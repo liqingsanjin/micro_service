@@ -8,3 +8,11 @@ db = "apsmgm"
 [db.redis]
 host = "127.0.0.1"
 port = 6379
+
+[grpc]
+host = "127.0.0.1"
+port = 5000
+
+[consul]
+host = "127.0.0.1"
+port = 8500
