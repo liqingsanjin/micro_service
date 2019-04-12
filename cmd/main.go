@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"runtime"
+	"time"
 	"userService/pb"
-	"userService/pkg/userservice"
-
 	"userService/pkg/common"
 	"userService/pkg/model"
 	"userService/pkg/redis"
+	"userService/pkg/userservice"
 
 	"github.com/go-kit/kit/sd/consul"
 	consuld "github.com/hashicorp/consul/api"
@@ -67,8 +66,10 @@ func main() {
 	if err != nil {
 		logrus.Errorln("注册userService失败", err)
 	}
-	runtime.Goexit()
 	logrus.Infoln("启动成功")
+	for {
+		time.Sleep(time.Hour)
+	}
 }
 
 func parseConfigFile() error {
