@@ -3,9 +3,9 @@ package userservice
 import (
 	"context"
 
-	"userService/pb"
 	"userService/pkg/common"
 	"userService/pkg/model"
+	"userService/pkg/pb"
 
 	"github.com/sirupsen/logrus"
 )

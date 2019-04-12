@@ -9,7 +9,9 @@ go mod tidy
 ```
 ### 编译
 ```
-go build -ldflags='-s -w' -o userService cmd/main.go
+protoc -I ./api --go_out=plugins=grpc:./pkg/pb/ api/user.proto
+
+go build -ldflags='-s -w' -o userService cmd/userservice/main.go
 ```
 ### 编译成 docker 镜像
 ```

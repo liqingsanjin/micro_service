@@ -1,13 +1,14 @@
-package main
+package userservice
 
 import (
 	"fmt"
 	"net"
 	"os"
 	"time"
-	"userService/pb"
+
 	"userService/pkg/common"
 	"userService/pkg/model"
+	"userService/pkg/pb"
 	"userService/pkg/redis"
 	"userService/pkg/userservice"
 
