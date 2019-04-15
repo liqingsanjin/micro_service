@@ -2,16 +2,101 @@ package model
 
 import (
 	"database/sql"
+	"encoding/json"
+	"time"
 
 	"github.com/jinzhu/gorm"
 )
 
+const (
+	TableUser           = "TBL_USER"
+	TableAuthAssignment = "TBL_AUTH_ASSIGNMENT"
+	TableAuthItemChild  = "TBL_AUTH_ITEM_CHILD"
+	TableMenu           = "TBL_MENU"
+	TableAuthItem       = "TBL_AUTH_ITEM"
+)
+
 type User struct {
-	UserID    int64  `gorm:"column:USER_ID;primary_key"`
-	LeaguerNO string `gorm:"column:LEAGUER_NO"`
-	UserName  string `gorm:"column:USER_NAME;unique"`
+	UserID             int64     `gorm:"column:USER_ID;primary_key"`
+	LeaguerNO          string    `gorm:"column:LEAGUER_NO"`
+	UserName           string    `gorm:"column:USER_NAME;unique"`
+	AuthKey            string    `gorm:"column:AUTH_KEY"`
+	PasswordHash       string    `gorm:"column:PASSWORD_HASH"`
+	PasswordResetToken *string   `gorm:"column:PASSWORD_RESET_TOKEN"`
+	Email              *string   `gorm:"column:EMAIL"`
+	UserType           string    `gorm:"column:USER_TYPE"`
+	UserInfo           *string   `gorm:"column:USER_INFO"`
+	UserStatus         int64     `gorm:"column:USER_STATUS"`
+	UserNotice         *string   `gorm:"column:USER_NOTICE"`
+	CreatedAt          time.Time `gorm:"column:REC_CRT_TS"`
+	UpdatedAt          time.Time `gorm:"column:REC_UPD_TS"`
+	ParentUserName     *string   `gorm:"column:PARENT_USER_NAME"`
 }
 
+func (u User) TableName() string {
+	return TableUser
+}
+
+type AuthAssignment struct {
+	ItemName string `gorm:"column:ITEM_NAME"`
+	UserID   int64  `gorm:"column:USER_ID"`
+}
+
+func (a AuthAssignment) TableName() string {
+	return TableAuthAssignment
+}
+
+type AuthItemChild struct {
+	Parent string `gorm:"column:PARENT"`
+	Child  string `gorm:"column:CHILD"`
+}
+
+func (a AuthItemChild) TableName() string {
+	return TableAuthItemChild
+}
+
+type Menu struct {
+	ID        int64  `gorm:"column:ID"`
+	Name      string `gorm:"column:NAME"`
+	Parent    *int64 `gorm:"column:PARENT"`
+	MenuRoute string `grom:"column:MENU_ROUTE"`
+	MenuOrder int64  `grom:"column:MENU_ORDER"`
+	MenuData  string `grom:"column:MENU_DATA"`
+}
+
+func (m Menu) TableName() string {
+	return TableMenu
+}
+
+type AuthItem struct {
+	Name        string `gorm:"column:NAME"`
+	Type        int64  `gorm:"column:TYPE"`
+	Description string `gorm:"column:DESCRIPTION"`
+	RuleName    string `gorm:"column:RULE_NAME"`
+	ItemData    string `gorm:"column:ITEM_DATA"`
+	ItemCode    string `gorm:"column:ITEM_CODE"`
+	ParentItem  string `gorm:"column:PARENT_ITEM"`
+	CreateUser  int64  `gorm:"column:CREATE_USER"`
+}
+
+func (a AuthItem) TableName() string {
+	return TableAuthItem
+}
+
+type Permission struct {
+	Menus []*Menu
+	Items []*AuthItem
+}
+
+func (p Permission) MarshalBinary() ([]byte, error) {
+	return json.Marshal(p)
+}
+
+// 根据用户名查询用户信息
+// 入参
+// userName: TBL_USER表中的USER_NAME字段
+// 返回
+// *User: TBL_USER表中的用户信息
 func FindUserByUserName(db *gorm.DB, userName string) (*User, error) {
 	user := &User{
 		UserName: userName,
@@ -23,6 +108,113 @@ func FindUserByUserName(db *gorm.DB, userName string) (*User, error) {
 	return user, err
 }
 
-func (u User) TableName() string {
-	return "TBL_USER"
+// 根据用户id查询权限
+// 入参
+// userID用户id, 对应TBL_USER表中的USER_ID字段
+// 返回
+// []*AuthItem: TBL_AUTH_ITEM表中的数据, 用户所有权限
+// []*Menu: TBL_MENU表中的数据, 用户菜单显示权限
+func GetPermissionsByUserID(db *gorm.DB, userID int64) (*Permission, error) {
+	// 根据用户查询角色权限
+	results := make([]*AuthAssignment, 0)
+	err := db.Where(&AuthAssignment{UserID: userID}).Select("ITEM_NAME, USER_ID").Find(&results).Error
+	if err == sql.ErrNoRows {
+		err = nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	// 查询角色权限下的子权限
+	names := make([]string, 0)
+	for _, result := range results {
+		names = append(names, result.ItemName)
+	}
+	children, err := getAuthRoutes(db, names)
+	if err != nil {
+		return nil, err
+	}
+	itemNames := make([]string, 0, len(children))
+	for _, child := range children {
+		itemNames = append(itemNames, child.Child)
+	}
+
+	// 查询子权限对应的菜单权限
+	menus, err := getAuthMenu(db, itemNames)
+	if err != nil {
+		return nil, err
+	}
+
+	// 查询权限详细信息
+	items := make([]*AuthItem, 0)
+	err = db.Where("NAME in (?)", itemNames).Find(&items).Error
+	if err == sql.ErrNoRows {
+		err = nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return &Permission{
+		Items: items,
+		Menus: menus,
+	}, nil
+}
+
+func getAuthRoutes(db *gorm.DB, itemNames []string) ([]*AuthItemChild, error) {
+	results := make([]*AuthItemChild, 0)
+	err := db.Where("PARENT in (?)", itemNames).Find(&results).Error
+	if err == sql.ErrNoRows {
+		err = nil
+		return results, err
+	}
+	names := make([]string, 0)
+	for _, result := range results {
+		names = append(names, result.Child)
+	}
+	if len(names) != 0 {
+		childResults, err := getAuthRoutes(db, names)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, childResults...)
+	}
+	return results, err
+}
+
+func getAuthMenu(db *gorm.DB, items []string) ([]*Menu, error) {
+	menus := make([]*Menu, 0)
+	err := db.Where("MENU_ROUTE in (?)", items).Find(&menus).Error
+	if err == sql.ErrNoRows {
+		err = nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	parents := make(map[int64]bool)
+	if len(menus) != 0 {
+		for _, menu := range menus {
+			if menu.Parent != nil {
+				parents[*menu.Parent] = true
+			}
+		}
+	}
+
+	parentIDs := make([]int64, 0, len(parents))
+	for id := range parents {
+		parentIDs = append(parentIDs, id)
+	}
+
+	rootMenus := make([]*Menu, 0)
+	err = db.Where("ID in (?)", parentIDs).Find(&rootMenus).Error
+	if err == sql.ErrNoRows {
+		err = nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	menus = append(menus, rootMenus...)
+	return menus, nil
 }

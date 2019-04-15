@@ -1,12 +1,11 @@
 package common
 
 import (
-	"userService/pkg/redis"
-
+	"github.com/go-redis/redis"
 	"github.com/jinzhu/gorm"
 )
 
 var (
-	RedisClientService redis.ClientService
-	DB                 *gorm.DB
+	RedisClient *redis.Client
+	DB          *gorm.DB
 )

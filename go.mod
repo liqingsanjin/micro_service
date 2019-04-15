@@ -6,6 +6,9 @@ require (
 	cloud.google.com/go v0.37.4 // indirect
 	github.com/DataDog/zstd v1.3.8 // indirect
 	github.com/Shopify/sarama v1.22.0 // indirect
+	github.com/casbin/casbin v1.8.1 // indirect
+	github.com/casbin/mysql-adapter v0.0.0-20170721055345-c494d0c4c842 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/envoyproxy/go-control-plane v0.7.0 // indirect
 	github.com/go-logfmt/logfmt v0.4.0 // indirect
 	github.com/go-redis/redis v6.15.2+incompatible
@@ -35,6 +38,7 @@ require (
 	github.com/spf13/viper v1.3.2 // indirect
 	github.com/stretchr/objx v0.2.0 // indirect
 	go.opencensus.io v0.20.2 // indirect
+	golang.org/x/crypto v0.0.0-20190404164418-38d8ce5564a5
 	golang.org/x/exp v0.0.0-20190409044807-56b785ea58b2 // indirect
 	golang.org/x/image v0.0.0-20190321063152-3fc05d484e9f // indirect
 	golang.org/x/lint v0.0.0-20190409202823-959b441ac422 // indirect

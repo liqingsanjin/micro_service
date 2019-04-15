@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"net"
 	"os"
@@ -9,10 +10,10 @@ import (
 	"userService/pkg/common"
 	"userService/pkg/model"
 	"userService/pkg/pb"
-	"userService/pkg/redis"
 	"userService/pkg/userservice"
 
 	"github.com/go-kit/kit/sd/consul"
+	"github.com/go-redis/redis"
 	consuld "github.com/hashicorp/consul/api"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -37,11 +38,18 @@ var (
 )
 
 func main() {
+	logrus.SetFormatter(&logFormatter{})
 	var err error
 	if err = parseConfigFile(); err != nil {
 		logrus.Fatal("解析配置文件错误", err)
 	}
-	common.RedisClientService = redis.New(fmt.Sprintf("%s:%d", redisHost, redisPort))
+
+	// 初始化redis client
+	common.RedisClient = redis.NewClient(&redis.Options{
+		Addr: fmt.Sprintf("%s:%d", redisHost, redisPort),
+	})
+
+	// 初始化mysql client
 	common.DB, err = model.NewDB(&model.Options{
 		User:     mysqlUser,
 		Password: mysqlPassword,
@@ -52,22 +60,28 @@ func main() {
 		logrus.Fatal("启动mysql错误", err)
 	}
 
+	// todo 初始化角色权限
+
+	// 初始化consul client
 	consulClient, err := newConsulClient(fmt.Sprintf("%s:%d", consulHost, consulPort))
 	if err != nil {
 		logrus.Fatal("连接consul失败", err)
 	}
 
+	// 启动grpc server
 	go func() {
 		if err := runGRPCServer(fmt.Sprintf("%s:%d", grpcHost, grpcPort)); err != nil {
 			logrus.Fatal("grpc server shutdown", err)
 		}
 	}()
 
+	// 注册consul service
 	err = registerConsulService(consulClient, "userService", grpcHost, grpcPort)
 	if err != nil {
 		logrus.Errorln("注册userService失败", err)
 	}
 	logrus.Infoln("启动成功")
+
 	for {
 		time.Sleep(time.Hour)
 	}
@@ -137,4 +151,24 @@ func runGRPCServer(addr string) error {
 	svr := grpc.NewServer()
 	pb.RegisterUserServer(svr, userservice.New())
 	return svr.Serve(l)
+}
+
+type logFormatter struct{}
+
+func (l logFormatter) Format(entry *logrus.Entry) ([]byte, error) {
+	var buffer *bytes.Buffer
+	if entry.Buffer != nil {
+		buffer = entry.Buffer
+	} else {
+		buffer = &bytes.Buffer{}
+	}
+	buffer.Write([]byte("["))
+	buffer.Write([]byte(entry.Time.Format("2006-01-02 15:04:05.000")))
+	buffer.Write([]byte("] "))
+	buffer.Write([]byte("["))
+	buffer.Write([]byte(entry.Level.String()))
+	buffer.Write([]byte("] "))
+	buffer.Write([]byte(entry.Message))
+	buffer.Write([]byte("\n"))
+	return buffer.Bytes(), nil
 }

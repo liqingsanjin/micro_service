@@ -15,13 +15,19 @@ type Options struct {
 }
 
 func NewDB(opt *Options) (*gorm.DB, error) {
-	return gorm.Open(
+	db, err := gorm.Open(
 		"mysql",
-		fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8",
+		fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=true",
 			opt.User,
 			opt.Password,
 			opt.Addr,
 			opt.DB,
 		),
 	)
+	if err != nil {
+		return nil, err
+	}
+	db.DB().SetMaxIdleConns(10)
+	db.DB().SetMaxOpenConns(100)
+	return db, nil
 }
