@@ -6,10 +6,12 @@ require (
 	cloud.google.com/go v0.37.4 // indirect
 	github.com/DataDog/zstd v1.3.8 // indirect
 	github.com/Shopify/sarama v1.22.0 // indirect
-	github.com/casbin/casbin v1.8.1 // indirect
+	github.com/casbin/casbin v1.8.1
+	github.com/casbin/gorm-adapter v0.0.0-20190318080705-e74a050c51a4
 	github.com/casbin/mysql-adapter v0.0.0-20170721055345-c494d0c4c842 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/envoyproxy/go-control-plane v0.7.0 // indirect
+	github.com/go-kit/kit v0.8.0
 	github.com/go-logfmt/logfmt v0.4.0 // indirect
 	github.com/go-redis/redis v6.15.2+incompatible
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
@@ -27,6 +29,7 @@ require (
 	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a // indirect
 	github.com/kisielk/errcheck v1.2.0 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
+	github.com/lib/pq v1.0.0
 	github.com/lyft/protoc-gen-validate v0.0.14 // indirect
 	github.com/onsi/ginkgo v1.8.0 // indirect
 	github.com/onsi/gomega v1.5.0 // indirect

@@ -6,10 +6,10 @@ import (
 	"net"
 	"os"
 	"time"
-
 	"userService/pkg/common"
 	"userService/pkg/model"
 	"userService/pkg/pb"
+	"userService/pkg/rabc"
 	"userService/pkg/userservice"
 
 	"github.com/go-kit/kit/sd/consul"
@@ -35,6 +35,8 @@ var (
 
 	consulHost = "localhost"
 	consulPort = 8500
+
+	rbacFileName = ""
 )
 
 func main() {
@@ -50,17 +52,18 @@ func main() {
 	})
 
 	// 初始化mysql client
-	common.DB, err = model.NewDB(&model.Options{
+	opts := model.Options{
 		User:     mysqlUser,
 		Password: mysqlPassword,
 		DB:       mysqlDB,
 		Addr:     fmt.Sprintf("%s:%d", mysqlHost, mysqlPort),
-	})
+	}
+	common.DB, err = model.NewDB(&opts)
 	if err != nil {
 		logrus.Fatal("启动mysql错误", err)
 	}
 
-	// todo 初始化角色权限
+	common.Enforcer = rabc.NewCasbin(rbacFileName, &opts)
 
 	// 初始化consul client
 	consulClient, err := newConsulClient(fmt.Sprintf("%s:%d", consulHost, consulPort))
@@ -122,6 +125,8 @@ func parseConfigFile() error {
 
 	consulHost = viper.GetString("consul.host")
 	consulPort = viper.GetInt("consul.port")
+
+	rbacFileName = viper.GetString("rbacFile")
 	return nil
 }
 

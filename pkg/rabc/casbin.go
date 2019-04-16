@@ -1,10 +1,20 @@
 package rabc
 
-import "github.com/casbin/casbin"
+import (
+	"fmt"
 
-// todo
-func Casbin() *casbin.Enforcer {
-	e := casbin.NewEnforcer()
-	e.AddPolicy()
+	"github.com/casbin/casbin"
+
+	"userService/pkg/gormadapter"
+	"userService/pkg/model"
+)
+
+func NewCasbin(fileName string, options *model.Options) *casbin.Enforcer {
+	adapter := gormadapter.NewAdapter(
+		"mysql",
+		fmt.Sprintf("%s:%s@tcp(%s)/", options.User, options.Password, options.Addr),
+	)
+	e := casbin.NewEnforcer(fileName, adapter)
+	e.LoadPolicy()
 	return e
 }

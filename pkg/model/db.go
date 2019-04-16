@@ -27,6 +27,7 @@ func NewDB(opt *Options) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	db.DB().SetMaxIdleConns(10)
 	db.DB().SetMaxOpenConns(100)
 	return db, nil

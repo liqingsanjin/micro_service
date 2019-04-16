@@ -4,6 +4,8 @@ package pb;
 
 service User {
     rpc Login(LoginRequest) returns (LoginReply) {}
+    rpc GetPermissions(GetPermissionsRequest) returns (GetPermissionsReply) {}
+    rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionReply) {}
 }
 
 message LoginRequest {
@@ -12,5 +14,26 @@ message LoginRequest {
 }
 
 message LoginReply {
-    string token = 1;
+    string token = 2;
+}
+
+message GetPermissionsRequest {}
+
+message GetPermissionsReply {
+    repeated Menu menus = 2;
+}
+
+message Menu {
+    string menu = 1;
+    string route = 2;
+    string data = 3;
+    repeated Menu children = 4;
+}
+
+message CheckPermissionRequest {
+    string route = 1;
+}
+
+message CheckPermissionReply {
+    bool result = 1;
 }

@@ -1,7 +1,6 @@
 package model
 
 import (
-	"database/sql"
 	"encoding/json"
 	"time"
 
@@ -40,6 +39,7 @@ func (u User) TableName() string {
 type AuthAssignment struct {
 	ItemName string `gorm:"column:ITEM_NAME"`
 	UserID   int64  `gorm:"column:USER_ID"`
+	UserName string `gorm:"column:USER_NAME"`
 }
 
 func (a AuthAssignment) TableName() string {
@@ -59,9 +59,9 @@ type Menu struct {
 	ID        int64  `gorm:"column:ID"`
 	Name      string `gorm:"column:NAME"`
 	Parent    *int64 `gorm:"column:PARENT"`
-	MenuRoute string `grom:"column:MENU_ROUTE"`
-	MenuOrder int64  `grom:"column:MENU_ORDER"`
-	MenuData  string `grom:"column:MENU_DATA"`
+	MenuRoute string `gorm:"column:MENU_ROUTE"`
+	MenuOrder int64  `gorm:"column:MENU_ORDER"`
+	MenuData  string `gorm:"column:MENU_DATA"`
 }
 
 func (m Menu) TableName() string {
@@ -102,7 +102,7 @@ func FindUserByUserName(db *gorm.DB, userName string) (*User, error) {
 		UserName: userName,
 	}
 	err := db.Where(&User{UserName: userName}).First(user).Error
-	if err == sql.ErrNoRows {
+	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}
 	return user, err
@@ -115,10 +115,10 @@ func FindUserByUserName(db *gorm.DB, userName string) (*User, error) {
 // []*AuthItem: TBL_AUTH_ITEM表中的数据, 用户所有权限
 // []*Menu: TBL_MENU表中的数据, 用户菜单显示权限
 func GetPermissionsByUserID(db *gorm.DB, userID int64) (*Permission, error) {
-	// 根据用户查询角色权限
+	// 根据用户查询角色
 	results := make([]*AuthAssignment, 0)
 	err := db.Where(&AuthAssignment{UserID: userID}).Select("ITEM_NAME, USER_ID").Find(&results).Error
-	if err == sql.ErrNoRows {
+	if err == gorm.ErrRecordNotFound {
 		err = nil
 	}
 	if err != nil {
@@ -140,7 +140,7 @@ func GetPermissionsByUserID(db *gorm.DB, userID int64) (*Permission, error) {
 	}
 
 	// 查询子权限对应的菜单权限
-	menus, err := getAuthMenu(db, itemNames)
+	menus, err := GetAuthMenu(db, itemNames)
 	if err != nil {
 		return nil, err
 	}
@@ -148,7 +148,7 @@ func GetPermissionsByUserID(db *gorm.DB, userID int64) (*Permission, error) {
 	// 查询权限详细信息
 	items := make([]*AuthItem, 0)
 	err = db.Where("NAME in (?)", itemNames).Find(&items).Error
-	if err == sql.ErrNoRows {
+	if err == gorm.ErrRecordNotFound {
 		err = nil
 	}
 	if err != nil {
@@ -164,7 +164,7 @@ func GetPermissionsByUserID(db *gorm.DB, userID int64) (*Permission, error) {
 func getAuthRoutes(db *gorm.DB, itemNames []string) ([]*AuthItemChild, error) {
 	results := make([]*AuthItemChild, 0)
 	err := db.Where("PARENT in (?)", itemNames).Find(&results).Error
-	if err == sql.ErrNoRows {
+	if err == gorm.ErrRecordNotFound {
 		err = nil
 		return results, err
 	}
@@ -182,10 +182,10 @@ func getAuthRoutes(db *gorm.DB, itemNames []string) ([]*AuthItemChild, error) {
 	return results, err
 }
 
-func getAuthMenu(db *gorm.DB, items []string) ([]*Menu, error) {
+func GetAuthMenu(db *gorm.DB, items []string) ([]*Menu, error) {
 	menus := make([]*Menu, 0)
-	err := db.Where("MENU_ROUTE in (?)", items).Find(&menus).Error
-	if err == sql.ErrNoRows {
+	err := db.Debug().Where("MENU_ROUTE in (?)", items).Find(&menus).Error
+	if err == gorm.ErrRecordNotFound {
 		err = nil
 	}
 	if err != nil {
@@ -208,7 +208,7 @@ func getAuthMenu(db *gorm.DB, items []string) ([]*Menu, error) {
 
 	rootMenus := make([]*Menu, 0)
 	err = db.Where("ID in (?)", parentIDs).Find(&rootMenus).Error
-	if err == sql.ErrNoRows {
+	if err == gorm.ErrRecordNotFound {
 		err = nil
 	}
 	if err != nil {
