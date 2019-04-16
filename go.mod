@@ -7,20 +7,20 @@ require (
 	github.com/DataDog/zstd v1.3.8 // indirect
 	github.com/Shopify/sarama v1.22.0 // indirect
 	github.com/casbin/casbin v1.8.1
-	github.com/casbin/gorm-adapter v0.0.0-20190318080705-e74a050c51a4
+	github.com/casbin/gorm-adapter v0.0.0-20190318080705-e74a050c51a4 // indirect
 	github.com/casbin/mysql-adapter v0.0.0-20170721055345-c494d0c4c842 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/envoyproxy/go-control-plane v0.7.0 // indirect
 	github.com/go-kit/kit v0.8.0
 	github.com/go-logfmt/logfmt v0.4.0 // indirect
 	github.com/go-redis/redis v6.15.2+incompatible
-	github.com/go-sql-driver/mysql v1.4.1 // indirect
+	github.com/go-sql-driver/mysql v1.4.1
 	github.com/gogo/googleapis v1.2.0 // indirect
 	github.com/golang/protobuf v1.3.1
 	github.com/google/btree v1.0.0 // indirect
 	github.com/google/pprof v0.0.0-20190404155422-f8f10df84213 // indirect
 	github.com/gorilla/mux v1.7.1 // indirect
-	github.com/hashicorp/consul v1.4.4 // indirect
+	github.com/hashicorp/consul v1.4.4
 	github.com/hashicorp/go-cleanhttp v0.5.1 // indirect
 	github.com/hashicorp/go-rootcerts v1.0.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.1 // indirect
@@ -38,7 +38,7 @@ require (
 	github.com/prometheus/common v0.3.0 // indirect
 	github.com/prometheus/procfs v0.0.0-20190403104016-ea9eea638872 // indirect
 	github.com/sirupsen/logrus v1.4.1
-	github.com/spf13/viper v1.3.2 // indirect
+	github.com/spf13/viper v1.3.2
 	github.com/stretchr/objx v0.2.0 // indirect
 	go.opencensus.io v0.20.2 // indirect
 	golang.org/x/crypto v0.0.0-20190404164418-38d8ce5564a5
