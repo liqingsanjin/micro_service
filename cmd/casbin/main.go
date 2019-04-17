@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"userService/pkg/model"
+	"userService/pkg/model/user"
 
 	"github.com/casbin/casbin"
 	_ "github.com/go-sql-driver/mysql"
@@ -59,7 +59,7 @@ func initCasbin() {
 	logrus.Infoln(len(roles))
 	roleMap := slice2Map(roles)
 
-	assigns := make([]model.AuthAssignment, 0)
+	assigns := make([]user.AuthAssignment, 0)
 	db.Debug().Table("TBL_AUTH_ASSIGNMENT").
 		Where("TBL_USER.USER_ID is not null").
 		Select("TBL_AUTH_ASSIGNMENT.ITEM_NAME, TBL_USER.USER_ID, TBL_USER.USER_NAME").

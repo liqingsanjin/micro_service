@@ -3,9 +3,8 @@ package userservice
 import (
 	"context"
 	"time"
-
 	"userService/pkg/common"
-	"userService/pkg/model"
+	user2 "userService/pkg/model/user"
 	"userService/pkg/pb"
 
 	"github.com/sirupsen/logrus"
@@ -26,7 +25,7 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 	}
 
 	// 查询用户
-	user, err := model.FindUserByUserName(db, in.GetUsername())
+	user, err := user2.FindUserByUserName(db, in.GetUsername())
 	if err != nil {
 		return nil, err
 	}
@@ -71,18 +70,18 @@ func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsR
 		}
 	}
 
-	menus, err := model.GetAuthMenu(db, itemNames)
+	menus, err := user2.GetAuthMenu(db, itemNames)
 	if err != nil {
 		return nil, err
 	}
 
-	idMap := make(map[int64][]*model.Menu)
+	idMap := make(map[int64][]*user2.Menu)
 	for _, menu := range menus {
 		if menu.Parent == nil {
 			// 第一级菜单
 			ms, ok := idMap[-1]
 			if !ok {
-				ms = make([]*model.Menu, 0)
+				ms = make([]*user2.Menu, 0)
 			}
 			ms = append(ms, menu)
 			idMap[-1] = ms
@@ -90,7 +89,7 @@ func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsR
 			// 第二级菜单
 			ms, ok := idMap[*menu.Parent]
 			if !ok {
-				ms = make([]*model.Menu, 0)
+				ms = make([]*user2.Menu, 0)
 			}
 			ms = append(ms, menu)
 			idMap[*menu.Parent] = ms
@@ -141,7 +140,7 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 		return nil, err
 	}
 
-	user := &model.User{
+	user := &user2.User{
 		UserName:     in.Username,
 		UserType:     in.UserType,
 		Email:        &in.Email,
@@ -150,7 +149,7 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 		UserStatus:   1,
 	}
 
-	newUser, err := model.SaveUser(db, user)
+	newUser, err := user2.SaveUser(db, user)
 	if err != nil {
 		return nil, err
 	}
