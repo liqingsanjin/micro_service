@@ -12,6 +12,7 @@ type userServer struct {
 	loginHandler           grpctransport.Handler
 	getPermissionsHandler  grpctransport.Handler
 	checkPermissionHandler grpctransport.Handler
+	registerHandler        grpctransport.Handler
 }
 
 func New() pb.UserServer {
@@ -50,6 +51,16 @@ func New() pb.UserServer {
 		)
 	}
 
+	{
+		registerEndpoint := makeRegisterEndpoint(userService)
+		registerEndpoint = logginMiddleware(registerEndpoint)
+		svr.registerHandler = grpctransport.NewServer(
+			registerEndpoint,
+			decodeRequest,
+			encodeResponse,
+		)
+	}
+
 	return svr
 }
 
@@ -83,6 +94,18 @@ func (u *userServer) CheckPermission(ctx context.Context, in *pb.CheckPermission
 		return nil, err
 	}
 	reply, ok := res.(*pb.CheckPermissionReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (u *userServer) Register(ctx context.Context, in *pb.RegisterRequest) (*pb.RegisterReply, error) {
+	_, res, err := u.registerHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.RegisterReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

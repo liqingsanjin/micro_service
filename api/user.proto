@@ -6,6 +6,7 @@ service User {
     rpc Login(LoginRequest) returns (LoginReply) {}
     rpc GetPermissions(GetPermissionsRequest) returns (GetPermissionsReply) {}
     rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionReply) {}
+    rpc Register(RegisterRequest) returns (RegisterReply) {}
 }
 
 message LoginRequest {
@@ -39,4 +40,22 @@ message CheckPermissionRequest {
 
 message CheckPermissionReply {
     bool result = 1;
+}
+
+message RegisterRequest {
+    string username = 1;
+    string password = 2;
+    string leaguerNo = 3;
+    string email = 4;
+    string userType = 5;
+}
+
+message RegisterReply {
+    int64 id = 1;
+    string leaguerNo = 2;
+    string username = 3;
+    string email = 4;
+    string userType = 5;
+    int64 userStatus = 6;
+    int64 createdAt = 7;
 }

@@ -218,3 +218,25 @@ func GetAuthMenu(db *gorm.DB, items []string) ([]*Menu, error) {
 	menus = append(menus, rootMenus...)
 	return menus, nil
 }
+
+func SaveUser(db *gorm.DB, user *User) (*User, error) {
+	findUser := &User{}
+	err := db.Where(&User{UserName: user.UserName}).First(&findUser).Error
+	if err == gorm.ErrRecordNotFound {
+		err = nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	if findUser.UserName != "" {
+		return nil, ErrUserExists
+	}
+
+	err = db.Create(user).Error
+	if err != nil {
+		return nil, err
+	}
+
+	err = db.Where(&User{UserName: user.UserName}).First(&findUser).Error
+	return findUser, err
+}

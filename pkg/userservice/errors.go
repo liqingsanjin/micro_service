@@ -14,4 +14,5 @@ var (
 	ErrTokenMalformed          = errors.New("JWT Token is malformed")
 	ErrTokenNotActive          = errors.New("token is not valid yet")
 	ErrUnexpectedSigningMethod = errors.New("unexpected signing method")
+	ErrInvalidParams           = errors.New("invalid params")
 )

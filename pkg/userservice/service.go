@@ -20,7 +20,7 @@ type UserInfo struct {
 }
 
 func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, error) {
-	db := common.DB
+	db := common.DB.New()
 	if in.GetUsername() == "" || in.GetPassword() == "" {
 		return nil, ErrUserNamePasswordEmpty
 	}
@@ -59,6 +59,7 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 }
 
 func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsRequest) (*pb.GetPermissionsReply, error) {
+	db := common.DB.New()
 	user := ctx.Value("userInfo").(*UserInfo)
 
 	permissions := common.Enforcer.GetImplicitPermissionsForUser(user.UserName)
@@ -70,7 +71,7 @@ func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsR
 		}
 	}
 
-	menus, err := model.GetAuthMenu(common.DB, itemNames)
+	menus, err := model.GetAuthMenu(db, itemNames)
 	if err != nil {
 		return nil, err
 	}
@@ -126,5 +127,41 @@ func (u *userService) CheckPermission(ctx context.Context, in *pb.CheckPermissio
 	ok := common.Enforcer.Enforce(user.UserName, in.GetRoute())
 	return &pb.CheckPermissionReply{
 		Result: ok,
+	}, nil
+}
+
+func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb.RegisterReply, error) {
+	db := common.DB.New()
+	if in.Username == "" || in.Password == "" || in.UserType == "" || in.Email == "" || in.LeaguerNo == "" {
+		return nil, ErrInvalidParams
+	}
+
+	bs, err := bcrypt.GenerateFromPassword([]byte(in.Password), 4)
+	if err != nil {
+		return nil, err
+	}
+
+	user := &model.User{
+		UserName:     in.Username,
+		UserType:     in.UserType,
+		Email:        &in.Email,
+		LeaguerNO:    in.LeaguerNo,
+		PasswordHash: string(bs),
+		UserStatus:   1,
+	}
+
+	newUser, err := model.SaveUser(db, user)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.RegisterReply{
+		Id:         newUser.UserID,
+		LeaguerNo:  newUser.LeaguerNO,
+		Username:   newUser.UserName,
+		Email:      *newUser.Email,
+		UserType:   newUser.UserType,
+		UserStatus: newUser.UserStatus,
+		CreatedAt:  newUser.CreatedAt.UnixNano() / int64(time.Millisecond),
 	}, nil
 }
