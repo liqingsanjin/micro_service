@@ -104,6 +104,8 @@ func initCasbin() {
 func checkValid() {
 	//enforcer.AddRoleForUser("jingx", "dsafdsa")
 	//enforcer.AddRoleForUser("jingx", "管理员权限")
-	ok := enforcer.Enforce("zymcxy", "/clear/downinsdz")
-	logrus.Infoln(ok)
+	//ok := enforcer.Enforce("zymcxy", "/clear/downinsdz")
+	//logrus.Infoln(ok)
+	roles := enforcer.GetAllRoles()
+	logrus.Infoln(len(roles))
 }

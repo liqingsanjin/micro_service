@@ -40,6 +40,13 @@ var (
 )
 
 func main() {
+	level := os.Getenv("LOG_LEVEL")
+	if level == "debug" {
+		logrus.SetLevel(logrus.DebugLevel)
+	} else {
+		logrus.SetLevel(logrus.InfoLevel)
+	}
+
 	logrus.SetFormatter(&logFormatter{})
 	var err error
 	if err = parseConfigFile(); err != nil {

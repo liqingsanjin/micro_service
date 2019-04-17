@@ -5,6 +5,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/sirupsen/logrus"
 )
 
 type Options struct {
@@ -15,14 +16,16 @@ type Options struct {
 }
 
 func NewDB(opt *Options) (*gorm.DB, error) {
+	url := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=true",
+		opt.User,
+		opt.Password,
+		opt.Addr,
+		opt.DB,
+	)
+	logrus.Debugln("mysql url:", url)
 	db, err := gorm.Open(
 		"mysql",
-		fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=true",
-			opt.User,
-			opt.Password,
-			opt.Addr,
-			opt.DB,
-		),
+		url,
 	)
 	if err != nil {
 		return nil, err

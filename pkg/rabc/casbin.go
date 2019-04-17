@@ -15,6 +15,5 @@ func NewCasbin(fileName string, options *model.Options) *casbin.Enforcer {
 		fmt.Sprintf("%s:%s@tcp(%s)/", options.User, options.Password, options.Addr),
 	)
 	e := casbin.NewEnforcer(fileName, adapter)
-	e.LoadPolicy()
 	return e
 }

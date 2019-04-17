@@ -15,4 +15,7 @@ go build -ldflags='-s -w' -o userService cmd/userservice/main.go
 ```
 ### 编译成 docker 镜像
 ```
+./build/ci/compile.sh
+
+docker build -t userservice:1.0.0 -f build/deploy/Dockerfile .
 ```
