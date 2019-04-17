@@ -51,7 +51,10 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 	}
 
 	return &pb.LoginReply{
-		Token: tk,
+		Id:       user.UserID,
+		Username: user.UserName,
+		UserType: user.UserType,
+		Token:    tk,
 	}, err
 }
 

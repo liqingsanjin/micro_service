@@ -17,27 +17,38 @@ type userServer struct {
 func New() pb.UserServer {
 	svr := &userServer{}
 	userService := &userService{}
-	svr.loginHandler = grpctransport.NewServer(
-		makeLoginEndpoint(userService),
-		decodeRequest,
-		encodeResponse,
-	)
 
-	getPermissionEndpoint := makeGetPermissionsEndpoint(userService)
-	getPermissionEndpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(getPermissionEndpoint)
-	svr.getPermissionsHandler = grpctransport.NewServer(
-		getPermissionEndpoint,
-		decodeRequest,
-		encodeResponse,
-	)
+	{
+		loginEndpoint := makeLoginEndpoint(userService)
+		loginEndpoint = logginMiddleware(loginEndpoint)
+		svr.loginHandler = grpctransport.NewServer(
+			loginEndpoint,
+			decodeRequest,
+			encodeResponse,
+		)
+	}
 
-	checkPermissionEndpoint := makeCheckPermissionEndpoint(userService)
-	checkPermissionEndpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(checkPermissionEndpoint)
-	svr.checkPermissionHandler = grpctransport.NewServer(
-		checkPermissionEndpoint,
-		decodeRequest,
-		encodeResponse,
-	)
+	{
+		getPermissionEndpoint := makeGetPermissionsEndpoint(userService)
+		getPermissionEndpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(getPermissionEndpoint)
+		getPermissionEndpoint = logginMiddleware(getPermissionEndpoint)
+		svr.getPermissionsHandler = grpctransport.NewServer(
+			getPermissionEndpoint,
+			decodeRequest,
+			encodeResponse,
+		)
+	}
+
+	{
+		checkPermissionEndpoint := makeCheckPermissionEndpoint(userService)
+		checkPermissionEndpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(checkPermissionEndpoint)
+		checkPermissionEndpoint = logginMiddleware(checkPermissionEndpoint)
+		svr.checkPermissionHandler = grpctransport.NewServer(
+			checkPermissionEndpoint,
+			decodeRequest,
+			encodeResponse,
+		)
+	}
 
 	return svr
 }

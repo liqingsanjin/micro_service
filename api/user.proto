@@ -14,7 +14,10 @@ message LoginRequest {
 }
 
 message LoginReply {
-    string token = 2;
+    int64 id = 1;
+    string username =2;
+    string userType = 3;
+    string token = 4;
 }
 
 message GetPermissionsRequest {}
