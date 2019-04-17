@@ -1,0 +1,22 @@
+rbacFile = "configs/rabc.conf"
+
+[db]
+[db.mysql]
+host = "mysql"
+port = 3306
+user = "root"
+password = "root"
+db = "apsmgm"
+
+[db.redis]
+host = "redis"
+port = 6379
+
+[grpc]
+host = "192.168.127.203"
+port = 5000
+
+[consul]
+host = "consul"
+port = 8500
+

@@ -81,7 +81,7 @@ func main() {
 	// 启动grpc server
 	go func() {
 
-		if err := runGRPCServer(fmt.Sprintf("%s:%d", grpcHost, grpcPort)); err != nil {
+		if err := runGRPCServer(fmt.Sprintf("%s:%d", "", grpcPort)); err != nil {
 			logrus.Fatal("grpc server shutdown", err)
 		}
 	}()

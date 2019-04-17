@@ -1,0 +1,43 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:5.7.25
+    container_name: mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+    volumes:
+      - ./mysql_data/:/var/lib/mysql/
+  redis:
+    image: redis:5.0.4
+    container_name: reids
+    ports:
+      - 6379:6379
+  consul:
+    image: consul:1.4.4
+    container_name: consul
+    ports:
+      - 8300:8300
+      - 8301:8301
+      - 8302:8302
+      - 8500:8500
+      - 8600:8600
+    environment:
+      CONSUL_LOCAL_CONFIG: '{"skip_leave_on_interrupt": true}'
+  userservice:
+    image: userservice:1.0.0
+    container_name: userservice
+    ports:
+      - 5000:5000
+    environment:
+      CONFIG_FILE: configs/dev.toml
+      LOG_LEVEL: debug
+    volumes:
+      - ./configs/:/data/configs/
+    depends_on:
+      - redis
+      - mysql
+      - consul
