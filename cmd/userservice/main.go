@@ -62,6 +62,7 @@ func main() {
 
 	logrus.SetFormatter(&logFormatter{})
 	if logFile != "" {
+		os.MkdirAll(logPath, os.ModePerm)
 		logFilePath := path.Join(logPath, logFile)
 		writer, err := rotatelogs.New(
 			logFilePath+".%Y%m%d%H%M",
