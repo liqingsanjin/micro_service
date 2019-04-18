@@ -5,7 +5,7 @@ import "errors"
 var (
 	ErrUserNamePasswordEmpty   = errors.New("empty username or password")
 	ErrWrongUserNameOrPassword = errors.New("wrong username or password")
-	ErrUnAuthorized            = errors.New("unauthoriezd error")
+	ErrUserNotFound            = errors.New("user not found")
 	ErrReplyTypeInvalid        = errors.New("reply type invalid")
 	ErrRequestTypeInvalid      = errors.New("request type invalid")
 	ErrTokenContextMissing     = errors.New("token up for parsing was not passed through the context")

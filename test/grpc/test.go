@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	log.SetFlags(log.Llongfile | log.LstdFlags)
 	conn, err := grpc.Dial("127.0.0.1:5000", grpc.WithInsecure())
 	if err != nil {
 		log.Fatal(err)
@@ -51,6 +52,21 @@ func main() {
 		md.Set("jwtToken", tk)
 		ctx := metadata.NewOutgoingContext(context.Background(), md)
 		rep, err := client.GetPermissions(ctx, &pb.GetPermissionsRequest{})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.AddPermission(ctx, &pb.AddPermissionRequest{
+			Username:    "test2",
+			Permissions: []string{"/trnlog/repay/query"},
+		})
 		if err != nil {
 			log.Println(err)
 		} else {

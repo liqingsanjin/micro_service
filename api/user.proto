@@ -7,6 +7,7 @@ service User {
     rpc GetPermissions(GetPermissionsRequest) returns (GetPermissionsReply) {}
     rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionReply) {}
     rpc Register(RegisterRequest) returns (RegisterReply) {}
+    rpc AddPermission(AddPermissionRequest) returns (AddPermissionReply) {}
 }
 
 message LoginRequest {
@@ -59,3 +60,9 @@ message RegisterReply {
     int64 userStatus = 6;
     int64 createdAt = 7;
 }
+
+message AddPermissionRequest {
+    string username = 1;
+    repeated string permissions = 2;
+}
+message AddPermissionReply {}
