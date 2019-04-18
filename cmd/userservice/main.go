@@ -47,6 +47,7 @@ var (
 )
 
 func main() {
+	// 初始化log
 	level := os.Getenv("LOG_LEVEL")
 	if level == "debug" {
 		logrus.SetReportCaller(true)
@@ -54,13 +55,13 @@ func main() {
 	} else {
 		logrus.SetLevel(logrus.InfoLevel)
 	}
+	logrus.SetFormatter(&logFormatter{})
 
 	var err error
 	if err = parseConfigFile(); err != nil {
 		logrus.Fatal("解析配置文件错误", err)
 	}
 
-	logrus.SetFormatter(&logFormatter{})
 	if logFile != "" {
 		os.MkdirAll(logPath, os.ModePerm)
 		logFilePath := path.Join(logPath, logFile)
