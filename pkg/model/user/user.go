@@ -13,6 +13,7 @@ const (
 	TableAuthItemChild  = "TBL_AUTH_ITEM_CHILD"
 	TableMenu           = "TBL_MENU"
 	TableAuthItem       = "TBL_AUTH_ITEM"
+	TableRole           = "TBL_ROLE"
 )
 
 type User struct {
@@ -81,6 +82,17 @@ type AuthItem struct {
 
 func (a AuthItem) TableName() string {
 	return TableAuthItem
+}
+
+type Role struct {
+	ID        int64     `gorm:"column:ROLE_ID"`
+	Role      string    `gorm:"column:ROLE_NAME"`
+	CreatedAt time.Time `gorm:"column:CREATED_AT"`
+	UpdatedAt time.Time `gorm:"column:UPDATED_AT"`
+}
+
+func (a Role) TableName() string {
+	return TableRole
 }
 
 type Permission struct {
@@ -239,4 +251,17 @@ func SaveUser(db *gorm.DB, user *User) (*User, error) {
 
 	err = db.Where(&User{UserName: user.UserName}).First(&findUser).Error
 	return findUser, err
+}
+
+func FindRole(db *gorm.DB, role string) (*Role, error) {
+	var r Role
+	err := db.Where(&Role{Role: role}).First(&r).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return &r, err
+}
+
+func SaveRole(db *gorm.DB, role *Role) error {
+	return db.Create(role).Error
 }
