@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb;
+
+service Institution {
+    rpc TnxHisDownload(InstitutionTnxHisDownloadReq) returns (InstitutionTnxHisDownloadResp){}
+}
+
+message InstitutionTnxHisDownloadReq {
+    string StartTime = 1;
+    string EndTime = 2;
+    string Name = 3;
+}
+
+message InstitutionTnxHisDownloadResp {
+    bool Result = 1;
+}

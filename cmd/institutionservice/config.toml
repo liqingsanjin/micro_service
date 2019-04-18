@@ -1,0 +1,21 @@
+[db]
+[db.mysql]
+host = "127.0.0.1"
+port = 3306
+user = "debian-sys-maint"
+password = "alaswKYdb0O6Onj0"
+db = "apsmgm"
+[db.redis]
+host = "127.0.0.1"
+port = 6379
+
+[grpc]
+host = "127.0.0.1"
+port = 5000
+
+[consul]
+host = "127.0.0.1"
+port = 8500
+
+[info]
+serviceName = "institutionService"
