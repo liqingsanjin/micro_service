@@ -9,7 +9,7 @@ import (
 	"userService/pkg/common"
 	"userService/pkg/model"
 	"userService/pkg/pb"
-	"userService/pkg/rabc"
+	"userService/pkg/rbac"
 	"userService/pkg/userservice"
 
 	"github.com/go-kit/kit/sd/consul"
@@ -70,7 +70,7 @@ func main() {
 		logrus.Fatal("启动mysql错误", err)
 	}
 
-	common.Enforcer = rabc.NewCasbin(rbacFileName, &opts)
+	common.Enforcer = rbac.NewCasbin(rbacFileName, &opts)
 
 	// 初始化consul client
 	consulClient, err := newConsulClient(fmt.Sprintf("%s:%d", consulHost, consulPort))

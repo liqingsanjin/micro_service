@@ -13,7 +13,7 @@ import (
 )
 
 var adapter = gormadapter.NewAdapter("mysql", "root:root@tcp(127.0.0.1:3306)/")
-var enforcer = casbin.NewEnforcer("configs/rabc.conf", adapter)
+var enforcer = casbin.NewEnforcer("configs/rbac.conf", adapter)
 
 type AuthModel struct {
 	Role string

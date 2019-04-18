@@ -1,4 +1,4 @@
-rbacFile = "configs/rabc.conf"
+rbacFile = "configs/rbac.conf"
 
 [db]
 [db.mysql]
