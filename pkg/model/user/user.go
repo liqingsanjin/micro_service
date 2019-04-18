@@ -85,7 +85,7 @@ func (a AuthItem) TableName() string {
 }
 
 type Role struct {
-	ID        int64     `gorm:"column:ROLE_ID"`
+	ID        int64     `gorm:"column:ROLE_ID;primary_key"`
 	Role      string    `gorm:"column:ROLE_NAME"`
 	CreatedAt time.Time `gorm:"column:CREATED_AT"`
 	UpdatedAt time.Time `gorm:"column:UPDATED_AT"`

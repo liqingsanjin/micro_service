@@ -30,8 +30,8 @@ func (a AuthModel) String() string {
 }
 
 func main() {
-	//initCasbin()
-	checkValid()
+	initCasbin()
+	//checkValid()
 }
 
 func slice2Map(ss []string) map[string]bool {
@@ -92,13 +92,27 @@ func initCasbin() {
 		logrus.Infoln(m.Role)
 		logrus.Infoln(m.Data)
 		enforcer.AddPolicy(m.Role, m.Data)
+
 	}
 
-	for _, u := range us {
-		logrus.Infoln(u.User)
-		logrus.Infoln(u.Role)
-		enforcer.AddRoleForUser(u.User, u.Role)
+	db = db.Debug()
+	db = db.Begin()
+	defer db.Rollback()
+	for _, role := range roles {
+		err = user.SaveRole(db, &user.Role{
+			Role: role,
+		})
+		if err != nil {
+			return
+		}
 	}
+	db.Commit()
+
+	//for _ := range us {
+	//logrus.Infoln(u.User)
+	//logrus.Infoln(u.Role)
+	//enforcer.AddRoleForUser(u.User, u.Role)
+	//}
 }
 
 func checkValid() {

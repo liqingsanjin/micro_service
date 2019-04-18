@@ -94,7 +94,7 @@ func main() {
 		ctx := metadata.NewOutgoingContext(context.Background(), md)
 		rep, err := client.AddRole(ctx, &pb.AddRoleRequest{
 			Role: "test2",
-			On:   "admin",
+			On:   "dsafdsa",
 		})
 		if err != nil {
 			log.Println(err)
