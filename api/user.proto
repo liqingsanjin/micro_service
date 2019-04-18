@@ -9,6 +9,8 @@ service User {
     rpc Register(RegisterRequest) returns (RegisterReply) {}
     rpc AddPermission(AddPermissionRequest) returns (AddPermissionReply) {}
     rpc AddRole(AddRoleRequest) returns (AddRoleReply) {}
+    rpc CreateRole(CreateRoleRequest) returns(CreateRoleReply) {}
+    rpc AddRoleForUser(AddRoleForUserRequest) returns(AddRoleForUserReply) {}
 }
 
 message LoginRequest {
@@ -73,3 +75,16 @@ message AddRoleRequest {
     string on = 2;
 }
 message AddRoleReply {}
+
+message CreateRoleRequest {
+    string role = 1;
+}
+
+message CreateRoleReply {}
+
+message AddRoleForUserRequest {
+    string username = 1;
+    string role = 2;
+}
+
+message AddRoleForUserReply {}

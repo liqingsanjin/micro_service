@@ -181,10 +181,75 @@ func (u *userService) AddRole(ctx context.Context, in *pb.AddRoleRequest) (*pb.A
 	if in.Role == "" || in.On == "" {
 		return nil, ErrInvalidParams
 	}
+	db := common.DB
+
+	role, err := usermodel.FindRole(db, in.Role)
+	if err != nil {
+		return nil, err
+	}
+	if role == nil {
+		return nil, ErrRoleNotFound
+	}
+	on, err := usermodel.FindRole(db, in.On)
+	if err != nil {
+		return nil, err
+	}
+	if on == nil {
+		return nil, ErrRoleNotFound
+	}
 
 	if common.Enforcer.AddRoleForUser(in.Role, in.On) {
 		return &pb.AddRoleReply{}, nil
 	} else {
-		return nil, ErrUserHasRole
+		return nil, ErrPolicyExists
+	}
+}
+
+func (u *userService) CreateRole(ctx context.Context, in *pb.CreateRoleRequest) (*pb.CreateRoleReply, error) {
+	if in.Role == "" {
+		return nil, ErrInvalidParams
+	}
+	db := common.DB
+
+	r, err := usermodel.FindRole(db, in.Role)
+	if err != nil {
+		return nil, err
+	}
+
+	if r != nil {
+		return nil, ErrRoleExists
+	}
+
+	err = usermodel.SaveRole(db, &usermodel.Role{Role: in.Role})
+	return &pb.CreateRoleReply{}, err
+}
+
+func (u *userService) AddRoleForUser(ctx context.Context, in *pb.AddRoleForUserRequest) (*pb.AddRoleForUserReply, error) {
+	if in.Username == "" || in.Role == "" {
+		return nil, ErrInvalidParams
+	}
+
+	db := common.DB
+
+	role, err := usermodel.FindRole(db, in.Role)
+	if err != nil {
+		return nil, err
+	}
+	if role == nil {
+		return nil, ErrRoleNotFound
+	}
+
+	user, err := usermodel.FindUserByUserName(db, in.Username)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, ErrUserNotFound
+	}
+
+	if common.Enforcer.AddRoleForUser(in.Username, in.Role) {
+		return &pb.AddRoleForUserReply{}, nil
+	} else {
+		return nil, ErrPolicyExists
 	}
 }

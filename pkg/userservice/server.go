@@ -15,6 +15,8 @@ type userServer struct {
 	registerHandler        grpctransport.Handler
 	addPermissionHandler   grpctransport.Handler
 	addRoleHandler         grpctransport.Handler
+	createRoleHandler      grpctransport.Handler
+	addRoleForUserHandler  grpctransport.Handler
 }
 
 func New() pb.UserServer {
@@ -80,6 +82,28 @@ func New() pb.UserServer {
 		addRoleEndpoint = logginMiddleware(addRoleEndpoint)
 		svr.addRoleHandler = grpctransport.NewServer(
 			addRoleEndpoint,
+			decodeRequest,
+			encodeResponse,
+		)
+	}
+
+	{
+		createRoleEndpoint := makeCreateRoleEndpoint(userService)
+		createRoleEndpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(createRoleEndpoint)
+		createRoleEndpoint = logginMiddleware(createRoleEndpoint)
+		svr.createRoleHandler = grpctransport.NewServer(
+			createRoleEndpoint,
+			decodeRequest,
+			encodeResponse,
+		)
+	}
+
+	{
+		addRoleForUserEndpoint := makeAddRoleForUserEndpoint(userService)
+		addRoleForUserEndpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(addRoleForUserEndpoint)
+		addRoleForUserEndpoint = logginMiddleware(addRoleForUserEndpoint)
+		svr.addRoleForUserHandler = grpctransport.NewServer(
+			addRoleForUserEndpoint,
 			decodeRequest,
 			encodeResponse,
 		)
@@ -154,6 +178,30 @@ func (u *userServer) AddRole(ctx context.Context, in *pb.AddRoleRequest) (*pb.Ad
 		return nil, err
 	}
 	reply, ok := res.(*pb.AddRoleReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (u *userServer) CreateRole(ctx context.Context, in *pb.CreateRoleRequest) (*pb.CreateRoleReply, error) {
+	_, res, err := u.createRoleHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.CreateRoleReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (u *userServer) AddRoleForUser(ctx context.Context, in *pb.AddRoleForUserRequest) (*pb.AddRoleForUserReply, error) {
+	_, res, err := u.addRoleForUserHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.AddRoleForUserReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

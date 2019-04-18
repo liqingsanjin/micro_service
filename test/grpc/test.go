@@ -102,4 +102,33 @@ func main() {
 			log.Println(rep)
 		}
 	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.CreateRole(ctx, &pb.CreateRoleRequest{
+			Role: "test2",
+		})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.AddRoleForUser(ctx, &pb.AddRoleForUserRequest{
+			Username: "test2",
+			Role:     "test2",
+		})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
 }
