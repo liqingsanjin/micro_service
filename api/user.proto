@@ -8,6 +8,7 @@ service User {
     rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionReply) {}
     rpc Register(RegisterRequest) returns (RegisterReply) {}
     rpc AddPermission(AddPermissionRequest) returns (AddPermissionReply) {}
+    rpc AddRole(AddRoleRequest) returns (AddRoleReply) {}
 }
 
 message LoginRequest {
@@ -62,7 +63,13 @@ message RegisterReply {
 }
 
 message AddPermissionRequest {
-    string username = 1;
-    repeated string permissions = 2;
+    string role = 1;
+    string permission = 2;
 }
 message AddPermissionReply {}
+
+message AddRoleRequest {
+    string role = 1;
+    string on = 2;
+}
+message AddRoleReply {}

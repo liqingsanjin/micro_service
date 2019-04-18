@@ -15,4 +15,6 @@ var (
 	ErrTokenNotActive          = errors.New("token is not valid yet")
 	ErrUnexpectedSigningMethod = errors.New("unexpected signing method")
 	ErrInvalidParams           = errors.New("invalid params")
+	ErrPolicyExists            = errors.New("policy exists")
+	ErrUserHasRole             = errors.New("user has role already")
 )

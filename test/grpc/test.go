@@ -64,8 +64,37 @@ func main() {
 		md.Set("jwtToken", tk)
 		ctx := metadata.NewOutgoingContext(context.Background(), md)
 		rep, err := client.AddPermission(ctx, &pb.AddPermissionRequest{
-			Username:    "test2",
-			Permissions: []string{"/trnlog/repay/query"},
+			Role:       "test2",
+			Permission: "/trnlog/repay/query",
+		})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.CheckPermission(ctx, &pb.CheckPermissionRequest{
+			Route: "/trnlog/repay/query",
+		})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.AddRole(ctx, &pb.AddRoleRequest{
+			Role: "test2",
+			On:   "admin",
 		})
 		if err != nil {
 			log.Println(err)
