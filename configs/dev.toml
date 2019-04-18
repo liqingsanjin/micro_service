@@ -20,3 +20,6 @@ port = 5000
 host = "consul"
 port = 8500
 
+[log]
+path = "log"
+file = "userservice.log"

@@ -6,6 +6,7 @@ import (
 	"userService/pkg/pb"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 )
 
 func main() {
@@ -14,6 +15,7 @@ func main() {
 		log.Fatal(err)
 	}
 	client := pb.NewUserClient(conn)
+	tk := ""
 	{
 		rep, err := client.Login(context.Background(), &pb.LoginRequest{
 			Username: "test2",
@@ -24,8 +26,10 @@ func main() {
 			log.Println(err)
 		} else {
 			log.Println(rep)
+			tk = rep.Token
 		}
 	}
+
 	{
 		rep, err := client.Register(context.Background(), &pb.RegisterRequest{
 			Username:  "test2",
@@ -42,4 +46,15 @@ func main() {
 		}
 	}
 
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.GetPermissions(ctx, &pb.GetPermissionsRequest{})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
 }

@@ -184,7 +184,7 @@ func getAuthRoutes(db *gorm.DB, itemNames []string) ([]*AuthItemChild, error) {
 
 func GetAuthMenu(db *gorm.DB, items []string) ([]*Menu, error) {
 	menus := make([]*Menu, 0)
-	err := db.Debug().Where("MENU_ROUTE in (?)", items).Find(&menus).Error
+	err := db.Where("MENU_ROUTE in (?)", items).Find(&menus).Error
 	if err == gorm.ErrRecordNotFound {
 		err = nil
 	}

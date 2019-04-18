@@ -49,18 +49,18 @@ func initCasbin() {
 	}
 
 	names := make([]string, 0)
-	db.Debug().Table("TBL_AUTH_ITEM").Pluck("NAME", &names)
+	db.Table("TBL_AUTH_ITEM").Pluck("NAME", &names)
 	logrus.Infoln(names)
 	logrus.Infoln(len(names))
 
 	roles := make([]string, 0)
-	db.Debug().Table("TBL_AUTH_ITEM_CHILD").Pluck("distinct PARENT", &roles)
+	db.Table("TBL_AUTH_ITEM_CHILD").Pluck("distinct PARENT", &roles)
 	logrus.Infoln(roles)
 	logrus.Infoln(len(roles))
 	roleMap := slice2Map(roles)
 
 	assigns := make([]user.AuthAssignment, 0)
-	db.Debug().Table("TBL_AUTH_ASSIGNMENT").
+	db.Table("TBL_AUTH_ASSIGNMENT").
 		Where("TBL_USER.USER_ID is not null").
 		Select("TBL_AUTH_ASSIGNMENT.ITEM_NAME, TBL_USER.USER_ID, TBL_USER.USER_NAME").
 		Joins("left join TBL_USER on TBL_AUTH_ASSIGNMENT.USER_ID = TBL_USER.USER_ID").Scan(&assigns)
@@ -70,7 +70,7 @@ func initCasbin() {
 
 	for _, role := range roles {
 		children := make([]string, 0)
-		db.Debug().Table("TBL_AUTH_ITEM_CHILD").Where("PARENT = ?", role).Pluck("CHILD", &children)
+		db.Table("TBL_AUTH_ITEM_CHILD").Where("PARENT = ?", role).Pluck("CHILD", &children)
 		logrus.Infoln(role, children)
 		for _, c := range children {
 			if roleMap[c] {

@@ -5,19 +5,23 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"path"
 	"time"
+
+	"github.com/go-kit/kit/sd/consul"
+	"github.com/go-redis/redis"
+	consuld "github.com/hashicorp/consul/api"
+	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+	"github.com/rifflock/lfshook"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
+	"google.golang.org/grpc"
+
 	"userService/pkg/common"
 	"userService/pkg/model"
 	"userService/pkg/pb"
 	"userService/pkg/rbac"
 	"userService/pkg/userservice"
-
-	"github.com/go-kit/kit/sd/consul"
-	"github.com/go-redis/redis"
-	consuld "github.com/hashicorp/consul/api"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
-	"google.golang.org/grpc"
 )
 
 var (
@@ -37,20 +41,50 @@ var (
 	consulPort = 8500
 
 	rbacFileName = ""
+
+	logPath = ""
+	logFile = ""
 )
 
 func main() {
 	level := os.Getenv("LOG_LEVEL")
 	if level == "debug" {
+		logrus.SetReportCaller(true)
 		logrus.SetLevel(logrus.DebugLevel)
 	} else {
 		logrus.SetLevel(logrus.InfoLevel)
 	}
 
-	logrus.SetFormatter(&logFormatter{})
 	var err error
 	if err = parseConfigFile(); err != nil {
 		logrus.Fatal("解析配置文件错误", err)
+	}
+
+	logrus.SetFormatter(&logFormatter{})
+	if logFile != "" {
+		logFilePath := path.Join(logPath, logFile)
+		writer, err := rotatelogs.New(
+			logFilePath+".%Y%m%d%H%M",
+			rotatelogs.WithLinkName(logFilePath),
+			rotatelogs.WithMaxAge(time.Duration(24)*time.Hour),
+			rotatelogs.WithRotationTime(time.Duration(30*24)*time.Hour),
+		)
+		if err != nil {
+			logrus.Errorln(err)
+		}
+		logrus.AddHook(lfshook.NewHook(
+			lfshook.WriterMap{
+				logrus.InfoLevel:  writer,
+				logrus.DebugLevel: writer,
+				logrus.FatalLevel: writer,
+				logrus.PanicLevel: writer,
+				logrus.ErrorLevel: writer,
+				logrus.WarnLevel:  writer,
+				logrus.TraceLevel: writer,
+			},
+			&logFormatter{},
+		))
+
 	}
 
 	// 初始化redis client
@@ -68,6 +102,9 @@ func main() {
 	common.DB, err = model.NewDB(&opts)
 	if err != nil {
 		logrus.Fatal("启动mysql错误", err)
+	}
+	if level == "debug" {
+		common.DB = common.DB.Debug()
 	}
 
 	common.Enforcer = rbac.NewCasbin(rbacFileName, &opts)
@@ -135,6 +172,9 @@ func parseConfigFile() error {
 	consulPort = viper.GetInt("consul.port")
 
 	rbacFileName = viper.GetString("rbacFile")
+
+	logPath = viper.GetString("log.path")
+	logFile = viper.GetString("log.file")
 	return nil
 }
 
@@ -181,6 +221,11 @@ func (l logFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	buffer.Write([]byte("["))
 	buffer.Write([]byte(entry.Level.String()))
 	buffer.Write([]byte("] "))
+	if entry.HasCaller() {
+		buffer.Write([]byte("["))
+		buffer.Write([]byte(fmt.Sprintf("%s:%d", entry.Caller.File, entry.Caller.Line)))
+		buffer.Write([]byte("] "))
+	}
 	buffer.Write([]byte(entry.Message))
 	buffer.Write([]byte("\n"))
 	return buffer.Bytes(), nil

@@ -6,6 +6,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-kit/kit/endpoint"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -52,6 +53,8 @@ func jwtParser(keyFunc jwt.Keyfunc, method jwt.SigningMethod, newClaims ClaimsFa
 			}
 
 			tokenString := tk[0]
+
+			logrus.Debugln("token:", tokenString)
 
 			token, err := jwt.ParseWithClaims(tokenString, newClaims(), func(token *jwt.Token) (interface{}, error) {
 				if token.Method != method {
