@@ -195,34 +195,6 @@ func (u *userService) AddPermissionForRole(ctx context.Context, in *pb.AddPermis
 	}
 }
 
-func (u *userService) AddRole(ctx context.Context, in *pb.AddRoleRequest) (*pb.AddRoleReply, error) {
-	if in.Role == "" || in.On == "" {
-		return nil, ErrInvalidParams
-	}
-	db := common.DB
-
-	role, err := usermodel.FindRole(db, in.Role)
-	if err != nil {
-		return nil, err
-	}
-	if role == nil {
-		return nil, ErrRoleNotFound
-	}
-	on, err := usermodel.FindRole(db, in.On)
-	if err != nil {
-		return nil, err
-	}
-	if on == nil {
-		return nil, ErrRoleNotFound
-	}
-
-	if common.Enforcer.AddRoleForUser(in.Role, in.On) {
-		return &pb.AddRoleReply{}, nil
-	} else {
-		return nil, ErrPolicyExists
-	}
-}
-
 func (u *userService) CreateRole(ctx context.Context, in *pb.CreateRoleRequest) (*pb.CreateRoleReply, error) {
 	if in.Role == "" {
 		return nil, ErrInvalidParams
@@ -564,4 +536,31 @@ func (u *userService) RemovePermissionForRole(ctx context.Context, in *pb.Remove
 		return &pb.RemovePermissionForRoleReply{}, nil
 	}
 	return nil, ErrPolicyNotFound
+}
+
+func (u *userService) AddRoleForRole(ctx context.Context, in *pb.AddRoleForRoleRequest) (*pb.AddRoleForRoleReply, error) {
+	if in.From == "" || in.To == "" {
+		return nil, ErrInvalidParams
+	}
+	db := common.DB
+
+	from, err := usermodel.FindRole(db, in.From)
+	if err != nil {
+		return nil, err
+	}
+	if from == nil {
+		return nil, ErrRoleNotFound
+	}
+	to, err := usermodel.FindRole(db, in.To)
+	if err != nil {
+		return nil, err
+	}
+	if to == nil {
+		return nil, ErrRoleNotFound
+	}
+
+	if common.Enforcer.AddRoleForUser(to.Role, from.Role) {
+		return &pb.AddRoleForRoleReply{}, nil
+	}
+	return nil, ErrPolicyExists
 }

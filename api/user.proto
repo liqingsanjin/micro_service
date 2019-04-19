@@ -12,7 +12,6 @@ service User {
     rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionReply) {}
 
     rpc AddPolicy(AddPolicyRequest) returns (AddPolicyReply) {}
-    rpc AddRole(AddRoleRequest) returns (AddRoleReply) {}
     rpc AddRoleForUser(AddRoleForUserRequest) returns(AddRoleForUserReply) {}
 
     // 权限和路由
@@ -33,6 +32,8 @@ service User {
     rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleReply) {}
     rpc AddPermissionForRole(AddPermissionForRoleRequest) returns (AddPermissionForRoleReply) {}
     rpc RemovePermissionForRole(RemovePermissionForRoleRequest) returns (RemovePermissionForRoleReply) {}
+    rpc AddRoleForRole(AddRoleForRoleRequest) returns (AddRoleForRoleReply) {}
+
 
     // 用户和角色
 }
@@ -94,11 +95,11 @@ message AddPermissionForRoleRequest {
 }
 message AddPermissionForRoleReply {}
 
-message AddRoleRequest {
-    string role = 1;
-    string on = 2;
+message AddRoleForRoleRequest {
+    string from = 1;
+    string to = 2;
 }
-message AddRoleReply {}
+message AddRoleForRoleReply {}
 
 message CreateRoleRequest {
     string role = 1;
