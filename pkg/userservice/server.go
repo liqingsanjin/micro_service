@@ -9,23 +9,24 @@ import (
 )
 
 type userServer struct {
-	loginHandler                    grpctransport.Handler
-	getPermissionsHandler           grpctransport.Handler
-	checkPermissionHandler          grpctransport.Handler
-	registerHandler                 grpctransport.Handler
-	addPermissionHandler            grpctransport.Handler
-	addRoleHandler                  grpctransport.Handler
-	createRoleHandler               grpctransport.Handler
-	addRoleForUserHandler           grpctransport.Handler
-	addRoutesHandler                grpctransport.Handler
-	listRouteHandler                grpctransport.Handler
-	createPermissionHandler         grpctransport.Handler
-	updatePermissionHandler         grpctransport.Handler
-	addRouteForPermissionHandler    grpctransport.Handler
-	removeRouteForPermissionHandler grpctransport.Handler
-	removePermissionHandler         grpctransport.Handler
-	listPermissionsHandler          grpctransport.Handler
-	addPermissionForPermission      grpctransport.Handler
+	loginHandler                         grpctransport.Handler
+	getPermissionsHandler                grpctransport.Handler
+	checkPermissionHandler               grpctransport.Handler
+	registerHandler                      grpctransport.Handler
+	addPermissionHandler                 grpctransport.Handler
+	addRoleHandler                       grpctransport.Handler
+	createRoleHandler                    grpctransport.Handler
+	addRoleForUserHandler                grpctransport.Handler
+	addRoutesHandler                     grpctransport.Handler
+	listRouteHandler                     grpctransport.Handler
+	createPermissionHandler              grpctransport.Handler
+	updatePermissionHandler              grpctransport.Handler
+	addRouteForPermissionHandler         grpctransport.Handler
+	removeRouteForPermissionHandler      grpctransport.Handler
+	removePermissionHandler              grpctransport.Handler
+	listPermissionsHandler               grpctransport.Handler
+	addPermissionForPermissionHandler    grpctransport.Handler
+	removePermissionForPermissionHandler grpctransport.Handler
 }
 
 func New() pb.UserServer {
@@ -210,7 +211,18 @@ func New() pb.UserServer {
 		endpoint := makeAddPermissionForPermissionEndpoint(userService)
 		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
-		svr.addPermissionForPermission = grpctransport.NewServer(
+		svr.addPermissionForPermissionHandler = grpctransport.NewServer(
+			endpoint,
+			decodeRequest,
+			encodeResponse,
+		)
+	}
+
+	{
+		endpoint := makeRemovePermissionForPermissionEndpoint(userService)
+		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
+		endpoint = logginMiddleware(endpoint)
+		svr.removePermissionForPermissionHandler = grpctransport.NewServer(
 			endpoint,
 			decodeRequest,
 			encodeResponse,
@@ -417,11 +429,23 @@ func (u *userServer) ListPermissions(ctx context.Context, in *pb.ListPermissions
 }
 
 func (u *userServer) AddPermissionForPermission(ctx context.Context, in *pb.AddPermissionForPermissionRequest) (*pb.AddPermissionForPermissionReply, error) {
-	_, res, err := u.addPermissionForPermission.ServeGRPC(ctx, in)
+	_, res, err := u.addPermissionForPermissionHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
 	}
 	reply, ok := res.(*pb.AddPermissionForPermissionReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (u *userServer) RemovePermissionForPermission(ctx context.Context, in *pb.RemovePermissionForPermissionRequest) (*pb.RemovePermissionForPermissionReply, error) {
+	_, res, err := u.removePermissionForPermissionHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.RemovePermissionForPermissionReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

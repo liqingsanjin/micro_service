@@ -24,6 +24,7 @@ service User {
     rpc RemovePermission(RemovePermissionRequest) returns (RemovePermissionReply) {}
     rpc ListPermissions(ListPermissionsRequest) returns (ListPermissionsReply) {}
     rpc AddPermissionForPermission(AddPermissionForPermissionRequest) returns (AddPermissionForPermissionReply) {}
+    rpc RemovePermissionForPermission(RemovePermissionForPermissionRequest) returns (RemovePermissionForPermissionReply) {}
 
     // 角色和权限
     rpc CreateRole(CreateRoleRequest) returns(CreateRoleReply) {}
@@ -168,3 +169,10 @@ message AddPermissionForPermissionRequest {
 }
 
 message AddPermissionForPermissionReply {}
+
+message RemovePermissionForPermissionRequest {
+    string from = 1;
+    string child = 2;
+}
+
+message RemovePermissionForPermissionReply {}

@@ -461,3 +461,30 @@ func (u *userService) AddPermissionForPermission(ctx context.Context, in *pb.Add
 	}
 	return nil, ErrPolicyExists
 }
+
+func (u *userService) RemovePermissionForPermission(ctx context.Context, in *pb.RemovePermissionForPermissionRequest) (*pb.RemovePermissionForPermissionReply, error) {
+	if in.From == "" || in.Child == "" {
+		return nil, ErrInvalidParams
+	}
+	db := common.DB
+
+	from, err := usermodel.FindPermissionByName(db, in.From)
+	if err != nil {
+		return nil, err
+	}
+	if from == nil {
+		return nil, ErrPermissionNotFound
+	}
+	child, err := usermodel.FindPermissionByName(db, in.Child)
+	if err != nil {
+		return nil, err
+	}
+	if child == nil {
+		return nil, ErrPermissionNotFound
+	}
+
+	if common.Enforcer.DeleteRoleForUser(from.Name, child.Name) {
+		return &pb.RemovePermissionForPermissionReply{}, nil
+	}
+	return nil, ErrPolicyExists
+}
