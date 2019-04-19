@@ -311,6 +311,21 @@ func main() {
 		}
 	}
 
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.RemovePermissionForRole(ctx, &pb.RemovePermissionForRoleRequest{
+			Role:       "test",
+			Permission: "T1补付权限",
+		})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
 	//enforce := rbac.NewCasbin("configs/rbac.conf", &model.Options{
 	//	User:     "root",
 	//	Password: "root",

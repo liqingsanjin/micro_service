@@ -32,6 +32,7 @@ service User {
     rpc ListRole(ListRoleRequest) returns (ListRoleReply) {}
     rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleReply) {}
     rpc AddPermissionForRole(AddPermissionForRoleRequest) returns (AddPermissionForRoleReply) {}
+    rpc RemovePermissionForRole(RemovePermissionForRoleRequest) returns (RemovePermissionForRoleReply) {}
 
     // 用户和角色
 }
@@ -192,3 +193,10 @@ message UpdateRoleRequest {
 }
 
 message UpdateRoleReply {}
+
+message RemovePermissionForRoleRequest {
+    string role = 1;
+    string permission = 2;
+}
+
+message RemovePermissionForRoleReply {}

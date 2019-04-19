@@ -536,3 +536,32 @@ func (u *userService) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest) 
 
 	return &pb.UpdateRoleReply{}, usermodel.UpdateRole(db, in.Id, &usermodel.Role{Role: in.Name})
 }
+
+func (u *userService) RemovePermissionForRole(ctx context.Context, in *pb.RemovePermissionForRoleRequest) (*pb.RemovePermissionForRoleReply, error) {
+	if in.Role == "" || len(in.Permission) == 0 {
+		return nil, ErrInvalidParams
+	}
+	db := common.DB
+
+	role, err := usermodel.FindRole(db, in.Role)
+	if err != nil {
+		return nil, err
+	}
+
+	if role == nil {
+		return nil, ErrRoleNotFound
+	}
+
+	permission, err := usermodel.FindPermissionByName(db, in.Permission)
+	if err != nil {
+		return nil, err
+	}
+	if permission == nil {
+		return nil, ErrPermissionNotFound
+	}
+
+	if common.Enforcer.DeleteRoleForUser(in.Role, in.Permission) {
+		return &pb.RemovePermissionForRoleReply{}, nil
+	}
+	return nil, ErrPolicyNotFound
+}
