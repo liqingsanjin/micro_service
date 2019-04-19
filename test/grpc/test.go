@@ -197,7 +197,7 @@ func main() {
 		ctx := metadata.NewOutgoingContext(context.Background(), md)
 		rep, err := client.AddRouteForPermission(ctx, &pb.AddRouteForPermissionRequest{
 			Permission: "T1补付权限",
-			Route:      "/trnlog/repay/repay",
+			Route:      "/trnlog/repay/index",
 		})
 		if err != nil {
 			//panic(err)
@@ -214,6 +214,21 @@ func main() {
 		rep, err := client.RemoveRouteForPermission(ctx, &pb.RemoveRouteForPermissionRequest{
 			Permission: "T1补付权限",
 			Route:      "/trnlog/repay/repay",
+		})
+		if err != nil {
+			//panic(err)
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.RemovePermission(ctx, &pb.RemovePermissionRequest{
+			Permission: "T1补付权限",
 		})
 		if err != nil {
 			//panic(err)

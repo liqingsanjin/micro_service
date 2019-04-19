@@ -18,6 +18,7 @@ service User {
     rpc UpdatePermission(UpdatePermissionRequest) returns (UpdatePermissionReply) {}
     rpc AddRouteForPermission(AddRouteForPermissionRequest) returns (AddRouteForPermissionReply) {}
     rpc RemoveRouteForPermission(RemoveRouteForPermissionRequest) returns (RemoveRouteForPermissionReply) {}
+    rpc RemovePermission(RemovePermissionRequest) returns (RemovePermissionReply) {}
 }
 
 message LoginRequest {
@@ -139,3 +140,9 @@ message RemoveRouteForPermissionRequest {
 }
 
 message RemoveRouteForPermissionReply {}
+
+message RemovePermissionRequest {
+    string permission = 1;
+}
+
+message RemovePermissionReply {}

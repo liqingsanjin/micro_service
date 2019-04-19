@@ -379,3 +379,7 @@ func FindRoutesByName(db *gorm.DB, routes []string) ([]*Route, error) {
 
 	return rs, nil
 }
+
+func DeletePermission(db *gorm.DB, permission *Permission) error {
+	return db.Delete(permission).Error
+}
