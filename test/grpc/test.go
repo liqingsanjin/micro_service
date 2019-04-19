@@ -296,6 +296,21 @@ func main() {
 		}
 	}
 
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.UpdateRole(ctx, &pb.UpdateRoleRequest{
+			Id:   1,
+			Name: "test",
+		})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
 	//enforce := rbac.NewCasbin("configs/rbac.conf", &model.Options{
 	//	User:     "root",
 	//	Password: "root",

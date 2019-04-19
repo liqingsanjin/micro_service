@@ -402,3 +402,18 @@ func ListRole(db *gorm.DB) ([]*Role, error) {
 
 	return roles, nil
 }
+
+func FindRoleByID(db *gorm.DB, id int64) (*Role, error) {
+	role := new(Role)
+	err := db.Where(&Role{ID: id}).First(role).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return role, err
+}
+
+func UpdateRole(db *gorm.DB, id int64, role *Role) error {
+	return db.Model(&Role{
+		ID: id,
+	}).Update(role).Error
+}

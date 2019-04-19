@@ -503,3 +503,18 @@ func (u *userService) ListRole(ctx context.Context, in *pb.ListRoleRequest) (*pb
 	}
 	return &pb.ListRoleReply{Roles: names}, nil
 }
+
+func (u *userService) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest) (*pb.UpdateRoleReply, error) {
+	db := common.DB
+
+	p, err := usermodel.FindRoleByID(db, in.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	if p == nil {
+		return nil, ErrRouteNotFound
+	}
+
+	return &pb.UpdateRoleReply{}, usermodel.UpdateRole(db, in.Id, &usermodel.Role{Role: in.Name})
+}

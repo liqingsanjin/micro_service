@@ -197,6 +197,16 @@ func makeListRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
+func makeUpdateRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.UpdateRoleRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.UpdateRole(ctx, req)
+	}
+}
+
 func decodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
 	return request, nil
 }

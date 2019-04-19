@@ -31,6 +31,7 @@ service User {
     // 角色和权限
     rpc CreateRole(CreateRoleRequest) returns(CreateRoleReply) {}
     rpc ListRole(ListRoleRequest) returns (ListRoleReply) {}
+    rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleReply) {}
 
     // 用户和角色
 }
@@ -184,3 +185,10 @@ message ListRoleRequest {}
 message ListRoleReply {
     repeated string roles = 1;
 }
+
+message UpdateRoleRequest {
+    int64 id = 2;
+    string name = 1;
+}
+
+message UpdateRoleReply {}
