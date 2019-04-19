@@ -13,7 +13,7 @@ type userServer struct {
 	getPermissionsHandler                grpctransport.Handler
 	checkPermissionHandler               grpctransport.Handler
 	registerHandler                      grpctransport.Handler
-	addPermissionHandler                 grpctransport.Handler
+	addPermissionForRoleHandler          grpctransport.Handler
 	addRoleHandler                       grpctransport.Handler
 	createRoleHandler                    grpctransport.Handler
 	addRoleForUserHandler                grpctransport.Handler
@@ -78,10 +78,10 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeAddPermissionEndpoint(userService)
+		endpoint := makeAddPermissionForRoleEndpoint(userService)
 		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
-		svr.addPermissionHandler = grpctransport.NewServer(
+		svr.addPermissionForRoleHandler = grpctransport.NewServer(
 			endpoint,
 			decodeRequest,
 			encodeResponse,
@@ -304,12 +304,12 @@ func (u *userServer) Register(ctx context.Context, in *pb.RegisterRequest) (*pb.
 	return reply, nil
 }
 
-func (u *userServer) AddPermission(ctx context.Context, in *pb.AddPermissionRequest) (*pb.AddPermissionReply, error) {
-	_, res, err := u.addPermissionHandler.ServeGRPC(ctx, in)
+func (u *userServer) AddPermissionForRole(ctx context.Context, in *pb.AddPermissionForRoleRequest) (*pb.AddPermissionForRoleReply, error) {
+	_, res, err := u.addPermissionForRoleHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.AddPermissionReply)
+	reply, ok := res.(*pb.AddPermissionForRoleReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

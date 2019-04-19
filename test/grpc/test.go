@@ -58,21 +58,6 @@ func main() {
 			log.Println(rep)
 		}
 	}
-	//
-	//{
-	//	md := metadata.New(map[string]string{})
-	//	md.Set("jwtToken", tk)
-	//	ctx := metadata.NewOutgoingContext(context.Background(), md)
-	//	rep, err := client.AddPermission(ctx, &pb.AddPermissionRequest{
-	//		Role:       "test2",
-	//		Permission: "/trnlog/repay/query",
-	//	})
-	//	if err != nil {
-	//		log.Println(err)
-	//	} else {
-	//		log.Println(rep)
-	//	}
-	//}
 
 	{
 		md := metadata.New(map[string]string{})
@@ -311,10 +296,25 @@ func main() {
 		}
 	}
 
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.AddPermissionForRole(ctx, &pb.AddPermissionForRoleRequest{
+			Role:       "test",
+			Permission: "T1补付权限",
+		})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
 	//enforce := rbac.NewCasbin("configs/rbac.conf", &model.Options{
 	//	User:     "root",
 	//	Password: "root",
 	//	Addr:     "127.0.0.1:3306",
 	//})
-	//log.Println(enforce.Enforce("T1补付权限", "/trnlog/repay/index"))
+	//log.Println(enforce.Enforce("test", "/trnlog/repay/index"))
 }

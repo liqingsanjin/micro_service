@@ -47,13 +47,13 @@ func makeRegisterEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeAddPermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
+func makeAddPermissionForRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		req, ok := request.(*pb.AddPermissionRequest)
+		req, ok := request.(*pb.AddPermissionForRoleRequest)
 		if !ok {
 			return nil, ErrRequestTypeInvalid
 		}
-		return service.AddPermission(ctx, req)
+		return service.AddPermissionForRole(ctx, req)
 	}
 }
 

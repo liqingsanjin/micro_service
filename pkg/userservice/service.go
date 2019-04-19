@@ -165,13 +165,31 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 	}, nil
 }
 
-func (u *userService) AddPermission(ctx context.Context, in *pb.AddPermissionRequest) (*pb.AddPermissionReply, error) {
+func (u *userService) AddPermissionForRole(ctx context.Context, in *pb.AddPermissionForRoleRequest) (*pb.AddPermissionForRoleReply, error) {
 	if in.Role == "" || len(in.Permission) == 0 {
 		return nil, ErrInvalidParams
 	}
+	db := common.DB
 
-	if common.Enforcer.AddPolicy(in.Role, in.Permission) {
-		return &pb.AddPermissionReply{}, nil
+	role, err := usermodel.FindRole(db, in.Role)
+	if err != nil {
+		return nil, err
+	}
+
+	if role == nil {
+		return nil, ErrRoleNotFound
+	}
+
+	permission, err := usermodel.FindPermissionByName(db, in.Permission)
+	if err != nil {
+		return nil, err
+	}
+	if permission == nil {
+		return nil, ErrPermissionNotFound
+	}
+
+	if common.Enforcer.AddRoleForUser(in.Role, in.Permission) {
+		return &pb.AddPermissionForRoleReply{}, nil
 	} else {
 		return nil, ErrPolicyExists
 	}

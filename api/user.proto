@@ -12,7 +12,6 @@ service User {
     rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionReply) {}
 
     rpc AddPolicy(AddPolicyRequest) returns (AddPolicyReply) {}
-    rpc AddPermission(AddPermissionRequest) returns (AddPermissionReply) {}
     rpc AddRole(AddRoleRequest) returns (AddRoleReply) {}
     rpc AddRoleForUser(AddRoleForUserRequest) returns(AddRoleForUserReply) {}
 
@@ -32,6 +31,7 @@ service User {
     rpc CreateRole(CreateRoleRequest) returns(CreateRoleReply) {}
     rpc ListRole(ListRoleRequest) returns (ListRoleReply) {}
     rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleReply) {}
+    rpc AddPermissionForRole(AddPermissionForRoleRequest) returns (AddPermissionForRoleReply) {}
 
     // 用户和角色
 }
@@ -87,11 +87,11 @@ message RegisterReply {
     int64 createdAt = 7;
 }
 
-message AddPermissionRequest {
+message AddPermissionForRoleRequest {
     string role = 1;
     string permission = 2;
 }
-message AddPermissionReply {}
+message AddPermissionForRoleReply {}
 
 message AddRoleRequest {
     string role = 1;
