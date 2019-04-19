@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package pb;
 
+// 路由 -> 权限 -> 角色 -> 用户
+
 service User {
     // 登录注册，用户权限信息
     rpc Login(LoginRequest) returns (LoginReply) {}
@@ -28,6 +30,7 @@ service User {
 
     // 角色和权限
     rpc CreateRole(CreateRoleRequest) returns(CreateRoleReply) {}
+    rpc ListRole(ListRoleRequest) returns (ListRoleReply) {}
 
     // 用户和角色
 }
@@ -176,3 +179,8 @@ message RemovePermissionForPermissionRequest {
 }
 
 message RemovePermissionForPermissionReply {}
+
+message ListRoleRequest {}
+message ListRoleReply {
+    repeated string roles = 1;
+}

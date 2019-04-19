@@ -392,3 +392,13 @@ func ListPermissions(db *gorm.DB) ([]*Permission, error) {
 	}
 	return ps, nil
 }
+
+func ListRole(db *gorm.DB) ([]*Role, error) {
+	roles := make([]*Role, 0)
+	err := db.Find(&roles).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+
+	return roles, nil
+}

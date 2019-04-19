@@ -103,19 +103,6 @@ func main() {
 	//	}
 	//}
 
-	//{
-	//	md := metadata.New(map[string]string{})
-	//	md.Set("jwtToken", tk)
-	//	ctx := metadata.NewOutgoingContext(context.Background(), md)
-	//	rep, err := client.CreateRole(ctx, &pb.CreateRoleRequest{
-	//		Role: "test2",
-	//	})
-	//	if err != nil {
-	//		log.Println(err)
-	//	} else {
-	//		log.Println(rep)
-	//	}
-	//}
 	//
 	//{
 	//	md := metadata.New(map[string]string{})
@@ -277,6 +264,32 @@ func main() {
 		})
 		if err != nil {
 			//panic(err)
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.CreateRole(ctx, &pb.CreateRoleRequest{
+			Role: "test1",
+		})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.ListRole(ctx, &pb.ListRoleRequest{})
+		if err != nil {
 			log.Println(err)
 		} else {
 			log.Println(rep)

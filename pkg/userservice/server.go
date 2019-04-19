@@ -27,6 +27,7 @@ type userServer struct {
 	listPermissionsHandler               grpctransport.Handler
 	addPermissionForPermissionHandler    grpctransport.Handler
 	removePermissionForPermissionHandler grpctransport.Handler
+	listRoleHandler                      grpctransport.Handler
 }
 
 func New() pb.UserServer {
@@ -223,6 +224,17 @@ func New() pb.UserServer {
 		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.removePermissionForPermissionHandler = grpctransport.NewServer(
+			endpoint,
+			decodeRequest,
+			encodeResponse,
+		)
+	}
+
+	{
+		endpoint := makeListRoleEndpoint(userService)
+		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
+		endpoint = logginMiddleware(endpoint)
+		svr.listRoleHandler = grpctransport.NewServer(
 			endpoint,
 			decodeRequest,
 			encodeResponse,
@@ -446,6 +458,18 @@ func (u *userServer) RemovePermissionForPermission(ctx context.Context, in *pb.R
 		return nil, err
 	}
 	reply, ok := res.(*pb.RemovePermissionForPermissionReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (u *userServer) ListRole(ctx context.Context, in *pb.ListRoleRequest) (*pb.ListRoleReply, error) {
+	_, res, err := u.listRoleHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.ListRoleReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

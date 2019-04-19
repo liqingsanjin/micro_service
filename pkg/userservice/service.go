@@ -425,9 +425,9 @@ func (u *userService) ListPermissions(ctx context.Context, in *pb.ListPermission
 		return nil, err
 	}
 
-	names := make([]string, 0)
-	for _, p := range ps {
-		names = append(names, p.Name)
+	names := make([]string, len(ps))
+	for i := range ps {
+		names[i] = ps[i].Name
 	}
 
 	return &pb.ListPermissionsReply{
@@ -487,4 +487,19 @@ func (u *userService) RemovePermissionForPermission(ctx context.Context, in *pb.
 		return &pb.RemovePermissionForPermissionReply{}, nil
 	}
 	return nil, ErrPolicyExists
+}
+
+func (u *userService) ListRole(ctx context.Context, in *pb.ListRoleRequest) (*pb.ListRoleReply, error) {
+	db := common.DB
+
+	roles, err := usermodel.ListRole(db)
+	if err != nil {
+		return nil, err
+	}
+
+	names := make([]string, len(roles))
+	for i := range roles {
+		names[i] = roles[i].Role
+	}
+	return &pb.ListRoleReply{Roles: names}, nil
 }
