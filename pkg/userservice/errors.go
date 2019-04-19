@@ -16,6 +16,7 @@ var (
 	ErrUnexpectedSigningMethod = errors.New("unexpected signing method")
 	ErrInvalidParams           = errors.New("invalid params")
 	ErrPolicyExists            = errors.New("policy exists")
+	ErrPolicyNotFound          = errors.New("policy not found")
 	ErrRoleExists              = errors.New("role exists")
 	ErrRoleNotFound            = errors.New("role not found")
 	ErrRouteExists             = errors.New("routes exists")

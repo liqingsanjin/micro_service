@@ -359,3 +359,33 @@ func (u *userService) AddRouteForPermission(ctx context.Context, in *pb.AddRoute
 	return nil, ErrPolicyExists
 
 }
+
+func (u *userService) RemoveRouteForPermission(ctx context.Context, in *pb.RemoveRouteForPermissionRequest) (*pb.RemoveRouteForPermissionReply, error) {
+	if in.Permission == "" || in.Route == "" {
+		return nil, ErrInvalidParams
+	}
+	db := common.DB
+
+	permission, err := usermodel.FindPermissionByName(db, in.Permission)
+	if err != nil {
+		return nil, err
+	}
+
+	if permission == nil {
+		return nil, ErrPermissionNotFound
+	}
+
+	route, err := usermodel.FindRouteByName(db, in.Route)
+	if err != nil {
+		return nil, err
+	}
+
+	if route == nil {
+		return nil, ErrRouteNotFound
+	}
+
+	if common.Enforcer.DeletePermissionForUser(permission.Name, in.Route) {
+		return &pb.RemoveRouteForPermissionReply{}, nil
+	}
+	return nil, ErrPolicyNotFound
+}

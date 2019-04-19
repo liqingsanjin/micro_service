@@ -9,19 +9,20 @@ import (
 )
 
 type userServer struct {
-	loginHandler                 grpctransport.Handler
-	getPermissionsHandler        grpctransport.Handler
-	checkPermissionHandler       grpctransport.Handler
-	registerHandler              grpctransport.Handler
-	addPermissionHandler         grpctransport.Handler
-	addRoleHandler               grpctransport.Handler
-	createRoleHandler            grpctransport.Handler
-	addRoleForUserHandler        grpctransport.Handler
-	addRoutesHandler             grpctransport.Handler
-	listRouteHandler             grpctransport.Handler
-	createPermissionHandler      grpctransport.Handler
-	updatePermissionHandler      grpctransport.Handler
-	addRouteForPermissionHandler grpctransport.Handler
+	loginHandler                    grpctransport.Handler
+	getPermissionsHandler           grpctransport.Handler
+	checkPermissionHandler          grpctransport.Handler
+	registerHandler                 grpctransport.Handler
+	addPermissionHandler            grpctransport.Handler
+	addRoleHandler                  grpctransport.Handler
+	createRoleHandler               grpctransport.Handler
+	addRoleForUserHandler           grpctransport.Handler
+	addRoutesHandler                grpctransport.Handler
+	listRouteHandler                grpctransport.Handler
+	createPermissionHandler         grpctransport.Handler
+	updatePermissionHandler         grpctransport.Handler
+	addRouteForPermissionHandler    grpctransport.Handler
+	removeRouteForPermissionHandler grpctransport.Handler
 }
 
 func New() pb.UserServer {
@@ -163,6 +164,17 @@ func New() pb.UserServer {
 		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.addRouteForPermissionHandler = grpctransport.NewServer(
+			endpoint,
+			decodeRequest,
+			encodeResponse,
+		)
+	}
+
+	{
+		endpoint := makeRemoveRouteForPermissionEndpoint(userService)
+		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
+		endpoint = logginMiddleware(endpoint)
+		svr.removeRouteForPermissionHandler = grpctransport.NewServer(
 			endpoint,
 			decodeRequest,
 			encodeResponse,
@@ -326,6 +338,18 @@ func (u *userServer) AddRouteForPermission(ctx context.Context, in *pb.AddRouteF
 		return nil, err
 	}
 	reply, ok := res.(*pb.AddRouteForPermissionReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (u *userServer) RemoveRouteForPermission(ctx context.Context, in *pb.RemoveRouteForPermissionRequest) (*pb.RemoveRouteForPermissionReply, error) {
+	_, res, err := u.removeRouteForPermissionHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.RemoveRouteForPermissionReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}
