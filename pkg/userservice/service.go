@@ -434,3 +434,30 @@ func (u *userService) ListPermissions(ctx context.Context, in *pb.ListPermission
 		Permissions: names,
 	}, nil
 }
+
+func (u *userService) AddPermissionForPermission(ctx context.Context, in *pb.AddPermissionForPermissionRequest) (*pb.AddPermissionForPermissionReply, error) {
+	if in.From == "" || in.To == "" {
+		return nil, ErrInvalidParams
+	}
+	db := common.DB
+
+	from, err := usermodel.FindPermissionByName(db, in.From)
+	if err != nil {
+		return nil, err
+	}
+	if from == nil {
+		return nil, ErrPermissionNotFound
+	}
+	to, err := usermodel.FindPermissionByName(db, in.To)
+	if err != nil {
+		return nil, err
+	}
+	if to == nil {
+		return nil, ErrPermissionNotFound
+	}
+
+	if common.Enforcer.AddRoleForUser(to.Name, from.Name) {
+		return &pb.AddPermissionForPermissionReply{}, nil
+	}
+	return nil, ErrPolicyExists
+}

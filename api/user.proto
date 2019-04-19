@@ -3,15 +3,18 @@ syntax = "proto3";
 package pb;
 
 service User {
+    // 登录注册，用户权限信息
     rpc Login(LoginRequest) returns (LoginReply) {}
+    rpc Register(RegisterRequest) returns (RegisterReply) {}
     rpc GetPermissions(GetPermissionsRequest) returns (GetPermissionsReply) {}
     rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionReply) {}
-    rpc Register(RegisterRequest) returns (RegisterReply) {}
+
     rpc AddPolicy(AddPolicyRequest) returns (AddPolicyReply) {}
     rpc AddPermission(AddPermissionRequest) returns (AddPermissionReply) {}
     rpc AddRole(AddRoleRequest) returns (AddRoleReply) {}
-    rpc CreateRole(CreateRoleRequest) returns(CreateRoleReply) {}
     rpc AddRoleForUser(AddRoleForUserRequest) returns(AddRoleForUserReply) {}
+
+    // 权限和路由
     rpc AddRoutes(AddRoutesRequest) returns (AddRoutesReply) {}
     rpc ListRoutes(ListRoutesRequest) returns (ListRoutesReply) {}
     rpc CreatePermission(CreatePermissionRequest) returns (CreatePermissionReply) {}
@@ -19,6 +22,13 @@ service User {
     rpc AddRouteForPermission(AddRouteForPermissionRequest) returns (AddRouteForPermissionReply) {}
     rpc RemoveRouteForPermission(RemoveRouteForPermissionRequest) returns (RemoveRouteForPermissionReply) {}
     rpc RemovePermission(RemovePermissionRequest) returns (RemovePermissionReply) {}
+    rpc ListPermissions(ListPermissionsRequest) returns (ListPermissionsReply) {}
+    rpc AddPermissionForPermission(AddPermissionForPermissionRequest) returns (AddPermissionForPermissionReply) {}
+
+    // 角色和权限
+    rpc CreateRole(CreateRoleRequest) returns(CreateRoleReply) {}
+
+    // 用户和角色
 }
 
 message LoginRequest {
@@ -146,3 +156,15 @@ message RemovePermissionRequest {
 }
 
 message RemovePermissionReply {}
+
+message ListPermissionsRequest {}
+message ListPermissionsReply {
+    repeated string permissions = 1;
+}
+
+message AddPermissionForPermissionRequest {
+    string from = 1;
+    string to = 2;
+}
+
+message AddPermissionForPermissionReply {}

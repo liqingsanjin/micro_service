@@ -212,7 +212,7 @@ func main() {
 		md.Set("jwtToken", tk)
 		ctx := metadata.NewOutgoingContext(context.Background(), md)
 		rep, err := client.RemoveRouteForPermission(ctx, &pb.RemoveRouteForPermissionRequest{
-			Permission: "T1补付权限",
+			Permission: "T1补付权限2",
 			Route:      "/trnlog/repay/repay",
 		})
 		if err != nil {
@@ -228,7 +228,7 @@ func main() {
 		md.Set("jwtToken", tk)
 		ctx := metadata.NewOutgoingContext(context.Background(), md)
 		rep, err := client.RemovePermission(ctx, &pb.RemovePermissionRequest{
-			Permission: "T1补付权限",
+			Permission: "T1补付权限2",
 		})
 		if err != nil {
 			//panic(err)
@@ -251,10 +251,26 @@ func main() {
 		}
 	}
 
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.AddPermissionForPermission(ctx, &pb.AddPermissionForPermissionRequest{
+			From: "T1补付权限",
+			To:   "T1补付权限1",
+		})
+		if err != nil {
+			//panic(err)
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
 	//enforce := rbac.NewCasbin("configs/rbac.conf", &model.Options{
 	//	User:     "root",
 	//	Password: "root",
 	//	Addr:     "127.0.0.1:3306",
 	//})
-	//log.Println(enforce.Enforce("T1补付权限", "/trnlog/repay/repay"))
+	//log.Println(enforce.Enforce("T1补付权限", "/trnlog/repay/index"))
 }
