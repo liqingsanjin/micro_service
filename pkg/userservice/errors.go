@@ -18,4 +18,7 @@ var (
 	ErrPolicyExists            = errors.New("policy exists")
 	ErrRoleExists              = errors.New("role exists")
 	ErrRoleNotFound            = errors.New("role not found")
+	ErrRouteExists             = errors.New("routes exists")
+	ErrPermissionExists        = errors.New("permission exists")
+	ErrPermissionNotFound      = errors.New("permission not found")
 )

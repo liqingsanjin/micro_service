@@ -87,6 +87,46 @@ func makeAddRoleForUserEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
+func makeAddRoutesEndpoint(service pb.UserServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.AddRoutesRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.AddRoutes(ctx, req)
+	}
+}
+
+func makeListRoutesEndpoint(service pb.UserServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.ListRoutesRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.ListRoutes(ctx, req)
+	}
+}
+
+func makeCreatePermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.CreatePermissionRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.CreatePermission(ctx, req)
+	}
+}
+
+func makeUpdatePermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.UpdatePermissionRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.UpdatePermission(ctx, req)
+	}
+}
+
 func decodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
 	return request, nil
 }

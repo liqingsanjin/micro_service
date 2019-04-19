@@ -14,6 +14,8 @@ const (
 	TableMenu           = "TBL_MENU"
 	TableAuthItem       = "TBL_AUTH_ITEM"
 	TableRole           = "TBL_ROLE"
+	TableRoute          = "TBL_ROUTE"
+	TablePermission     = "TBL_PERMISSION"
 )
 
 type User struct {
@@ -95,13 +97,35 @@ func (a Role) TableName() string {
 	return TableRole
 }
 
-type Permission struct {
+type Permissions struct {
 	Menus []*Menu
 	Items []*AuthItem
 }
 
-func (p Permission) MarshalBinary() ([]byte, error) {
+func (p Permissions) MarshalBinary() ([]byte, error) {
 	return json.Marshal(p)
+}
+
+type Route struct {
+	ID        int64     `gorm:"column:ROUTE_ID;primary_key"`
+	Name      string    `gorm:"column:ROUTE_NAME"`
+	CreatedAt time.Time `gorm:"column:CREATED_AT"`
+	UpdatedAt time.Time `gorm:"column:UPDATED_AT"`
+}
+
+func (r Route) TableName() string {
+	return TableRoute
+}
+
+type Permission struct {
+	ID        int64     `gorm:"column:PERMISSION_ID;primary_key"`
+	Name      string    `gorm:"column:PERMISSION_NAME"`
+	CreatedAt time.Time `gorm:"column:CREATED_AT"`
+	UpdatedAt time.Time `gorm:"column:UPDATED_AT"`
+}
+
+func (r Permission) TableName() string {
+	return TablePermission
 }
 
 // 根据用户名查询用户信息
@@ -126,7 +150,7 @@ func FindUserByUserName(db *gorm.DB, userName string) (*User, error) {
 // 返回
 // []*AuthItem: TBL_AUTH_ITEM表中的数据, 用户所有权限
 // []*Menu: TBL_MENU表中的数据, 用户菜单显示权限
-func GetPermissionsByUserID(db *gorm.DB, userID int64) (*Permission, error) {
+func GetPermissionsByUserID(db *gorm.DB, userID int64) (*Permissions, error) {
 	// 根据用户查询角色
 	results := make([]*AuthAssignment, 0)
 	err := db.Where(&AuthAssignment{UserID: userID}).Select("ITEM_NAME, USER_ID").Find(&results).Error
@@ -167,7 +191,7 @@ func GetPermissionsByUserID(db *gorm.DB, userID int64) (*Permission, error) {
 		return nil, err
 	}
 
-	return &Permission{
+	return &Permissions{
 		Items: items,
 		Menus: menus,
 	}, nil
@@ -264,4 +288,78 @@ func FindRole(db *gorm.DB, role string) (*Role, error) {
 
 func SaveRole(db *gorm.DB, role *Role) error {
 	return db.Create(role).Error
+}
+
+func FindRoutesByNames(db *gorm.DB, names []string) ([]*Route, error) {
+	rs := make([]*Route, 0)
+	err := db.Where("ROUTE_NAME in (?)", names).Find(&rs).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return rs, nil
+}
+
+func SaveRoutes(db *gorm.DB, names []string) error {
+	db = db.Begin()
+	var err error
+	defer db.Rollback()
+	for _, name := range names {
+		err = db.Create(&Route{
+			Name: name,
+		}).Error
+		if err != nil {
+			return err
+		}
+	}
+	return db.Commit().Error
+}
+
+func ListRoutes(db *gorm.DB) ([]*Route, error) {
+	rs := make([]*Route, 0)
+	err := db.Find(&rs).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+
+	return rs, nil
+}
+
+func SavePermission(db *gorm.DB, name string) error {
+	return db.Create(&Permission{
+		Name: name,
+	}).Error
+}
+
+func UpdatePermission(db *gorm.DB, id int64, permission *Permission) error {
+	return db.Model(&Permission{
+		ID: id,
+	}).Update(permission).Error
+}
+
+func FindPermissionByName(db *gorm.DB, name string) (*Permission, error) {
+	p := new(Permission)
+	err := db.Where(&Permission{Name: name}).First(p).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return p, nil
+}
+
+func FindPermissionByID(db *gorm.DB, id int64) (*Permission, error) {
+	p := new(Permission)
+	err := db.Where(&Permission{ID: id}).First(p).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return p, nil
 }

@@ -7,10 +7,15 @@ service User {
     rpc GetPermissions(GetPermissionsRequest) returns (GetPermissionsReply) {}
     rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionReply) {}
     rpc Register(RegisterRequest) returns (RegisterReply) {}
+    rpc AddPolicy(AddPolicyRequest) returns (AddPolicyReply) {}
     rpc AddPermission(AddPermissionRequest) returns (AddPermissionReply) {}
     rpc AddRole(AddRoleRequest) returns (AddRoleReply) {}
     rpc CreateRole(CreateRoleRequest) returns(CreateRoleReply) {}
     rpc AddRoleForUser(AddRoleForUserRequest) returns(AddRoleForUserReply) {}
+    rpc AddRoutes(AddRoutesRequest) returns (AddRoutesReply) {}
+    rpc ListRoutes(ListRoutesRequest) returns (ListRoutesReply) {}
+    rpc CreatePermission(CreatePermissionRequest) returns (CreatePermissionReply) {}
+    rpc UpdatePermission(UpdatePermissionRequest) returns (UpdatePermissionReply) {}
 }
 
 message LoginRequest {
@@ -88,3 +93,34 @@ message AddRoleForUserRequest {
 }
 
 message AddRoleForUserReply {}
+
+message AddPolicyRequest {
+    string permission = 1;
+    string resource = 2;
+}
+
+message AddPolicyReply {}
+
+message AddRoutesRequest {
+    repeated string routes = 1;
+}
+
+message AddRoutesReply {}
+
+message ListRoutesRequest {}
+
+message ListRoutesReply {
+    repeated string routes = 1;
+}
+
+message CreatePermissionRequest {
+    string name = 1;
+}
+
+message CreatePermissionReply {}
+
+message UpdatePermissionRequest {
+    int64 id = 2;
+    string name = 1;
+}
+message UpdatePermissionReply {}

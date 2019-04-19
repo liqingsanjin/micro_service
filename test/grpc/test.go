@@ -131,4 +131,63 @@ func main() {
 			log.Println(rep)
 		}
 	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.AddRoutes(ctx, &pb.AddRoutesRequest{
+			Routes: []string{"/trnlog/repay/refund", "/trnlog/repay/query", "/trnlog/repay/index"},
+		})
+		if err != nil {
+			//panic(err)
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.ListRoutes(ctx, &pb.ListRoutesRequest{})
+		if err != nil {
+			//panic(err)
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.CreatePermission(ctx, &pb.CreatePermissionRequest{
+			Name: "T1补付权限",
+		})
+		if err != nil {
+			//panic(err)
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.UpdatePermission(ctx, &pb.UpdatePermissionRequest{
+			Id:   1,
+			Name: "T1补付权限1",
+		})
+		if err != nil {
+			//panic(err)
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
 }

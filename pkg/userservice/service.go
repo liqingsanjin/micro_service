@@ -253,3 +253,77 @@ func (u *userService) AddRoleForUser(ctx context.Context, in *pb.AddRoleForUserR
 		return nil, ErrPolicyExists
 	}
 }
+
+func (u *userService) AddPolicy(ctx context.Context, in *pb.AddPolicyRequest) (*pb.AddPolicyReply, error) {
+	return nil, nil
+}
+
+func (u *userService) AddRoutes(ctx context.Context, in *pb.AddRoutesRequest) (*pb.AddRoutesReply, error) {
+	if len(in.Routes) == 0 {
+		return nil, ErrInvalidParams
+	}
+	db := common.DB
+
+	rs, err := usermodel.FindRoutesByNames(db, in.Routes)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(rs) != 0 {
+		return nil, ErrRouteExists
+	}
+
+	err = usermodel.SaveRoutes(db, in.Routes)
+	return &pb.AddRoutesReply{}, err
+}
+
+func (u *userService) ListRoutes(ctx context.Context, in *pb.ListRoutesRequest) (*pb.ListRoutesReply, error) {
+	db := common.DB
+
+	routes, err := usermodel.ListRoutes(db)
+	if err != nil {
+		return nil, err
+	}
+
+	names := make([]string, len(routes))
+	for i := range routes {
+		names[i] = routes[i].Name
+	}
+
+	return &pb.ListRoutesReply{
+		Routes: names,
+	}, nil
+}
+
+func (u *userService) CreatePermission(ctx context.Context, in *pb.CreatePermissionRequest) (*pb.CreatePermissionReply, error) {
+	if in.Name == "" {
+		return nil, ErrInvalidParams
+	}
+	db := common.DB
+
+	p, err := usermodel.FindPermissionByName(db, in.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	if p != nil {
+		return nil, ErrPermissionExists
+	}
+
+	return &pb.CreatePermissionReply{}, usermodel.SavePermission(db, in.Name)
+}
+
+func (u *userService) UpdatePermission(ctx context.Context, in *pb.UpdatePermissionRequest) (*pb.UpdatePermissionReply, error) {
+	db := common.DB
+
+	p, err := usermodel.FindPermissionByID(db, in.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	if p == nil {
+		return nil, ErrPermissionNotFound
+	}
+
+	return &pb.UpdatePermissionReply{}, usermodel.UpdatePermission(db, in.Id, &usermodel.Permission{Name: in.Name})
+}
