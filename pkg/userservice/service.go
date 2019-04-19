@@ -416,3 +416,21 @@ func (u *userService) RemovePermission(ctx context.Context, in *pb.RemovePermiss
 	}
 	return nil, ErrPermissionNotFound
 }
+
+func (u *userService) ListPermissions(ctx context.Context, in *pb.ListPermissionsRequest) (*pb.ListPermissionsReply, error) {
+	db := common.DB
+
+	ps, err := usermodel.ListPermissions(db)
+	if err != nil {
+		return nil, err
+	}
+
+	names := make([]string, 0)
+	for _, p := range ps {
+		names = append(names, p.Name)
+	}
+
+	return &pb.ListPermissionsReply{
+		Permissions: names,
+	}, nil
+}
