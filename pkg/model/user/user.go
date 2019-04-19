@@ -346,10 +346,8 @@ func FindPermissionByName(db *gorm.DB, name string) (*Permission, error) {
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}
-	if err != nil {
-		return nil, err
-	}
-	return p, nil
+
+	return p, err
 }
 
 func FindPermissionByID(db *gorm.DB, id int64) (*Permission, error) {
@@ -358,8 +356,26 @@ func FindPermissionByID(db *gorm.DB, id int64) (*Permission, error) {
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}
-	if err != nil {
+	return p, err
+}
+
+func FindRouteByName(db *gorm.DB, route string) (*Route, error) {
+	r := new(Route)
+
+	err := db.Where(&Route{Name: route}).First(r).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return r, err
+}
+
+func FindRoutesByName(db *gorm.DB, routes []string) ([]*Route, error) {
+	rs := make([]*Route, 0)
+
+	err := db.Where("ROUTE_NAME in (?)", routes).Find(&rs).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
-	return p, nil
+
+	return rs, nil
 }

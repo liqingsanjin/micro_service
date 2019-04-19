@@ -16,6 +16,7 @@ service User {
     rpc ListRoutes(ListRoutesRequest) returns (ListRoutesReply) {}
     rpc CreatePermission(CreatePermissionRequest) returns (CreatePermissionReply) {}
     rpc UpdatePermission(UpdatePermissionRequest) returns (UpdatePermissionReply) {}
+    rpc AddRouteForPermission(AddRouteForPermissionRequest) returns (AddRouteForPermissionReply) {}
 }
 
 message LoginRequest {
@@ -124,3 +125,9 @@ message UpdatePermissionRequest {
     string name = 1;
 }
 message UpdatePermissionReply {}
+
+message AddRouteForPermissionRequest {
+    string permission = 1;
+    string route = 2;
+}
+message AddRouteForPermissionReply {}

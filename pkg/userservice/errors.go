@@ -21,4 +21,5 @@ var (
 	ErrRouteExists             = errors.New("routes exists")
 	ErrPermissionExists        = errors.New("permission exists")
 	ErrPermissionNotFound      = errors.New("permission not found")
+	ErrRouteNotFound           = errors.New("route not found")
 )

@@ -327,3 +327,35 @@ func (u *userService) UpdatePermission(ctx context.Context, in *pb.UpdatePermiss
 
 	return &pb.UpdatePermissionReply{}, usermodel.UpdatePermission(db, in.Id, &usermodel.Permission{Name: in.Name})
 }
+
+func (u *userService) AddRouteForPermission(ctx context.Context, in *pb.AddRouteForPermissionRequest) (*pb.AddRouteForPermissionReply, error) {
+	db := common.DB
+
+	if in.Permission == "" || in.Route == "" {
+		return nil, ErrInvalidParams
+	}
+
+	permission, err := usermodel.FindPermissionByName(db, in.Permission)
+	if err != nil {
+		return nil, err
+	}
+
+	if permission == nil {
+		return nil, ErrPermissionNotFound
+	}
+
+	route, err := usermodel.FindRouteByName(db, in.Route)
+	if err != nil {
+		return nil, err
+	}
+
+	if route == nil {
+		return nil, ErrRouteNotFound
+	}
+
+	if common.Enforcer.AddPermissionForUser(permission.Name, in.Route) {
+		return &pb.AddRouteForPermissionReply{}, nil
+	}
+	return nil, ErrPolicyExists
+
+}

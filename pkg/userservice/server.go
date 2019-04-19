@@ -9,18 +9,19 @@ import (
 )
 
 type userServer struct {
-	loginHandler            grpctransport.Handler
-	getPermissionsHandler   grpctransport.Handler
-	checkPermissionHandler  grpctransport.Handler
-	registerHandler         grpctransport.Handler
-	addPermissionHandler    grpctransport.Handler
-	addRoleHandler          grpctransport.Handler
-	createRoleHandler       grpctransport.Handler
-	addRoleForUserHandler   grpctransport.Handler
-	addRoutesHandler        grpctransport.Handler
-	listRouteHandler        grpctransport.Handler
-	createPermissionHandler grpctransport.Handler
-	updatePermissionHandler grpctransport.Handler
+	loginHandler                 grpctransport.Handler
+	getPermissionsHandler        grpctransport.Handler
+	checkPermissionHandler       grpctransport.Handler
+	registerHandler              grpctransport.Handler
+	addPermissionHandler         grpctransport.Handler
+	addRoleHandler               grpctransport.Handler
+	createRoleHandler            grpctransport.Handler
+	addRoleForUserHandler        grpctransport.Handler
+	addRoutesHandler             grpctransport.Handler
+	listRouteHandler             grpctransport.Handler
+	createPermissionHandler      grpctransport.Handler
+	updatePermissionHandler      grpctransport.Handler
+	addRouteForPermissionHandler grpctransport.Handler
 }
 
 func New() pb.UserServer {
@@ -151,6 +152,17 @@ func New() pb.UserServer {
 		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.updatePermissionHandler = grpctransport.NewServer(
+			endpoint,
+			decodeRequest,
+			encodeResponse,
+		)
+	}
+
+	{
+		endpoint := makeAddRouteForPermissionEndpoint(userService)
+		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
+		endpoint = logginMiddleware(endpoint)
+		svr.addRouteForPermissionHandler = grpctransport.NewServer(
 			endpoint,
 			decodeRequest,
 			encodeResponse,
@@ -302,6 +314,18 @@ func (u *userServer) UpdatePermission(ctx context.Context, in *pb.UpdatePermissi
 		return nil, err
 	}
 	reply, ok := res.(*pb.UpdatePermissionReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (u *userServer) AddRouteForPermission(ctx context.Context, in *pb.AddRouteForPermissionRequest) (*pb.AddRouteForPermissionReply, error) {
+	_, res, err := u.addRouteForPermissionHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.AddRouteForPermissionReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

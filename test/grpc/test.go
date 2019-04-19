@@ -58,21 +58,21 @@ func main() {
 			log.Println(rep)
 		}
 	}
-
-	{
-		md := metadata.New(map[string]string{})
-		md.Set("jwtToken", tk)
-		ctx := metadata.NewOutgoingContext(context.Background(), md)
-		rep, err := client.AddPermission(ctx, &pb.AddPermissionRequest{
-			Role:       "test2",
-			Permission: "/trnlog/repay/query",
-		})
-		if err != nil {
-			log.Println(err)
-		} else {
-			log.Println(rep)
-		}
-	}
+	//
+	//{
+	//	md := metadata.New(map[string]string{})
+	//	md.Set("jwtToken", tk)
+	//	ctx := metadata.NewOutgoingContext(context.Background(), md)
+	//	rep, err := client.AddPermission(ctx, &pb.AddPermissionRequest{
+	//		Role:       "test2",
+	//		Permission: "/trnlog/repay/query",
+	//	})
+	//	if err != nil {
+	//		log.Println(err)
+	//	} else {
+	//		log.Println(rep)
+	//	}
+	//}
 
 	{
 		md := metadata.New(map[string]string{})
@@ -88,56 +88,56 @@ func main() {
 		}
 	}
 
-	{
-		md := metadata.New(map[string]string{})
-		md.Set("jwtToken", tk)
-		ctx := metadata.NewOutgoingContext(context.Background(), md)
-		rep, err := client.AddRole(ctx, &pb.AddRoleRequest{
-			Role: "test2",
-			On:   "dsafdsa",
-		})
-		if err != nil {
-			log.Println(err)
-		} else {
-			log.Println(rep)
-		}
-	}
+	//{
+	//	md := metadata.New(map[string]string{})
+	//	md.Set("jwtToken", tk)
+	//	ctx := metadata.NewOutgoingContext(context.Background(), md)
+	//	rep, err := client.AddRole(ctx, &pb.AddRoleRequest{
+	//		Role: "test2",
+	//		On:   "dsafdsa",
+	//	})
+	//	if err != nil {
+	//		log.Println(err)
+	//	} else {
+	//		log.Println(rep)
+	//	}
+	//}
 
-	{
-		md := metadata.New(map[string]string{})
-		md.Set("jwtToken", tk)
-		ctx := metadata.NewOutgoingContext(context.Background(), md)
-		rep, err := client.CreateRole(ctx, &pb.CreateRoleRequest{
-			Role: "test2",
-		})
-		if err != nil {
-			log.Println(err)
-		} else {
-			log.Println(rep)
-		}
-	}
-
-	{
-		md := metadata.New(map[string]string{})
-		md.Set("jwtToken", tk)
-		ctx := metadata.NewOutgoingContext(context.Background(), md)
-		rep, err := client.AddRoleForUser(ctx, &pb.AddRoleForUserRequest{
-			Username: "test2",
-			Role:     "test2",
-		})
-		if err != nil {
-			log.Println(err)
-		} else {
-			log.Println(rep)
-		}
-	}
+	//{
+	//	md := metadata.New(map[string]string{})
+	//	md.Set("jwtToken", tk)
+	//	ctx := metadata.NewOutgoingContext(context.Background(), md)
+	//	rep, err := client.CreateRole(ctx, &pb.CreateRoleRequest{
+	//		Role: "test2",
+	//	})
+	//	if err != nil {
+	//		log.Println(err)
+	//	} else {
+	//		log.Println(rep)
+	//	}
+	//}
+	//
+	//{
+	//	md := metadata.New(map[string]string{})
+	//	md.Set("jwtToken", tk)
+	//	ctx := metadata.NewOutgoingContext(context.Background(), md)
+	//	rep, err := client.AddRoleForUser(ctx, &pb.AddRoleForUserRequest{
+	//		Username: "test2",
+	//		Role:     "test2",
+	//	})
+	//	if err != nil {
+	//		log.Println(err)
+	//	} else {
+	//		log.Println(rep)
+	//	}
+	//}
 
 	{
 		md := metadata.New(map[string]string{})
 		md.Set("jwtToken", tk)
 		ctx := metadata.NewOutgoingContext(context.Background(), md)
 		rep, err := client.AddRoutes(ctx, &pb.AddRoutesRequest{
-			Routes: []string{"/trnlog/repay/refund", "/trnlog/repay/query", "/trnlog/repay/index"},
+			Routes: []string{"/prodbizfeemap/index"},
 		})
 		if err != nil {
 			//panic(err)
@@ -190,4 +190,27 @@ func main() {
 			log.Println(rep)
 		}
 	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.AddRouteForPermission(ctx, &pb.AddRouteForPermissionRequest{
+			Permission: "T1补付权限",
+			Route:      "/trnlog/repay/repay",
+		})
+		if err != nil {
+			//panic(err)
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
+	//enforce := rbac.NewCasbin("configs/rbac.conf", &model.Options{
+	//	User:     "root",
+	//	Password: "root",
+	//	Addr:     "127.0.0.1:3306",
+	//})
+	//log.Println(enforce.Enforce("T1补付权限", "/trnlog/repay/repay"))
 }
