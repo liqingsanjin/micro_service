@@ -417,3 +417,7 @@ func UpdateRole(db *gorm.DB, id int64, role *Role) error {
 		ID: id,
 	}).Update(role).Error
 }
+
+func DeleteRole(db *gorm.DB, role *Role) error {
+	return db.Delete(role).Error
+}

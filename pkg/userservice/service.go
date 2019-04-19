@@ -589,3 +589,28 @@ func (u *userService) RemoveRoleForRole(ctx context.Context, in *pb.RemoveRoleFo
 	}
 	return nil, ErrPolicyExists
 }
+
+func (u *userService) RemoveRole(ctx context.Context, in *pb.RemoveRoleRequest) (*pb.RemoveRoleReply, error) {
+	if in.Role == "" {
+		return nil, ErrInvalidParams
+	}
+	db := common.DB
+
+	role, err := usermodel.FindRole(db, in.Role)
+	if err != nil {
+		return nil, err
+	}
+
+	if role == nil {
+		return nil, ErrRoleNotFound
+	}
+
+	db = db.Begin()
+	defer db.Rollback()
+	err = usermodel.DeleteRole(db, role)
+	if err != nil {
+		return nil, err
+	}
+	common.Enforcer.DeleteRole(in.Role)
+	return &pb.RemoveRoleReply{}, db.Commit().Error
+}
