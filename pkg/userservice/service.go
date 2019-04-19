@@ -401,10 +401,8 @@ func (u *userService) RemovePermission(ctx context.Context, in *pb.RemovePermiss
 	if err != nil {
 		return nil, err
 	}
-	if common.Enforcer.DeletePermissionsForUser(in.Permission) {
-		return &pb.RemovePermissionReply{}, db.Commit().Error
-	}
-	return nil, ErrPermissionNotFound
+	common.Enforcer.DeleteRole(in.Permission)
+	return &pb.RemovePermissionReply{}, db.Commit().Error
 }
 
 func (u *userService) ListPermissions(ctx context.Context, in *pb.ListPermissionsRequest) (*pb.ListPermissionsReply, error) {
@@ -561,6 +559,33 @@ func (u *userService) AddRoleForRole(ctx context.Context, in *pb.AddRoleForRoleR
 
 	if common.Enforcer.AddRoleForUser(to.Role, from.Role) {
 		return &pb.AddRoleForRoleReply{}, nil
+	}
+	return nil, ErrPolicyExists
+}
+
+func (u *userService) RemoveRoleForRole(ctx context.Context, in *pb.RemoveRoleForRoleRequest) (*pb.RemoveRoleForRoleReply, error) {
+	if in.From == "" || in.Child == "" {
+		return nil, ErrInvalidParams
+	}
+	db := common.DB
+
+	from, err := usermodel.FindRole(db, in.From)
+	if err != nil {
+		return nil, err
+	}
+	if from == nil {
+		return nil, ErrRoleNotFound
+	}
+	child, err := usermodel.FindRole(db, in.Child)
+	if err != nil {
+		return nil, err
+	}
+	if child == nil {
+		return nil, ErrRoleNotFound
+	}
+
+	if common.Enforcer.DeleteRoleForUser(from.Role, child.Role) {
+		return &pb.RemoveRoleForRoleReply{}, nil
 	}
 	return nil, ErrPolicyExists
 }

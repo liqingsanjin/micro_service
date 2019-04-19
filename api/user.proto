@@ -33,7 +33,8 @@ service User {
     rpc AddPermissionForRole(AddPermissionForRoleRequest) returns (AddPermissionForRoleReply) {}
     rpc RemovePermissionForRole(RemovePermissionForRoleRequest) returns (RemovePermissionForRoleReply) {}
     rpc AddRoleForRole(AddRoleForRoleRequest) returns (AddRoleForRoleReply) {}
-
+    rpc RemoveRoleForRole(RemoveRoleForRoleRequest) returns (RemoveRoleForRoleReply) {}
+    // rpc RemoveRole(RemoveRoleRequest) returns (RemoveRoleReply) {}
 
     // 用户和角色
 }
@@ -201,3 +202,14 @@ message RemovePermissionForRoleRequest {
 }
 
 message RemovePermissionForRoleReply {}
+
+message RemoveRoleForRoleRequest {
+     string from = 1;
+     string child = 2;
+}
+
+message RemoveRoleForRoleReply {}
+
+message RemoveRoleRequest {}
+
+message RemoveRoleReply {}

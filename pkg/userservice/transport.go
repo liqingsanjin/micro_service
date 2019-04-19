@@ -217,6 +217,16 @@ func makeRemovePermissionForRoleEndpoint(service pb.UserServer) endpoint.Endpoin
 	}
 }
 
+func makeRemoveRoleForRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.RemoveRoleForRoleRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.RemoveRoleForRole(ctx, req)
+	}
+}
+
 func decodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
 	return request, nil
 }

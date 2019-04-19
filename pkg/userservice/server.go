@@ -30,6 +30,7 @@ type userServer struct {
 	listRoleHandler                      grpctransport.Handler
 	updateRoleHandler                    grpctransport.Handler
 	removePermissionForRoleHandler       grpctransport.Handler
+	removeRoleForRoleHandler             grpctransport.Handler
 }
 
 func New() pb.UserServer {
@@ -265,6 +266,16 @@ func New() pb.UserServer {
 		)
 	}
 
+	{
+		endpoint := makeRemoveRoleForRoleEndpoint(userService)
+		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
+		endpoint = logginMiddleware(endpoint)
+		svr.removeRoleForRoleHandler = grpctransport.NewServer(
+			endpoint,
+			decodeRequest,
+			encodeResponse,
+		)
+	}
 	return svr
 }
 
@@ -518,6 +529,18 @@ func (u *userServer) AddRoleForRole(ctx context.Context, in *pb.AddRoleForRoleRe
 		return nil, err
 	}
 	reply, ok := res.(*pb.AddRoleForRoleReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (u *userServer) RemoveRoleForRole(ctx context.Context, in *pb.RemoveRoleForRoleRequest) (*pb.RemoveRoleForRoleReply, error) {
+	_, res, err := u.removeRoleForRoleHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.RemoveRoleForRoleReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}
