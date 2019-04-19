@@ -24,6 +24,13 @@ create table if not exists TBL_AUTH_ITEM
   CREATE_USER INT
 );
 
+create table if not exists TBL_ROLE (
+	ROLE_ID bigint(20) unsigned auto_increment primary key,
+	ROLE_NAME varchar(32) unique not null,
+	CREATED_AT datetime default now(),
+	UPDATED_AT datetime default now()
+);
+
 create table if not exists TBL_AUTH_ITEM_CHILD
 (
   PARENT VARCHAR(64) not null,
@@ -33,7 +40,7 @@ create table if not exists TBL_AUTH_ITEM_CHILD
 
 create table if not exists TBL_MENU
 (
-  ID         int(10) auto_increment not null primary key,
+  ID         bigint(20) auto_increment not null primary key,
   NAME       VARCHAR(128),
   PARENT     int(10),
   MENU_ROUTE VARCHAR(256),
@@ -43,7 +50,7 @@ create table if not exists TBL_MENU
 
 create table if not exists TBL_USER
 (
-  USER_ID              int(10)  auto_increment   not null primary key,
+  USER_ID              BIGINT(20)  auto_increment   not null primary key,
   LEAGUER_NO           VARCHAR(20)  not null,
   USER_NAME            VARCHAR(32)  not null unique,
   AUTH_KEY             VARCHAR(32)  not null,
