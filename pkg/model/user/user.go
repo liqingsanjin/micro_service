@@ -430,3 +430,16 @@ func ListUsers(db *gorm.DB) ([]*User, error) {
 	}
 	return us, nil
 }
+
+func UpdateUser(db *gorm.DB, id int64, user *User) error {
+	return db.Model(&User{UserID: id}).Update(user).Error
+}
+
+func FindUserByID(db *gorm.DB, id int64) (*User, error) {
+	user := &User{}
+	err := db.Where("USER_ID = ?", id).First(user).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return user, err
+}

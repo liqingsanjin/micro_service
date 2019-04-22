@@ -636,3 +636,24 @@ func (u *userService) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*
 		Users: users,
 	}, nil
 }
+
+func (u *userService) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) (*pb.UpdateUserReply, error) {
+	db := common.DB
+
+	user, err := usermodel.FindUserByID(db, in.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
+		return nil, ErrUserNotFound
+	}
+
+	err = usermodel.UpdateUser(db, in.Id, &usermodel.User{
+		UserName: in.Username,
+		Email:    &in.Email,
+		UserType: in.UserType,
+	})
+
+	return &pb.UpdateUserReply{}, err
+}

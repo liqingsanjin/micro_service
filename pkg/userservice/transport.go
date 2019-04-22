@@ -247,6 +247,16 @@ func makeListUsersEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
+func makeUpdateUserEndpoint(service pb.UserServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.UpdateUserRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.UpdateUser(ctx, req)
+	}
+}
+
 func decodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
 	return request, nil
 }

@@ -33,6 +33,7 @@ type userServer struct {
 	removeRoleForRoleHandler             grpctransport.Handler
 	removeRoleHandler                    grpctransport.Handler
 	listUsersHandler                     grpctransport.Handler
+	updateUserHandler                    grpctransport.Handler
 }
 
 func New() pb.UserServer {
@@ -295,6 +296,17 @@ func New() pb.UserServer {
 		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.listUsersHandler = grpctransport.NewServer(
+			endpoint,
+			decodeRequest,
+			encodeResponse,
+		)
+	}
+
+	{
+		endpoint := makeUpdateUserEndpoint(userService)
+		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
+		endpoint = logginMiddleware(endpoint)
+		svr.updateUserHandler = grpctransport.NewServer(
 			endpoint,
 			decodeRequest,
 			encodeResponse,
@@ -589,6 +601,18 @@ func (u *userServer) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*p
 		return nil, err
 	}
 	reply, ok := res.(*pb.ListUsersReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (u *userServer) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) (*pb.UpdateUserReply, error) {
+	_, res, err := u.updateUserHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.UpdateUserReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

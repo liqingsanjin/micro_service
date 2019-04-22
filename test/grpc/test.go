@@ -366,6 +366,23 @@ func main() {
 			log.Println(rep)
 		}
 	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.UpdateUser(ctx, &pb.UpdateUserRequest{
+			Id:       102258,
+			Username: "test",
+			Email:    "liqingsanjin@163.com",
+			UserType: "ABC",
+		})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
 	//
 	//enforce := rbac.NewCasbin("configs/rbac.conf", &model.Options{
 	//	User:     "root",

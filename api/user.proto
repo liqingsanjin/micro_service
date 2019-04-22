@@ -38,6 +38,7 @@ service User {
 
     // 用户和角色
     rpc ListUsers(ListUsersRequest) returns(ListUsersReply) {}
+    rpc UpdateUser(UpdateUserRequest) returns(UpdateUserReply) {}
 }
 
 message LoginRequest {
@@ -227,3 +228,12 @@ message UserField {
     int64 id = 1;
     string username = 2;
 }
+
+message UpdateUserRequest {
+    int64 id = 1;
+    string username = 2;
+    string email = 3;
+    string userType = 4;
+}
+
+message UpdateUserReply {}
