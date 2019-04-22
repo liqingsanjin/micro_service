@@ -398,6 +398,21 @@ func main() {
 			log.Println(rep)
 		}
 	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.RemovePermissionForUser(ctx, &pb.RemovePermissionForUserRequest{
+			Username:   "test111",
+			Permission: "T1补付权限",
+		})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
 	//
 	//enforce := rbac.NewCasbin("configs/rbac.conf", &model.Options{
 	//	User:     "root",

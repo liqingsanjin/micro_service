@@ -37,9 +37,10 @@ service User {
     rpc RemoveRole(RemoveRoleRequest) returns (RemoveRoleReply) {}
 
     // 用户和角色
-    rpc ListUsers(ListUsersRequest) returns(ListUsersReply) {}
-    rpc UpdateUser(UpdateUserRequest) returns(UpdateUserReply) {}
-    rpc AddPermissionForUser(AddPermissionForUserRequest) returns(AddPermissionForUserReply) {}
+    rpc ListUsers(ListUsersRequest) returns (ListUsersReply) {}
+    rpc UpdateUser(UpdateUserRequest) returns (UpdateUserReply) {}
+    rpc AddPermissionForUser(AddPermissionForUserRequest) returns (AddPermissionForUserReply) {}
+    rpc RemovePermissionForUser(RemovePermissionForUserRequest) returns (RemovePermissionForUserReply) {}
 }
 
 message LoginRequest {
@@ -245,3 +246,10 @@ message AddPermissionForUserRequest {
 }
 
 message AddPermissionForUserReply {}
+
+message RemovePermissionForUserRequest {
+    string username = 1;
+    string permission = 2;
+}
+
+message RemovePermissionForUserReply {}

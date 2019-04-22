@@ -267,6 +267,16 @@ func makeAddPermissionForUserEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
+func makeRemovePermissionForUserEndpoint(service pb.UserServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.RemovePermissionForUserRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.RemovePermissionForUser(ctx, req)
+	}
+}
+
 func decodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
 	return request, nil
 }
