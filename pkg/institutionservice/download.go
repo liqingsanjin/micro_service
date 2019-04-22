@@ -23,14 +23,14 @@ const fileZipPath = "/home/dj/zip"
 //@return fileDir 下载完成之后存放临时文件的文件夹
 func DownloadFileWithDay(clearTxn []*cleartxnM.ClearTxn) (string, error) {
 
-	if len(clearTxn) == 0 {
-		return "", nil
-	}
-
 	uid := uuid.NewV4().String()
-
 	fileDirPath := path.Join(filePath, uid)
 	os.MkdirAll(fileDirPath, os.ModePerm)
+
+	if len(clearTxn) == 0 {
+		return uid, nil
+	}
+
 	var dataIndex string
 
 	for index := 0; index < len(clearTxn); index++ {

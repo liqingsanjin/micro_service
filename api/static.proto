@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package pb;
+
+service static {
+    rpc SyncData(StaticSyncDataReq) returns (StaticSyncDataResp) {}
+    rpc GetDictionaryItem(StaticGetDictionaryItemReq) returns (StaticGetDictionaryItemResp) {}
+    rpc GetDicByProdAndBiz(StaticGetDicByProdAndBizReq) returns (StaticGetDicByProdAndBizResp) {}
+    rpc GetDicByInsCmpCd(StaticGetDicByInsCmpCdReq) returns (StaticGetDicByInsCmpCdResp) {}
+}
+
+message StaticSyncDataReq {
+    string TableName = 1;
+}
+
+message StaticSyncDataResp {
+    bool result = 1;
+}
+
+message StaticGetDictionaryItemReq {
+    string DicType = 1;
+    string DicCode = 2;
+    string DicName = 3;
+}
+
+
+message StaticGetDictionaryItemResp {
+    repeated StaticGetDictionaryItem GetDictionaryItems = 1;
+}
+
+
+message StaticGetDictionaryItem {
+    string DicType = 1;
+    string DicCode = 2;
+    string DicName = 3;
+}
+
+message StaticGetDicByProdAndBizReq {
+    string ProdCd = 1;
+    string BizCd = 2;
+}
+
+message StaticGetDicByProdAndBizResp {
+    repeated StaticGetDictionaryItem GetDictionaryItems = 1;
+}
+
+message StaticGetDicByInsCmpCdReq {
+    string InsCompanyCd = 1;
+}
+
+message StaticGetDicByInsCmpCdResp {
+    repeated StaticGetDictionaryItem GetDictionaryItems = 1;
+}
