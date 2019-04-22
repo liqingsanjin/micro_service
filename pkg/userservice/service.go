@@ -614,3 +614,25 @@ func (u *userService) RemoveRole(ctx context.Context, in *pb.RemoveRoleRequest) 
 	common.Enforcer.DeleteRole(in.Role)
 	return &pb.RemoveRoleReply{}, db.Commit().Error
 }
+
+func (u *userService) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*pb.ListUsersReply, error) {
+	db := common.DB
+
+	us, err := usermodel.ListUsers(db)
+	if err != nil {
+		return nil, err
+	}
+
+	users := make([]*pb.UserField, 0)
+
+	for _, u := range us {
+		users = append(users, &pb.UserField{
+			Id:       u.UserID,
+			Username: u.UserName,
+		})
+	}
+
+	return &pb.ListUsersReply{
+		Users: users,
+	}, nil
+}

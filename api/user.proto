@@ -37,6 +37,7 @@ service User {
     rpc RemoveRole(RemoveRoleRequest) returns (RemoveRoleReply) {}
 
     // 用户和角色
+    rpc ListUsers(ListUsersRequest) returns(ListUsersReply) {}
 }
 
 message LoginRequest {
@@ -215,3 +216,14 @@ message RemoveRoleRequest {
 }
 
 message RemoveRoleReply {}
+
+message ListUsersRequest {}
+
+message ListUsersReply {
+    repeated UserField users = 1;
+}
+
+message UserField {
+    int64 id = 1;
+    string username = 2;
+}

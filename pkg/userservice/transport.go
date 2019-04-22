@@ -237,6 +237,16 @@ func makeRemoveRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
+func makeListUsersEndpoint(service pb.UserServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.ListUsersRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.ListUsers(ctx, req)
+	}
+}
+
 func decodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
 	return request, nil
 }

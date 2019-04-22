@@ -421,3 +421,12 @@ func UpdateRole(db *gorm.DB, id int64, role *Role) error {
 func DeleteRole(db *gorm.DB, role *Role) error {
 	return db.Delete(role).Error
 }
+
+func ListUsers(db *gorm.DB) ([]*User, error) {
+	us := make([]*User, 0)
+	err := db.Find(&us).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return us, nil
+}

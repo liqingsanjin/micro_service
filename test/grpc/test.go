@@ -3,9 +3,7 @@ package main
 import (
 	"context"
 	"log"
-	"userService/pkg/model"
 	"userService/pkg/pb"
-	"userService/pkg/rbac"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -357,10 +355,22 @@ func main() {
 		}
 	}
 
-	enforce := rbac.NewCasbin("configs/rbac.conf", &model.Options{
-		User:     "root",
-		Password: "root",
-		Addr:     "127.0.0.1:3306",
-	})
-	log.Println(enforce.Enforce("test", "/trnlog/repay/index"))
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.ListUsers(ctx, &pb.ListUsersRequest{})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+	//
+	//enforce := rbac.NewCasbin("configs/rbac.conf", &model.Options{
+	//	User:     "root",
+	//	Password: "root",
+	//	Addr:     "127.0.0.1:3306",
+	//})
+	//log.Println(enforce.Enforce("test", "/trnlog/repay/index"))
 }
