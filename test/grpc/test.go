@@ -73,22 +73,6 @@ func main() {
 		}
 	}
 
-	//
-	//{
-	//	md := metadata.New(map[string]string{})
-	//	md.Set("jwtToken", tk)
-	//	ctx := metadata.NewOutgoingContext(context.Background(), md)
-	//	rep, err := client.AddRoleForUser(ctx, &pb.AddRoleForUserRequest{
-	//		Username: "test2",
-	//		Role:     "test2",
-	//	})
-	//	if err != nil {
-	//		log.Println(err)
-	//	} else {
-	//		log.Println(rep)
-	//	}
-	//}
-
 	{
 		md := metadata.New(map[string]string{})
 		md.Set("jwtToken", tk)
@@ -406,6 +390,36 @@ func main() {
 		rep, err := client.RemovePermissionForUser(ctx, &pb.RemovePermissionForUserRequest{
 			Username:   "test111",
 			Permission: "T1补付权限",
+		})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.AddRoleForUser(ctx, &pb.AddRoleForUserRequest{
+			Username: "test111",
+			Role:     "test1",
+		})
+		if err != nil {
+			log.Println(err)
+		} else {
+			log.Println(rep)
+		}
+	}
+
+	{
+		md := metadata.New(map[string]string{})
+		md.Set("jwtToken", tk)
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		rep, err := client.RemoveRoleForUser(ctx, &pb.RemoveRoleForUserRequest{
+			Username: "test111",
+			Role:     "test1",
 		})
 		if err != nil {
 			log.Println(err)

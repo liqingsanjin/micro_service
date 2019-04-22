@@ -713,3 +713,33 @@ func (u *userService) RemovePermissionForUser(ctx context.Context, in *pb.Remove
 	}
 	return nil, ErrPolicyNotFound
 }
+
+func (u *userService) RemoveRoleForUser(ctx context.Context, in *pb.RemoveRoleForUserRequest) (*pb.RemoveRoleForUserReply, error) {
+	if in.Username == "" || in.Role == "" {
+		return nil, ErrInvalidParams
+	}
+
+	db := common.DB
+
+	role, err := usermodel.FindRole(db, in.Role)
+	if err != nil {
+		return nil, err
+	}
+	if role == nil {
+		return nil, ErrRoleNotFound
+	}
+
+	user, err := usermodel.FindUserByUserName(db, in.Username)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, ErrUserNotFound
+	}
+
+	if common.Enforcer.DeleteRoleForUser(in.Username, in.Role) {
+		return &pb.RemoveRoleForUserReply{}, nil
+	}
+	return nil, ErrPolicyNotFound
+
+}

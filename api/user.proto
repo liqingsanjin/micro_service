@@ -41,6 +41,7 @@ service User {
     rpc AddPermissionForUser(AddPermissionForUserRequest) returns (AddPermissionForUserReply) {}
     rpc RemovePermissionForUser(RemovePermissionForUserRequest) returns (RemovePermissionForUserReply) {}
     rpc AddRoleForUser(AddRoleForUserRequest) returns (AddRoleForUserReply) {}
+    rpc RemoveRoleForUser(RemoveRoleForUserRequest) returns (RemoveRoleForUserReply) {}
 }
 
 message LoginRequest {
@@ -253,3 +254,10 @@ message RemovePermissionForUserRequest {
 }
 
 message RemovePermissionForUserReply {}
+
+message RemoveRoleForUserRequest {
+    string username = 1;
+    string role = 2;
+}
+
+message RemoveRoleForUserReply {}
