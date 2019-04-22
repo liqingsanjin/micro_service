@@ -657,3 +657,31 @@ func (u *userService) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) 
 
 	return &pb.UpdateUserReply{}, err
 }
+
+func (u *userService) AddPermissionForUser(ctx context.Context, in *pb.AddPermissionForUserRequest) (*pb.AddPermissionForUserReply, error) {
+	if in.Username == "" || in.Permission == "" {
+		return nil, ErrInvalidParams
+	}
+	db := common.DB
+
+	user, err := usermodel.FindUserByUserName(db, in.Username)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, ErrUserNotFound
+	}
+
+	permission, err := usermodel.FindPermissionByName(db, in.Permission)
+	if err != nil {
+		return nil, err
+	}
+	if permission == nil {
+		return nil, ErrPermissionNotFound
+	}
+
+	if common.Enforcer.AddRoleForUser(in.Username, in.Permission) {
+		return &pb.AddPermissionForUserReply{}, nil
+	}
+	return nil, ErrPolicyExists
+}

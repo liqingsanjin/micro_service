@@ -39,6 +39,7 @@ service User {
     // 用户和角色
     rpc ListUsers(ListUsersRequest) returns(ListUsersReply) {}
     rpc UpdateUser(UpdateUserRequest) returns(UpdateUserReply) {}
+    rpc AddPermissionForUser(AddPermissionForUserRequest) returns(AddPermissionForUserReply) {}
 }
 
 message LoginRequest {
@@ -237,3 +238,10 @@ message UpdateUserRequest {
 }
 
 message UpdateUserReply {}
+
+message AddPermissionForUserRequest {
+    string username = 1;
+    string permission = 2;
+}
+
+message AddPermissionForUserReply {}
