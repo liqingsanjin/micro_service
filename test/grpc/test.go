@@ -373,7 +373,7 @@ func main() {
 		md.Set("jwtToken", tk)
 		ctx := metadata.NewOutgoingContext(context.Background(), md)
 		rep, err := client.AddPermissionForUser(ctx, &pb.AddPermissionForUserRequest{
-			Username:   "test111",
+			Username:   "test2",
 			Permission: "T1补付权限",
 		})
 		if err != nil {
