@@ -45,6 +45,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			returnDic := make([]*static.DictionaryItem, 0)
 			err = json.Unmarshal([]byte(retPair.Value), &returnDic)
+			if err != nil {
+				return
+			}
 			MyMap.dicItem = returnDic
 		}
 
@@ -55,6 +58,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			ret := make([]*static.InsProdBizFeeMapInf, 0)
 			err = json.Unmarshal([]byte(retPair.Value), &ret)
+			if err != nil {
+				return
+			}
 			MyMap.insProdBizFeeMapInf = ret
 		}
 
@@ -65,6 +71,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			ret := make([]*static.ProdBizTransMap, 0)
 			err = json.Unmarshal([]byte(retPair.Value), &ret)
+			if err != nil {
+				return
+			}
 			MyMap.prodBizTransMap = ret
 		}
 
@@ -75,6 +84,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			ret := make([]*static.InsInf, 0)
 			err = json.Unmarshal([]byte(retPair.Value), &ret)
+			if err != nil {
+				return
+			}
 			MyMap.insInf = ret
 		}
 	}
