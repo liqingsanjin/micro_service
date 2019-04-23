@@ -7,7 +7,7 @@ import (
 
 var (
 	ErrUserNamePasswordEmpty   = status.Error(codes.NotFound, "empty username or password")
-	ErrWrongUserNameOrPassword = status.Error(codes.PermissionDenied, "wrong username or password")
+	ErrWrongUserNameOrPassword = status.Error(codes.InvalidArgument, "wrong username or password")
 	ErrUserNotFound            = status.Error(codes.NotFound, "user not found")
 	ErrReplyTypeInvalid        = status.Error(codes.Internal, "reply type invalid")
 	ErrRequestTypeInvalid      = status.Error(codes.Internal, "request type invalid")
