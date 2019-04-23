@@ -250,10 +250,6 @@ func (u *userService) AddRoleForUser(ctx context.Context, in *pb.AddRoleForUserR
 	}
 }
 
-func (u *userService) AddPolicy(ctx context.Context, in *pb.AddPolicyRequest) (*pb.AddPolicyReply, error) {
-	return nil, nil
-}
-
 func (u *userService) AddRoutes(ctx context.Context, in *pb.AddRoutesRequest) (*pb.AddRoutesReply, error) {
 	if len(in.Routes) == 0 {
 		return nil, ErrInvalidParams

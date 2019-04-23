@@ -435,10 +435,6 @@ func (u *userServer) AddRoleForUser(ctx context.Context, in *pb.AddRoleForUserRe
 	return reply, nil
 }
 
-func (u *userServer) AddPolicy(ctx context.Context, in *pb.AddPolicyRequest) (*pb.AddPolicyReply, error) {
-	return nil, nil
-}
-
 func (u *userServer) AddRoutes(ctx context.Context, in *pb.AddRoutesRequest) (*pb.AddRoutesReply, error) {
 	_, res, err := u.addRoutesHandler.ServeGRPC(ctx, in)
 	if err != nil {
