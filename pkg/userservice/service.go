@@ -9,6 +9,8 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type userService struct{}
@@ -27,7 +29,7 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 	// 查询用户
 	user, err := usermodel.FindUserByUserName(db, in.GetUsername())
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if user == nil {
 		return nil, ErrWrongUserNameOrPassword
@@ -47,6 +49,7 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 	}, expiredAt)
 	if err != nil {
 		logrus.Errorln(err)
+		err = status.Error(codes.Internal, err.Error())
 	}
 
 	return &pb.LoginReply{
@@ -72,7 +75,7 @@ func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsR
 
 	menus, err := usermodel.GetAuthMenu(db, itemNames)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	idMap := make(map[int64][]*usermodel.Menu)
@@ -137,7 +140,7 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 
 	bs, err := bcrypt.GenerateFromPassword([]byte(in.Password), 4)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	user := &usermodel.User{
@@ -151,7 +154,7 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 
 	newUser, err := usermodel.SaveUser(db, user)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	return &pb.RegisterReply{
@@ -173,7 +176,7 @@ func (u *userService) AddPermissionForRole(ctx context.Context, in *pb.AddPermis
 
 	role, err := usermodel.FindRole(db, in.Role)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	if role == nil {
@@ -182,7 +185,7 @@ func (u *userService) AddPermissionForRole(ctx context.Context, in *pb.AddPermis
 
 	permission, err := usermodel.FindPermissionByName(db, in.Permission)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if permission == nil {
 		return nil, ErrPermissionNotFound
@@ -203,7 +206,7 @@ func (u *userService) CreateRole(ctx context.Context, in *pb.CreateRoleRequest) 
 
 	r, err := usermodel.FindRole(db, in.Role)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	if r != nil {
@@ -211,6 +214,9 @@ func (u *userService) CreateRole(ctx context.Context, in *pb.CreateRoleRequest) 
 	}
 
 	err = usermodel.SaveRole(db, &usermodel.Role{Role: in.Role})
+	if err != nil {
+		err = status.Error(codes.Internal, err.Error())
+	}
 	return &pb.CreateRoleReply{}, err
 }
 
@@ -223,7 +229,7 @@ func (u *userService) AddRoleForUser(ctx context.Context, in *pb.AddRoleForUserR
 
 	role, err := usermodel.FindRole(db, in.Role)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if role == nil {
 		return nil, ErrRoleNotFound
@@ -231,7 +237,7 @@ func (u *userService) AddRoleForUser(ctx context.Context, in *pb.AddRoleForUserR
 
 	user, err := usermodel.FindUserByUserName(db, in.Username)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if user == nil {
 		return nil, ErrUserNotFound
@@ -244,10 +250,6 @@ func (u *userService) AddRoleForUser(ctx context.Context, in *pb.AddRoleForUserR
 	}
 }
 
-func (u *userService) AddPolicy(ctx context.Context, in *pb.AddPolicyRequest) (*pb.AddPolicyReply, error) {
-	return nil, nil
-}
-
 func (u *userService) AddRoutes(ctx context.Context, in *pb.AddRoutesRequest) (*pb.AddRoutesReply, error) {
 	if len(in.Routes) == 0 {
 		return nil, ErrInvalidParams
@@ -256,7 +258,7 @@ func (u *userService) AddRoutes(ctx context.Context, in *pb.AddRoutesRequest) (*
 
 	rs, err := usermodel.FindRoutesByNames(db, in.Routes)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	if len(rs) != 0 {
@@ -264,6 +266,9 @@ func (u *userService) AddRoutes(ctx context.Context, in *pb.AddRoutesRequest) (*
 	}
 
 	err = usermodel.SaveRoutes(db, in.Routes)
+	if err != nil {
+		err = status.Error(codes.Internal, err.Error())
+	}
 	return &pb.AddRoutesReply{}, err
 }
 
@@ -272,7 +277,7 @@ func (u *userService) ListRoutes(ctx context.Context, in *pb.ListRoutesRequest) 
 
 	routes, err := usermodel.ListRoutes(db)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	names := make([]string, len(routes))
@@ -293,14 +298,17 @@ func (u *userService) CreatePermission(ctx context.Context, in *pb.CreatePermiss
 
 	p, err := usermodel.FindPermissionByName(db, in.Name)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	if p != nil {
 		return nil, ErrPermissionExists
 	}
-
-	return &pb.CreatePermissionReply{}, usermodel.SavePermission(db, in.Name)
+	err = usermodel.SavePermission(db, in.Name)
+	if err != nil {
+		err = status.Error(codes.Internal, err.Error())
+	}
+	return &pb.CreatePermissionReply{}, err
 }
 
 func (u *userService) UpdatePermission(ctx context.Context, in *pb.UpdatePermissionRequest) (*pb.UpdatePermissionReply, error) {
@@ -308,14 +316,17 @@ func (u *userService) UpdatePermission(ctx context.Context, in *pb.UpdatePermiss
 
 	p, err := usermodel.FindPermissionByID(db, in.Id)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	if p == nil {
 		return nil, ErrPermissionNotFound
 	}
-
-	return &pb.UpdatePermissionReply{}, usermodel.UpdatePermission(db, in.Id, &usermodel.Permission{Name: in.Name})
+	err = usermodel.UpdatePermission(db, in.Id, &usermodel.Permission{Name: in.Name})
+	if err != nil {
+		err = status.Error(codes.Internal, err.Error())
+	}
+	return &pb.UpdatePermissionReply{}, err
 }
 
 func (u *userService) AddRouteForPermission(ctx context.Context, in *pb.AddRouteForPermissionRequest) (*pb.AddRouteForPermissionReply, error) {
@@ -327,7 +338,7 @@ func (u *userService) AddRouteForPermission(ctx context.Context, in *pb.AddRoute
 
 	permission, err := usermodel.FindPermissionByName(db, in.Permission)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	if permission == nil {
@@ -336,7 +347,7 @@ func (u *userService) AddRouteForPermission(ctx context.Context, in *pb.AddRoute
 
 	route, err := usermodel.FindRouteByName(db, in.Route)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	if route == nil {
@@ -358,7 +369,7 @@ func (u *userService) RemoveRouteForPermission(ctx context.Context, in *pb.Remov
 
 	permission, err := usermodel.FindPermissionByName(db, in.Permission)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	if permission == nil {
@@ -367,7 +378,7 @@ func (u *userService) RemoveRouteForPermission(ctx context.Context, in *pb.Remov
 
 	route, err := usermodel.FindRouteByName(db, in.Route)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	if route == nil {
@@ -388,7 +399,7 @@ func (u *userService) RemovePermission(ctx context.Context, in *pb.RemovePermiss
 
 	permission, err := usermodel.FindPermissionByName(db, in.Permission)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	if permission == nil {
@@ -399,10 +410,14 @@ func (u *userService) RemovePermission(ctx context.Context, in *pb.RemovePermiss
 	defer db.Rollback()
 	err = usermodel.DeletePermission(db, permission)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	common.Enforcer.DeleteRole(in.Permission)
-	return &pb.RemovePermissionReply{}, db.Commit().Error
+	err = db.Commit().Error
+	if err != nil {
+		err = status.Error(codes.Internal, err.Error())
+	}
+	return &pb.RemovePermissionReply{}, err
 }
 
 func (u *userService) ListPermissions(ctx context.Context, in *pb.ListPermissionsRequest) (*pb.ListPermissionsReply, error) {
@@ -410,7 +425,7 @@ func (u *userService) ListPermissions(ctx context.Context, in *pb.ListPermission
 
 	ps, err := usermodel.ListPermissions(db)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	names := make([]string, len(ps))
@@ -431,14 +446,14 @@ func (u *userService) AddPermissionForPermission(ctx context.Context, in *pb.Add
 
 	from, err := usermodel.FindPermissionByName(db, in.From)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if from == nil {
 		return nil, ErrPermissionNotFound
 	}
 	to, err := usermodel.FindPermissionByName(db, in.To)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if to == nil {
 		return nil, ErrPermissionNotFound
@@ -458,14 +473,14 @@ func (u *userService) RemovePermissionForPermission(ctx context.Context, in *pb.
 
 	from, err := usermodel.FindPermissionByName(db, in.From)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if from == nil {
 		return nil, ErrPermissionNotFound
 	}
 	child, err := usermodel.FindPermissionByName(db, in.Child)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if child == nil {
 		return nil, ErrPermissionNotFound
@@ -482,7 +497,7 @@ func (u *userService) ListRole(ctx context.Context, in *pb.ListRoleRequest) (*pb
 
 	roles, err := usermodel.ListRole(db)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	names := make([]string, len(roles))
@@ -497,14 +512,18 @@ func (u *userService) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest) 
 
 	p, err := usermodel.FindRoleByID(db, in.Id)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	if p == nil {
 		return nil, ErrRouteNotFound
 	}
 
-	return &pb.UpdateRoleReply{}, usermodel.UpdateRole(db, in.Id, &usermodel.Role{Role: in.Name})
+	err = usermodel.UpdateRole(db, in.Id, &usermodel.Role{Role: in.Name})
+	if err != nil {
+		err = status.Error(codes.Internal, err.Error())
+	}
+	return &pb.UpdateRoleReply{}, err
 }
 
 func (u *userService) RemovePermissionForRole(ctx context.Context, in *pb.RemovePermissionForRoleRequest) (*pb.RemovePermissionForRoleReply, error) {
@@ -515,7 +534,7 @@ func (u *userService) RemovePermissionForRole(ctx context.Context, in *pb.Remove
 
 	role, err := usermodel.FindRole(db, in.Role)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	if role == nil {
@@ -524,7 +543,7 @@ func (u *userService) RemovePermissionForRole(ctx context.Context, in *pb.Remove
 
 	permission, err := usermodel.FindPermissionByName(db, in.Permission)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if permission == nil {
 		return nil, ErrPermissionNotFound
@@ -544,14 +563,14 @@ func (u *userService) AddRoleForRole(ctx context.Context, in *pb.AddRoleForRoleR
 
 	from, err := usermodel.FindRole(db, in.From)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if from == nil {
 		return nil, ErrRoleNotFound
 	}
 	to, err := usermodel.FindRole(db, in.To)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if to == nil {
 		return nil, ErrRoleNotFound
@@ -571,14 +590,14 @@ func (u *userService) RemoveRoleForRole(ctx context.Context, in *pb.RemoveRoleFo
 
 	from, err := usermodel.FindRole(db, in.From)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if from == nil {
 		return nil, ErrRoleNotFound
 	}
 	child, err := usermodel.FindRole(db, in.Child)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if child == nil {
 		return nil, ErrRoleNotFound
@@ -598,7 +617,7 @@ func (u *userService) RemoveRole(ctx context.Context, in *pb.RemoveRoleRequest) 
 
 	role, err := usermodel.FindRole(db, in.Role)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	if role == nil {
@@ -609,10 +628,14 @@ func (u *userService) RemoveRole(ctx context.Context, in *pb.RemoveRoleRequest) 
 	defer db.Rollback()
 	err = usermodel.DeleteRole(db, role)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	common.Enforcer.DeleteRole(in.Role)
-	return &pb.RemoveRoleReply{}, db.Commit().Error
+	err = db.Commit().Error
+	if err != nil {
+		err = status.Error(codes.Internal, err.Error())
+	}
+	return &pb.RemoveRoleReply{}, err
 }
 
 func (u *userService) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*pb.ListUsersReply, error) {
@@ -620,7 +643,7 @@ func (u *userService) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*
 
 	us, err := usermodel.ListUsers(db)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	users := make([]*pb.UserField, 0)
@@ -642,7 +665,7 @@ func (u *userService) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) 
 
 	user, err := usermodel.FindUserByID(db, in.Id)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	if user == nil {
@@ -654,6 +677,9 @@ func (u *userService) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) 
 		Email:    &in.Email,
 		UserType: in.UserType,
 	})
+	if err != nil {
+		err = status.Error(codes.Internal, err.Error())
+	}
 
 	return &pb.UpdateUserReply{}, err
 }
@@ -666,7 +692,7 @@ func (u *userService) AddPermissionForUser(ctx context.Context, in *pb.AddPermis
 
 	user, err := usermodel.FindUserByUserName(db, in.Username)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if user == nil {
 		return nil, ErrUserNotFound
@@ -674,7 +700,7 @@ func (u *userService) AddPermissionForUser(ctx context.Context, in *pb.AddPermis
 
 	permission, err := usermodel.FindPermissionByName(db, in.Permission)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if permission == nil {
 		return nil, ErrPermissionNotFound
@@ -694,7 +720,7 @@ func (u *userService) RemovePermissionForUser(ctx context.Context, in *pb.Remove
 
 	user, err := usermodel.FindUserByUserName(db, in.Username)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if user == nil {
 		return nil, ErrUserNotFound
@@ -702,7 +728,7 @@ func (u *userService) RemovePermissionForUser(ctx context.Context, in *pb.Remove
 
 	permission, err := usermodel.FindPermissionByName(db, in.Permission)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if permission == nil {
 		return nil, ErrPermissionNotFound
@@ -723,7 +749,7 @@ func (u *userService) RemoveRoleForUser(ctx context.Context, in *pb.RemoveRoleFo
 
 	role, err := usermodel.FindRole(db, in.Role)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if role == nil {
 		return nil, ErrRoleNotFound
@@ -731,7 +757,7 @@ func (u *userService) RemoveRoleForUser(ctx context.Context, in *pb.RemoveRoleFo
 
 	user, err := usermodel.FindUserByUserName(db, in.Username)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if user == nil {
 		return nil, ErrUserNotFound

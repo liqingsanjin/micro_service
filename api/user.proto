@@ -11,8 +11,6 @@ service User {
     rpc GetPermissions(GetPermissionsRequest) returns (GetPermissionsReply) {}
     rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionReply) {}
 
-    rpc AddPolicy(AddPolicyRequest) returns (AddPolicyReply) {}
-
     // 权限和路由
     rpc AddRoutes(AddRoutesRequest) returns (AddRoutesReply) {}
     rpc ListRoutes(ListRoutesRequest) returns (ListRoutesReply) {}
