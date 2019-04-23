@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 	"path"
+	"runtime"
 	"time"
 
 	"github.com/go-kit/kit/sd/consul"
@@ -132,9 +133,7 @@ func main() {
 	}
 	logrus.Infoln("启动成功")
 
-	for {
-		time.Sleep(time.Hour)
-	}
+	runtime.Goexit()
 }
 
 func parseConfigFile() error {
