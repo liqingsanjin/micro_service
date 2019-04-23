@@ -136,6 +136,9 @@ func (s *setService) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticGetDic
 		bizCdArr = getBizCdByProdCd(prodCdArr)
 		dicTypeCondition = append(dicTypeCondition, "BIZ_CD")
 		results := getDicItemByCondition(dicTypeCondition, dicNameCondition, bizCdArr)
+		if len(results) == 0 {
+			return &pb.StaticGetDicByProdAndBizResp{}, nil
+		}
 
 		items := make([]*pb.StaticGetDictionaryItem, 0)
 		for i := 0; i < len(results); i++ {
@@ -168,9 +171,11 @@ func (s *setService) GetDicByInsCmpCd(ctx context.Context, in *pb.StaticGetDicBy
 	dicTypeCondition := []string{"INS_ID_CD"}
 	dicNameCondition := make([]string, 0)
 	insCds := getDicByInsCmpCd(in.InsCompanyCd)
+	if len(insCds) == 0 {
+		return &pb.StaticGetDicByInsCmpCdResp{}, nil
+	}
 
 	results := getDicItemByCondition(dicTypeCondition, dicNameCondition, insCds)
-
 	items := make([]*pb.StaticGetDictionaryItem, 0)
 	for i := 0; i < len(results); i++ {
 		items = append(items, &pb.StaticGetDictionaryItem{
