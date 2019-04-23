@@ -19,6 +19,8 @@ services:
   consul:
     image: consul:1.4.4
     container_name: consul
+    volumes:
+      - ./configs/consul.json:/consul/config/consul.json
     ports:
       - 8300:8300
       - 8301:8301
