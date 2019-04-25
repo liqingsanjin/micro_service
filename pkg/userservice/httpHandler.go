@@ -93,6 +93,15 @@ func NewHttpHandler(endpoints *UserEndpoints) http.Handler {
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
+
+	engin.POST("/user/removeRouteForPermission",
+		jwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.RemoveRouteForPermissionEndpoint,
+			decodeHttpRemoveRouteForPermissionRequest,
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
 	return engin
 }
 
@@ -170,6 +179,13 @@ func decodeHttpUpdatePermissionRequest(_ context.Context, r *http.Request) (inte
 
 func decodeHttpAddRouteForPermissionRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var request pb.AddRouteForPermissionRequest
+	defer r.Body.Close()
+	err := json.NewDecoder(r.Body).Decode(&request)
+	return &request, err
+}
+
+func decodeHttpRemoveRouteForPermissionRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var request pb.RemoveRouteForPermissionRequest
 	defer r.Body.Close()
 	err := json.NewDecoder(r.Body).Decode(&request)
 	return &request, err

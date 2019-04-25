@@ -94,6 +94,13 @@ func main() {
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
 		endpoints.AddRouteForPermissionEndpoint = retry
 	}
+	{
+		factory := userserviceFactory(userservice.MakeRemoveRouteForPermissionEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.RemoveRouteForPermissionEndpoint = retry
+	}
 
 	userHandler := userservice.NewHttpHandler(&endpoints)
 	http.ListenAndServe(":8080", userHandler)
