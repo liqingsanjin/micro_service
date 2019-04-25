@@ -249,7 +249,7 @@ create table if not exists TBL_INS_PROD_BIZ_FEE_MAP_INF
 	REC_CRT_TS datetime default now(),
 	REC_UPD_TS datetime default now(),
 	primary key (PROD_CD, BIZ_CD, MCC_M_TP, MCC_S_TP)
-)
+);
 
 create table if not exists TBL_PROD_BIZ_TRANS_MAP
 (
@@ -262,4 +262,4 @@ create table if not exists TBL_PROD_BIZ_TRANS_MAP
 	RESV_FLD2 VARCHAR(20),
 	RESV_FLD3 VARCHAR(20),
 	primary key (PROD_CD, BIZ_CD, TRANS_CD)
-)
+);

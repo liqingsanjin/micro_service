@@ -1,25 +1,28 @@
 package cleartxn
 
 import (
-	"archive/zip"
-	"errors"
-	"fmt"
-	"io"
-	"io/ioutil"
-	"os"
 	"time"
+	"userService/pkg/pb"
 
 	"github.com/jinzhu/gorm"
-	"github.com/tealeg/xlsx"
 )
 
+//Mysql Select
 const (
-	clearTxnName = "TBL_CLEAR_TXN"
+	SelectInsTxnResp = "KEY_RSP, MCHNT_CD, CARD_ACCPTR_NM, TRANS_DT, MA_SETTLE_DT, TRANS_MT, " +
+		"MA_TRANS_CD, FWD_INS_ID_CD, TRANS_AT, PRI_ACCT_NO, ISS_INS_ID_CD,  TERM_ID, " +
+		"PROD_CD , CARD_CLASS, TRANS_ST, RESP_CD"
+)
+
+//Table
+const (
+	clearTxnName  = "TBL_CLEAR_TXN"
+	TfrTrnLogName = "TBL_TFR_TRN_LOG1"
 )
 
 type ClearTxn struct {
-	CompanyCd        string    `gorm:"column:COMPANY_CD"`
-	InsIDCd          string    `gorm:"column:INS_ID_CD"`
+	CompanyCd        string    `gorm:"column:COMPANY_CD`
+	InsIDCd          string    `gorm:"column:INS_ID_CD`
 	AcqInsIDCd       string    `gorm:"column:ACQ_INS_ID_CD"`
 	FwdInsIDCd       string    `gorm:"column:FWD_INS_ID_CD"`
 	MchtCd           string    `gorm:"column:MCHT_CD"`
@@ -134,6 +137,138 @@ func (c ClearTxn) TableName() string {
 	return clearTxnName
 }
 
+type TfrTrnLog struct {
+	TransDt              string    `gorm:"column:TRANS_DT"`
+	TransMt              string    `gorm:"column:TRANS_MT"`
+	SrcQid               int       `gorm:"column:SRC_QID"`
+	DesQid               int       `gorm:"column:DES_QID"`
+	MaTransCd            string    `gorm:"column:MA_TRANS_CD"`
+	MaTransNm            string    `gorm:"column:MA_TRANS_NM"`
+	KeyRsp               string    `gorm:"column:KEY_RSP"`
+	KeyRevsal            string    `gorm:"column:KEY_REVSAL"`
+	KeyCancel            string    `gorm:"column:KEY_CANCEL"`
+	RespCd               string    `gorm:"column:RESP_CD"`
+	TransSt              string    `gorm:"column:TRANS_ST"`
+	MaTransSeq           int       `gorm:"column:MA_TRANS_SEQ"`
+	OrigMaTransSeq       int       `gorm:"column:ORIG_MA_TRANS_SEQ"`
+	OrigTransSeq         string    `gorm:"column:ORIG_TRANS_SEQ"`
+	OrigTermSeq          string    `gorm:"column:ORIG_TERM_SEQ"`
+	OrigTransDt          string    `gorm:"column:ORIG_TRANS_DT"`
+	MaSettleDt           string    `gorm:"column:MA_SETTLE_DT"`
+	AccessMd             string    `gorm:"column:ACCESS_MD"`
+	MsgTp                string    `gorm:"column:MSG_TP"`
+	PriAcctNo            string    `gorm:"column:PRI_ACCT_NO"`
+	AcctTp               string    `gorm:"column:ACCT_TP"`
+	TransProcCd          string    `gorm:"column:TRANS_PROC_CD"`
+	TransAt              string    `gorm:"column:TRANS_AT"`
+	TransTdTm            string    `gorm:"column:TRANS_TD_TM"`
+	TermSeq              string    `gorm:"column:TERM_SEQ"`
+	AcptTransTm          string    `gorm:"column:ACPT_TRANS_TM"`
+	AcptTransDt          string    `gorm:"column:ACPT_TRANS_DT"`
+	MchntTp              string    `gorm:"column:MCHNT_TP"`
+	PosEntryMdCd         string    `gorm:"column:POS_ENTRY_MD_CD"`
+	PosCondCd            string    `gorm:"column:POS_COND_CD"`
+	AcptInsIdCd          string    `gorm:"column:ACPT_INS_ID_CD"`
+	FwdInsIdCd           string    `gorm:"column:FWD_INS_ID_CD"`
+	TermId               string    `gorm:"column:TERM_ID"`
+	MchntCd              string    `gorm:"column:MCHNT_CD"`
+	CardAccptrNm         string    `gorm:"column:CARD_ACCPTR_NM"`
+	RetriRefNo           string    `gorm:"column:RETRI_REF_NO"`
+	ReqAuthId            string    `gorm:"column:REQ_AUTH_ID"`
+	TransSubcata         string    `gorm:"column:TRANS_SUBCATA"`
+	IndustryAddnInf      string    `gorm:"column:INDUSTRY_ADDN_INF"`
+	TransCurrCd          string    `gorm:"column:TRANS_CURR_CD"`
+	SecCtrlInf           string    `gorm:"column:SEC_CTRL_INF"`
+	IcData               string    `gorm:"column:IC_DATA"`
+	UdfFldPure           string    `gorm:"column:UDF_FLD_PURE"`
+	CertifId             string    `gorm:"column:CERTIF_ID"`
+	NetworkMgmtInfCd     string    `gorm:"column:NETWORK_MGMT_INF_CD"`
+	OrigDataElemnt       string    `gorm:"column:ORIG_DATA_ELEMNT"`
+	RcvInsIdCd           string    `gorm:"column:RCV_INS_ID_CD"`
+	TfrInAcctNoPure      string    `gorm:"column:TFR_IN_ACCT_NO_PURE"`
+	TfrInAcctTp          string    `gorm:"column:TFR_IN_ACCT_TP"`
+	TfrOutAcctNoPure     string    `gorm:"column:TFR_OUT_ACCT_NO_PURE"`
+	AcptInsResvPure      string    `gorm:"column:ACPT_INS_RESV_PURE"`
+	TrrOutAcctTp         string    `gorm:"column:TRR_OUT_ACCT_TP"`
+	IssInsIdCd           string    `gorm:"column:ISS_INS_ID_CD"`
+	CardAttr             string    `gorm:"column:CARD_ATTR"`
+	CardClass            string    `gorm:"column:CARD_CLASS"`
+	CardMedia            string    `gorm:"column:CARD_MEDIA"`
+	CardBin              string    `gorm:"column:CARD_BIN"`
+	CardBrand            string    `gorm:"column:CARD_BRAND"`
+	RoutInsIdCd          string    `gorm:"column:ROUT_INS_ID_CD"`
+	AcptRegionCd         string    `gorm:"column:ACPT_REGION_CD"`
+	BussRegionCd         string    `gorm:"column:BUSS_REGION_CD"`
+	UsrNoTp              string    `gorm:"column:USR_NO_TP"`
+	UsrNoRegionCd        string    `gorm:"column:USR_NO_REGION_CD"`
+	UsrNoRegionAddnCd    string    `gorm:"column:USR_NO_REGION_ADDN_CD"`
+	UsrNo                string    `gorm:"column:USR_NO"`
+	SpInsIdCd            string    `gorm:"column:SP_INS_ID_CD"`
+	IndustryInsIdCd      string    `gorm:"column:INDUSTRY_INS_ID_CD"`
+	RoutIndustryInsIdCd  string    `gorm:"column:ROUT_INDUSTRY_INS_ID_CD"`
+	IndustryMchntCd      string    `gorm:"column:INDUSTRY_MCHNT_CD"`
+	IndustryTermCd       string    `gorm:"column:INDUSTRY_TERM_CD"`
+	IndustryMchntTp      string    `gorm:"column:INDUSTRY_MCHNT_TP"`
+	EntrustTp            string    `gorm:"column:ENTRUST_TP"`
+	PmtMd                string    `gorm:"column:PMT_MD"`
+	PmtTp                string    `gorm:"column:PMT_TP"`
+	PmtNo                string    `gorm:"column:PMT_NO"`
+	PmtMchntCd           string    `gorm:"column:PMT_MCHNT_CD"`
+	PmtNoIndustryInsIdCd string    `gorm:"column:PMT_NO_INDUSTRY_INS_ID_CD"`
+	PriAcctNoConv        string    `gorm:"column:PRI_ACCT_NO_CONV"`
+	TransAtConv          string    `gorm:"column:TRANS_AT_CONV"`
+	TransDtTmConv        string    `gorm:"column:TRANS_DT_TM_CONV"`
+	TransSeqConv         string    `gorm:"column:TRANS_SEQ_CONV"`
+	MchntTpConv          string    `gorm:"column:MCHNT_TP_CONV"`
+	RetriRefNoConv       string    `gorm:"column:RETRI_REF_NO_CONV"`
+	AcptInsIdCdConv      string    `gorm:"column:ACPT_INS_ID_CD_CONV"`
+	TermIdConv           string    `gorm:"column:TERM_ID_CONV"`
+	MchntCdConv          string    `gorm:"column:MCHNT_CD_CONV"`
+	MchntNmConv          string    `gorm:"column:MCHNT_NM_CONV"`
+	UdfFldPureConv       string    `gorm:"column:UDF_FLD_PURE_CONV"`
+	SpInsIdCdConv        string    `gorm:"column:SP_INS_ID_CD_CONV"`
+	ExpireDt             string    `gorm:"column:EXPIRE_DT"`
+	SettleDt             string    `gorm:"column:SETTLE_DT"`
+	TransFee             string    `gorm:"column:TRANS_FEE"`
+	RespAuthId           string    `gorm:"column:RESP_AUTH_ID"`
+	AcptRespCd           string    `gorm:"column:ACPT_RESP_CD"`
+	AddnRespDataPure     string    `gorm:"column:ADDN_RESP_DATA_PURE"`
+	AddnAtPure           string    `gorm:"column:ADDN_AT_PURE"`
+	IssAddnDataPure      string    `gorm:"column:ISS_ADDN_DATA_PURE"`
+	IcResDatCups         string    `gorm:"column:IC_RES_DAT_CUPS"`
+	SwResvPure           string    `gorm:"column:SW_RESV_PURE"`
+	IssInsResvPure       string    `gorm:"column:ISS_INS_RESV_PURE"`
+	IndustryRespCd       string    `gorm:"column:INDUSTRY_RESP_CD"`
+	DebtAt               string    `gorm:"column:DEBT_AT"`
+	DtlInqData           string    `gorm:"column:DTL_INQ_DATA"`
+	TransChnl            string    `gorm:"column:TRANS_CHNL"`
+	InterchMdCd          string    `gorm:"column:INTERCH_MD_CD"`
+	TransChkIn           string    `gorm:"column:TRANS_CHK_IN"`
+	MchtStlmFlg          string    `gorm:"column:MCHT_STLM_FLG"`
+	InsStlmFlg           string    `gorm:"column:INS_STLM_FLG"`
+	MsgResvFld1          string    `gorm:"column:MSG_RESV_FLD1"`
+	MsgResvFld2          string    `gorm:"column:MSG_RESV_FLD2"`
+	MsgResvFld3          string    `gorm:"column:MSG_RESV_FLD3"`
+	TransMth             int       `gorm:"column:TRANS_MTH"`
+	RecUpdTs             time.Time `gorm:"column:REC_UPD_TS"`
+	RecCrtTs             time.Time `gorm:"column:REC_CRT_TS"`
+	ProdCd               string    `gorm:"column:PROD_CD"`
+	TranTp               string    `gorm:"column:TRAN_TP"`
+	BizCd                string    `gorm:"column:BIZ_CD"`
+	RevelFlg             string    `gorm:"column:REVEL_FLG"`
+	CancelFlg            string    `gorm:"column:CANCEL_FLG"`
+	MsgResvFld4          string    `gorm:"column:MSG_RESV_FLD4"`
+	MsgResvFld5          string    `gorm:"column:MSG_RESV_FLD5"`
+	MsgResvFld6          string    `gorm:"column:MSG_RESV_FLD6"`
+	MsgResvFld7          string    `gorm:"column:MSG_RESV_FLD7"`
+	MsgResvFld8          string    `gorm:"column:MSG_RESV_FLD8"`
+	MsgResvFld9          string    `gorm:"column:MSG_RESV_FLD9"`
+}
+
+func (t TfrTrnLog) TableName() string {
+	return TfrTrnLogName
+}
+
 //DownloadInstitutionFile 根据开始时间跟结束时间查找交易流水
 //@return Institution： 符合的实例
 func DownloadInstitutionFile(db *gorm.DB, startTime, endTime string) ([]*ClearTxn, error) {
@@ -145,187 +280,54 @@ func DownloadInstitutionFile(db *gorm.DB, startTime, endTime string) ([]*ClearTx
 	return clearTxn, err
 }
 
-//通过日期将数据分为不同的文件
-//@param fileDir "/home/dj/test/"
-func downloadFile(clearTxn []*ClearTxn, fileDir string) error {
+//查询商户一天的交易记录
+//@params option 查询的limit跟offset， 第一个为limit， 第二个为page
+//默认limit=10； page=0
+//@params amountCond 可以为空， a < TRANS_AT AND b > TRANS_AT
+func GetTfrTrnLogs(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string, limit, page int64) ([]*TfrTrnLog, int64, int64, error) {
+	limit, offset := getLimitOffest(limit, page)
+	logs := make([]*TfrTrnLog, 0)
+	var count int64
+	var total int64
 
-	if len(clearTxn) == 0 {
-		return errors.New("Not found correct record")
+	err := db.Debug().Where(tfrTrnLog).Where(amountCond).Select(SelectInsTxnResp).Offset(offset).Limit(limit).Find(&logs).Error
+	if err == gorm.ErrRecordNotFound {
+		return logs, count, total, nil
+	}
+	if err != nil {
+		return nil, count, total, err
 	}
 
-	os.MkdirAll(fileDir, os.ModePerm)
-	var dataIndex string
-
-	for index := 0; index < len(clearTxn); index++ {
-		dataIndex = clearTxn[index].StlmDate
-		file := xlsx.NewFile()
-		sheet, err := file.AddSheet("Worksheet")
-		if err != nil {
-			println(err)
-		}
-
-		var cell *xlsx.Cell
-		{
-			row := sheet.AddRow()
-			cell = row.AddCell()
-			cell.Value = "商户编码"
-			cell = row.AddCell()
-			cell.Value = "交易日期"
-			cell = row.AddCell()
-			cell.Value = "交易时间"
-			cell = row.AddCell()
-			cell.Value = "清算日期"
-			cell = row.AddCell()
-			cell.Value = "终端编号"
-			cell = row.AddCell()
-			cell.Value = "交易类型"
-			cell = row.AddCell()
-			cell.Value = "交易流水号"
-			cell = row.AddCell()
-			cell.Value = "交易卡号"
-			cell = row.AddCell()
-			cell.Value = "卡类型"
-			cell = row.AddCell()
-			cell.Value = "交易本金"
-			cell = row.AddCell()
-			cell.Value = "交易手续费"
-			cell = row.AddCell()
-			cell.Value = "交易结算资金"
-			cell = row.AddCell()
-			cell.Value = "应收差错费用"
-			cell = row.AddCell()
-			cell.Value = "应付差费用"
-			cell = row.AddCell()
-			cell.Value = "系统流水号"
-			cell = row.AddCell()
-			cell.Value = "机构基准收入"
-			cell = row.AddCell()
-			cell.Value = "机构实际收入"
-			cell = row.AddCell()
-			cell.Value = "机构营销返佣"
-			cell = row.AddCell()
-			cell.Value = "代理编码"
-			cell = row.AddCell()
-			cell.Value = "会员号"
-		}
-
-		var j = index
-		for ; j < len(clearTxn); j++ {
-			if dataIndex == clearTxn[j].StlmDate {
-				row := sheet.AddRow()
-				cell = row.AddCell()
-				cell.Value = clearTxn[j].MchtCd
-				cell = row.AddCell()
-				cell.Value = clearTxn[j].StlmDate
-				cell = row.AddCell()
-				cell.Value = clearTxn[j].TransDateTime
-				cell = row.AddCell()
-				cell.Value = "清算日期"
-				cell = row.AddCell()
-				cell.Value = "终端编号"
-				cell = row.AddCell()
-				cell.Value = clearTxn[j].TxnDesc
-				cell = row.AddCell()
-				cell.Value = "交易流水号"
-				cell = row.AddCell()
-				cell.Value = "交易卡号"
-				cell = row.AddCell()
-				cell.Value = clearTxn[j].CardKindDis
-				cell = row.AddCell()
-				cell.Value = "交易本金"
-				cell = row.AddCell()
-				cell.Value = "交易手续费"
-				cell = row.AddCell()
-				cell.Value = "交易结算资金"
-				cell = row.AddCell()
-				cell.Value = "应收差错费用"
-				cell = row.AddCell()
-				cell.Value = "应付差费用"
-				cell = row.AddCell()
-				cell.Value = "系统流水号"
-				cell = row.AddCell()
-				cell.Value = "机构基准收入"
-				cell = row.AddCell()
-				cell.Value = "机构实际收入"
-				cell = row.AddCell()
-				cell.Value = "机构营销返佣"
-				cell = row.AddCell()
-				cell.Value = "代理编码"
-				cell = row.AddCell()
-				cell.Value = "会员号"
-			} else {
-				break
-			}
-
-		}
-		index = j - 1
-
-		filename := fileDir + dataIndex + ".xlsx"
-		err = file.Save(filename)
-		if err != nil {
-			println(err)
-		}
+	rows, err := db.Debug().Table(tfrTrnLog.TableName()).Where(tfrTrnLog).Where(amountCond).Select("sum(TRANS_AT) as total, count(*) as count").Rows()
+	if err != nil {
+		return nil, count, count, err
 	}
-	compress(fileDir, "/home/dj/"+"result.zip")
-	return nil
+	defer rows.Close()
+	for rows.Next() {
+		rows.Scan(&total, &count)
+	}
+
+	return logs, count, total, nil
 }
 
-func compress(dis, src string) error {
-	disFile, err := os.Create(src)
+func GetTfrTrnLogByKeyRsp(db *gorm.DB, keyRsp string) (*pb.GetTfrTrnLogResp, error) {
+	resp := new(pb.GetTfrTrnLogResp)
+	err := db.Debug().Table(TfrTrnLog{}.TableName()).Where("key_rsp = ?", keyRsp).First(resp).Error
+	if err == gorm.ErrRecordNotFound {
+		return resp, nil
+	}
 	if err != nil {
-		return err
-	}
-	defer disFile.Close()
-
-	zw := zip.NewWriter(disFile)
-	defer zw.Close()
-
-	filesInfo, err := ioutil.ReadDir(dis)
-	if err != nil {
-		errors.New("File not exist")
+		return nil, err
 	}
 
-	files := make([]string, 0)
-	for _, f := range filesInfo {
-		files = append(files, dis+f.Name())
+	return resp, nil
+}
+
+func getLimitOffest(limit, page int64) (int64, int64) {
+	if limit == 0 {
+		return 10, 0
 	}
 
-	fmt.Println(files)
-
-	for _, file := range files {
-
-		zipfile, err := os.Open(file)
-		if err != nil {
-			return err
-		}
-		defer zipfile.Close()
-
-		// Get the file information
-		info, err := zipfile.Stat()
-		if err != nil {
-			return err
-		}
-
-		header, err := zip.FileInfoHeader(info)
-		if err != nil {
-			return err
-		}
-
-		// Using FileInfoHeader() above only uses the basename of the file. If we want
-		// to preserve the folder structure we can overwrite this with the full path.
-		header.Name = file
-
-		// Change to deflate to gain better compression
-		// see http://golang.org/pkg/archive/zip/#pkg-constants
-		header.Method = zip.Deflate
-
-		writer, err := zw.CreateHeader(header)
-		if err != nil {
-			return err
-		}
-		if _, err = io.Copy(writer, zipfile); err != nil {
-			return err
-		}
-	}
-	return nil
+	offset := (page - 1) * limit
+	return limit, offset
 }

@@ -10,7 +10,7 @@ import (
 	"path"
 	cleartxnM "userService/pkg/model/cleartxn"
 
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 	"github.com/tealeg/xlsx"
 )
 

@@ -11,6 +11,8 @@ import (
 
 type grpcServer struct {
 	tnxHisDownload grpc.Handler
+	getTfrTrnLogs  grpc.Handler
+	getTfrTrnLog   grpc.Handler
 }
 
 func (g *grpcServer) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHisDownloadReq) (*pb.InstitutionTnxHisDownloadResp, error) {
@@ -21,10 +23,33 @@ func (g *grpcServer) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHi
 	return res.(*pb.InstitutionTnxHisDownloadResp), nil
 }
 
+func (g *grpcServer) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq) (*pb.GetTfrTrnLogsResp, error) {
+	_, res, err := g.getTfrTrnLogs.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetTfrTrnLogsResp), nil
+}
+
+func (g *grpcServer) GetTfrTrnLog(ctx context.Context, in *pb.GetTfrTrnLogReq) (*pb.GetTfrTrnLogResp, error) {
+	_, res, err := g.getTfrTrnLog.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetTfrTrnLogResp), nil
+}
+
 //NewGRPCServer .
-func NewGRPCServer(setEndpoint *SetEndpoint) pb.InstitutionServer {
+func NewGRPCServer() pb.InstitutionServer {
+	insSetService := NewSetService()
+	downEndpoint := MakeDownloadEndpoint(insSetService)
+	getTfrTrnlogsEndpoint := MakeGetTfrTrnLogsEndpoint(insSetService)
+	getTfrTrnlogEndpoint := MakeGetTfrTrnLogEndpoint(insSetService)
+
 	return &grpcServer{
-		tnxHisDownload: grpcNewServer(setEndpoint.TnxHisDownloadEndpoint),
+		tnxHisDownload: grpcNewServer(downEndpoint),
+		getTfrTrnLogs:  grpcNewServer(getTfrTrnlogsEndpoint),
+		getTfrTrnLog:   grpcNewServer(getTfrTrnlogEndpoint),
 	}
 }
 
