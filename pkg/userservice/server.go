@@ -63,7 +63,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeCheckPermissionEndpoint(userService)
+		endpoint := MakeCheckPermissionEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.checkPermissionHandler = grpctransport.NewServer(
 			endpoint,

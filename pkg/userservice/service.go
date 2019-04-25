@@ -143,9 +143,12 @@ func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsR
 }
 
 func (u *userService) CheckPermission(ctx context.Context, in *pb.CheckPermissionRequest) (*pb.CheckPermissionReply, error) {
-	user := ctx.Value("userInfo").(*UserInfo)
+	user := in.User
+	if user == nil {
+		return nil, ErrInvalidParams
+	}
 
-	ok := common.Enforcer.Enforce(user.UserName, in.GetRoute())
+	ok := common.Enforcer.Enforce(user.Username, in.GetRoute())
 	return &pb.CheckPermissionReply{
 		Result: ok,
 	}, nil

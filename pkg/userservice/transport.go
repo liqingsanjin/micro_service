@@ -27,7 +27,7 @@ func MakeGetPermissionsEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeCheckPermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeCheckPermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.CheckPermissionRequest)
 		if !ok {

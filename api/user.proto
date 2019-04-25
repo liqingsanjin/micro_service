@@ -81,6 +81,7 @@ message Menu {
 
 message CheckPermissionRequest {
     string route = 1;
+    UserInfo user = 2;
 }
 
 message CheckPermissionReply {

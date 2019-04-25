@@ -33,6 +33,14 @@ func NewHttpHandler(endpoints *UserEndpoints) http.Handler {
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
+	engin.POST("/user/checkPermission",
+		jwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.CheckPermissionEndpoint,
+			decodeHttpCheckPermissionRequest,
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
 	return engin
 }
 
@@ -51,6 +59,18 @@ func decodeHttpLoginRequest(_ context.Context, r *http.Request) (interface{}, er
 
 func decodeHttpGetPermissionsRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var request pb.GetPermissionsRequest
+	defer r.Body.Close()
+	err := json.NewDecoder(r.Body).Decode(&request)
+	userid, _ := strconv.Atoi(r.Form.Get("userid"))
+	request.User = &pb.UserInfo{
+		Username: r.Form.Get("username"),
+		Userid:   int64(userid),
+	}
+	return &request, err
+}
+
+func decodeHttpCheckPermissionRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var request pb.CheckPermissionRequest
 	defer r.Body.Close()
 	err := json.NewDecoder(r.Body).Decode(&request)
 	userid, _ := strconv.Atoi(r.Form.Get("userid"))
