@@ -341,6 +341,9 @@ func (u *userService) CreatePermission(ctx context.Context, in *pb.CreatePermiss
 }
 
 func (u *userService) UpdatePermission(ctx context.Context, in *pb.UpdatePermissionRequest) (*pb.UpdatePermissionReply, error) {
+	if in.Id == 0 || in.Name == "" {
+		return nil, ErrInvalidParams
+	}
 	db := common.DB
 
 	p, err := usermodel.FindPermissionByID(db, in.Id)
