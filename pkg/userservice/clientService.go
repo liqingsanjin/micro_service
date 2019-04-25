@@ -137,6 +137,17 @@ func NewGrpcClient(conn *grpc.ClientConn) *UserEndpoints {
 		).Endpoint()
 		endpoints.UpdatePermissionEndpoint = endpoint
 	}
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.User",
+			"AddRouteForPermission",
+			encodeRequest,
+			decodeResponse,
+			pb.AddRouteForPermissionReply{},
+		).Endpoint()
+		endpoints.AddRouteForPermissionEndpoint = endpoint
+	}
 
 	return endpoints
 }

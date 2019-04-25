@@ -84,6 +84,15 @@ func NewHttpHandler(endpoints *UserEndpoints) http.Handler {
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
+
+	engin.POST("/user/addRouteForPermission",
+		jwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.AddRouteForPermissionEndpoint,
+			decodeHttpAddRouteForPermissionRequest,
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
 	return engin
 }
 
@@ -154,6 +163,13 @@ func decodeHttpCreatePermissionRequest(_ context.Context, r *http.Request) (inte
 
 func decodeHttpUpdatePermissionRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var request pb.UpdatePermissionRequest
+	defer r.Body.Close()
+	err := json.NewDecoder(r.Body).Decode(&request)
+	return &request, err
+}
+
+func decodeHttpAddRouteForPermissionRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var request pb.AddRouteForPermissionRequest
 	defer r.Body.Close()
 	err := json.NewDecoder(r.Body).Decode(&request)
 	return &request, err
