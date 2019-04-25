@@ -35,11 +35,17 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 		return nil, ErrWrongUserNameOrPassword
 	}
 
+	hash := user.PasswordHashNew
+	if hash == "" {
+		hash = user.PasswordHash
+	}
+	start := time.Now()
 	// 校验密码
-	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(in.GetPassword()))
+	err = bcrypt.CompareHashAndPassword([]byte(hash), []byte(in.GetPassword()))
 	if err != nil {
 		return nil, ErrWrongUserNameOrPassword
 	}
+	logrus.Debugln(time.Since(start))
 
 	// 生成token
 	expiredAt := time.Now().Add(time.Hour * 72)
@@ -52,6 +58,16 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 		err = status.Error(codes.Internal, err.Error())
 	}
 
+	//添加新密码
+	if user.PasswordHashNew == "" {
+		logrus.Infoln("更新密码")
+		newHash, _ := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.MinCost)
+		logrus.Infoln("newHash", newHash)
+		usermodel.UpdateUser(db, user.UserID, &usermodel.User{
+			PasswordHashNew: string(newHash),
+		})
+	}
+
 	return &pb.LoginReply{
 		Id:       user.UserID,
 		Username: user.UserName,
@@ -62,9 +78,12 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 
 func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsRequest) (*pb.GetPermissionsReply, error) {
 	db := common.DB
-	user := ctx.Value("userInfo").(*UserInfo)
+	user := in.User
+	if user == nil {
+		return nil, ErrInvalidParams
+	}
 
-	permissions := common.Enforcer.GetImplicitPermissionsForUser(user.UserName)
+	permissions := common.Enforcer.GetImplicitPermissionsForUser(user.Username)
 
 	itemNames := make([]string, 0)
 	for _, permission := range permissions {

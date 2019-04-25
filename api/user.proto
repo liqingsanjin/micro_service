@@ -40,6 +40,16 @@ service User {
     rpc RemovePermissionForUser(RemovePermissionForUserRequest) returns (RemovePermissionForUserReply) {}
     rpc AddRoleForUser(AddRoleForUserRequest) returns (AddRoleForUserReply) {}
     rpc RemoveRoleForUser(RemoveRoleForUserRequest) returns (RemoveRoleForUserReply) {}
+
+    // 菜单和路由
+    // rpc ListMenus(ListMenusRequest) returns (ListMenusReply) {}
+    // rpc CreateMenu(CreateMenuRequest) returns (CreateMenuReply) {}
+    // rpc RemoveMenu(RemoveMenuRequest) returns (RemoveMenuReply) {}
+}
+
+message UserInfo {
+    int64 userid = 1;
+    string username = 2;
 }
 
 message LoginRequest {
@@ -54,7 +64,9 @@ message LoginReply {
     string token = 4;
 }
 
-message GetPermissionsRequest {}
+message GetPermissionsRequest {
+    UserInfo user = 1;
+}
 
 message GetPermissionsReply {
     repeated Menu menus = 2;
@@ -259,3 +271,15 @@ message RemoveRoleForUserRequest {
 }
 
 message RemoveRoleForUserReply {}
+
+message ListMenusRequest {}
+
+message ListMenusReply {}
+
+message CreateMenuRequest {}
+
+message CreateMenuReply {}
+
+message RemoveMenuRequest {}
+
+message RemoveMenuReply {}

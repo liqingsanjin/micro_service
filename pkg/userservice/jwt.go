@@ -1,13 +1,14 @@
 package userservice
 
 import (
-	"context"
+	"fmt"
+	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/go-kit/kit/endpoint"
+	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"google.golang.org/grpc/metadata"
 )
 
 var (
@@ -39,58 +40,38 @@ func UserClaimFactory() jwt.Claims {
 	return &UserClaims{}
 }
 
-func jwtParser(keyFunc jwt.Keyfunc, method jwt.SigningMethod, newClaims ClaimsFactory) endpoint.Middleware {
-	return func(next endpoint.Endpoint) endpoint.Endpoint {
-		return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-			md, ok := metadata.FromIncomingContext(ctx)
-			if !ok {
-				return nil, ErrTokenContextMissing
+func jwtMiddleware(keyFunc jwt.Keyfunc, method jwt.SigningMethod, newClaims ClaimsFactory) gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		tokenString := c.GetHeader("Authorization")
+
+		token, err := jwt.ParseWithClaims(tokenString, newClaims(), func(token *jwt.Token) (interface{}, error) {
+			if token.Method != method {
+				return nil, ErrUnexpectedSigningMethod
 			}
 
-			tk := md.Get(jwtToken)
-			if len(tk) == 0 || tk[0] == "" {
-				return nil, ErrTokenContextMissing
-			}
-
-			tokenString := tk[0]
-
-			logrus.Debugln("token:", tokenString)
-
-			token, err := jwt.ParseWithClaims(tokenString, newClaims(), func(token *jwt.Token) (interface{}, error) {
-				if token.Method != method {
-					return nil, ErrUnexpectedSigningMethod
-				}
-
-				return keyFunc(token)
-			})
-			if err != nil {
-				if e, ok := err.(*jwt.ValidationError); ok {
-					switch {
-					case e.Errors&jwt.ValidationErrorMalformed != 0:
-						return nil, ErrTokenMalformed
-					case e.Errors&jwt.ValidationErrorExpired != 0:
-						return nil, ErrTokenExpired
-					case e.Errors&jwt.ValidationErrorNotValidYet != 0:
-						return nil, ErrTokenNotActive
-					case e.Inner != nil:
-						return nil, e.Inner
-					}
-				}
-				return nil, err
-			}
-
-			if !token.Valid {
-				return nil, ErrTokenInvalid
-			}
-
-			claims, ok := token.Claims.(*UserClaims)
-			if !ok || claims.User == nil {
-				return nil, ErrTokenInvalid
-			}
-
-			ctx = context.WithValue(ctx, "userInfo", claims.User)
-
-			return next(ctx, request)
+			return keyFunc(token)
+		})
+		if err != nil {
+			logrus.Errorln(err)
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
 		}
+		if !token.Valid {
+			logrus.Errorln(err)
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+
+		claims, ok := token.Claims.(*UserClaims)
+		if !ok || claims.User == nil {
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+		c.Request.Form = url.Values{}
+		c.Request.Form.Set("username", claims.User.UserName)
+		c.Request.Form.Set("userid", fmt.Sprintf("%d", claims.User.ID))
+
+		c.Next()
 	}
 }

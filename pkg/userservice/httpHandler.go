@@ -1,0 +1,92 @@
+package userservice
+
+import (
+	"context"
+	"encoding/json"
+	"net/http"
+	"strconv"
+	"time"
+	"userService/pkg/pb"
+
+	stdjwt "github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
+	httptransport "github.com/go-kit/kit/transport/http"
+	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+)
+
+func NewHttpHandler(endpoints *UserEndpoints) http.Handler {
+	var engin = gin.New()
+	engin.POST("/user/login", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.LoginEndpoint,
+		decodeHttpLoginRequest,
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
+
+	engin.POST("/user/getPermissions",
+		jwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.GetPermissionsEndpoint,
+			decodeHttpGetPermissionsRequest,
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
+	return engin
+}
+
+func convertHttpHandlerToGinHandler(handler http.Handler) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		handler.ServeHTTP(c.Writer, c.Request)
+	}
+}
+
+func decodeHttpLoginRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var request pb.LoginRequest
+	defer r.Body.Close()
+	err := json.NewDecoder(r.Body).Decode(&request)
+	return &request, err
+}
+
+func decodeHttpGetPermissionsRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var request pb.GetPermissionsRequest
+	defer r.Body.Close()
+	err := json.NewDecoder(r.Body).Decode(&request)
+	userid, _ := strconv.Atoi(r.Form.Get("userid"))
+	request.User = &pb.UserInfo{
+		Username: r.Form.Get("username"),
+		Userid:   int64(userid),
+	}
+	return &request, err
+}
+
+func encodeHttpResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	return json.NewEncoder(w).Encode(response)
+}
+
+func errorEncoder(ctx context.Context, err error, w http.ResponseWriter) {
+	start := time.Now()
+	code, msg := err2codeAndMessage(err)
+	w.WriteHeader(code)
+	json.NewEncoder(w).Encode(gin.H{
+		"error": msg,
+	})
+	logrus.Infoln(time.Since(start))
+}
+
+func err2codeAndMessage(err error) (int, string) {
+	s := status.Convert(err)
+	code := s.Code()
+	msg := s.Message()
+	switch code {
+	case codes.PermissionDenied:
+		return http.StatusUnauthorized, msg
+	case codes.Internal:
+		return http.StatusInternalServerError, msg
+	case codes.NotFound, codes.AlreadyExists, codes.InvalidArgument:
+		return http.StatusBadRequest, msg
+	}
+	return http.StatusInternalServerError, msg
+}

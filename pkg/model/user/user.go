@@ -24,6 +24,7 @@ type User struct {
 	UserName           string    `gorm:"column:USER_NAME;unique"`
 	AuthKey            string    `gorm:"column:AUTH_KEY"`
 	PasswordHash       string    `gorm:"column:PASSWORD_HASH"`
+	PasswordHashNew    string    `gorm:"column:PASSWORD_HASH_NEW"`
 	PasswordResetToken *string   `gorm:"column:PASSWORD_RESET_TOKEN"`
 	Email              *string   `gorm:"column:EMAIL"`
 	UserType           string    `gorm:"column:USER_TYPE"`

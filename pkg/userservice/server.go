@@ -4,7 +4,6 @@ import (
 	"context"
 	"userService/pkg/pb"
 
-	stdjwt "github.com/dgrijalva/jwt-go"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 )
 
@@ -44,7 +43,7 @@ func New() pb.UserServer {
 	userService := &userService{}
 
 	{
-		endpoint := makeLoginEndpoint(userService)
+		endpoint := MakeLoginEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.loginHandler = grpctransport.NewServer(
 			endpoint,
@@ -54,8 +53,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeGetPermissionsEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
+		endpoint := MakeGetPermissionsEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.getPermissionsHandler = grpctransport.NewServer(
 			endpoint,
@@ -66,7 +64,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeCheckPermissionEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.checkPermissionHandler = grpctransport.NewServer(
 			endpoint,
@@ -87,7 +84,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeAddPermissionForRoleEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.addPermissionForRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -98,7 +94,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeAddRoleForRoleEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.addRoleForRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -109,7 +104,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeCreateRoleEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.createRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -120,7 +114,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeAddRoleForUserEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.addRoleForUserHandler = grpctransport.NewServer(
 			endpoint,
@@ -131,7 +124,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeAddRoutesEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.addRoutesHandler = grpctransport.NewServer(
 			endpoint,
@@ -142,7 +134,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeListRoutesEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.listRouteHandler = grpctransport.NewServer(
 			endpoint,
@@ -153,7 +144,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeCreatePermissionEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.createPermissionHandler = grpctransport.NewServer(
 			endpoint,
@@ -164,7 +154,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeUpdatePermissionEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.updatePermissionHandler = grpctransport.NewServer(
 			endpoint,
@@ -175,7 +164,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeAddRouteForPermissionEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.addRouteForPermissionHandler = grpctransport.NewServer(
 			endpoint,
@@ -186,7 +174,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeRemoveRouteForPermissionEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.removeRouteForPermissionHandler = grpctransport.NewServer(
 			endpoint,
@@ -197,7 +184,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeRemovePermissionEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.removePermissionHandler = grpctransport.NewServer(
 			endpoint,
@@ -208,7 +194,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeListPermissionsEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.listPermissionsHandler = grpctransport.NewServer(
 			endpoint,
@@ -219,7 +204,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeAddPermissionForPermissionEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.addPermissionForPermissionHandler = grpctransport.NewServer(
 			endpoint,
@@ -230,7 +214,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeRemovePermissionForPermissionEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.removePermissionForPermissionHandler = grpctransport.NewServer(
 			endpoint,
@@ -241,7 +224,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeListRoleEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.listRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -252,7 +234,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeUpdateRoleEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.updateRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -263,7 +244,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeRemovePermissionForRoleEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.removePermissionForRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -274,7 +254,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeRemoveRoleForRoleEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.removeRoleForRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -285,7 +264,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeRemoveRoleEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.removeRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -296,7 +274,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeListUsersEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.listUsersHandler = grpctransport.NewServer(
 			endpoint,
@@ -307,7 +284,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeUpdateUserEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.updateUserHandler = grpctransport.NewServer(
 			endpoint,
@@ -318,7 +294,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeAddPermissionForUserEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.addPermissionForUserHandler = grpctransport.NewServer(
 			endpoint,
@@ -329,7 +304,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeRemovePermissionForUserEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.removePermissionForUserHandler = grpctransport.NewServer(
 			endpoint,
@@ -340,7 +314,6 @@ func New() pb.UserServer {
 
 	{
 		endpoint := makeRemoveRoleForUserEndpoint(userService)
-		endpoint = jwtParser(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory)(endpoint)
 		endpoint = logginMiddleware(endpoint)
 		svr.removeRoleForUserHandler = grpctransport.NewServer(
 			endpoint,

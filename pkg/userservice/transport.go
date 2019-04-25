@@ -7,7 +7,7 @@ import (
 	"github.com/go-kit/kit/endpoint"
 )
 
-func makeLoginEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeLoginEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.LoginRequest)
 		if !ok {
@@ -17,7 +17,7 @@ func makeLoginEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeGetPermissionsEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeGetPermissionsEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.GetPermissionsRequest)
 		if !ok {
@@ -292,5 +292,13 @@ func decodeRequest(ctx context.Context, request interface{}) (interface{}, error
 }
 
 func encodeResponse(ctx context.Context, response interface{}) (interface{}, error) {
+	return response, nil
+}
+
+func encodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
+	return request, nil
+}
+
+func decodeResponse(ctx context.Context, response interface{}) (interface{}, error) {
 	return response, nil
 }
