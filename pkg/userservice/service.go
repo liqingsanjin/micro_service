@@ -157,18 +157,19 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 		return nil, ErrInvalidParams
 	}
 
-	bs, err := bcrypt.GenerateFromPassword([]byte(in.Password), 4)
+	bs, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.MinCost)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	user := &usermodel.User{
-		UserName:     in.Username,
-		UserType:     in.UserType,
-		Email:        &in.Email,
-		LeaguerNO:    in.LeaguerNo,
-		PasswordHash: string(bs),
-		UserStatus:   1,
+		UserName:        in.Username,
+		UserType:        in.UserType,
+		Email:           &in.Email,
+		LeaguerNO:       in.LeaguerNo,
+		PasswordHash:    string(bs),
+		PasswordHashNew: string(bs),
+		UserStatus:      1,
 	}
 
 	newUser, err := usermodel.SaveUser(db, user)
