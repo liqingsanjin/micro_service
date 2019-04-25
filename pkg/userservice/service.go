@@ -35,8 +35,12 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 		return nil, ErrWrongUserNameOrPassword
 	}
 
+	hash := user.PasswordHashNew
+	if hash == "" {
+		hash = user.PasswordHash
+	}
 	// 校验密码
-	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(in.GetPassword()))
+	err = bcrypt.CompareHashAndPassword([]byte(hash), []byte(in.GetPassword()))
 	if err != nil {
 		return nil, ErrWrongUserNameOrPassword
 	}
@@ -52,6 +56,16 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 		err = status.Error(codes.Internal, err.Error())
 	}
 
+	//添加新密码
+	if user.PasswordHashNew == "" {
+		logrus.Infoln("更新密码")
+		newHash, _ := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.MinCost)
+		logrus.Infoln("newHash", newHash)
+		usermodel.UpdateUser(db, user.UserID, &usermodel.User{
+			PasswordHashNew: string(newHash),
+		})
+	}
+
 	return &pb.LoginReply{
 		Id:       user.UserID,
 		Username: user.UserName,
@@ -62,9 +76,12 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 
 func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsRequest) (*pb.GetPermissionsReply, error) {
 	db := common.DB
-	user := ctx.Value("userInfo").(*UserInfo)
+	user := in.User
+	if user == nil {
+		return nil, ErrInvalidParams
+	}
 
-	permissions := common.Enforcer.GetImplicitPermissionsForUser(user.UserName)
+	permissions := common.Enforcer.GetImplicitPermissionsForUser(user.Username)
 
 	itemNames := make([]string, 0)
 	for _, permission := range permissions {
@@ -124,9 +141,12 @@ func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsR
 }
 
 func (u *userService) CheckPermission(ctx context.Context, in *pb.CheckPermissionRequest) (*pb.CheckPermissionReply, error) {
-	user := ctx.Value("userInfo").(*UserInfo)
+	user := in.User
+	if user == nil {
+		return nil, ErrInvalidParams
+	}
 
-	ok := common.Enforcer.Enforce(user.UserName, in.GetRoute())
+	ok := common.Enforcer.Enforce(user.Username, in.GetRoute())
 	return &pb.CheckPermissionReply{
 		Result: ok,
 	}, nil
@@ -138,18 +158,27 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 		return nil, ErrInvalidParams
 	}
 
-	bs, err := bcrypt.GenerateFromPassword([]byte(in.Password), 4)
+	user, err := usermodel.FindUserByUserName(db, in.Username)
+	if err != nil {
+		return nil, err
+	}
+	if user != nil {
+		return nil, ErrUserExists
+	}
+
+	bs, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.MinCost)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	user := &usermodel.User{
-		UserName:     in.Username,
-		UserType:     in.UserType,
-		Email:        &in.Email,
-		LeaguerNO:    in.LeaguerNo,
-		PasswordHash: string(bs),
-		UserStatus:   1,
+	user = &usermodel.User{
+		UserName:        in.Username,
+		UserType:        in.UserType,
+		Email:           &in.Email,
+		LeaguerNO:       in.LeaguerNo,
+		PasswordHash:    string(bs),
+		PasswordHashNew: string(bs),
+		UserStatus:      1,
 	}
 
 	newUser, err := usermodel.SaveUser(db, user)
@@ -312,6 +341,9 @@ func (u *userService) CreatePermission(ctx context.Context, in *pb.CreatePermiss
 }
 
 func (u *userService) UpdatePermission(ctx context.Context, in *pb.UpdatePermissionRequest) (*pb.UpdatePermissionReply, error) {
+	if in.Id == 0 || in.Name == "" {
+		return nil, ErrInvalidParams
+	}
 	db := common.DB
 
 	p, err := usermodel.FindPermissionByID(db, in.Id)

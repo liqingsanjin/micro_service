@@ -7,7 +7,7 @@ import (
 	"github.com/go-kit/kit/endpoint"
 )
 
-func makeLoginEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeLoginEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.LoginRequest)
 		if !ok {
@@ -17,7 +17,7 @@ func makeLoginEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeGetPermissionsEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeGetPermissionsEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.GetPermissionsRequest)
 		if !ok {
@@ -27,7 +27,7 @@ func makeGetPermissionsEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeCheckPermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeCheckPermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.CheckPermissionRequest)
 		if !ok {
@@ -37,7 +37,7 @@ func makeCheckPermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeRegisterEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeRegisterEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.RegisterRequest)
 		if !ok {
@@ -47,7 +47,7 @@ func makeRegisterEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeAddPermissionForRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeAddPermissionForRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.AddPermissionForRoleRequest)
 		if !ok {
@@ -57,7 +57,7 @@ func makeAddPermissionForRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeAddRoleForRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeAddRoleForRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.AddRoleForRoleRequest)
 		if !ok {
@@ -67,7 +67,7 @@ func makeAddRoleForRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeCreateRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeCreateRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.CreateRoleRequest)
 		if !ok {
@@ -77,7 +77,7 @@ func makeCreateRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeAddRoleForUserEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeAddRoleForUserEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.AddRoleForUserRequest)
 		if !ok {
@@ -87,7 +87,7 @@ func makeAddRoleForUserEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeAddRoutesEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeAddRoutesEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.AddRoutesRequest)
 		if !ok {
@@ -97,7 +97,7 @@ func makeAddRoutesEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeListRoutesEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeListRoutesEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.ListRoutesRequest)
 		if !ok {
@@ -107,7 +107,7 @@ func makeListRoutesEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeCreatePermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeCreatePermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.CreatePermissionRequest)
 		if !ok {
@@ -117,7 +117,7 @@ func makeCreatePermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeUpdatePermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeUpdatePermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.UpdatePermissionRequest)
 		if !ok {
@@ -127,7 +127,7 @@ func makeUpdatePermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeAddRouteForPermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeAddRouteForPermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.AddRouteForPermissionRequest)
 		if !ok {
@@ -137,7 +137,7 @@ func makeAddRouteForPermissionEndpoint(service pb.UserServer) endpoint.Endpoint 
 	}
 }
 
-func makeRemoveRouteForPermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeRemoveRouteForPermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.RemoveRouteForPermissionRequest)
 		if !ok {
@@ -147,7 +147,7 @@ func makeRemoveRouteForPermissionEndpoint(service pb.UserServer) endpoint.Endpoi
 	}
 }
 
-func makeRemovePermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeRemovePermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.RemovePermissionRequest)
 		if !ok {
@@ -157,7 +157,7 @@ func makeRemovePermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeListPermissionsEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeListPermissionsEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.ListPermissionsRequest)
 		if !ok {
@@ -167,7 +167,7 @@ func makeListPermissionsEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeAddPermissionForPermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeAddPermissionForPermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.AddPermissionForPermissionRequest)
 		if !ok {
@@ -177,7 +177,7 @@ func makeAddPermissionForPermissionEndpoint(service pb.UserServer) endpoint.Endp
 	}
 }
 
-func makeRemovePermissionForPermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeRemovePermissionForPermissionEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.RemovePermissionForPermissionRequest)
 		if !ok {
@@ -187,7 +187,7 @@ func makeRemovePermissionForPermissionEndpoint(service pb.UserServer) endpoint.E
 	}
 }
 
-func makeListRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeListRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.ListRoleRequest)
 		if !ok {
@@ -197,7 +197,7 @@ func makeListRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeUpdateRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeUpdateRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.UpdateRoleRequest)
 		if !ok {
@@ -207,7 +207,7 @@ func makeUpdateRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeRemovePermissionForRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeRemovePermissionForRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.RemovePermissionForRoleRequest)
 		if !ok {
@@ -217,7 +217,7 @@ func makeRemovePermissionForRoleEndpoint(service pb.UserServer) endpoint.Endpoin
 	}
 }
 
-func makeRemoveRoleForRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeRemoveRoleForRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.RemoveRoleForRoleRequest)
 		if !ok {
@@ -227,7 +227,7 @@ func makeRemoveRoleForRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeRemoveRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeRemoveRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.RemoveRoleRequest)
 		if !ok {
@@ -237,7 +237,7 @@ func makeRemoveRoleEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeListUsersEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeListUsersEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.ListUsersRequest)
 		if !ok {
@@ -247,7 +247,7 @@ func makeListUsersEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeUpdateUserEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeUpdateUserEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.UpdateUserRequest)
 		if !ok {
@@ -257,7 +257,7 @@ func makeUpdateUserEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeAddPermissionForUserEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeAddPermissionForUserEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.AddPermissionForUserRequest)
 		if !ok {
@@ -267,7 +267,7 @@ func makeAddPermissionForUserEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
-func makeRemovePermissionForUserEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeRemovePermissionForUserEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.RemovePermissionForUserRequest)
 		if !ok {
@@ -277,7 +277,7 @@ func makeRemovePermissionForUserEndpoint(service pb.UserServer) endpoint.Endpoin
 	}
 }
 
-func makeRemoveRoleForUserEndpoint(service pb.UserServer) endpoint.Endpoint {
+func MakeRemoveRoleForUserEndpoint(service pb.UserServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req, ok := request.(*pb.RemoveRoleForUserRequest)
 		if !ok {
@@ -292,5 +292,13 @@ func decodeRequest(ctx context.Context, request interface{}) (interface{}, error
 }
 
 func encodeResponse(ctx context.Context, response interface{}) (interface{}, error) {
+	return response, nil
+}
+
+func encodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
+	return request, nil
+}
+
+func decodeResponse(ctx context.Context, response interface{}) (interface{}, error) {
 	return response, nil
 }
