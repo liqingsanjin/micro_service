@@ -20,7 +20,7 @@ type UserEndpoints struct {
 	CreateRoleEndpoint                    endpoint.Endpoint
 	AddRoleForUserEndpoint                endpoint.Endpoint
 	AddRoutesEndpoint                     endpoint.Endpoint
-	ListRouteEndpoint                     endpoint.Endpoint
+	ListRoutesEndpoint                    endpoint.Endpoint
 	CreatePermissionEndpoint              endpoint.Endpoint
 	UpdatePermissionEndpoint              endpoint.Endpoint
 	AddRouteForPermissionEndpoint         endpoint.Endpoint
@@ -101,6 +101,18 @@ func NewGrpcClient(conn *grpc.ClientConn) *UserEndpoints {
 			pb.AddRoutesReply{},
 		).Endpoint()
 		endpoints.AddRoutesEndpoint = endpoint
+	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.User",
+			"ListRoutes",
+			encodeRequest,
+			decodeResponse,
+			pb.ListRoutesReply{},
+		).Endpoint()
+		endpoints.ListRoutesEndpoint = endpoint
 	}
 	return endpoints
 }
@@ -201,7 +213,7 @@ func (u *UserEndpoints) AddRoutes(ctx context.Context, in *pb.AddRoutesRequest) 
 }
 
 func (u *UserEndpoints) ListRoutes(ctx context.Context, in *pb.ListRoutesRequest) (*pb.ListRoutesReply, error) {
-	res, err := u.ListRouteEndpoint(ctx, in)
+	res, err := u.ListRoutesEndpoint(ctx, in)
 	if err != nil {
 		return nil, err
 	}
