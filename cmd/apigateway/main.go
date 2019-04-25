@@ -4,6 +4,7 @@ import (
 	"io"
 	"net/http"
 	"time"
+	"userService/pkg/gateway"
 	"userService/pkg/pb"
 	"userService/pkg/userservice"
 
@@ -102,7 +103,7 @@ func main() {
 		endpoints.RemoveRouteForPermissionEndpoint = retry
 	}
 
-	userHandler := userservice.NewHttpHandler(&endpoints)
+	userHandler := gateway.NewHttpHandler(&endpoints)
 	http.ListenAndServe(":8080", userHandler)
 }
 

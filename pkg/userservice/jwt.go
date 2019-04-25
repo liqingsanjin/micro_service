@@ -12,8 +12,7 @@ import (
 )
 
 var (
-	signedKey = "huiepay"
-	jwtToken  = "jwtToken"
+	SignedKey = "huiepay"
 )
 
 type ClaimsFactory func() jwt.Claims
@@ -29,18 +28,14 @@ func genToken(user *UserInfo, exTime time.Time) (string, error) {
 	}
 	claims.ExpiresAt = exTime.Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(signedKey))
-}
-
-func keyFunc(token *jwt.Token) (interface{}, error) {
-	return []byte(signedKey), nil
+	return token.SignedString([]byte(SignedKey))
 }
 
 func UserClaimFactory() jwt.Claims {
 	return &UserClaims{}
 }
 
-func jwtMiddleware(keyFunc jwt.Keyfunc, method jwt.SigningMethod, newClaims ClaimsFactory) gin.HandlerFunc {
+func JwtMiddleware(keyFunc jwt.Keyfunc, method jwt.SigningMethod, newClaims ClaimsFactory) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		tokenString := c.GetHeader("Authorization")
