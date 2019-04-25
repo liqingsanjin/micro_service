@@ -73,7 +73,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeRegisterEndpoint(userService)
+		endpoint := MakeRegisterEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.registerHandler = grpctransport.NewServer(
 			endpoint,

@@ -79,6 +79,17 @@ func NewGrpcClient(conn *grpc.ClientConn) *UserEndpoints {
 		endpoints.CheckPermissionEndpoint = endpoint
 	}
 
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.User",
+			"Register",
+			encodeRequest,
+			decodeResponse,
+			pb.RegisterReply{},
+		).Endpoint()
+		endpoints.RegisterEndpoint = endpoint
+	}
 	return endpoints
 }
 func (u *UserEndpoints) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, error) {

@@ -39,13 +39,11 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 	if hash == "" {
 		hash = user.PasswordHash
 	}
-	start := time.Now()
 	// 校验密码
 	err = bcrypt.CompareHashAndPassword([]byte(hash), []byte(in.GetPassword()))
 	if err != nil {
 		return nil, ErrWrongUserNameOrPassword
 	}
-	logrus.Debugln(time.Since(start))
 
 	// 生成token
 	expiredAt := time.Now().Add(time.Hour * 72)
@@ -160,12 +158,20 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 		return nil, ErrInvalidParams
 	}
 
+	user, err := usermodel.FindUserByUserName(db, in.Username)
+	if err != nil {
+		return nil, err
+	}
+	if user != nil {
+		return nil, ErrUserExists
+	}
+
 	bs, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.MinCost)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	user := &usermodel.User{
+	user = &usermodel.User{
 		UserName:        in.Username,
 		UserType:        in.UserType,
 		Email:           &in.Email,

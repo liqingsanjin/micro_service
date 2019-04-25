@@ -5,13 +5,12 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"time"
 	"userService/pkg/pb"
 
 	stdjwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/go-kit/kit/sd/lb"
 	httptransport "github.com/go-kit/kit/transport/http"
-	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -25,6 +24,13 @@ func NewHttpHandler(endpoints *UserEndpoints) http.Handler {
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
+	engin.POST("/user/register", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.RegisterEndpoint,
+		decodeHttpRegisterRequest,
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
+
 	engin.POST("/user/getPermissions",
 		jwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
@@ -33,6 +39,7 @@ func NewHttpHandler(endpoints *UserEndpoints) http.Handler {
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
+
 	engin.POST("/user/checkPermission",
 		jwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
@@ -48,6 +55,13 @@ func convertHttpHandlerToGinHandler(handler http.Handler) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		handler.ServeHTTP(c.Writer, c.Request)
 	}
+}
+
+func decodeHttpRegisterRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var request pb.RegisterRequest
+	defer r.Body.Close()
+	err := json.NewDecoder(r.Body).Decode(&request)
+	return &request, err
 }
 
 func decodeHttpLoginRequest(_ context.Context, r *http.Request) (interface{}, error) {
@@ -87,17 +101,26 @@ func encodeHttpResponse(_ context.Context, w http.ResponseWriter, response inter
 }
 
 func errorEncoder(ctx context.Context, err error, w http.ResponseWriter) {
-	start := time.Now()
 	code, msg := err2codeAndMessage(err)
 	w.WriteHeader(code)
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	json.NewEncoder(w).Encode(gin.H{
 		"error": msg,
 	})
-	logrus.Infoln(time.Since(start))
 }
 
 func err2codeAndMessage(err error) (int, string) {
-	s := status.Convert(err)
+	if err == nil {
+		return http.StatusOK, ""
+	}
+	switch e := err.(type) {
+	case lb.RetryError:
+		err = e.Final
+	}
+	s, ok := status.FromError(err)
+	if !ok {
+		return http.StatusInternalServerError, err.Error()
+	}
 	code := s.Code()
 	msg := s.Message()
 	switch code {
@@ -105,7 +128,11 @@ func err2codeAndMessage(err error) (int, string) {
 		return http.StatusUnauthorized, msg
 	case codes.Internal:
 		return http.StatusInternalServerError, msg
-	case codes.NotFound, codes.AlreadyExists, codes.InvalidArgument:
+	case codes.NotFound:
+		return http.StatusBadRequest, msg
+	case codes.AlreadyExists:
+		return http.StatusBadRequest, msg
+	case codes.InvalidArgument:
 		return http.StatusBadRequest, msg
 	}
 	return http.StatusInternalServerError, msg

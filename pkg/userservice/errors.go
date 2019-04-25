@@ -6,16 +6,12 @@ import (
 )
 
 var (
+	ErrUserExists              = status.Error(codes.AlreadyExists, "user is exists")
 	ErrUserNamePasswordEmpty   = status.Error(codes.NotFound, "empty username or password")
 	ErrWrongUserNameOrPassword = status.Error(codes.InvalidArgument, "wrong username or password")
 	ErrUserNotFound            = status.Error(codes.NotFound, "user not found")
 	ErrReplyTypeInvalid        = status.Error(codes.Internal, "reply type invalid")
 	ErrRequestTypeInvalid      = status.Error(codes.Internal, "request type invalid")
-	ErrTokenContextMissing     = status.Error(codes.PermissionDenied, "token up for parsing was not passed through the context")
-	ErrTokenInvalid            = status.Error(codes.PermissionDenied, "JWT Token was invalid")
-	ErrTokenExpired            = status.Error(codes.PermissionDenied, "JWT Token is expired")
-	ErrTokenMalformed          = status.Error(codes.PermissionDenied, "JWT Token is malformed")
-	ErrTokenNotActive          = status.Error(codes.PermissionDenied, "token is not valid yet")
 	ErrUnexpectedSigningMethod = status.Error(codes.PermissionDenied, "unexpected signing method")
 	ErrInvalidParams           = status.Error(codes.InvalidArgument, "invalid params")
 	ErrPolicyExists            = status.Error(codes.AlreadyExists, "policy exists")

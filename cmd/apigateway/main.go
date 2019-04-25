@@ -39,17 +39,24 @@ func main() {
 		endpoints.LoginEndpoint = retry
 	}
 	{
+		factory := userserviceFactory(userservice.MakeRegisterEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.RegisterEndpoint = retry
+	}
+	{
 		factory := userserviceFactory(userservice.MakeGetPermissionsEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
 		endpoints.GetPermissionsEndpoint = retry
 	}
 	{
 		factory := userserviceFactory(userservice.MakeCheckPermissionEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
 		endpoints.CheckPermissionEndpoint = retry
 	}
 
