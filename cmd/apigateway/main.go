@@ -30,7 +30,7 @@ func main() {
 		tags        = []string{}
 		passingOnly = true
 		instancer   = consulsd.NewInstancer(client, log, "userService", tags, passingOnly)
-		endpoints   userservice.UserEndpoints
+		endpoints   gateway.UserEndpoints
 	)
 	{
 		factory := userserviceFactory(userservice.MakeLoginEndpoint)
@@ -113,7 +113,7 @@ func userserviceFactory(makeEndpoint func(pb.UserServer) endpoint.Endpoint) sd.F
 		if err != nil {
 			return nil, nil, err
 		}
-		service := userservice.NewGrpcClient(conn)
+		service := gateway.NewUserServiceGRPCClient(conn)
 		return makeEndpoint(service), conn, nil
 	}
 }

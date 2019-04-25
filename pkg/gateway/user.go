@@ -17,7 +17,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func RegisterUserHandler(engine *gin.Engine, endpoints *userservice.UserEndpoints) {
+func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 	engine.POST("/user/login", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.LoginEndpoint,
 		decodeHttpLoginRequest,

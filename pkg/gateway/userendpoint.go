@@ -1,4 +1,4 @@
-package userservice
+package gateway
 
 import (
 	"context"
@@ -41,7 +41,7 @@ type UserEndpoints struct {
 	RemoveRoleForUserEndpoint             endpoint.Endpoint
 }
 
-func NewGrpcClient(conn *grpc.ClientConn) *UserEndpoints {
+func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 	endpoints := new(UserEndpoints)
 	{
 		endpoint := grpctransport.NewClient(

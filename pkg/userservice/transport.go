@@ -294,11 +294,3 @@ func decodeRequest(ctx context.Context, request interface{}) (interface{}, error
 func encodeResponse(ctx context.Context, response interface{}) (interface{}, error) {
 	return response, nil
 }
-
-func encodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
-	return request, nil
-}
-
-func decodeResponse(ctx context.Context, response interface{}) (interface{}, error) {
-	return response, nil
-}
