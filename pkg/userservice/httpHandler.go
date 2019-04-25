@@ -48,6 +48,15 @@ func NewHttpHandler(endpoints *UserEndpoints) http.Handler {
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
+
+	engin.POST("/user/addRoutes",
+		jwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.AddRoutesEndpoint,
+			decodeHttpAddRoutesRequest,
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
 	return engin
 }
 
@@ -92,6 +101,13 @@ func decodeHttpCheckPermissionRequest(_ context.Context, r *http.Request) (inter
 		Username: r.Form.Get("username"),
 		Userid:   int64(userid),
 	}
+	return &request, err
+}
+
+func decodeHttpAddRoutesRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var request pb.AddRoutesRequest
+	defer r.Body.Close()
+	err := json.NewDecoder(r.Body).Decode(&request)
 	return &request, err
 }
 

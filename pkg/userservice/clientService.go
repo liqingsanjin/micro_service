@@ -90,6 +90,18 @@ func NewGrpcClient(conn *grpc.ClientConn) *UserEndpoints {
 		).Endpoint()
 		endpoints.RegisterEndpoint = endpoint
 	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.User",
+			"AddRoutes",
+			encodeRequest,
+			decodeResponse,
+			pb.AddRoutesReply{},
+		).Endpoint()
+		endpoints.AddRoutesEndpoint = endpoint
+	}
 	return endpoints
 }
 func (u *UserEndpoints) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, error) {

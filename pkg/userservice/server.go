@@ -83,7 +83,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeAddPermissionForRoleEndpoint(userService)
+		endpoint := MakeAddPermissionForRoleEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.addPermissionForRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -93,7 +93,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeAddRoleForRoleEndpoint(userService)
+		endpoint := MakeAddRoleForRoleEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.addRoleForRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -103,7 +103,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeCreateRoleEndpoint(userService)
+		endpoint := MakeCreateRoleEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.createRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -113,7 +113,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeAddRoleForUserEndpoint(userService)
+		endpoint := MakeAddRoleForUserEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.addRoleForUserHandler = grpctransport.NewServer(
 			endpoint,
@@ -123,7 +123,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeAddRoutesEndpoint(userService)
+		endpoint := MakeAddRoutesEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.addRoutesHandler = grpctransport.NewServer(
 			endpoint,
@@ -133,7 +133,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeListRoutesEndpoint(userService)
+		endpoint := MakeListRoutesEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.listRouteHandler = grpctransport.NewServer(
 			endpoint,
@@ -143,7 +143,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeCreatePermissionEndpoint(userService)
+		endpoint := MakeCreatePermissionEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.createPermissionHandler = grpctransport.NewServer(
 			endpoint,
@@ -153,7 +153,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeUpdatePermissionEndpoint(userService)
+		endpoint := MakeUpdatePermissionEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.updatePermissionHandler = grpctransport.NewServer(
 			endpoint,
@@ -163,7 +163,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeAddRouteForPermissionEndpoint(userService)
+		endpoint := MakeAddRouteForPermissionEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.addRouteForPermissionHandler = grpctransport.NewServer(
 			endpoint,
@@ -173,7 +173,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeRemoveRouteForPermissionEndpoint(userService)
+		endpoint := MakeRemoveRouteForPermissionEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.removeRouteForPermissionHandler = grpctransport.NewServer(
 			endpoint,
@@ -183,7 +183,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeRemovePermissionEndpoint(userService)
+		endpoint := MakeRemovePermissionEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.removePermissionHandler = grpctransport.NewServer(
 			endpoint,
@@ -193,7 +193,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeListPermissionsEndpoint(userService)
+		endpoint := MakeListPermissionsEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.listPermissionsHandler = grpctransport.NewServer(
 			endpoint,
@@ -203,7 +203,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeAddPermissionForPermissionEndpoint(userService)
+		endpoint := MakeAddPermissionForPermissionEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.addPermissionForPermissionHandler = grpctransport.NewServer(
 			endpoint,
@@ -213,7 +213,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeRemovePermissionForPermissionEndpoint(userService)
+		endpoint := MakeRemovePermissionForPermissionEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.removePermissionForPermissionHandler = grpctransport.NewServer(
 			endpoint,
@@ -223,7 +223,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeListRoleEndpoint(userService)
+		endpoint := MakeListRoleEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.listRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -233,7 +233,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeUpdateRoleEndpoint(userService)
+		endpoint := MakeUpdateRoleEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.updateRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -243,7 +243,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeRemovePermissionForRoleEndpoint(userService)
+		endpoint := MakeRemovePermissionForRoleEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.removePermissionForRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -253,7 +253,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeRemoveRoleForRoleEndpoint(userService)
+		endpoint := MakeRemoveRoleForRoleEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.removeRoleForRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -263,7 +263,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeRemoveRoleEndpoint(userService)
+		endpoint := MakeRemoveRoleEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.removeRoleHandler = grpctransport.NewServer(
 			endpoint,
@@ -273,7 +273,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeListUsersEndpoint(userService)
+		endpoint := MakeListUsersEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.listUsersHandler = grpctransport.NewServer(
 			endpoint,
@@ -283,7 +283,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeUpdateUserEndpoint(userService)
+		endpoint := MakeUpdateUserEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.updateUserHandler = grpctransport.NewServer(
 			endpoint,
@@ -293,7 +293,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeAddPermissionForUserEndpoint(userService)
+		endpoint := MakeAddPermissionForUserEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.addPermissionForUserHandler = grpctransport.NewServer(
 			endpoint,
@@ -303,7 +303,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeRemovePermissionForUserEndpoint(userService)
+		endpoint := MakeRemovePermissionForUserEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.removePermissionForUserHandler = grpctransport.NewServer(
 			endpoint,
@@ -313,7 +313,7 @@ func New() pb.UserServer {
 	}
 
 	{
-		endpoint := makeRemoveRoleForUserEndpoint(userService)
+		endpoint := MakeRemoveRoleForUserEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.removeRoleForUserHandler = grpctransport.NewServer(
 			endpoint,
