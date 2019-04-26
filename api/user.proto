@@ -66,7 +66,8 @@ message GetPermissionsRequest {
 }
 
 message GetPermissionsReply {
-    repeated Menu menus = 2;
+    repeated Menu menus = 1;
+    error err = 2;
 }
 
 message Menu {
@@ -82,6 +83,7 @@ message CheckPermissionRequest {
 
 message CheckPermissionReply {
     bool result = 1;
+    error err = 2;
 }
 
 message RegisterRequest {
@@ -100,86 +102,111 @@ message RegisterReply {
     string userType = 5;
     int64 userStatus = 6;
     int64 createdAt = 7;
+    error err = 8;
 }
 
 message AddPermissionForRoleRequest {
     string role = 1;
     string permission = 2;
 }
-message AddPermissionForRoleReply {}
+message AddPermissionForRoleReply {
+    error err = 1;
+}
 
 message AddRoleForRoleRequest {
     string from = 1;
     string to = 2;
 }
-message AddRoleForRoleReply {}
+message AddRoleForRoleReply {
+    error err = 1;
+}
 
 message CreateRoleRequest {
     string role = 1;
 }
 
-message CreateRoleReply {}
+message CreateRoleReply {
+    error err = 1;
+}
 
 message AddRoleForUserRequest {
     string username = 1;
     string role = 2;
 }
 
-message AddRoleForUserReply {}
+message AddRoleForUserReply {
+    error err = 1;
+}
 
 message AddPolicyRequest {
     string permission = 1;
     string resource = 2;
 }
 
-message AddPolicyReply {}
+message AddPolicyReply {
+    error err = 1;
+}
 
 message AddRoutesRequest {
     repeated string routes = 1;
 }
 
-message AddRoutesReply {}
+message AddRoutesReply {
+    error err = 1;
+}
 
 message ListRoutesRequest {}
 
 message ListRoutesReply {
     repeated string routes = 1;
+    error err = 2;
 }
 
 message CreatePermissionRequest {
     string name = 1;
 }
 
-message CreatePermissionReply {}
+message CreatePermissionReply {
+    error err = 1;
+}
 
 message UpdatePermissionRequest {
     int64 id = 2;
     string name = 1;
 }
-message UpdatePermissionReply {}
+message UpdatePermissionReply {
+    error err = 1;
+}
 
 message AddRouteForPermissionRequest {
     string permission = 1;
     string route = 2;
 }
-message AddRouteForPermissionReply {}
+message AddRouteForPermissionReply {
+    error err = 1;
+}
 
 message RemoveRouteForPermissionRequest {
     string permission = 1;
     string route = 2;
 }
 
-message RemoveRouteForPermissionReply {}
+message RemoveRouteForPermissionReply {
+    error err = 1;
+}
 
 message RemovePermissionRequest {
     string permission = 1;
 }
 
-message RemovePermissionReply {}
+message RemovePermissionReply {
+    error err = 1;
+}
 
 message ListPermissionsRequest {}
 message ListPermissionsReply {
     repeated string permissions = 1;
+    error err = 2;
 }
 
 message AddPermissionForPermissionRequest {
@@ -187,18 +214,23 @@ message AddPermissionForPermissionRequest {
     string to = 2;
 }
 
-message AddPermissionForPermissionReply {}
+message AddPermissionForPermissionReply {
+    error err = 1;
+}
 
 message RemovePermissionForPermissionRequest {
     string from = 1;
     string child = 2;
 }
 
-message RemovePermissionForPermissionReply {}
+message RemovePermissionForPermissionReply {
+    error err = 1;
+}
 
 message ListRoleRequest {}
 message ListRoleReply {
     repeated string roles = 1;
+    error err = 2;
 }
 
 message UpdateRoleRequest {
@@ -206,32 +238,41 @@ message UpdateRoleRequest {
     string name = 1;
 }
 
-message UpdateRoleReply {}
+message UpdateRoleReply {
+    error err = 1;
+}
 
 message RemovePermissionForRoleRequest {
     string role = 1;
     string permission = 2;
 }
 
-message RemovePermissionForRoleReply {}
-
-message RemoveRoleForRoleRequest {
-     string from = 1;
-     string child = 2;
+message RemovePermissionForRoleReply {
+    error err = 1;
 }
 
-message RemoveRoleForRoleReply {}
+message RemoveRoleForRoleRequest {
+    string from = 1;
+    string child = 2;
+}
+
+message RemoveRoleForRoleReply {
+    error err = 1;
+}
 
 message RemoveRoleRequest {
     string role = 1;
 }
 
-message RemoveRoleReply {}
+message RemoveRoleReply {
+    error err = 1;
+}
 
 message ListUsersRequest {}
 
 message ListUsersReply {
     repeated UserField users = 1;
+    error err = 2;
 }
 
 message UserField {
@@ -246,37 +287,51 @@ message UpdateUserRequest {
     string userType = 4;
 }
 
-message UpdateUserReply {}
+message UpdateUserReply {
+    error err = 1;
+}
 
 message AddPermissionForUserRequest {
     string username = 1;
     string permission = 2;
 }
 
-message AddPermissionForUserReply {}
+message AddPermissionForUserReply {
+    error err = 1;
+}
 
 message RemovePermissionForUserRequest {
     string username = 1;
     string permission = 2;
 }
 
-message RemovePermissionForUserReply {}
+message RemovePermissionForUserReply {
+    error err = 1;
+}
 
 message RemoveRoleForUserRequest {
     string username = 1;
     string role = 2;
 }
 
-message RemoveRoleForUserReply {}
+message RemoveRoleForUserReply {
+    error err = 1;
+}
 
 message ListMenusRequest {}
 
-message ListMenusReply {}
+message ListMenusReply {
+    error err = 1;
+}
 
 message CreateMenuRequest {}
 
-message CreateMenuReply {}
+message CreateMenuReply {
+    error err = 1;
+}
 
 message RemoveMenuRequest {}
 
-message RemoveMenuReply {}
+message RemoveMenuReply {
+    error err = 1;
+}
