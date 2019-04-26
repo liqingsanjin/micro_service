@@ -31,6 +31,42 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
+	engine.POST("/user/addPermissionForRole",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.AddPermissionForRoleEndpoint,
+			decodeHttpRequest(&pb.AddPermissionForRoleRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
+
+	engine.POST("/user/createRole",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.CreateRoleEndpoint,
+			decodeHttpRequest(&pb.CreateRoleRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
+
+	engine.POST("/user/addRoleForUser",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.AddRoleForUserEndpoint,
+			decodeHttpRequest(&pb.AddRoleForUserRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
+
+	engine.POST("/user/addRoutes",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.AddRoutesEndpoint,
+			decodeHttpRequest(&pb.AddRoutesRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
+
 	engine.POST("/user/getPermissions",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
@@ -49,15 +85,6 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 			httptransport.ServerBefore(setUserInfoContext),
-		)))
-
-	engine.POST("/user/addRoutes",
-		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
-		convertHttpHandlerToGinHandler(httptransport.NewServer(
-			endpoints.AddRoutesEndpoint,
-			decodeHttpRequest(&pb.AddRoutesRequest{}),
-			encodeHttpResponse,
-			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
 	engine.POST("/user/listRoutes",
@@ -101,33 +128,6 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.RemoveRouteForPermissionEndpoint,
 			decodeHttpRequest(&pb.RemoveRouteForPermissionRequest{}),
-			encodeHttpResponse,
-			httptransport.ServerErrorEncoder(errorEncoder),
-		)))
-
-	engine.POST("/user/addPermissionForRole",
-		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
-		convertHttpHandlerToGinHandler(httptransport.NewServer(
-			endpoints.AddPermissionForRoleEndpoint,
-			decodeHttpRequest(&pb.AddPermissionForRoleRequest{}),
-			encodeHttpResponse,
-			httptransport.ServerErrorEncoder(errorEncoder),
-		)))
-
-	engine.POST("/user/createRole",
-		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
-		convertHttpHandlerToGinHandler(httptransport.NewServer(
-			endpoints.CreateRoleEndpoint,
-			decodeHttpRequest(&pb.CreateRoleRequest{}),
-			encodeHttpResponse,
-			httptransport.ServerErrorEncoder(errorEncoder),
-		)))
-
-	engine.POST("/user/addRoleForUser",
-		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
-		convertHttpHandlerToGinHandler(httptransport.NewServer(
-			endpoints.AddRoleForUserEndpoint,
-			decodeHttpRequest(&pb.AddRoleForUserRequest{}),
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))

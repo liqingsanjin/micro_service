@@ -391,25 +391,36 @@ func (u *userService) AddRoleForUser(ctx context.Context, in *pb.AddRoleForUserR
 }
 
 func (u *userService) AddRoutes(ctx context.Context, in *pb.AddRoutesRequest) (*pb.AddRoutesReply, error) {
+	reply := &pb.AddRoutesReply{}
 	if len(in.Routes) == 0 {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "路由不能为空",
+		}
+		return reply, nil
 	}
 	db := common.DB
 
 	rs, err := usermodel.FindRoutesByNames(db, in.Routes)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	if len(rs) != 0 {
-		return nil, ErrRouteExists
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     AlreadyExists,
+			Description: "路由已存在",
+		}
+		return reply, nil
 	}
 
 	err = usermodel.SaveRoutes(db, in.Routes)
 	if err != nil {
-		err = status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
-	return &pb.AddRoutesReply{}, err
+	return reply, err
 }
 
 func (u *userService) ListRoutes(ctx context.Context, in *pb.ListRoutesRequest) (*pb.ListRoutesReply, error) {
