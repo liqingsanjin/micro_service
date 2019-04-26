@@ -122,6 +122,16 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
+
+	engine.POST("/user/addRoleForUser",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.AddRoleForUserEndpoint,
+			decodeHttpRequest(&pb.AddRoleForUserRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
+
 }
 
 func convertHttpHandlerToGinHandler(handler http.Handler) gin.HandlerFunc {
@@ -144,6 +154,7 @@ func decodeHttpRequest(ins interface{}) httptransport.DecodeRequestFunc {
 }
 
 func encodeHttpResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	s, ok := response.(StatusError)
 	if ok {
 		err := s.GetErr()
@@ -155,7 +166,6 @@ func encodeHttpResponse(_ context.Context, w http.ResponseWriter, response inter
 			})
 		}
 	}
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	return json.NewEncoder(w).Encode(response)
 }
 

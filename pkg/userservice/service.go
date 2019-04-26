@@ -298,13 +298,12 @@ func (u *userService) AddPermissionForRole(ctx context.Context, in *pb.AddPermis
 		return reply, nil
 	}
 
-	if common.Enforcer.AddRoleForUser(in.Role, in.Permission) {
-		return reply, nil
-	}
-	reply.Err = &pb.Error{
-		Code:        http.StatusBadRequest,
-		Message:     AlreadyExists,
-		Description: "策略已存在",
+	if !common.Enforcer.AddRoleForUser(in.Role, in.Permission) {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     AlreadyExists,
+			Description: "策略已存在",
+		}
 	}
 	return reply, nil
 }
@@ -343,33 +342,52 @@ func (u *userService) CreateRole(ctx context.Context, in *pb.CreateRoleRequest) 
 }
 
 func (u *userService) AddRoleForUser(ctx context.Context, in *pb.AddRoleForUserRequest) (*pb.AddRoleForUserReply, error) {
+	reply := &pb.AddRoleForUserReply{}
 	if in.Username == "" || in.Role == "" {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "用户名和角色名不能为空",
+		}
+		return reply, nil
 	}
 
 	db := common.DB
 
 	role, err := usermodel.FindRole(db, in.Role)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	if role == nil {
-		return nil, ErrRoleNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "找不到角色",
+		}
+		return reply, nil
 	}
 
 	user, err := usermodel.FindUserByUserName(db, in.Username)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	if user == nil {
-		return nil, ErrUserNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "找不到用户",
+		}
+		return reply, nil
 	}
 
-	if common.Enforcer.AddRoleForUser(in.Username, in.Role) {
-		return &pb.AddRoleForUserReply{}, nil
-	} else {
-		return nil, ErrPolicyExists
+	if !common.Enforcer.AddRoleForUser(in.Username, in.Role) {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     AlreadyExists,
+			Description: "策略已存在",
+		}
 	}
+	return reply, nil
 }
 
 func (u *userService) AddRoutes(ctx context.Context, in *pb.AddRoutesRequest) (*pb.AddRoutesReply, error) {

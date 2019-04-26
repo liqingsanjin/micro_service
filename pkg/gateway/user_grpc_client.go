@@ -98,6 +98,42 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 		endpoint := grpctransport.NewClient(
 			conn,
 			"pb.User",
+			"AddPermissionForRole",
+			encodeRequest,
+			decodeResponse,
+			pb.AddPermissionForRoleReply{},
+		).Endpoint()
+		endpoints.AddPermissionForRoleEndpoint = endpoint
+	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.User",
+			"CreateRole",
+			encodeRequest,
+			decodeResponse,
+			pb.CreateRoleReply{},
+		).Endpoint()
+		endpoints.CreateRoleEndpoint = endpoint
+	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.User",
+			"AddRoleForUser",
+			encodeRequest,
+			decodeResponse,
+			pb.AddRoleForUserReply{},
+		).Endpoint()
+		endpoints.AddRoleForUserEndpoint = endpoint
+	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.User",
 			"AddRoutes",
 			encodeRequest,
 			decodeResponse,
@@ -161,28 +197,6 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			pb.RemoveRouteForPermissionReply{},
 		).Endpoint()
 		endpoints.RemoveRouteForPermissionEndpoint = endpoint
-	}
-	{
-		endpoint := grpctransport.NewClient(
-			conn,
-			"pb.User",
-			"AddPermissionForRole",
-			encodeRequest,
-			decodeResponse,
-			pb.AddPermissionForRoleReply{},
-		).Endpoint()
-		endpoints.AddPermissionForRoleEndpoint = endpoint
-	}
-	{
-		endpoint := grpctransport.NewClient(
-			conn,
-			"pb.User",
-			"CreateRole",
-			encodeRequest,
-			decodeResponse,
-			pb.CreateRoleReply{},
-		).Endpoint()
-		endpoints.CreateRoleEndpoint = endpoint
 	}
 	return endpoints
 }

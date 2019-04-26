@@ -32,6 +32,7 @@ func main() {
 		instancer   = consulsd.NewInstancer(client, log, "userService", tags, passingOnly)
 		endpoints   gateway.UserEndpoints
 	)
+
 	{
 		factory := userserviceFactory(userservice.MakeLoginEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
@@ -39,6 +40,7 @@ func main() {
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
 		endpoints.LoginEndpoint = retry
 	}
+
 	{
 		factory := userserviceFactory(userservice.MakeRegisterEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
@@ -46,62 +48,7 @@ func main() {
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
 		endpoints.RegisterEndpoint = retry
 	}
-	{
-		factory := userserviceFactory(userservice.MakeGetPermissionsEndpoint)
-		endpointer := sd.NewEndpointer(instancer, factory, log)
-		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 500*time.Millisecond, balancer)
-		endpoints.GetPermissionsEndpoint = retry
-	}
-	{
-		factory := userserviceFactory(userservice.MakeCheckPermissionEndpoint)
-		endpointer := sd.NewEndpointer(instancer, factory, log)
-		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 500*time.Millisecond, balancer)
-		endpoints.CheckPermissionEndpoint = retry
-	}
-	{
-		factory := userserviceFactory(userservice.MakeAddRoutesEndpoint)
-		endpointer := sd.NewEndpointer(instancer, factory, log)
-		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 500*time.Millisecond, balancer)
-		endpoints.AddRoutesEndpoint = retry
-	}
-	{
-		factory := userserviceFactory(userservice.MakeListRoutesEndpoint)
-		endpointer := sd.NewEndpointer(instancer, factory, log)
-		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 500*time.Millisecond, balancer)
-		endpoints.ListRoutesEndpoint = retry
-	}
-	{
-		factory := userserviceFactory(userservice.MakeCreatePermissionEndpoint)
-		endpointer := sd.NewEndpointer(instancer, factory, log)
-		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 500*time.Millisecond, balancer)
-		endpoints.CreatePermissionEndpoint = retry
-	}
-	{
-		factory := userserviceFactory(userservice.MakeUpdatePermissionEndpoint)
-		endpointer := sd.NewEndpointer(instancer, factory, log)
-		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 500*time.Millisecond, balancer)
-		endpoints.UpdatePermissionEndpoint = retry
-	}
-	{
-		factory := userserviceFactory(userservice.MakeAddRouteForPermissionEndpoint)
-		endpointer := sd.NewEndpointer(instancer, factory, log)
-		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 500*time.Millisecond, balancer)
-		endpoints.AddRouteForPermissionEndpoint = retry
-	}
-	{
-		factory := userserviceFactory(userservice.MakeRemoveRouteForPermissionEndpoint)
-		endpointer := sd.NewEndpointer(instancer, factory, log)
-		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 500*time.Millisecond, balancer)
-		endpoints.RemoveRouteForPermissionEndpoint = retry
-	}
+
 	{
 		factory := userserviceFactory(userservice.MakeAddPermissionForRoleEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
@@ -109,12 +56,101 @@ func main() {
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
 		endpoints.AddPermissionForRoleEndpoint = retry
 	}
+
 	{
 		factory := userserviceFactory(userservice.MakeCreateRoleEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
 		endpoints.CreateRoleEndpoint = retry
+	}
+
+	{
+		factory := userserviceFactory(userservice.MakeAddRoleForUserEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.AddRoleForUserEndpoint = retry
+	}
+
+	{
+		factory := userserviceFactory(userservice.MakeAddPermissionForRoleEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.AddPermissionForRoleEndpoint = retry
+	}
+
+	{
+		factory := userserviceFactory(userservice.MakeCreateRoleEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.CreateRoleEndpoint = retry
+	}
+
+	{
+		factory := userserviceFactory(userservice.MakeGetPermissionsEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.GetPermissionsEndpoint = retry
+	}
+
+	{
+		factory := userserviceFactory(userservice.MakeCheckPermissionEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.CheckPermissionEndpoint = retry
+	}
+
+	{
+		factory := userserviceFactory(userservice.MakeAddRoutesEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.AddRoutesEndpoint = retry
+	}
+
+	{
+		factory := userserviceFactory(userservice.MakeListRoutesEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.ListRoutesEndpoint = retry
+	}
+
+	{
+		factory := userserviceFactory(userservice.MakeCreatePermissionEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.CreatePermissionEndpoint = retry
+	}
+
+	{
+		factory := userserviceFactory(userservice.MakeUpdatePermissionEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.UpdatePermissionEndpoint = retry
+	}
+
+	{
+		factory := userserviceFactory(userservice.MakeAddRouteForPermissionEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.AddRouteForPermissionEndpoint = retry
+	}
+
+	{
+		factory := userserviceFactory(userservice.MakeRemoveRouteForPermissionEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.RemoveRouteForPermissionEndpoint = retry
 	}
 
 	userHandler := gateway.NewHttpHandler(&endpoints)
