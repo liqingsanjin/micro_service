@@ -177,13 +177,24 @@ func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsR
 }
 
 func (u *userService) CheckPermission(ctx context.Context, in *pb.CheckPermissionRequest) (*pb.CheckPermissionReply, error) {
+	reply := &pb.CheckPermissionReply{}
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "找不到用户信息",
+		}
+		return reply, nil
 	}
 	usernames := md.Get("username")
-	if len(usernames) == 0 {
-		return nil, ErrInvalidParams
+	if !ok {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "找不到用户信息",
+		}
+		return reply, nil
 	}
 
 	ok = common.Enforcer.Enforce(usernames[0], in.GetRoute())
@@ -193,9 +204,15 @@ func (u *userService) CheckPermission(ctx context.Context, in *pb.CheckPermissio
 }
 
 func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb.RegisterReply, error) {
+	reply := &pb.RegisterReply{}
 	db := common.DB
 	if in.Username == "" || in.Password == "" || in.UserType == "" || in.Email == "" || in.LeaguerNo == "" {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "用户信息不全",
+		}
+		return reply, nil
 	}
 
 	user, err := usermodel.FindUserByUserName(db, in.Username)
@@ -203,12 +220,17 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 		return nil, err
 	}
 	if user != nil {
-		return nil, ErrUserExists
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "用户已存在",
+		}
+		return reply, nil
 	}
 
 	bs, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.MinCost)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	user = &usermodel.User{
@@ -223,7 +245,7 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 
 	newUser, err := usermodel.SaveUser(db, user)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	return &pb.RegisterReply{
