@@ -37,7 +37,7 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 	// 查询用户
 	user, err := usermodel.FindUserByUserName(db, in.GetUsername())
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	if user == nil {
 		return &pb.LoginReply{
@@ -59,7 +59,7 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 		return &pb.LoginReply{
 			Err: &pb.Error{
 				Code:        http.StatusBadRequest,
-				Message:     "InvalidParamsError",
+				Message:     InvalidParam,
 				Description: "密码错误",
 			},
 		}, nil
@@ -72,7 +72,7 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 		UserName: user.UserName,
 	}, expiredAt)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	//添加新密码
@@ -84,7 +84,7 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 			PasswordHashNew: string(newHash),
 		})
 		if err != nil {
-			return nil, status.Error(codes.Internal, err.Error())
+			return nil, err
 		}
 	}
 	return &pb.LoginReply{
@@ -96,14 +96,25 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 }
 
 func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsRequest) (*pb.GetPermissionsReply, error) {
+	reply := &pb.GetPermissionsReply{}
 	db := common.DB
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "找不到用户信息",
+		}
+		return reply, nil
 	}
 	usernames := md.Get("username")
 	if len(usernames) == 0 {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "找不到用户信息",
+		}
+		return reply, nil
 	}
 
 	permissions := common.Enforcer.GetImplicitPermissionsForUser(usernames[0])
@@ -117,7 +128,7 @@ func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsR
 
 	menus, err := usermodel.GetAuthMenu(db, itemNames)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	idMap := make(map[int64][]*usermodel.Menu)

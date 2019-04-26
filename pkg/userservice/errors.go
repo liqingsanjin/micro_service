@@ -23,3 +23,7 @@ var (
 	ErrPermissionNotFound      = status.Error(codes.NotFound, "permission not found")
 	ErrRouteNotFound           = status.Error(codes.NotFound, "route not found")
 )
+
+const (
+	InvalidParam = "InvalidParamError"
+)
