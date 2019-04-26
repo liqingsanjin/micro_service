@@ -42,6 +42,22 @@ func main() {
 	}
 
 	{
+		factory := userserviceFactory(userservice.MakeGetPermissionsEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.GetPermissionsEndpoint = retry
+	}
+
+	{
+		factory := userserviceFactory(userservice.MakeCheckPermissionEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.CheckPermissionEndpoint = retry
+	}
+
+	{
 		factory := userserviceFactory(userservice.MakeRegisterEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
@@ -71,38 +87,6 @@ func main() {
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
 		endpoints.AddRoleForUserEndpoint = retry
-	}
-
-	{
-		factory := userserviceFactory(userservice.MakeAddPermissionForRoleEndpoint)
-		endpointer := sd.NewEndpointer(instancer, factory, log)
-		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 500*time.Millisecond, balancer)
-		endpoints.AddPermissionForRoleEndpoint = retry
-	}
-
-	{
-		factory := userserviceFactory(userservice.MakeCreateRoleEndpoint)
-		endpointer := sd.NewEndpointer(instancer, factory, log)
-		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 500*time.Millisecond, balancer)
-		endpoints.CreateRoleEndpoint = retry
-	}
-
-	{
-		factory := userserviceFactory(userservice.MakeGetPermissionsEndpoint)
-		endpointer := sd.NewEndpointer(instancer, factory, log)
-		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 500*time.Millisecond, balancer)
-		endpoints.GetPermissionsEndpoint = retry
-	}
-
-	{
-		factory := userserviceFactory(userservice.MakeCheckPermissionEndpoint)
-		endpointer := sd.NewEndpointer(instancer, factory, log)
-		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 500*time.Millisecond, balancer)
-		endpoints.CheckPermissionEndpoint = retry
 	}
 
 	{

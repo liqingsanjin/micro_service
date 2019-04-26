@@ -442,24 +442,35 @@ func (u *userService) ListRoutes(ctx context.Context, in *pb.ListRoutesRequest) 
 }
 
 func (u *userService) CreatePermission(ctx context.Context, in *pb.CreatePermissionRequest) (*pb.CreatePermissionReply, error) {
+	reply := &pb.CreatePermissionReply{}
 	if in.Name == "" {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "权限信息不全",
+		}
+		return reply, nil
 	}
 	db := common.DB
 
 	p, err := usermodel.FindPermissionByName(db, in.Name)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	if p != nil {
-		return nil, ErrPermissionExists
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     AlreadyExists,
+			Description: "权限已存在",
+		}
+		return reply, nil
 	}
 	err = usermodel.SavePermission(db, in.Name)
 	if err != nil {
-		err = status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
-	return &pb.CreatePermissionReply{}, err
+	return reply, err
 }
 
 func (u *userService) UpdatePermission(ctx context.Context, in *pb.UpdatePermissionRequest) (*pb.UpdatePermissionReply, error) {
