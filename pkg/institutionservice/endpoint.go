@@ -34,3 +34,10 @@ func MakeGetTfrTrnLogEndpoint(s pb.InstitutionServer) endpoint.Endpoint {
 		return s.GetTfrTrnLog(ctx, req)
 	}
 }
+
+func MakeDownloadTfrTrnLogsEndpoint(s pb.InstitutionServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req := request.(*pb.DownloadTfrTrnLogsReq)
+		return s.DownloadTfrTrnLogs(ctx, req)
+	}
+}

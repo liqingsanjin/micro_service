@@ -2,17 +2,18 @@ package main
 
 import (
 	"fmt"
+	"net"
+	"os"
+	"time"
 	"userService/pkg/common"
 	"userService/pkg/institutionservice"
 	"userService/pkg/model"
 	"userService/pkg/pb"
-	"net"
-	"time"
-	"os"
+
 	"github.com/go-kit/kit/sd/consul"
 	"github.com/hashicorp/consul/api"
-	"github.com/spf13/viper"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 )
 
@@ -34,7 +35,6 @@ func main() {
 	if err != nil {
 		logrus.Fatal("启动mysql错误", err)
 	}
-
 
 	go func() {
 		if err := runGRPCServer(fmt.Sprintf("%s:%d", conf.GrpcHost, conf.GrpcPort)); err != nil {
@@ -67,13 +67,7 @@ func runGRPCServer(addr string) error {
 		return err
 	}
 
-	insSetService := institutionservice.NewSetService()
-	tnxHisDownloadEndpoint := institutionservice.MakeDownloadEndpoint(insSetService)
-	tnxHisDownloadEndpoint = institutionservice.Passport()(tnxHisDownloadEndpoint)
-	insSetEndpoint := institutionservice.SetEndpoint{TnxHisDownloadEndpoint:tnxHisDownloadEndpoint}
-	insHandle := institutionservice.NewGRPCServer(&insSetEndpoint)
-
-
+	insHandle := institutionservice.NewGRPCServer()
 
 	svr := grpc.NewServer()
 	pb.RegisterInstitutionServer(svr, insHandle)

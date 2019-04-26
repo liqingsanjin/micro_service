@@ -8,6 +8,9 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"reflect"
+	"strconv"
+	"strings"
 	cleartxnM "userService/pkg/model/cleartxn"
 
 	uuid "github.com/satori/go.uuid"
@@ -17,6 +20,10 @@ import (
 const filePath = "/tmp"
 const defaultSheep = "Worksheet"
 const fileZipPath = "/home/dj/zip"
+
+var (
+	titleTfrTrnLogs = "交易键值,商户编码,商户名称,交易日期,清算日期,交易时间,交易类型,收单机构代码,交易金额,交易卡号,发卡机构代码,终端编码,产品码,卡类型,交易状态,应答码"
+)
 
 //通过日期将数据分为不同的文件
 //@param fileDir test
@@ -133,7 +140,6 @@ func DownloadFileWithDay(clearTxn []*cleartxnM.ClearTxn) (string, error) {
 			} else {
 				break
 			}
-
 		}
 		index = j - 1
 
@@ -146,10 +152,79 @@ func DownloadFileWithDay(clearTxn []*cleartxnM.ClearTxn) (string, error) {
 	return uid, nil
 }
 
+func DownloadTfrTrnLogs(tfrTrnLog []*cleartxnM.TfrTrnLog) (string, error) {
+	uid := uuid.NewV4().String()
+	fileDirPath := path.Join(filePath, uid)
+	os.MkdirAll(fileDirPath, os.ModePerm)
+
+	if len(tfrTrnLog) == 0 {
+		return uid, nil
+	}
+
+	file := xlsx.NewFile()
+	sheet, err := file.AddSheet(defaultSheep)
+	if err != nil {
+		return "", err
+	}
+
+	addTitle(sheet, titleTfrTrnLogs)
+	err = addBodyWithTfrTrnlogs(sheet, tfrTrnLog)
+	if err != nil {
+		return "", err
+	}
+
+	filename := path.Join(fileDirPath, "admin.xlsx")
+	err = file.Save(filename)
+	if err != nil {
+		return "", err
+	}
+	return uid, nil
+}
+
+func addBodyWithTfrTrnlogs(sheet *xlsx.Sheet, tfrTrnLog []*cleartxnM.TfrTrnLog) error {
+	for i := range tfrTrnLog {
+		var arrItems = [16]string{}
+		trnType := reflect.TypeOf(*tfrTrnLog[i])
+		trnValue := reflect.ValueOf(*tfrTrnLog[i])
+		for j := 0; j < trnType.NumField(); j++ {
+			tag, ok := trnType.Field(j).Tag.Lookup("downI")
+			if !ok {
+				continue
+			}
+			tagInt, err := strconv.ParseInt(tag, 10, 64)
+
+			if err != nil {
+				return err
+			}
+
+			val, ok := trnValue.Field(j).Interface().(string)
+			if !ok {
+				continue
+			}
+			arrItems[tagInt-1] = val
+		}
+
+		row := sheet.AddRow()
+		for i := range arrItems {
+			cell := row.AddCell()
+			cell.Value = arrItems[i]
+		}
+	}
+	return nil
+}
+
+func addTitle(sheet *xlsx.Sheet, title string) {
+	s := strings.Split(title, ",")
+	row := sheet.AddRow()
+	for i, _ := range s {
+		cell := row.AddCell()
+		cell.Value = s[i]
+	}
+}
+
 //@param dis 压缩前文件名称
 //@param src 压缩后文件名称
 func Compress(dis, src string) error {
-
 	srcFile, err := os.Create(path.Join(fileZipPath, src))
 	if err != nil {
 		return err

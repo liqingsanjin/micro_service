@@ -6,6 +6,7 @@ service Institution {
     rpc TnxHisDownload(InstitutionTnxHisDownloadReq) returns (InstitutionTnxHisDownloadResp){}
     rpc GetTfrTrnLogs(GetTfrTrnLogsReq) returns (GetTfrTrnLogsResp){}
     rpc GetTfrTrnLog(GetTfrTrnLogReq) returns (GetTfrTrnLogResp){}
+    rpc DownloadTfrTrnLogs(DownloadTfrTrnLogsReq) returns (DownloadTfrTrnLogsResp){}
 }
 
 message InstitutionTnxHisDownloadReq {
@@ -36,7 +37,7 @@ message GetTfrTrnLogsReq {
     string MaTransCd = 14;
     string MsgResvFld2 = 15;
     int64 Limit = 16;
-    int64 Page = 17;
+	int64 Page = 17;
 }
 
 message GetTfrTrnLogsResp {
@@ -195,4 +196,30 @@ message GetTfrTrnLogResp {
 	string MsgResvFld7 = 123;    
 	string MsgResvFld8 = 124;    
 	string MsgResvFld9 = 125;    
+}
+
+message DownloadTfrTrnLogsReq {
+    string MchntCd = 1;
+    string PriAcctNO = 2;
+    string BeginAt = 3;
+    string EndAt = 4;
+    string KeyRsp = 5;
+    string CardClass = 6;
+    string RoutIndustryInsIdCd = 7;
+    string FwdInsIdCd = 8;
+    string IssInsIdCd = 9;
+    string RespCd = 10;
+    string TermId = 11;
+    string ProdCd = 12;
+    string BizCd = 13;
+    string MaTransCd = 14;
+    string MsgResvFld2 = 15;
+    int64 Limit = 16;
+	int64 Page = 17;
+}
+
+
+//下载logs文件code 0代表失败， 1代表成功
+message DownloadTfrTrnLogsResp {
+    bool code = 1;
 }
