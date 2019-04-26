@@ -66,7 +66,6 @@ func JwtMiddleware(keyFunc jwt.Keyfunc, method jwt.SigningMethod, newClaims Clai
 		c.Request.Form = url.Values{}
 		c.Request.Form.Set("username", claims.User.UserName)
 		c.Request.Form.Set("userid", fmt.Sprintf("%d", claims.User.ID))
-
 		c.Next()
 	}
 }

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"strconv"
 	"userService/pkg/pb"
 	"userService/pkg/userservice"
 
@@ -14,6 +13,7 @@ import (
 	"github.com/go-kit/kit/sd/lb"
 	httptransport "github.com/go-kit/kit/transport/http"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -39,6 +39,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			decodeHttpGetPermissionsRequest,
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
+			httptransport.ServerBefore(setUserInfoContext),
 		)))
 
 	engine.POST("/user/checkPermission",
@@ -48,6 +49,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			decodeHttpCheckPermissionRequest,
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
+			httptransport.ServerBefore(setUserInfoContext),
 		)))
 
 	engine.POST("/user/addRoutes",
@@ -130,23 +132,13 @@ func decodeHttpGetPermissionsRequest(_ context.Context, r *http.Request) (interf
 	var request pb.GetPermissionsRequest
 	defer r.Body.Close()
 	err := json.NewDecoder(r.Body).Decode(&request)
-	userid, _ := strconv.Atoi(r.Form.Get("userid"))
-	request.User = &pb.UserInfo{
-		Username: r.Form.Get("username"),
-		Userid:   int64(userid),
-	}
 	return &request, err
 }
 
-func decodeHttpCheckPermissionRequest(_ context.Context, r *http.Request) (interface{}, error) {
+func decodeHttpCheckPermissionRequest(ctx context.Context, r *http.Request) (interface{}, error) {
 	var request pb.CheckPermissionRequest
 	defer r.Body.Close()
 	err := json.NewDecoder(r.Body).Decode(&request)
-	userid, _ := strconv.Atoi(r.Form.Get("userid"))
-	request.User = &pb.UserInfo{
-		Username: r.Form.Get("username"),
-		Userid:   int64(userid),
-	}
 	return &request, err
 }
 
@@ -237,4 +229,14 @@ func err2codeAndMessage(err error) (int, string) {
 
 func keyFunc(token *jwt.Token) (interface{}, error) {
 	return []byte(userservice.SignedKey), nil
+}
+
+func setUserInfoContext(ctx context.Context, r *http.Request) context.Context {
+	username := r.Form.Get("username")
+	id := r.Form.Get("id")
+	md := metadata.New(map[string]string{
+		"username": username,
+		"id":       id,
+	})
+	return context.WithValue(ctx, "userInfo", md)
 }

@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-kit/kit/endpoint"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 )
@@ -63,6 +64,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.GetPermissionsReply{},
+			grpctransport.ClientBefore(setUserInfoMD),
 		).Endpoint()
 		endpoints.GetPermissionsEndpoint = endpoint
 	}
@@ -75,6 +77,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.CheckPermissionReply{},
+			grpctransport.ClientBefore(setUserInfoMD),
 		).Endpoint()
 		endpoints.CheckPermissionEndpoint = endpoint
 	}
@@ -496,4 +499,15 @@ func (u *UserEndpoints) RemoveRoleForUser(ctx context.Context, in *pb.RemoveRole
 		return nil, ErrReplyTypeInvalid
 	}
 	return reply, nil
+}
+
+func setUserInfoMD(ctx context.Context, md *metadata.MD) context.Context {
+	old, ok := ctx.Value("userInfo").(metadata.MD)
+	if !ok {
+		return ctx
+	}
+	for k, v := range old {
+		md.Set(k, v...)
+	}
+	return ctx
 }

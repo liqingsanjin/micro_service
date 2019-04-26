@@ -10,6 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -76,12 +77,16 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 
 func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsRequest) (*pb.GetPermissionsReply, error) {
 	db := common.DB
-	user := in.User
-	if user == nil {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, ErrInvalidParams
+	}
+	usernames := md.Get("username")
+	if len(usernames) == 0 {
 		return nil, ErrInvalidParams
 	}
 
-	permissions := common.Enforcer.GetImplicitPermissionsForUser(user.Username)
+	permissions := common.Enforcer.GetImplicitPermissionsForUser(usernames[0])
 
 	itemNames := make([]string, 0)
 	for _, permission := range permissions {
@@ -141,12 +146,16 @@ func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsR
 }
 
 func (u *userService) CheckPermission(ctx context.Context, in *pb.CheckPermissionRequest) (*pb.CheckPermissionReply, error) {
-	user := in.User
-	if user == nil {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, ErrInvalidParams
+	}
+	usernames := md.Get("username")
+	if len(usernames) == 0 {
 		return nil, ErrInvalidParams
 	}
 
-	ok := common.Enforcer.Enforce(user.Username, in.GetRoute())
+	ok = common.Enforcer.Enforce(usernames[0], in.GetRoute())
 	return &pb.CheckPermissionReply{
 		Result: ok,
 	}, nil
