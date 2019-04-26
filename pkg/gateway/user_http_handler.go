@@ -104,6 +104,15 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
+	engine.POST("/user/addPermissionForRole",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.AddPermissionForRoleEndpoint,
+			decodeHttpAddPermissionForRoleRequest,
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
+
 }
 
 func convertHttpHandlerToGinHandler(handler http.Handler) gin.HandlerFunc {
@@ -177,6 +186,13 @@ func decodeHttpAddRouteForPermissionRequest(_ context.Context, r *http.Request) 
 
 func decodeHttpRemoveRouteForPermissionRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var request pb.RemoveRouteForPermissionRequest
+	defer r.Body.Close()
+	err := json.NewDecoder(r.Body).Decode(&request)
+	return &request, err
+}
+
+func decodeHttpAddPermissionForRoleRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var request pb.AddPermissionForRoleRequest
 	defer r.Body.Close()
 	err := json.NewDecoder(r.Body).Decode(&request)
 	return &request, err

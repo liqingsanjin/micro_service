@@ -257,25 +257,14 @@ func GetAuthMenu(db *gorm.DB, items []string) ([]*Menu, error) {
 }
 
 func SaveUser(db *gorm.DB, user *User) (*User, error) {
-	findUser := &User{}
-	err := db.Where(&User{UserName: user.UserName}).First(&findUser).Error
-	if err == gorm.ErrRecordNotFound {
-		err = nil
-	}
-	if err != nil {
-		return nil, err
-	}
-	if findUser.UserName != "" {
-		return nil, ErrUserExists
-	}
-
-	err = db.Create(user).Error
+	err := db.Create(user).Error
 	if err != nil {
 		return nil, err
 	}
 
+	var findUser User
 	err = db.Where(&User{UserName: user.UserName}).First(&findUser).Error
-	return findUser, err
+	return &findUser, err
 }
 
 func FindRole(db *gorm.DB, role string) (*Role, error) {

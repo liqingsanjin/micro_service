@@ -222,7 +222,7 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 	if user != nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
-			Message:     InvalidParam,
+			Message:     AlreadyExists,
 			Description: "用户已存在",
 		}
 		return reply, nil
@@ -260,33 +260,53 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 }
 
 func (u *userService) AddPermissionForRole(ctx context.Context, in *pb.AddPermissionForRoleRequest) (*pb.AddPermissionForRoleReply, error) {
-	if in.Role == "" || len(in.Permission) == 0 {
-		return nil, ErrInvalidParams
+	reply := &pb.AddPermissionForRoleReply{}
+	if in.Role == "" || in.Permission == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "权限和角色不能为空",
+		}
+		return reply, nil
 	}
 	db := common.DB
 
 	role, err := usermodel.FindRole(db, in.Role)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	if role == nil {
-		return nil, ErrRoleNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "角色不存在",
+		}
+		return reply, nil
 	}
 
 	permission, err := usermodel.FindPermissionByName(db, in.Permission)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	if permission == nil {
-		return nil, ErrPermissionNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "权限不存在",
+		}
+		return reply, nil
 	}
 
 	if common.Enforcer.AddRoleForUser(in.Role, in.Permission) {
-		return &pb.AddPermissionForRoleReply{}, nil
-	} else {
-		return nil, ErrPolicyExists
+		return reply, nil
 	}
+	reply.Err = &pb.Error{
+		Code:        http.StatusBadRequest,
+		Message:     AlreadyExists,
+		Description: "策略已存在",
+	}
+	return reply, nil
 }
 
 func (u *userService) CreateRole(ctx context.Context, in *pb.CreateRoleRequest) (*pb.CreateRoleReply, error) {

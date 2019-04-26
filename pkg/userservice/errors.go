@@ -25,5 +25,7 @@ var (
 )
 
 const (
-	InvalidParam = "InvalidParamError"
+	InvalidParam  = "InvalidParamError"
+	AlreadyExists = "AlreadyExistsError"
+	NotFound      = "NotFoundError"
 )
