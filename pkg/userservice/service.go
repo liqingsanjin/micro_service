@@ -428,7 +428,7 @@ func (u *userService) ListRoutes(ctx context.Context, in *pb.ListRoutesRequest) 
 
 	routes, err := usermodel.ListRoutes(db)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	names := make([]string, len(routes))

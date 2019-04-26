@@ -24,6 +24,26 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
+	engine.POST("/user/getPermissions",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.GetPermissionsEndpoint,
+			decodeHttpRequest(&pb.GetPermissionsRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+			httptransport.ServerBefore(setUserInfoContext),
+		)))
+
+	engine.POST("/user/checkPermission",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.CheckPermissionEndpoint,
+			decodeHttpRequest(&pb.CheckPermissionRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+			httptransport.ServerBefore(setUserInfoContext),
+		)))
+
 	engine.POST("/user/register", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.RegisterEndpoint,
 		decodeHttpRequest(&pb.RegisterRequest{}),
@@ -65,26 +85,6 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			decodeHttpRequest(&pb.AddRoutesRequest{}),
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
-		)))
-
-	engine.POST("/user/getPermissions",
-		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
-		convertHttpHandlerToGinHandler(httptransport.NewServer(
-			endpoints.GetPermissionsEndpoint,
-			decodeHttpRequest(&pb.GetPermissionsRequest{}),
-			encodeHttpResponse,
-			httptransport.ServerErrorEncoder(errorEncoder),
-			httptransport.ServerBefore(setUserInfoContext),
-		)))
-
-	engine.POST("/user/checkPermission",
-		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
-		convertHttpHandlerToGinHandler(httptransport.NewServer(
-			endpoints.CheckPermissionEndpoint,
-			decodeHttpRequest(&pb.CheckPermissionRequest{}),
-			encodeHttpResponse,
-			httptransport.ServerErrorEncoder(errorEncoder),
-			httptransport.ServerBefore(setUserInfoContext),
 		)))
 
 	engine.POST("/user/listRoutes",
