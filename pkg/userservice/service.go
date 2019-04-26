@@ -310,25 +310,36 @@ func (u *userService) AddPermissionForRole(ctx context.Context, in *pb.AddPermis
 }
 
 func (u *userService) CreateRole(ctx context.Context, in *pb.CreateRoleRequest) (*pb.CreateRoleReply, error) {
+	reply := &pb.CreateRoleReply{}
 	if in.Role == "" {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "角色名不能为空",
+		}
+		return reply, nil
 	}
 	db := common.DB
 
 	r, err := usermodel.FindRole(db, in.Role)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	if r != nil {
-		return nil, ErrRoleExists
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     AlreadyExists,
+			Description: "角色已存在",
+		}
+		return reply, nil
 	}
 
 	err = usermodel.SaveRole(db, &usermodel.Role{Role: in.Role})
 	if err != nil {
-		err = status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
-	return &pb.CreateRoleReply{}, err
+	return reply, nil
 }
 
 func (u *userService) AddRoleForUser(ctx context.Context, in *pb.AddRoleForUserRequest) (*pb.AddRoleForUserReply, error) {

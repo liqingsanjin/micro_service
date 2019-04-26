@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"reflect"
 	"userService/pkg/pb"
 	"userService/pkg/userservice"
 
@@ -18,14 +19,14 @@ import (
 func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 	engine.POST("/user/login", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.LoginEndpoint,
-		decodeHttpLoginRequest,
+		decodeHttpRequest(&pb.LoginRequest{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
 	engine.POST("/user/register", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.RegisterEndpoint,
-		decodeHttpRegisterRequest,
+		decodeHttpRequest(&pb.RegisterRequest{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
@@ -34,7 +35,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.GetPermissionsEndpoint,
-			decodeHttpGetPermissionsRequest,
+			decodeHttpRequest(&pb.GetPermissionsRequest{}),
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 			httptransport.ServerBefore(setUserInfoContext),
@@ -44,7 +45,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.CheckPermissionEndpoint,
-			decodeHttpCheckPermissionRequest,
+			decodeHttpRequest(&pb.CheckPermissionRequest{}),
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 			httptransport.ServerBefore(setUserInfoContext),
@@ -54,7 +55,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.AddRoutesEndpoint,
-			decodeHttpAddRoutesRequest,
+			decodeHttpRequest(&pb.AddRoutesRequest{}),
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
@@ -63,7 +64,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.ListRoutesEndpoint,
-			decodeHttpListRoutesRequest,
+			decodeHttpRequest(&pb.ListRoutesRequest{}),
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
@@ -72,7 +73,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.CreatePermissionEndpoint,
-			decodeHttpCreatePermissionRequest,
+			decodeHttpRequest(&pb.CreatePermissionRequest{}),
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
@@ -81,7 +82,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.UpdatePermissionEndpoint,
-			decodeHttpUpdatePermissionRequest,
+			decodeHttpRequest(&pb.UpdatePermissionRequest{}),
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
@@ -90,7 +91,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.AddRouteForPermissionEndpoint,
-			decodeHttpAddRouteForPermissionRequest,
+			decodeHttpRequest(&pb.AddRouteForPermissionRequest{}),
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
@@ -99,7 +100,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.RemoveRouteForPermissionEndpoint,
-			decodeHttpRemoveRouteForPermissionRequest,
+			decodeHttpRequest(&pb.RemoveRouteForPermissionRequest{}),
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
@@ -108,11 +109,19 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.AddPermissionForRoleEndpoint,
-			decodeHttpAddPermissionForRoleRequest,
+			decodeHttpRequest(&pb.AddPermissionForRoleRequest{}),
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
+	engine.POST("/user/createRole",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.CreateRoleEndpoint,
+			decodeHttpRequest(&pb.CreateRoleRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
 }
 
 func convertHttpHandlerToGinHandler(handler http.Handler) gin.HandlerFunc {
@@ -121,81 +130,17 @@ func convertHttpHandlerToGinHandler(handler http.Handler) gin.HandlerFunc {
 	}
 }
 
-func decodeHttpRegisterRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request pb.RegisterRequest
-	defer r.Body.Close()
-	err := json.NewDecoder(r.Body).Decode(&request)
-	return &request, err
-}
-
-func decodeHttpLoginRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request pb.LoginRequest
-	defer r.Body.Close()
-	err := json.NewDecoder(r.Body).Decode(&request)
-	return &request, err
-}
-
-func decodeHttpGetPermissionsRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request pb.GetPermissionsRequest
-	defer r.Body.Close()
-	err := json.NewDecoder(r.Body).Decode(&request)
-	return &request, err
-}
-
-func decodeHttpCheckPermissionRequest(ctx context.Context, r *http.Request) (interface{}, error) {
-	var request pb.CheckPermissionRequest
-	defer r.Body.Close()
-	err := json.NewDecoder(r.Body).Decode(&request)
-	return &request, err
-}
-
-func decodeHttpAddRoutesRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request pb.AddRoutesRequest
-	defer r.Body.Close()
-	err := json.NewDecoder(r.Body).Decode(&request)
-	return &request, err
-}
-
-func decodeHttpListRoutesRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request pb.ListRoutesRequest
-	defer r.Body.Close()
-	err := json.NewDecoder(r.Body).Decode(&request)
-	return &request, err
-}
-
-func decodeHttpCreatePermissionRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request pb.CreatePermissionRequest
-	defer r.Body.Close()
-	err := json.NewDecoder(r.Body).Decode(&request)
-	return &request, err
-}
-
-func decodeHttpUpdatePermissionRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request pb.UpdatePermissionRequest
-	defer r.Body.Close()
-	err := json.NewDecoder(r.Body).Decode(&request)
-	return &request, err
-}
-
-func decodeHttpAddRouteForPermissionRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request pb.AddRouteForPermissionRequest
-	defer r.Body.Close()
-	err := json.NewDecoder(r.Body).Decode(&request)
-	return &request, err
-}
-
-func decodeHttpRemoveRouteForPermissionRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request pb.RemoveRouteForPermissionRequest
-	defer r.Body.Close()
-	err := json.NewDecoder(r.Body).Decode(&request)
-	return &request, err
-}
-
-func decodeHttpAddPermissionForRoleRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request pb.AddPermissionForRoleRequest
-	defer r.Body.Close()
-	err := json.NewDecoder(r.Body).Decode(&request)
-	return &request, err
+func decodeHttpRequest(ins interface{}) httptransport.DecodeRequestFunc {
+	tp := reflect.TypeOf(ins)
+	if tp.Kind() == reflect.Ptr {
+		tp = tp.Elem()
+	}
+	return func(_ context.Context, r *http.Request) (interface{}, error) {
+		request := reflect.New(tp).Interface()
+		defer r.Body.Close()
+		err := json.NewDecoder(r.Body).Decode(&request)
+		return request, err
+	}
 }
 
 func encodeHttpResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
