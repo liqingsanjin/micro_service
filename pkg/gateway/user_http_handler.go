@@ -12,9 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-kit/kit/sd/lb"
 	httptransport "github.com/go-kit/kit/transport/http"
-	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
-	"google.golang.org/grpc/status"
 )
 
 func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
@@ -185,6 +183,17 @@ func decodeHttpRemoveRouteForPermissionRequest(_ context.Context, r *http.Reques
 }
 
 func encodeHttpResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
+	s, ok := response.(StatusError)
+	if ok {
+		err := s.GetErr()
+		if err != nil {
+			w.WriteHeader(int(err.GetCode()))
+			return json.NewEncoder(w).Encode(gin.H{
+				"err":  err.GetMessage(),
+				"desc": err.GetDescription(),
+			})
+		}
+	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	return json.NewEncoder(w).Encode(response)
 }
@@ -194,7 +203,8 @@ func errorEncoder(ctx context.Context, err error, w http.ResponseWriter) {
 	w.WriteHeader(code)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	json.NewEncoder(w).Encode(gin.H{
-		"error": msg,
+		"err":  msg,
+		"desc": "未知错误",
 	})
 }
 
@@ -206,25 +216,7 @@ func err2codeAndMessage(err error) (int, string) {
 	case lb.RetryError:
 		err = e.Final
 	}
-	s, ok := status.FromError(err)
-	if !ok {
-		return http.StatusInternalServerError, err.Error()
-	}
-	code := s.Code()
-	msg := s.Message()
-	switch code {
-	case codes.PermissionDenied:
-		return http.StatusUnauthorized, msg
-	case codes.Internal:
-		return http.StatusInternalServerError, msg
-	case codes.NotFound:
-		return http.StatusBadRequest, msg
-	case codes.AlreadyExists:
-		return http.StatusBadRequest, msg
-	case codes.InvalidArgument:
-		return http.StatusBadRequest, msg
-	}
-	return http.StatusInternalServerError, msg
+	return http.StatusInternalServerError, err.Error()
 }
 
 func keyFunc(token *jwt.Token) (interface{}, error) {

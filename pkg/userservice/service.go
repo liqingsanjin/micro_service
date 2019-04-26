@@ -2,6 +2,7 @@ package userservice
 
 import (
 	"context"
+	"net/http"
 	"time"
 	"userService/pkg/common"
 	usermodel "userService/pkg/model/user"
@@ -24,7 +25,13 @@ type UserInfo struct {
 func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, error) {
 	db := common.DB.New()
 	if in.GetUsername() == "" || in.GetPassword() == "" {
-		return nil, ErrUserNamePasswordEmpty
+		return &pb.LoginReply{
+			Err: &pb.Error{
+				Code:        http.StatusBadRequest,
+				Message:     "InvalidParamsError",
+				Description: "用户或密码为空",
+			},
+		}, nil
 	}
 
 	// 查询用户
@@ -33,7 +40,13 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	if user == nil {
-		return nil, ErrWrongUserNameOrPassword
+		return &pb.LoginReply{
+			Err: &pb.Error{
+				Code:        http.StatusNotFound,
+				Message:     "NotFoundError",
+				Description: "用户不存在",
+			},
+		}, nil
 	}
 
 	hash := user.PasswordHashNew
@@ -43,7 +56,13 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 	// 校验密码
 	err = bcrypt.CompareHashAndPassword([]byte(hash), []byte(in.GetPassword()))
 	if err != nil {
-		return nil, ErrWrongUserNameOrPassword
+		return &pb.LoginReply{
+			Err: &pb.Error{
+				Code:        http.StatusBadRequest,
+				Message:     "InvalidParamsError",
+				Description: "密码错误",
+			},
+		}, nil
 	}
 
 	// 生成token
@@ -53,8 +72,7 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 		UserName: user.UserName,
 	}, expiredAt)
 	if err != nil {
-		logrus.Errorln(err)
-		err = status.Error(codes.Internal, err.Error())
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	//添加新密码
@@ -62,17 +80,19 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 		logrus.Infoln("更新密码")
 		newHash, _ := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.MinCost)
 		logrus.Infoln("newHash", newHash)
-		usermodel.UpdateUser(db, user.UserID, &usermodel.User{
+		err = usermodel.UpdateUser(db, user.UserID, &usermodel.User{
 			PasswordHashNew: string(newHash),
 		})
+		if err != nil {
+			return nil, status.Error(codes.Internal, err.Error())
+		}
 	}
-
 	return &pb.LoginReply{
 		Id:       user.UserID,
 		Username: user.UserName,
 		UserType: user.UserType,
 		Token:    tk,
-	}, err
+	}, nil
 }
 
 func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsRequest) (*pb.GetPermissionsReply, error) {

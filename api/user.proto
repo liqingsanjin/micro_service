@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package pb;
 
+import "error.proto";
+
 // 路由 -> 权限 -> 角色 -> 用户
 
 service User {
@@ -57,6 +59,7 @@ message LoginReply {
     string username =2;
     string userType = 3;
     string token = 4;
+    error err = 5;
 }
 
 message GetPermissionsRequest {
