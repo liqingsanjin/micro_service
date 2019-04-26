@@ -14,7 +14,7 @@ go mod tidy
 ```
 mkdir pkg/pb
 
-protoc -I ./api --go_out=plugins=grpc:./pkg/pb/ api/user.proto
+protoc -I ./api --go_out=plugins=grpc:./pkg/pb/ api/*.proto
 
 go build -ldflags='-s -w' -o userService cmd/userservice/main.go
 ```
