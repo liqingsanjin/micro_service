@@ -222,6 +222,15 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
+	engine.POST("/user/listUsers",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.ListUsersEndpoint,
+			decodeHttpRequest(&pb.ListUsersRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
+
 }
 
 func convertHttpHandlerToGinHandler(handler http.Handler) gin.HandlerFunc {

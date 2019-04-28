@@ -998,7 +998,7 @@ func (u *userService) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*
 
 	us, err := usermodel.ListUsers(db)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	users := make([]*pb.UserField, 0)
