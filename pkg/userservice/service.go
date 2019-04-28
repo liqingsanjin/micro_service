@@ -859,30 +859,50 @@ func (u *userService) RemovePermissionForRole(ctx context.Context, in *pb.Remove
 }
 
 func (u *userService) AddRoleForRole(ctx context.Context, in *pb.AddRoleForRoleRequest) (*pb.AddRoleForRoleReply, error) {
-	if in.From == "" || in.To == "" {
-		return nil, ErrInvalidParams
+	reply := &pb.AddRoleForRoleReply{}
+	if in.From == "" || in.Child == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "角色名不能为空",
+		}
+		return reply, nil
 	}
 	db := common.DB
 
 	from, err := usermodel.FindRole(db, in.From)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	if from == nil {
-		return nil, ErrRoleNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "角色不存在",
+		}
+		return reply, nil
 	}
-	to, err := usermodel.FindRole(db, in.To)
+	child, err := usermodel.FindRole(db, in.Child)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
-	if to == nil {
-		return nil, ErrRoleNotFound
+	if child == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "角色不存在",
+		}
+		return reply, nil
 	}
 
-	if common.Enforcer.AddRoleForUser(to.Role, from.Role) {
-		return &pb.AddRoleForRoleReply{}, nil
+	if !common.Enforcer.AddRoleForUser(fmt.Sprintf("role:%d", from.ID), fmt.Sprintf("role:%d", child.ID)) {
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     AlreadyExists,
+			Description: "策略已存在",
+		}
 	}
-	return nil, ErrPolicyExists
+	return reply, nil
 }
 
 func (u *userService) RemoveRoleForRole(ctx context.Context, in *pb.RemoveRoleForRoleRequest) (*pb.RemoveRoleForRoleReply, error) {

@@ -279,12 +279,12 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 		endpoint := grpctransport.NewClient(
 			conn,
 			"pb.User",
-			"RemovePermissionForRole",
+			"AddRoleForRole",
 			encodeRequest,
 			decodeResponse,
-			pb.RemovePermissionForRoleReply{},
+			pb.AddRoleForRoleReply{},
 		).Endpoint()
-		endpoints.RemovePermissionForRoleEndpoint = endpoint
+		endpoints.AddRoleForRoleEndpoint = endpoint
 	}
 
 	return endpoints

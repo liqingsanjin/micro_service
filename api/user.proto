@@ -115,7 +115,7 @@ message AddPermissionForRoleReply {
 
 message AddRoleForRoleRequest {
     string from = 1;
-    string to = 2;
+    string child = 2;
 }
 message AddRoleForRoleReply {
     error err = 1;
