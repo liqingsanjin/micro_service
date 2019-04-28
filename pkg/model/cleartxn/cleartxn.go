@@ -138,29 +138,29 @@ func (c ClearTxn) TableName() string {
 }
 
 type TfrTrnLog struct {
-	TransDt              string    `gorm:"column:TRANS_DT"`
-	TransMt              string    `gorm:"column:TRANS_MT"`
+	TransDt              string    `gorm:"column:TRANS_DT" downI:"4"`
+	TransMt              string    `gorm:"column:TRANS_MT" downI:"6"`
 	SrcQid               int       `gorm:"column:SRC_QID"`
 	DesQid               int       `gorm:"column:DES_QID"`
-	MaTransCd            string    `gorm:"column:MA_TRANS_CD"`
+	MaTransCd            string    `gorm:"column:MA_TRANS_CD" downI:"7"`
 	MaTransNm            string    `gorm:"column:MA_TRANS_NM"`
-	KeyRsp               string    `gorm:"column:KEY_RSP"`
+	KeyRsp               string    `gorm:"column:KEY_RSP" downI:"1"`
 	KeyRevsal            string    `gorm:"column:KEY_REVSAL"`
 	KeyCancel            string    `gorm:"column:KEY_CANCEL"`
-	RespCd               string    `gorm:"column:RESP_CD"`
-	TransSt              string    `gorm:"column:TRANS_ST"`
+	RespCd               string    `gorm:"column:RESP_CD" downI:"16"`
+	TransSt              string    `gorm:"column:TRANS_ST" downI:"15"`
 	MaTransSeq           int       `gorm:"column:MA_TRANS_SEQ"`
 	OrigMaTransSeq       int       `gorm:"column:ORIG_MA_TRANS_SEQ"`
 	OrigTransSeq         string    `gorm:"column:ORIG_TRANS_SEQ"`
 	OrigTermSeq          string    `gorm:"column:ORIG_TERM_SEQ"`
 	OrigTransDt          string    `gorm:"column:ORIG_TRANS_DT"`
-	MaSettleDt           string    `gorm:"column:MA_SETTLE_DT"`
+	MaSettleDt           string    `gorm:"column:MA_SETTLE_DT" downI:"5"`
 	AccessMd             string    `gorm:"column:ACCESS_MD"`
 	MsgTp                string    `gorm:"column:MSG_TP"`
-	PriAcctNo            string    `gorm:"column:PRI_ACCT_NO"`
+	PriAcctNo            string    `gorm:"column:PRI_ACCT_NO" downI"10"`
 	AcctTp               string    `gorm:"column:ACCT_TP"`
 	TransProcCd          string    `gorm:"column:TRANS_PROC_CD"`
-	TransAt              string    `gorm:"column:TRANS_AT"`
+	TransAt              string    `gorm:"column:TRANS_AT" downI:"9"`
 	TransTdTm            string    `gorm:"column:TRANS_TD_TM"`
 	TermSeq              string    `gorm:"column:TERM_SEQ"`
 	AcptTransTm          string    `gorm:"column:ACPT_TRANS_TM"`
@@ -169,10 +169,10 @@ type TfrTrnLog struct {
 	PosEntryMdCd         string    `gorm:"column:POS_ENTRY_MD_CD"`
 	PosCondCd            string    `gorm:"column:POS_COND_CD"`
 	AcptInsIdCd          string    `gorm:"column:ACPT_INS_ID_CD"`
-	FwdInsIdCd           string    `gorm:"column:FWD_INS_ID_CD"`
-	TermId               string    `gorm:"column:TERM_ID"`
-	MchntCd              string    `gorm:"column:MCHNT_CD"`
-	CardAccptrNm         string    `gorm:"column:CARD_ACCPTR_NM"`
+	FwdInsIdCd           string    `gorm:"column:FWD_INS_ID_CD" downI:"8"`
+	TermId               string    `gorm:"column:TERM_ID" downI:"12"`
+	MchntCd              string    `gorm:"column:MCHNT_CD" downI:"2"`
+	CardAccptrNm         string    `gorm:"column:CARD_ACCPTR_NM" downI"3"`
 	RetriRefNo           string    `gorm:"column:RETRI_REF_NO"`
 	ReqAuthId            string    `gorm:"column:REQ_AUTH_ID"`
 	TransSubcata         string    `gorm:"column:TRANS_SUBCATA"`
@@ -190,9 +190,9 @@ type TfrTrnLog struct {
 	TfrOutAcctNoPure     string    `gorm:"column:TFR_OUT_ACCT_NO_PURE"`
 	AcptInsResvPure      string    `gorm:"column:ACPT_INS_RESV_PURE"`
 	TrrOutAcctTp         string    `gorm:"column:TRR_OUT_ACCT_TP"`
-	IssInsIdCd           string    `gorm:"column:ISS_INS_ID_CD"`
+	IssInsIdCd           string    `gorm:"column:ISS_INS_ID_CD" downI:"11"`
 	CardAttr             string    `gorm:"column:CARD_ATTR"`
-	CardClass            string    `gorm:"column:CARD_CLASS"`
+	CardClass            string    `gorm:"column:CARD_CLASS" downI:"14"`
 	CardMedia            string    `gorm:"column:CARD_MEDIA"`
 	CardBin              string    `gorm:"column:CARD_BIN"`
 	CardBrand            string    `gorm:"column:CARD_BRAND"`
@@ -252,7 +252,7 @@ type TfrTrnLog struct {
 	TransMth             int       `gorm:"column:TRANS_MTH"`
 	RecUpdTs             time.Time `gorm:"column:REC_UPD_TS"`
 	RecCrtTs             time.Time `gorm:"column:REC_CRT_TS"`
-	ProdCd               string    `gorm:"column:PROD_CD"`
+	ProdCd               string    `gorm:"column:PROD_CD" downI:"13"`
 	TranTp               string    `gorm:"column:TRAN_TP"`
 	BizCd                string    `gorm:"column:BIZ_CD"`
 	RevelFlg             string    `gorm:"column:REVEL_FLG"`
@@ -284,7 +284,7 @@ func DownloadInstitutionFile(db *gorm.DB, startTime, endTime string) ([]*ClearTx
 //@params option 查询的limit跟offset， 第一个为limit， 第二个为page
 //默认limit=10； page=0
 //@params amountCond 可以为空， a < TRANS_AT AND b > TRANS_AT
-func GetTfrTrnLogs(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string, limit, page int64) ([]*TfrTrnLog, int64, int64, error) {
+func GetTfrTrnLogsWithLimit(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string, limit, page int64) ([]*TfrTrnLog, int64, int64, error) {
 	limit, offset := getLimitOffest(limit, page)
 	logs := make([]*TfrTrnLog, 0)
 	var count int64
@@ -308,6 +308,18 @@ func GetTfrTrnLogs(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string, limit, 
 	}
 
 	return logs, count, total, nil
+}
+
+func GetTfrTrnLogs(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string) ([]*TfrTrnLog, error) {
+	logs := make([]*TfrTrnLog, 0)
+	err := db.Debug().Where(tfrTrnLog).Where(amountCond).Select(SelectInsTxnResp).Find(&logs).Error
+	if err == gorm.ErrRecordNotFound {
+		return logs, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return logs, nil
 }
 
 func GetTfrTrnLogByKeyRsp(db *gorm.DB, keyRsp string) (*pb.GetTfrTrnLogResp, error) {

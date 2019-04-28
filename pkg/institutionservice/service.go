@@ -66,7 +66,7 @@ func (s *setService) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq)
 		accountRegion = fmt.Sprintf("TRANS_AT < '%s'", in.EndAt)
 	}
 
-	results, count, total, err := cleartxnM.GetTfrTrnLogs(common.DB, &cond, accountRegion, in.Limit, in.Page)
+	results, count, total, err := cleartxnM.GetTfrTrnLogsWithLimit(common.DB, &cond, accountRegion, in.Limit, in.Page)
 	if err != nil {
 		return nil, err
 	}
@@ -100,4 +100,42 @@ func (s *setService) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq)
 //GetTfrTrnLog .
 func (s *setService) GetTfrTrnLog(ctx context.Context, in *pb.GetTfrTrnLogReq) (*pb.GetTfrTrnLogResp, error) {
 	return cleartxnM.GetTfrTrnLogByKeyRsp(common.DB, in.KeyRsp)
+}
+
+func (s *setService) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrTrnLogsReq) (*pb.DownloadTfrTrnLogsResp, error) {
+	var cond cleartxnM.TfrTrnLog
+
+	cond.MchntCd = in.MchntCd
+	cond.PriAcctNo = in.PriAcctNO
+	cond.KeyRsp = in.KeyRsp
+	cond.PriAcctNo = in.PriAcctNO
+	cond.CardClass = in.CardClass
+	cond.RoutInsIdCd = in.RoutIndustryInsIdCd
+	cond.FwdInsIdCd = in.FwdInsIdCd
+	cond.IssInsIdCd = in.IssInsIdCd
+	cond.RespCd = in.RespCd
+	cond.TermId = in.TermId
+	cond.ProdCd = in.ProdCd
+	cond.BizCd = in.BizCd
+	cond.MaTransCd = in.MaTransCd
+	cond.MsgResvFld2 = in.MsgResvFld2
+
+	var accountRegion = ""
+	if in.BeginAt != "" && in.EndAt != "" {
+		accountRegion = fmt.Sprintf("'%s' < TRANS_AT AND TRANS_AT < '%s'", in.BeginAt, in.EndAt)
+	} else if in.BeginAt != "" {
+		accountRegion = fmt.Sprintf("'%s' < TRANS_AT", in.BeginAt)
+	} else if in.EndAt != "" {
+		accountRegion = fmt.Sprintf("TRANS_AT < '%s'", in.EndAt)
+	}
+
+	results, err := cleartxnM.GetTfrTrnLogs(common.DB, &cond, accountRegion)
+	if err != nil {
+		return nil, err
+	}
+	uid, err := DownloadTfrTrnLogs(results)
+	fmt.Println(err)
+	fmt.Println(uid)
+
+	return &pb.DownloadTfrTrnLogsResp{Code: true}, nil
 }
