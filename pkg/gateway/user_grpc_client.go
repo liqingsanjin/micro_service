@@ -287,6 +287,18 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 		endpoints.AddRoleForRoleEndpoint = endpoint
 	}
 
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.User",
+			"RemoveRoleForRole",
+			encodeRequest,
+			decodeResponse,
+			pb.RemoveRoleForRoleReply{},
+		).Endpoint()
+		endpoints.RemoveRoleForRoleEndpoint = endpoint
+	}
+
 	return endpoints
 }
 func (u *UserEndpoints) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, error) {
