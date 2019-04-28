@@ -474,24 +474,35 @@ func (u *userService) CreatePermission(ctx context.Context, in *pb.CreatePermiss
 }
 
 func (u *userService) UpdatePermission(ctx context.Context, in *pb.UpdatePermissionRequest) (*pb.UpdatePermissionReply, error) {
+	reply := &pb.UpdatePermissionReply{}
 	if in.Id == 0 || in.Name == "" {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "id和权限名不能为空",
+		}
+		return reply, nil
 	}
 	db := common.DB
 
 	p, err := usermodel.FindPermissionByID(db, in.Id)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	if p == nil {
-		return nil, ErrPermissionNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "找不到权限，不能更新",
+		}
+		return reply, nil
 	}
 	err = usermodel.UpdatePermission(db, in.Id, &usermodel.Permission{Name: in.Name})
 	if err != nil {
-		err = status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
-	return &pb.UpdatePermissionReply{}, err
+	return reply, nil
 }
 
 func (u *userService) AddRouteForPermission(ctx context.Context, in *pb.AddRouteForPermissionRequest) (*pb.AddRouteForPermissionReply, error) {
