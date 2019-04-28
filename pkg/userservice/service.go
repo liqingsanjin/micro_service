@@ -11,9 +11,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
-	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
-	"google.golang.org/grpc/status"
 )
 
 type userService struct{}
@@ -1151,31 +1149,52 @@ func (u *userService) RemovePermissionForUser(ctx context.Context, in *pb.Remove
 }
 
 func (u *userService) RemoveRoleForUser(ctx context.Context, in *pb.RemoveRoleForUserRequest) (*pb.RemoveRoleForUserReply, error) {
+	reply := &pb.RemoveRoleForUserReply{}
 	if in.Username == "" || in.Role == "" {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "用户名和角色名不能为空",
+		}
+		return reply, nil
 	}
 
 	db := common.DB
 
 	role, err := usermodel.FindRole(db, in.Role)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	if role == nil {
-		return nil, ErrRoleNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "角色不存在",
+		}
+		return reply, nil
 	}
 
 	user, err := usermodel.FindUserByUserName(db, in.Username)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	if user == nil {
-		return nil, ErrUserNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "用户不存在",
+		}
+		return reply, nil
 	}
 
-	if common.Enforcer.DeleteRoleForUser(in.Username, in.Role) {
-		return &pb.RemoveRoleForUserReply{}, nil
+	if !common.Enforcer.DeleteRoleForUser(fmt.Sprintf("user:%d", user.UserID), fmt.Sprintf("role:%d", role.ID)) {
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "策略不存在",
+		}
+		return reply, nil
 	}
-	return nil, ErrPolicyNotFound
+	return reply, nil
 
 }
