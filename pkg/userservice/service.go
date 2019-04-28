@@ -765,7 +765,7 @@ func (u *userService) ListRole(ctx context.Context, in *pb.ListRoleRequest) (*pb
 
 	roles, err := usermodel.ListRole(db)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	names := make([]string, len(roles))
