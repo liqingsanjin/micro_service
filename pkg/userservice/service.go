@@ -652,7 +652,7 @@ func (u *userService) ListPermissions(ctx context.Context, in *pb.ListPermission
 
 	ps, err := usermodel.ListPermissions(db)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	names := make([]string, len(ps))
