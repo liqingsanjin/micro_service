@@ -897,7 +897,7 @@ func (u *userService) AddRoleForRole(ctx context.Context, in *pb.AddRoleForRoleR
 
 	if !common.Enforcer.AddRoleForUser(fmt.Sprintf("role:%d", from.ID), fmt.Sprintf("role:%d", child.ID)) {
 		reply.Err = &pb.Error{
-			Code:        http.StatusNotFound,
+			Code:        http.StatusBadRequest,
 			Message:     AlreadyExists,
 			Description: "策略已存在",
 		}
@@ -1054,31 +1054,51 @@ func (u *userService) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) 
 }
 
 func (u *userService) AddPermissionForUser(ctx context.Context, in *pb.AddPermissionForUserRequest) (*pb.AddPermissionForUserReply, error) {
+	reply := &pb.AddPermissionForUserReply{}
 	if in.Username == "" || in.Permission == "" {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "用户名和权限名不能为空",
+		}
+		return reply, nil
 	}
 	db := common.DB
 
 	user, err := usermodel.FindUserByUserName(db, in.Username)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	if user == nil {
-		return nil, ErrUserNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "用户不存在",
+		}
+		return reply, nil
 	}
 
 	permission, err := usermodel.FindPermissionByName(db, in.Permission)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	if permission == nil {
-		return nil, ErrPermissionNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "权限不存在",
+		}
+		return reply, nil
 	}
 
-	if common.Enforcer.AddRoleForUser(in.Username, in.Permission) {
-		return &pb.AddPermissionForUserReply{}, nil
+	if !common.Enforcer.AddRoleForUser(fmt.Sprintf("user:%d", user.UserID), fmt.Sprintf("permission:%d", permission.ID)) {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     AlreadyExists,
+			Description: "策略已存在",
+		}
 	}
-	return nil, ErrPolicyExists
+	return reply, nil
 }
 
 func (u *userService) RemovePermissionForUser(ctx context.Context, in *pb.RemovePermissionForUserRequest) (*pb.RemovePermissionForUserReply, error) {
