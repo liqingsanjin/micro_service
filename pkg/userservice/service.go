@@ -777,21 +777,35 @@ func (u *userService) ListRole(ctx context.Context, in *pb.ListRoleRequest) (*pb
 
 func (u *userService) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest) (*pb.UpdateRoleReply, error) {
 	db := common.DB
+	reply := &pb.UpdateRoleReply{}
+	if in.Id == 0 || in.Name == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "id和角色名不能为空",
+		}
+		return reply, nil
+	}
 
 	p, err := usermodel.FindRoleByID(db, in.Id)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	if p == nil {
-		return nil, ErrRouteNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "角色不存在",
+		}
+		return reply, nil
 	}
 
 	err = usermodel.UpdateRole(db, in.Id, &usermodel.Role{Role: in.Name})
 	if err != nil {
-		err = status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
-	return &pb.UpdateRoleReply{}, err
+	return reply, err
 }
 
 func (u *userService) RemovePermissionForRole(ctx context.Context, in *pb.RemovePermissionForRoleRequest) (*pb.RemovePermissionForRoleReply, error) {
