@@ -810,32 +810,52 @@ func (u *userService) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest) 
 }
 
 func (u *userService) RemovePermissionForRole(ctx context.Context, in *pb.RemovePermissionForRoleRequest) (*pb.RemovePermissionForRoleReply, error) {
+	reply := &pb.RemovePermissionForRoleReply{}
 	if in.Role == "" || len(in.Permission) == 0 {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "角色名和权限不能为空",
+		}
+		return reply, nil
 	}
 	db := common.DB
 
 	role, err := usermodel.FindRole(db, in.Role)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	if role == nil {
-		return nil, ErrRoleNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "角色不存在",
+		}
+		return reply, nil
 	}
 
 	permission, err := usermodel.FindPermissionByName(db, in.Permission)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	if permission == nil {
-		return nil, ErrPermissionNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "权限不存在",
+		}
+		return reply, nil
 	}
 
-	if common.Enforcer.DeleteRoleForUser(in.Role, in.Permission) {
-		return &pb.RemovePermissionForRoleReply{}, nil
+	if !common.Enforcer.DeleteRoleForUser(fmt.Sprintf("role:%d", role.ID), fmt.Sprintf("permission:%d", permission.ID)) {
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "策略不存在",
+		}
 	}
-	return nil, ErrPolicyNotFound
+	return reply, nil
 }
 
 func (u *userService) AddRoleForRole(ctx context.Context, in *pb.AddRoleForRoleRequest) (*pb.AddRoleForRoleReply, error) {

@@ -185,6 +185,14 @@ func main() {
 		endpoints.UpdateRoleEndpoint = retry
 	}
 
+	{
+		factory := userserviceFactory(userservice.MakeRemovePermissionForRoleEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		endpoints.RemovePermissionForRoleEndpoint = retry
+	}
+
 	userHandler := gateway.NewHttpHandler(&endpoints)
 	http.ListenAndServe(":8080", userHandler)
 }
