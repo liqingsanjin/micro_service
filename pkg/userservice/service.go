@@ -667,7 +667,7 @@ func (u *userService) ListPermissions(ctx context.Context, in *pb.ListPermission
 
 func (u *userService) AddPermissionForPermission(ctx context.Context, in *pb.AddPermissionForPermissionRequest) (*pb.AddPermissionForPermissionReply, error) {
 	reply := &pb.AddPermissionForPermissionReply{}
-	if in.From == "" || in.To == "" {
+	if in.From == "" || in.Child == "" {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     InvalidParam,
@@ -689,11 +689,11 @@ func (u *userService) AddPermissionForPermission(ctx context.Context, in *pb.Add
 		}
 		return reply, nil
 	}
-	to, err := usermodel.FindPermissionByName(db, in.To)
+	child, err := usermodel.FindPermissionByName(db, in.Child)
 	if err != nil {
 		return nil, err
 	}
-	if to == nil {
+	if child == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusNotFound,
 			Message:     NotFound,
@@ -702,7 +702,7 @@ func (u *userService) AddPermissionForPermission(ctx context.Context, in *pb.Add
 		return reply, nil
 	}
 
-	if !common.Enforcer.AddRoleForUser(to.Name, from.Name) {
+	if !common.Enforcer.AddRoleForUser(from.Name, child.Name) {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     AlreadyExists,
@@ -713,8 +713,15 @@ func (u *userService) AddPermissionForPermission(ctx context.Context, in *pb.Add
 }
 
 func (u *userService) RemovePermissionForPermission(ctx context.Context, in *pb.RemovePermissionForPermissionRequest) (*pb.RemovePermissionForPermissionReply, error) {
+	reply := &pb.RemovePermissionForPermissionReply{}
+
 	if in.From == "" || in.Child == "" {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "权限名不能为空",
+		}
+		return reply, nil
 	}
 	db := common.DB
 
@@ -723,20 +730,34 @@ func (u *userService) RemovePermissionForPermission(ctx context.Context, in *pb.
 		return nil, err
 	}
 	if from == nil {
-		return nil, ErrPermissionNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "权限不存在",
+		}
+		return reply, nil
 	}
 	child, err := usermodel.FindPermissionByName(db, in.Child)
 	if err != nil {
 		return nil, err
 	}
 	if child == nil {
-		return nil, ErrPermissionNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "权限不存在",
+		}
+		return reply, nil
 	}
 
-	if common.Enforcer.DeleteRoleForUser(from.Name, child.Name) {
-		return &pb.RemovePermissionForPermissionReply{}, nil
+	if !common.Enforcer.DeleteRoleForUser(from.Name, child.Name) {
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "策略不存在",
+		}
 	}
-	return nil, ErrPolicyExists
+	return reply, nil
 }
 
 func (u *userService) ListRole(ctx context.Context, in *pb.ListRoleRequest) (*pb.ListRoleReply, error) {

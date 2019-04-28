@@ -159,6 +159,15 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
+	engine.POST("/user/removePermissionForPermission",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.RemovePermissionForPermissionEndpoint,
+			decodeHttpRequest(&pb.RemovePermissionForPermissionRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
+
 }
 
 func convertHttpHandlerToGinHandler(handler http.Handler) gin.HandlerFunc {
