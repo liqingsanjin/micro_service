@@ -953,33 +953,44 @@ func (u *userService) RemoveRoleForRole(ctx context.Context, in *pb.RemoveRoleFo
 }
 
 func (u *userService) RemoveRole(ctx context.Context, in *pb.RemoveRoleRequest) (*pb.RemoveRoleReply, error) {
+	reply := &pb.RemoveRoleReply{}
 	if in.Role == "" {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "角色名不能为空",
+		}
+		return reply, nil
 	}
 	db := common.DB
 
 	role, err := usermodel.FindRole(db, in.Role)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	if role == nil {
-		return nil, ErrRoleNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "角色不存在",
+		}
+		return reply, nil
 	}
 
 	db = db.Begin()
 	defer db.Rollback()
 	err = usermodel.DeleteRole(db, role)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	common.Enforcer.DeleteRole(fmt.Sprintf("role:%d", role.ID))
 	common.Enforcer.DeleteUser(fmt.Sprintf("role:%d", role.ID))
 	err = db.Commit().Error
 	if err != nil {
-		err = status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
-	return &pb.RemoveRoleReply{}, err
+	return reply, err
 }
 
 func (u *userService) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*pb.ListUsersReply, error) {
