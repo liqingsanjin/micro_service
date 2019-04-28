@@ -599,7 +599,7 @@ func (u *userService) RemoveRouteForPermission(ctx context.Context, in *pb.Remov
 	if !common.Enforcer.DeletePermissionForUser(permission.Name, in.Route) {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
-			Message:     AlreadyExists,
+			Message:     NotFound,
 			Description: "策略不存在",
 		}
 	}
@@ -666,30 +666,50 @@ func (u *userService) ListPermissions(ctx context.Context, in *pb.ListPermission
 }
 
 func (u *userService) AddPermissionForPermission(ctx context.Context, in *pb.AddPermissionForPermissionRequest) (*pb.AddPermissionForPermissionReply, error) {
+	reply := &pb.AddPermissionForPermissionReply{}
 	if in.From == "" || in.To == "" {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "权限名不能为空",
+		}
+		return reply, nil
 	}
 	db := common.DB
 
 	from, err := usermodel.FindPermissionByName(db, in.From)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	if from == nil {
-		return nil, ErrPermissionNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "权限不存在",
+		}
+		return reply, nil
 	}
 	to, err := usermodel.FindPermissionByName(db, in.To)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	if to == nil {
-		return nil, ErrPermissionNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "权限不存在",
+		}
+		return reply, nil
 	}
 
-	if common.Enforcer.AddRoleForUser(to.Name, from.Name) {
-		return &pb.AddPermissionForPermissionReply{}, nil
+	if !common.Enforcer.AddRoleForUser(to.Name, from.Name) {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     AlreadyExists,
+			Description: "策略已存在",
+		}
 	}
-	return nil, ErrPolicyExists
+	return reply, nil
 }
 
 func (u *userService) RemovePermissionForPermission(ctx context.Context, in *pb.RemovePermissionForPermissionRequest) (*pb.RemovePermissionForPermissionReply, error) {
@@ -700,14 +720,14 @@ func (u *userService) RemovePermissionForPermission(ctx context.Context, in *pb.
 
 	from, err := usermodel.FindPermissionByName(db, in.From)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	if from == nil {
 		return nil, ErrPermissionNotFound
 	}
 	child, err := usermodel.FindPermissionByName(db, in.Child)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	if child == nil {
 		return nil, ErrPermissionNotFound

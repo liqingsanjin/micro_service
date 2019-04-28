@@ -227,6 +227,18 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 		endpoints.ListPermissionsEndpoint = endpoint
 	}
 
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.User",
+			"AddPermissionForPermission",
+			encodeRequest,
+			decodeResponse,
+			pb.AddPermissionForPermissionReply{},
+		).Endpoint()
+		endpoints.AddPermissionForPermissionEndpoint = endpoint
+	}
+
 	return endpoints
 }
 func (u *UserEndpoints) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, error) {
