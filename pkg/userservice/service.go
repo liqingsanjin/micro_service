@@ -557,33 +557,53 @@ func (u *userService) AddRouteForPermission(ctx context.Context, in *pb.AddRoute
 }
 
 func (u *userService) RemoveRouteForPermission(ctx context.Context, in *pb.RemoveRouteForPermissionRequest) (*pb.RemoveRouteForPermissionReply, error) {
+	reply := &pb.RemoveRouteForPermissionReply{}
 	if in.Permission == "" || in.Route == "" {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "路由和权限名不能为空",
+		}
+		return reply, nil
 	}
 	db := common.DB
 
 	permission, err := usermodel.FindPermissionByName(db, in.Permission)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	if permission == nil {
-		return nil, ErrPermissionNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "权限不存在",
+		}
+		return reply, nil
 	}
 
 	route, err := usermodel.FindRouteByName(db, in.Route)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	if route == nil {
-		return nil, ErrRouteNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "路由不存在",
+		}
+		return reply, nil
 	}
 
-	if common.Enforcer.DeletePermissionForUser(permission.Name, in.Route) {
-		return &pb.RemoveRouteForPermissionReply{}, nil
+	if !common.Enforcer.DeletePermissionForUser(permission.Name, in.Route) {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     AlreadyExists,
+			Description: "策略不存在",
+		}
 	}
-	return nil, ErrPolicyNotFound
+	return reply, nil
 }
 
 func (u *userService) RemovePermission(ctx context.Context, in *pb.RemovePermissionRequest) (*pb.RemovePermissionReply, error) {
