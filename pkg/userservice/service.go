@@ -2,6 +2,7 @@ package userservice
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 	"userService/pkg/common"
@@ -107,8 +108,8 @@ func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsR
 		}
 		return reply, nil
 	}
-	usernames := md.Get("username")
-	if len(usernames) == 0 {
+	userids := md.Get("userid")
+	if len(userids) == 0 {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     InvalidParam,
@@ -117,7 +118,7 @@ func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsR
 		return reply, nil
 	}
 
-	permissions := common.Enforcer.GetImplicitPermissionsForUser(usernames[0])
+	permissions := common.Enforcer.GetImplicitPermissionsForUser(fmt.Sprintf("user:%s", userids[0]))
 
 	itemNames := make([]string, 0)
 	for _, permission := range permissions {
@@ -187,8 +188,8 @@ func (u *userService) CheckPermission(ctx context.Context, in *pb.CheckPermissio
 		}
 		return reply, nil
 	}
-	usernames := md.Get("username")
-	if !ok {
+	ids := md.Get("userid")
+	if !ok || len(ids) == 0 {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     InvalidParam,
@@ -197,7 +198,7 @@ func (u *userService) CheckPermission(ctx context.Context, in *pb.CheckPermissio
 		return reply, nil
 	}
 
-	ok = common.Enforcer.Enforce(usernames[0], in.GetRoute())
+	ok = common.Enforcer.Enforce(fmt.Sprintf("user:%s", ids[0]), in.GetRoute())
 	return &pb.CheckPermissionReply{
 		Result: ok,
 	}, nil
@@ -298,7 +299,7 @@ func (u *userService) AddPermissionForRole(ctx context.Context, in *pb.AddPermis
 		return reply, nil
 	}
 
-	if !common.Enforcer.AddRoleForUser(in.Role, in.Permission) {
+	if !common.Enforcer.AddRoleForUser(fmt.Sprintf("role:%d", role.ID), fmt.Sprintf("permission:%d", permission.ID)) {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     AlreadyExists,
@@ -380,7 +381,7 @@ func (u *userService) AddRoleForUser(ctx context.Context, in *pb.AddRoleForUserR
 		return reply, nil
 	}
 
-	if !common.Enforcer.AddRoleForUser(in.Username, in.Role) {
+	if !common.Enforcer.AddRoleForUser(fmt.Sprintf("user:%d", user.UserID), fmt.Sprintf("role:%d", role.ID)) {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     AlreadyExists,
@@ -545,7 +546,7 @@ func (u *userService) AddRouteForPermission(ctx context.Context, in *pb.AddRoute
 		return reply, nil
 	}
 
-	if !common.Enforcer.AddPermissionForUser(permission.Name, in.Route) {
+	if !common.Enforcer.AddPermissionForUser(fmt.Sprintf("permission:%d", permission.ID), in.Route) {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     AlreadyExists,
@@ -596,7 +597,7 @@ func (u *userService) RemoveRouteForPermission(ctx context.Context, in *pb.Remov
 		return reply, nil
 	}
 
-	if !common.Enforcer.DeletePermissionForUser(permission.Name, in.Route) {
+	if !common.Enforcer.DeletePermissionForUser(fmt.Sprintf("permission:%d", permission.ID), in.Route) {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     NotFound,
@@ -638,8 +639,8 @@ func (u *userService) RemovePermission(ctx context.Context, in *pb.RemovePermiss
 	if err != nil {
 		return nil, err
 	}
-	common.Enforcer.DeleteRole(in.Permission)
-	common.Enforcer.DeleteUser(in.Permission)
+	common.Enforcer.DeleteRole(fmt.Sprintf("permission:%d", permission.ID))
+	common.Enforcer.DeleteUser(fmt.Sprintf("permission:%d", permission.ID))
 	err = db.Commit().Error
 	if err != nil {
 		return nil, err
@@ -702,7 +703,7 @@ func (u *userService) AddPermissionForPermission(ctx context.Context, in *pb.Add
 		return reply, nil
 	}
 
-	if !common.Enforcer.AddRoleForUser(from.Name, child.Name) {
+	if !common.Enforcer.AddRoleForUser(fmt.Sprintf("permission:%d", from.ID), fmt.Sprintf("permission:%d", child.ID)) {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     AlreadyExists,
@@ -750,7 +751,7 @@ func (u *userService) RemovePermissionForPermission(ctx context.Context, in *pb.
 		return reply, nil
 	}
 
-	if !common.Enforcer.DeleteRoleForUser(from.Name, child.Name) {
+	if !common.Enforcer.DeleteRoleForUser(fmt.Sprintf("permission:%d", from.ID), fmt.Sprintf("permission:%d", child.ID)) {
 		reply.Err = &pb.Error{
 			Code:        http.StatusNotFound,
 			Message:     NotFound,

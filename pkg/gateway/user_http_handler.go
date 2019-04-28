@@ -250,10 +250,10 @@ func keyFunc(token *jwt.Token) (interface{}, error) {
 
 func setUserInfoContext(ctx context.Context, r *http.Request) context.Context {
 	username := r.Form.Get("username")
-	id := r.Form.Get("id")
+	id := r.Form.Get("userid")
 	md := metadata.New(map[string]string{
 		"username": username,
-		"id":       id,
+		"userid":   id,
 	})
 	return context.WithValue(ctx, "userInfo", md)
 }
