@@ -44,6 +44,7 @@ type UserEndpoints struct {
 
 func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 	endpoints := new(UserEndpoints)
+
 	{
 		endpoint := grpctransport.NewClient(
 			conn,
@@ -165,6 +166,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 		).Endpoint()
 		endpoints.CreatePermissionEndpoint = endpoint
 	}
+
 	{
 		endpoint := grpctransport.NewClient(
 			conn,
@@ -176,6 +178,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 		).Endpoint()
 		endpoints.UpdatePermissionEndpoint = endpoint
 	}
+
 	{
 		endpoint := grpctransport.NewClient(
 			conn,
@@ -187,6 +190,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 		).Endpoint()
 		endpoints.AddRouteForPermissionEndpoint = endpoint
 	}
+
 	{
 		endpoint := grpctransport.NewClient(
 			conn,
@@ -198,6 +202,19 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 		).Endpoint()
 		endpoints.RemoveRouteForPermissionEndpoint = endpoint
 	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.User",
+			"RemovePermission",
+			encodeRequest,
+			decodeResponse,
+			pb.RemovePermissionReply{},
+		).Endpoint()
+		endpoints.RemovePermissionEndpoint = endpoint
+	}
+
 	return endpoints
 }
 func (u *UserEndpoints) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, error) {

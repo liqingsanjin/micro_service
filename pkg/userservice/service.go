@@ -607,32 +607,44 @@ func (u *userService) RemoveRouteForPermission(ctx context.Context, in *pb.Remov
 }
 
 func (u *userService) RemovePermission(ctx context.Context, in *pb.RemovePermissionRequest) (*pb.RemovePermissionReply, error) {
+	reply := &pb.RemovePermissionReply{}
 	if in.Permission == "" {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "权限名不能为空",
+		}
+		return reply, nil
 	}
 	db := common.DB
 
 	permission, err := usermodel.FindPermissionByName(db, in.Permission)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	if permission == nil {
-		return nil, ErrPermissionNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "权限不存在",
+		}
+		return reply, nil
 	}
 
 	db = db.Begin()
 	defer db.Rollback()
 	err = usermodel.DeletePermission(db, permission)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 	common.Enforcer.DeleteRole(in.Permission)
+	common.Enforcer.DeleteUser(in.Permission)
 	err = db.Commit().Error
 	if err != nil {
-		err = status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
-	return &pb.RemovePermissionReply{}, err
+	return reply, nil
 }
 
 func (u *userService) ListPermissions(ctx context.Context, in *pb.ListPermissionsRequest) (*pb.ListPermissionsReply, error) {
