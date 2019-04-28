@@ -494,7 +494,7 @@ func (u *userService) UpdatePermission(ctx context.Context, in *pb.UpdatePermiss
 		reply.Err = &pb.Error{
 			Code:        http.StatusNotFound,
 			Message:     NotFound,
-			Description: "找不到权限，不能更新",
+			Description: "权限不存在",
 		}
 		return reply, nil
 	}
@@ -507,33 +507,52 @@ func (u *userService) UpdatePermission(ctx context.Context, in *pb.UpdatePermiss
 
 func (u *userService) AddRouteForPermission(ctx context.Context, in *pb.AddRouteForPermissionRequest) (*pb.AddRouteForPermissionReply, error) {
 	db := common.DB
-
+	reply := &pb.AddRouteForPermissionReply{}
 	if in.Permission == "" || in.Route == "" {
-		return nil, ErrInvalidParams
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "路由和权限名不能为空",
+		}
+		return reply, nil
 	}
 
 	permission, err := usermodel.FindPermissionByName(db, in.Permission)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	if permission == nil {
-		return nil, ErrPermissionNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "权限不存在",
+		}
+		return reply, nil
 	}
 
 	route, err := usermodel.FindRouteByName(db, in.Route)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	if route == nil {
-		return nil, ErrRouteNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "路由不存在",
+		}
+		return reply, nil
 	}
 
-	if common.Enforcer.AddPermissionForUser(permission.Name, in.Route) {
-		return &pb.AddRouteForPermissionReply{}, nil
+	if !common.Enforcer.AddPermissionForUser(permission.Name, in.Route) {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     AlreadyExists,
+			Description: "策略已存在",
+		}
 	}
-	return nil, ErrPolicyExists
+	return reply, nil
 
 }
 
