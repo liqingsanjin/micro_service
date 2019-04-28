@@ -476,11 +476,11 @@ func (u *userService) CreatePermission(ctx context.Context, in *pb.CreatePermiss
 
 func (u *userService) UpdatePermission(ctx context.Context, in *pb.UpdatePermissionRequest) (*pb.UpdatePermissionReply, error) {
 	reply := &pb.UpdatePermissionReply{}
-	if in.Id == 0 || in.Name == "" {
+	if in.Id == 0 {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     InvalidParam,
-			Description: "id和权限名不能为空",
+			Description: "id不能为空",
 		}
 		return reply, nil
 	}
@@ -779,11 +779,11 @@ func (u *userService) ListRole(ctx context.Context, in *pb.ListRoleRequest) (*pb
 func (u *userService) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest) (*pb.UpdateRoleReply, error) {
 	db := common.DB
 	reply := &pb.UpdateRoleReply{}
-	if in.Id == 0 || in.Name == "" {
+	if in.Id == 0 {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     InvalidParam,
-			Description: "id和角色名不能为空",
+			Description: "id不能为空",
 		}
 		return reply, nil
 	}
@@ -1017,14 +1017,28 @@ func (u *userService) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*
 
 func (u *userService) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) (*pb.UpdateUserReply, error) {
 	db := common.DB
+	reply := &pb.UpdateUserReply{}
+	if in.Id == 0 {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "id不能为空",
+		}
+		return reply, nil
+	}
 
 	user, err := usermodel.FindUserByID(db, in.Id)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	if user == nil {
-		return nil, ErrUserNotFound
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "用户不存在",
+		}
+		return reply, nil
 	}
 
 	err = usermodel.UpdateUser(db, in.Id, &usermodel.User{
@@ -1033,10 +1047,10 @@ func (u *userService) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) 
 		UserType: in.UserType,
 	})
 	if err != nil {
-		err = status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
-	return &pb.UpdateUserReply{}, err
+	return reply, nil
 }
 
 func (u *userService) AddPermissionForUser(ctx context.Context, in *pb.AddPermissionForUserRequest) (*pb.AddPermissionForUserReply, error) {
