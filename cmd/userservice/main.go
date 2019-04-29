@@ -230,4 +230,5 @@ func (l logFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	buffer.Write([]byte(entry.Message))
 	buffer.Write([]byte("\n"))
 	return buffer.Bytes(), nil
+
 }
