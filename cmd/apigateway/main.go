@@ -8,6 +8,8 @@ import (
 	"userService/pkg/pb"
 	"userService/pkg/userservice"
 
+	"github.com/afex/hystrix-go/hystrix"
+	"github.com/go-kit/kit/circuitbreaker"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/sd"
 	consulsd "github.com/go-kit/kit/sd/consul"
@@ -15,6 +17,10 @@ import (
 	"github.com/hashicorp/consul/api"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
+)
+
+const (
+	userbreaker = "userbreaker"
 )
 
 func main() {
@@ -33,11 +39,20 @@ func main() {
 		endpoints   gateway.UserEndpoints
 	)
 
+	hystrix.ConfigureCommand(userbreaker, hystrix.CommandConfig{
+		MaxConcurrentRequests: 1000,
+		Timeout:               10000,
+		ErrorPercentThreshold: 25,
+		SleepWindow:           10000,
+	})
+	userBreaker := circuitbreaker.Hystrix(userbreaker)
+
 	{
 		factory := userserviceFactory(userservice.MakeLoginEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.LoginEndpoint = retry
 	}
 
@@ -46,6 +61,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.GetPermissionsEndpoint = retry
 	}
 
@@ -54,6 +70,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.CheckPermissionEndpoint = retry
 	}
 
@@ -62,6 +79,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.RegisterEndpoint = retry
 	}
 
@@ -70,6 +88,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.AddPermissionForRoleEndpoint = retry
 	}
 
@@ -78,6 +97,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.CreateRoleEndpoint = retry
 	}
 
@@ -86,6 +106,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.AddRoleForUserEndpoint = retry
 	}
 
@@ -94,6 +115,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.AddRoutesEndpoint = retry
 	}
 
@@ -102,6 +124,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.ListRoutesEndpoint = retry
 	}
 
@@ -110,6 +133,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.CreatePermissionEndpoint = retry
 	}
 
@@ -118,6 +142,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.UpdatePermissionEndpoint = retry
 	}
 
@@ -126,6 +151,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.AddRouteForPermissionEndpoint = retry
 	}
 
@@ -134,6 +160,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.RemoveRouteForPermissionEndpoint = retry
 	}
 
@@ -142,6 +169,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.RemovePermissionEndpoint = retry
 	}
 
@@ -150,6 +178,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.ListPermissionsEndpoint = retry
 	}
 
@@ -158,6 +187,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.AddPermissionForPermissionEndpoint = retry
 	}
 
@@ -166,6 +196,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.RemovePermissionForPermissionEndpoint = retry
 	}
 
@@ -174,6 +205,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.ListRoleEndpoint = retry
 	}
 
@@ -182,6 +214,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.UpdateRoleEndpoint = retry
 	}
 
@@ -190,6 +223,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.RemovePermissionForRoleEndpoint = retry
 	}
 
@@ -198,6 +232,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.AddRoleForRoleEndpoint = retry
 	}
 
@@ -206,6 +241,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.RemoveRoleForRoleEndpoint = retry
 	}
 
@@ -214,6 +250,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.RemoveRoleEndpoint = retry
 	}
 
@@ -222,6 +259,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.ListUsersEndpoint = retry
 	}
 
@@ -230,6 +268,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.UpdateUserEndpoint = retry
 	}
 
@@ -238,6 +277,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.AddPermissionForUserEndpoint = retry
 	}
 
@@ -246,6 +286,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.RemovePermissionForUserEndpoint = retry
 	}
 
@@ -254,6 +295,7 @@ func main() {
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
 		endpoints.RemoveRoleForUserEndpoint = retry
 	}
 
