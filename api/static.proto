@@ -7,6 +7,7 @@ service static {
     rpc GetDictionaryItem(StaticGetDictionaryItemReq) returns (StaticGetDictionaryItemResp) {}
     rpc GetDicByProdAndBiz(StaticGetDicByProdAndBizReq) returns (StaticGetDicByProdAndBizResp) {}
     rpc GetDicByInsCmpCd(StaticGetDicByInsCmpCdReq) returns (StaticGetDicByInsCmpCdResp) {}
+    rpc CheckValues(StaticCheckValuesReq) returns (StaticCheckValuesResp) {}
 }
 
 message StaticSyncDataReq {
@@ -50,4 +51,16 @@ message StaticGetDicByInsCmpCdReq {
 
 message StaticGetDicByInsCmpCdResp {
     repeated StaticGetDictionaryItem GetDictionaryItems = 1;
+}
+
+message StaticCheckValuesReq {
+    string ProdCd = 1;
+    string BizCd = 2;
+    string TransCd = 3;
+    string InsCompanyCd = 4;
+    string FwdInsIdCd = 5;
+}
+
+message StaticCheckValuesResp {
+    bool result = 1;
 }

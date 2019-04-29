@@ -66,7 +66,8 @@ func (s *setService) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq)
 		accountRegion = fmt.Sprintf("TRANS_AT < '%s'", in.EndAt)
 	}
 
-	results, count, total, err := cleartxnM.GetTfrTrnLogsWithLimit(common.DB, &cond, accountRegion, in.Limit, in.Page)
+	trfTrnLogsEnty := cleartxnM.TfrTrnLog{}
+	results, count, total, err := trfTrnLogsEnty.GetWithLimit(common.DB, &cond, accountRegion, in.Limit, in.Page)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +100,8 @@ func (s *setService) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq)
 
 //GetTfrTrnLog .
 func (s *setService) GetTfrTrnLog(ctx context.Context, in *pb.GetTfrTrnLogReq) (*pb.GetTfrTrnLogResp, error) {
-	return cleartxnM.GetTfrTrnLogByKeyRsp(common.DB, in.KeyRsp)
+	trfTrnLogsEnty := cleartxnM.TfrTrnLog{}
+	return trfTrnLogsEnty.GetByKeyRsp(common.DB, in.KeyRsp)
 }
 
 func (s *setService) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrTrnLogsReq) (*pb.DownloadTfrTrnLogsResp, error) {
@@ -129,7 +131,8 @@ func (s *setService) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrT
 		accountRegion = fmt.Sprintf("TRANS_AT < '%s'", in.EndAt)
 	}
 
-	results, err := cleartxnM.GetTfrTrnLogs(common.DB, &cond, accountRegion)
+	trfTrnLogsEnty := cleartxnM.TfrTrnLog{}
+	results, err := trfTrnLogsEnty.Get(common.DB, &cond, accountRegion)
 	if err != nil {
 		return nil, err
 	}

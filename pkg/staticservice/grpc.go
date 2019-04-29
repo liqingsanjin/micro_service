@@ -14,6 +14,7 @@ type grpcServer struct {
 	getDictionaryItem  grpc.Handler
 	getDicByProdAndBiz grpc.Handler
 	getDicByInsCmpCd   grpc.Handler
+	checkValues        grpc.Handler
 }
 
 func (g *grpcServer) SyncData(ctx context.Context, in *pb.StaticSyncDataReq) (*pb.StaticSyncDataResp, error) {
@@ -48,6 +49,14 @@ func (g *grpcServer) GetDicByInsCmpCd(ctx context.Context, in *pb.StaticGetDicBy
 	return res.(*pb.StaticGetDicByInsCmpCdResp), nil
 }
 
+func (g *grpcServer) CheckValues(ctx context.Context, in *pb.StaticCheckValuesReq) (*pb.StaticCheckValuesResp, error) {
+	_, res, err := g.checkValues.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.StaticCheckValuesResp), nil
+}
+
 //NewGRPCServer .
 func NewGRPCServer() pb.StaticServer {
 
@@ -56,11 +65,13 @@ func NewGRPCServer() pb.StaticServer {
 	getDictionaryItemEndpoint := MakeGetDictionaryItemEndpoint(insSetService)
 	getDicByProdAndBizEndpoint := MakeGetDicByProdAndBizEndpoint(insSetService)
 	getDicByInsCmpCdEndpoint := MakeGetDicByInsCmpCdEndpoint(insSetService)
+	checkValuesEndpoint := MakeCheckValuesEndpoint(insSetService)
 	setEndpoint := SetEndpoint{
 		SyncDataEndpoint:           syncDataEndpoint,
 		GetDictionaryItemEndpoint:  getDictionaryItemEndpoint,
 		GetDicByProdAndBizEndpoint: getDicByProdAndBizEndpoint,
 		GetDicByInsCmpCdEndpoint:   getDicByInsCmpCdEndpoint,
+		CheckValuesEndpoint:        checkValuesEndpoint,
 	}
 
 	return &grpcServer{
@@ -68,6 +79,7 @@ func NewGRPCServer() pb.StaticServer {
 		getDictionaryItem:  grpcNewServer(setEndpoint.GetDictionaryItemEndpoint),
 		getDicByProdAndBiz: grpcNewServer(setEndpoint.GetDicByProdAndBizEndpoint),
 		getDicByInsCmpCd:   grpcNewServer(setEndpoint.GetDicByInsCmpCdEndpoint),
+		checkValues:        grpcNewServer(setEndpoint.CheckValuesEndpoint),
 	}
 }
 

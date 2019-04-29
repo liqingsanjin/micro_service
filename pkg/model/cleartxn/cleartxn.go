@@ -284,7 +284,7 @@ func DownloadInstitutionFile(db *gorm.DB, startTime, endTime string) ([]*ClearTx
 //@params option 查询的limit跟offset， 第一个为limit， 第二个为page
 //默认limit=10； page=0
 //@params amountCond 可以为空， a < TRANS_AT AND b > TRANS_AT
-func GetTfrTrnLogsWithLimit(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string, limit, page int64) ([]*TfrTrnLog, int64, int64, error) {
+func (t TfrTrnLog) GetWithLimit(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string, limit, page int64) ([]*TfrTrnLog, int64, int64, error) {
 	limit, offset := getLimitOffest(limit, page)
 	logs := make([]*TfrTrnLog, 0)
 	var count int64
@@ -310,7 +310,7 @@ func GetTfrTrnLogsWithLimit(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string
 	return logs, count, total, nil
 }
 
-func GetTfrTrnLogs(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string) ([]*TfrTrnLog, error) {
+func (t TfrTrnLog) Get(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string) ([]*TfrTrnLog, error) {
 	logs := make([]*TfrTrnLog, 0)
 	err := db.Debug().Where(tfrTrnLog).Where(amountCond).Select(SelectInsTxnResp).Find(&logs).Error
 	if err == gorm.ErrRecordNotFound {
@@ -322,9 +322,9 @@ func GetTfrTrnLogs(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string) ([]*Tfr
 	return logs, nil
 }
 
-func GetTfrTrnLogByKeyRsp(db *gorm.DB, keyRsp string) (*pb.GetTfrTrnLogResp, error) {
+func (t TfrTrnLog) GetByKeyRsp(db *gorm.DB, keyRsp string) (*pb.GetTfrTrnLogResp, error) {
 	resp := new(pb.GetTfrTrnLogResp)
-	err := db.Debug().Table(TfrTrnLog{}.TableName()).Where("key_rsp = ?", keyRsp).First(resp).Error
+	err := db.Debug().Table(t.TableName()).Where("key_rsp = ?", keyRsp).First(resp).Error
 	if err == gorm.ErrRecordNotFound {
 		return resp, nil
 	}

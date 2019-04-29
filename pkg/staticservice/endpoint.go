@@ -13,6 +13,7 @@ type SetEndpoint struct {
 	GetDictionaryItemEndpoint  endpoint.Endpoint
 	GetDicByProdAndBizEndpoint endpoint.Endpoint
 	GetDicByInsCmpCdEndpoint   endpoint.Endpoint
+	CheckValuesEndpoint        endpoint.Endpoint
 }
 
 //MakeSyncDataEndpoint .
@@ -44,5 +45,12 @@ func MakeGetDicByInsCmpCdEndpoint(s pb.StaticServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(*pb.StaticGetDicByInsCmpCdReq)
 		return s.GetDicByInsCmpCd(ctx, req)
+	}
+}
+
+func MakeCheckValuesEndpoint(s pb.StaticServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req := request.(*pb.StaticCheckValuesReq)
+		return s.CheckValues(ctx, req)
 	}
 }

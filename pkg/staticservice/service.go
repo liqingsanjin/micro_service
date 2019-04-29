@@ -187,6 +187,79 @@ func (s *setService) GetDicByInsCmpCd(ctx context.Context, in *pb.StaticGetDicBy
 	return &pb.StaticGetDicByInsCmpCdResp{GetDictionaryItems: items}, nil
 }
 
+func (s *setService) CheckValues(ctx context.Context, in *pb.StaticCheckValuesReq) (*pb.StaticCheckValuesResp, error) {
+	result := checkProdBizAndTrans(in.ProdCd, in.BizCd, in.TransCd) && checkCpyCdAndFwd(in.InsCompanyCd, in.FwdInsIdCd)
+
+	return &pb.StaticCheckValuesResp{Result: result}, nil
+}
+
+func checkCpyCdAndFwd(insCompanyCd, fwdInsIdCd string) bool {
+	if insCompanyCd == "" && fwdInsIdCd == "" {
+		return true
+	}
+
+	dicCode := make([]string, 0)
+	if insCompanyCd != "" {
+		dicCode = append(dicCode, insCompanyCd)
+	}
+	if fwdInsIdCd != "" {
+		dicCode = append(dicCode, fwdInsIdCd)
+	}
+
+	results := getDicItemByCondition([]string{}, []string{}, dicCode)
+	if len(results) != len(dicCode) {
+		return false
+	}
+	if insCompanyCd != "" && fwdInsIdCd != "" {
+		cpyCdArr := getDicByInsCmpCd(insCompanyCd)
+		return inArr(cpyCdArr, fwdInsIdCd)
+	}
+	return true
+}
+
+func checkProdBizAndTrans(prodCd, bizCd, transCd string) bool {
+	if prodCd == "" && bizCd == "" && transCd == "" {
+		return true
+	}
+
+	dicCode := make([]string, 0)
+	if prodCd != "" {
+		dicCode = append(dicCode, prodCd)
+	}
+	if bizCd != "" {
+		dicCode = append(dicCode, bizCd)
+	}
+	if transCd != "" {
+		dicCode = append(dicCode, transCd)
+	}
+
+	results := getDicItemByCondition([]string{}, []string{}, dicCode)
+	if len(results) != len(dicCode) {
+		return false
+	}
+
+	if bizCd == "" || prodCd == "" {
+		return true
+	}
+
+	if transCd == "" {
+		bizArr := getBizCdByProdCd([]string{prodCd})
+		return inArr(bizArr, bizCd)
+	}
+
+	tranArr := getTransCdByProdAndBiz(prodCd, bizCd)
+	return inArr(tranArr, transCd)
+}
+
+func inArr(arr []string, val string) bool {
+	for _, v := range arr {
+		if v == val {
+			return true
+		}
+	}
+	return false
+}
+
 func getDicItemByCondition(dicTypeArr, dicNameArr, dicCodeArr []string) []*static.DictionaryItem {
 	returnDic := make([]*static.DictionaryItem, 0)
 	for i := 0; i < len(MyMap.dicItem); i++ {

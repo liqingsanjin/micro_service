@@ -38,7 +38,7 @@ func main() {
 	}
 
 	fmt.Println("启动consul watcher ...")
-	go staticservice.StartServer(conf.WatcherAddr , chanHTTPErr)
+	go staticservice.StartServer(conf.WatcherAddr, chanHTTPErr)
 
 	go func() {
 		if err := runGRPCServer(fmt.Sprintf("%s:%d", conf.GrpcHost, conf.GrpcPort)); err != nil {
@@ -115,7 +115,7 @@ type Conf struct {
 	ConsulHost    string
 	ConsulPort    int
 	ServiceName   string
-	WatcherAddr string
+	WatcherAddr   string
 }
 
 //ParseConfigFile .
