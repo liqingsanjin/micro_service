@@ -10,9 +10,13 @@ import (
 	"time"
 
 	"github.com/go-kit/kit/sd/consul"
+	"github.com/go-kit/kit/tracing/zipkin"
+	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"github.com/go-redis/redis"
 	consuld "github.com/hashicorp/consul/api"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+	stdzipkin "github.com/openzipkin/zipkin-go"
+	zipkinhttp "github.com/openzipkin/zipkin-go/reporter/http"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -45,6 +49,8 @@ var (
 
 	logPath = ""
 	logFile = ""
+
+	zipkinUrl = "http://127.0.0.1:9411/api/v2/spans"
 )
 
 func main() {
@@ -121,7 +127,21 @@ func main() {
 	// 启动grpc server
 	go func() {
 
-		if err := runGRPCServer(fmt.Sprintf("%s:%d", "", grpcPort)); err != nil {
+		localEndpoint, _ := stdzipkin.NewEndpoint("user", "localhost:9411")
+		reporter := zipkinhttp.NewReporter("http://localhost:9411/api/v2/spans")
+		stdTracer, err := stdzipkin.NewTracer(
+			reporter,
+			stdzipkin.WithLocalEndpoint(localEndpoint),
+		)
+		if err != nil {
+			logrus.Errorln(err)
+		}
+		var tracer grpctransport.ServerOption
+
+		if stdTracer != nil {
+			tracer = zipkin.GRPCServerTrace(stdTracer)
+		}
+		if err := runGRPCServer(fmt.Sprintf("%s:%d", "", grpcPort), tracer); err != nil {
 			logrus.Fatal("grpc server shutdown", err)
 		}
 	}()
@@ -197,13 +217,13 @@ func registerConsulService(client consul.Client, name string, host string, port 
 	})
 }
 
-func runGRPCServer(addr string) error {
+func runGRPCServer(addr string, tracer grpctransport.ServerOption) error {
 	l, err := net.Listen("tcp", addr)
 	if err != nil {
 		return err
 	}
 	svr := grpc.NewServer()
-	pb.RegisterUserServer(svr, userservice.New())
+	pb.RegisterUserServer(svr, userservice.New(tracer))
 	return svr.Serve(l)
 }
 

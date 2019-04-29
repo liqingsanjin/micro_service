@@ -13,6 +13,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-kit/kit/sd/lb"
 	httptransport "github.com/go-kit/kit/transport/http"
+	"github.com/golang/protobuf/jsonpb"
+	"github.com/golang/protobuf/proto"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -301,7 +303,13 @@ func encodeHttpResponse(_ context.Context, w http.ResponseWriter, response inter
 			})
 		}
 	}
-	return json.NewEncoder(w).Encode(response)
+	pMsg, ok := response.(proto.Message)
+	if ok {
+		marshaler := jsonpb.Marshaler{EmitDefaults: true}
+		return marshaler.Marshal(w, pMsg)
+	} else {
+		return json.NewEncoder(w).Encode(response)
+	}
 }
 
 func errorEncoder(ctx context.Context, err error, w http.ResponseWriter) {
