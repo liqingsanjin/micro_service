@@ -5,6 +5,7 @@ import (
 	"userService/pkg/pb"
 
 	"github.com/go-kit/kit/endpoint"
+	kitgrpc "github.com/go-kit/kit/transport/grpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
@@ -42,9 +43,12 @@ type UserEndpoints struct {
 	RemoveRoleForUserEndpoint             endpoint.Endpoint
 }
 
-func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
+func NewUserServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *UserEndpoints {
 	endpoints := new(UserEndpoints)
-
+	options := make([]kitgrpc.ClientOption, 0)
+	if tracer != nil {
+		options = append(options, tracer)
+	}
 	{
 		endpoint := grpctransport.NewClient(
 			conn,
@@ -53,6 +57,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.LoginReply{},
+			options...,
 		).Endpoint()
 		endpoints.LoginEndpoint = endpoint
 	}
@@ -65,7 +70,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.GetPermissionsReply{},
-			grpctransport.ClientBefore(setUserInfoMD),
+			append(options, grpctransport.ClientBefore(setUserInfoMD))...,
 		).Endpoint()
 		endpoints.GetPermissionsEndpoint = endpoint
 	}
@@ -78,7 +83,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.CheckPermissionReply{},
-			grpctransport.ClientBefore(setUserInfoMD),
+			append(options, grpctransport.ClientBefore(setUserInfoMD))...,
 		).Endpoint()
 		endpoints.CheckPermissionEndpoint = endpoint
 	}
@@ -91,6 +96,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.RegisterReply{},
+			options...,
 		).Endpoint()
 		endpoints.RegisterEndpoint = endpoint
 	}
@@ -103,6 +109,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.AddPermissionForRoleReply{},
+			options...,
 		).Endpoint()
 		endpoints.AddPermissionForRoleEndpoint = endpoint
 	}
@@ -115,6 +122,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.CreateRoleReply{},
+			options...,
 		).Endpoint()
 		endpoints.CreateRoleEndpoint = endpoint
 	}
@@ -127,6 +135,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.AddRoleForUserReply{},
+			options...,
 		).Endpoint()
 		endpoints.AddRoleForUserEndpoint = endpoint
 	}
@@ -139,6 +148,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.AddRoutesReply{},
+			options...,
 		).Endpoint()
 		endpoints.AddRoutesEndpoint = endpoint
 	}
@@ -151,6 +161,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.ListRoutesReply{},
+			options...,
 		).Endpoint()
 		endpoints.ListRoutesEndpoint = endpoint
 	}
@@ -163,6 +174,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.CreatePermissionReply{},
+			options...,
 		).Endpoint()
 		endpoints.CreatePermissionEndpoint = endpoint
 	}
@@ -175,6 +187,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.UpdatePermissionReply{},
+			options...,
 		).Endpoint()
 		endpoints.UpdatePermissionEndpoint = endpoint
 	}
@@ -187,6 +200,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.AddRouteForPermissionReply{},
+			options...,
 		).Endpoint()
 		endpoints.AddRouteForPermissionEndpoint = endpoint
 	}
@@ -199,6 +213,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.RemoveRouteForPermissionReply{},
+			options...,
 		).Endpoint()
 		endpoints.RemoveRouteForPermissionEndpoint = endpoint
 	}
@@ -211,6 +226,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.RemovePermissionReply{},
+			options...,
 		).Endpoint()
 		endpoints.RemovePermissionEndpoint = endpoint
 	}
@@ -223,6 +239,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.ListPermissionsReply{},
+			options...,
 		).Endpoint()
 		endpoints.ListPermissionsEndpoint = endpoint
 	}
@@ -235,6 +252,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.AddPermissionForPermissionReply{},
+			options...,
 		).Endpoint()
 		endpoints.AddPermissionForPermissionEndpoint = endpoint
 	}
@@ -247,6 +265,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.RemovePermissionForPermissionReply{},
+			options...,
 		).Endpoint()
 		endpoints.RemovePermissionForPermissionEndpoint = endpoint
 	}
@@ -259,6 +278,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.ListRoleReply{},
+			options...,
 		).Endpoint()
 		endpoints.ListRoleEndpoint = endpoint
 	}
@@ -271,6 +291,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.UpdateRoleReply{},
+			options...,
 		).Endpoint()
 		endpoints.UpdateRoleEndpoint = endpoint
 	}
@@ -283,6 +304,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.AddRoleForRoleReply{},
+			options...,
 		).Endpoint()
 		endpoints.AddRoleForRoleEndpoint = endpoint
 	}
@@ -295,6 +317,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.RemoveRoleForRoleReply{},
+			options...,
 		).Endpoint()
 		endpoints.RemoveRoleForRoleEndpoint = endpoint
 	}
@@ -307,6 +330,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.RemoveRoleReply{},
+			options...,
 		).Endpoint()
 		endpoints.RemoveRoleEndpoint = endpoint
 	}
@@ -319,6 +343,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.ListUsersReply{},
+			options...,
 		).Endpoint()
 		endpoints.ListUsersEndpoint = endpoint
 	}
@@ -331,6 +356,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.UpdateUserReply{},
+			options...,
 		).Endpoint()
 		endpoints.UpdateUserEndpoint = endpoint
 	}
@@ -343,6 +369,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.AddPermissionForUserReply{},
+			options...,
 		).Endpoint()
 		endpoints.AddPermissionForUserEndpoint = endpoint
 	}
@@ -355,6 +382,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.RemovePermissionForUserReply{},
+			options...,
 		).Endpoint()
 		endpoints.RemovePermissionForUserEndpoint = endpoint
 	}
@@ -367,6 +395,7 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn) *UserEndpoints {
 			encodeRequest,
 			decodeResponse,
 			pb.RemoveRoleForUserReply{},
+			options...,
 		).Endpoint()
 		endpoints.RemoveRoleForUserEndpoint = endpoint
 	}

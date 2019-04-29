@@ -14,7 +14,10 @@ import (
 	"github.com/go-kit/kit/sd"
 	consulsd "github.com/go-kit/kit/sd/consul"
 	"github.com/go-kit/kit/sd/lb"
+	"github.com/go-kit/kit/tracing/zipkin"
 	"github.com/hashicorp/consul/api"
+	stdzipkin "github.com/openzipkin/zipkin-go"
+	zipkinhttp "github.com/openzipkin/zipkin-go/reporter/http"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
@@ -32,6 +35,7 @@ func main() {
 	}
 	client := consulsd.NewClient(consulClient)
 	log := &logger{}
+
 	var (
 		tags        = []string{}
 		passingOnly = true
@@ -309,7 +313,24 @@ func userserviceFactory(makeEndpoint func(pb.UserServer) endpoint.Endpoint) sd.F
 		if err != nil {
 			return nil, nil, err
 		}
-		service := gateway.NewUserServiceGRPCClient(conn)
+
+		localEndpoint, _ := stdzipkin.NewEndpoint("user", "localhost:9411")
+		reporter := zipkinhttp.NewReporter("http://localhost:9411/api/v2/spans")
+		stdTracer, err := stdzipkin.NewTracer(
+			reporter,
+			stdzipkin.WithLocalEndpoint(localEndpoint),
+		)
+		if err != nil {
+			logrus.Errorln(err)
+		}
+		var service *gateway.UserEndpoints
+		if stdTracer == nil {
+			service = gateway.NewUserServiceGRPCClient(conn, nil)
+		} else {
+			tracer := zipkin.GRPCClientTrace(stdTracer)
+			service = gateway.NewUserServiceGRPCClient(conn, tracer)
+		}
+
 		return makeEndpoint(service), conn, nil
 	}
 }

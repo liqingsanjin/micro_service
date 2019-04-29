@@ -38,9 +38,13 @@ type userServer struct {
 	removeRoleForUserHandler             grpctransport.Handler
 }
 
-func New() pb.UserServer {
+func New(tracer grpctransport.ServerOption) pb.UserServer {
 	svr := &userServer{}
 	userService := &userService{}
+	options := make([]grpctransport.ServerOption, 0)
+	if tracer != nil {
+		options = append(options, tracer)
+	}
 
 	{
 		endpoint := MakeLoginEndpoint(userService)
@@ -49,6 +53,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -59,6 +64,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -69,6 +75,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -79,6 +86,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -89,6 +97,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -99,6 +108,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -109,6 +119,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -119,6 +130,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -129,6 +141,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -139,6 +152,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -149,6 +163,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -159,6 +174,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -169,6 +185,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -179,6 +196,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -189,6 +207,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -199,6 +218,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -209,6 +229,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -219,6 +240,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -229,6 +251,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -239,6 +262,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -249,6 +273,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -259,6 +284,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -269,6 +295,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -279,6 +306,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -289,6 +317,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -299,6 +328,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -309,6 +339,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 
@@ -319,6 +350,7 @@ func New() pb.UserServer {
 			endpoint,
 			decodeRequest,
 			encodeResponse,
+			options...,
 		)
 	}
 	return svr
