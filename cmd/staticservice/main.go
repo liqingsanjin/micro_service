@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"net"
 	"os"
+	"path"
+	"time"
 	"userService/pkg/common"
 	"userService/pkg/model"
 	"userService/pkg/pb"
@@ -11,12 +14,29 @@ import (
 
 	"github.com/go-kit/kit/sd/consul"
 	"github.com/hashicorp/consul/api"
+	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 )
 
+var (
+	logPath = "./data"
+	logFile = "log"
+)
+
 func main() {
+	//初始化log
+	level := os.Getenv("LOG_LEVEL")
+	if level == "debug" {
+		logrus.SetReportCaller(true)
+		logrus.SetLevel(logrus.DebugLevel)
+	} else {
+		logrus.SetLevel(logrus.InfoLevel)
+	}
+	logrus.SetFormatter(&logFormatter{})
+
 	chanHTTPErr := make(chan error)
 
 	conf, err := ParseConfigFile()
@@ -24,7 +44,34 @@ func main() {
 		logrus.Fatal("解析配置文件错误", err)
 	}
 
-	fmt.Println("正在链接mysql...")
+	if logFile != "" {
+		os.MkdirAll(logPath, os.ModePerm)
+		logFilePath := path.Join(logPath, logFile)
+		writer, err := rotatelogs.New(
+			logFilePath+".%Y%m%d%H%M",
+			rotatelogs.WithLinkName(logFilePath),
+			rotatelogs.WithMaxAge(time.Duration(24)*time.Hour),
+			rotatelogs.WithRotationTime(time.Duration(30*24)*time.Hour),
+		)
+		if err != nil {
+			logrus.Errorln(err)
+		}
+		logrus.AddHook(lfshook.NewHook(
+			lfshook.WriterMap{
+				logrus.InfoLevel:  writer,
+				logrus.DebugLevel: writer,
+				logrus.FatalLevel: writer,
+				logrus.PanicLevel: writer,
+				logrus.ErrorLevel: writer,
+				logrus.WarnLevel:  writer,
+				logrus.TraceLevel: writer,
+			},
+			&logFormatter{},
+		))
+
+	}
+
+	logrus.Info("正在链接mysql...")
 	common.DB, err = model.NewDB(&model.Options{
 		User:     conf.MysqlUser,
 		Password: conf.MysqlPassword,
@@ -36,8 +83,11 @@ func main() {
 	if err != nil {
 		logrus.Fatal("启动mysql错误", err)
 	}
+	if level == "debug" {
+		common.DB = common.DB.Debug()
+	}
 
-	fmt.Println("启动consul watcher ...")
+	logrus.Info("启动consul watcher ...")
 	go staticservice.StartServer(conf.WatcherAddr, chanHTTPErr)
 
 	go func() {
@@ -47,7 +97,7 @@ func main() {
 	}()
 
 	//register service.
-	fmt.Println("正在链接consul...")
+	logrus.Info("正在链接consul...")
 	consulClient, err := newConsulClient(fmt.Sprintf("%s:%d", conf.ConsulHost, conf.ConsulPort))
 
 	if err != nil {
@@ -116,6 +166,31 @@ type Conf struct {
 	ConsulPort    int
 	ServiceName   string
 	WatcherAddr   string
+}
+
+type logFormatter struct{}
+
+func (l logFormatter) Format(entry *logrus.Entry) ([]byte, error) {
+	var buffer *bytes.Buffer
+	if entry.Buffer != nil {
+		buffer = entry.Buffer
+	} else {
+		buffer = &bytes.Buffer{}
+	}
+	buffer.Write([]byte("["))
+	buffer.Write([]byte(entry.Time.Format("2006-01-02 15:04:05.000")))
+	buffer.Write([]byte("] "))
+	buffer.Write([]byte("["))
+	buffer.Write([]byte(entry.Level.String()))
+	buffer.Write([]byte("] "))
+	if entry.HasCaller() {
+		buffer.Write([]byte("["))
+		buffer.Write([]byte(fmt.Sprintf("%s:%d", entry.Caller.File, entry.Caller.Line)))
+		buffer.Write([]byte("] "))
+	}
+	buffer.Write([]byte(entry.Message))
+	buffer.Write([]byte("\n"))
+	return buffer.Bytes(), nil
 }
 
 //ParseConfigFile .

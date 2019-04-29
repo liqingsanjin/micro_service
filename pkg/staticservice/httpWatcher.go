@@ -6,6 +6,8 @@ import (
 	"sync"
 	"userService/pkg/common"
 	"userService/pkg/model/static"
+
+	"github.com/sirupsen/logrus"
 )
 
 //ConsulIndex .
@@ -36,6 +38,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	str := r.Header.Get("x-static")
 	result := consulIndex.setIndex(str, CIndex)
 	if result {
+		logrus.Debug("触发consul watcher")
 		str := r.Header.Get("x-static")
 
 		if str == DictionaryConsulKey {
@@ -94,7 +97,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 //StartServer .
 func StartServer(addr string, chanErr chan error) {
-	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/watch", indexHandler)
 	err := http.ListenAndServe(addr, nil)
 	if err != nil {
 		chanErr <- err

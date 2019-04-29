@@ -110,24 +110,24 @@ func (p InsInf) TableName() string {
 
 func GetDictionaryItem(db *gorm.DB) []*DictionaryItem {
 	dictionaryItem := make([]*DictionaryItem, 0)
-	db.Debug().Find(&dictionaryItem)
+	db.Find(&dictionaryItem)
 	return dictionaryItem
 }
 
 func GetInsProdBizFeeMapInf(db *gorm.DB) []*InsProdBizFeeMapInf {
 	insProdBizFeeMapInf := make([]*InsProdBizFeeMapInf, 0)
-	db.Debug().Find(&insProdBizFeeMapInf)
+	db.Find(&insProdBizFeeMapInf)
 	return insProdBizFeeMapInf
 }
 
 func GetProdBizTransMap(db *gorm.DB) []*ProdBizTransMap {
 	prodBizTransMap := make([]*ProdBizTransMap, 0)
-	db.Debug().Find(&prodBizTransMap)
+	db.Find(&prodBizTransMap)
 	return prodBizTransMap
 }
 
 func GetInsInf(db *gorm.DB) []*InsInf {
 	insInf := make([]*InsInf, 0)
-	db.Debug().Find(&insInf)
+	db.Find(&insInf)
 	return insInf
 }
