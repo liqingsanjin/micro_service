@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package pb;
 
-service static {
+service Static {
     rpc SyncData(StaticSyncDataReq) returns (StaticSyncDataResp) {}
     rpc GetDictionaryItem(StaticGetDictionaryItemReq) returns (StaticGetDictionaryItemResp) {}
     rpc GetDicByProdAndBiz(StaticGetDicByProdAndBizReq) returns (StaticGetDicByProdAndBizResp) {}

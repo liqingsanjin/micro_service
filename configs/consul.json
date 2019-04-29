@@ -5,7 +5,7 @@
       "key": "static/dictionaryItem",
       "handler_type": "http",
       "http_handler_config": {
-         "path":"http://172.17.0.1:8080/watch",
+         "path":"http://172.17.0.1:9000/watch",
          "method": "POST",
          "header": {"x-static":["static/dictionaryItem"]},
          "timeout": "10s",
@@ -17,7 +17,7 @@
       "key": "static/insProdBizFeeMapInf",
       "handler_type": "http",
       "http_handler_config": {
-         "path":"http://172.17.0.1:8080/watch",
+         "path":"http://172.17.0.1:9000/watch",
          "method": "POST",
          "header": {"x-static":["static/insProdBizFeeMapInf"]},
          "timeout": "10s",
@@ -29,7 +29,7 @@
       "key": "static/prodBizTransMap",
       "handler_type": "http",
       "http_handler_config": {
-         "path":"http://172.17.0.1:8080/watch",
+         "path":"http://172.17.0.1:9000/watch",
          "method": "POST",
          "header": {"x-static":["static/prodBizTransMap"]},
          "timeout": "10s",
@@ -41,7 +41,7 @@
       "key": "static/insInf",
       "handler_type": "http",
       "http_handler_config": {
-         "path":"http://172.17.0.1:8080/watch",
+         "path":"http://172.17.0.1:9000/watch",
          "method": "POST",
          "header": {"x-static":["static/insInf"]},
          "timeout": "10s",

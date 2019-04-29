@@ -302,8 +302,8 @@ func main() {
 		retry = userBreaker(retry)
 		endpoints.RemoveRoleForUserEndpoint = retry
 	}
-
-	userHandler := gateway.NewHttpHandler(&endpoints)
+	staticEndpoint := GetStaticCliEndpoints()
+	userHandler := gateway.NewHttpHandler(&endpoints, &staticEndpoint)
 	http.ListenAndServe(":8080", userHandler)
 }
 

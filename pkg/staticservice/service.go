@@ -134,6 +134,10 @@ func (s *setService) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticGetDic
 	if in.BizCd == "" {
 		prodCdArr = append(prodCdArr, in.ProdCd)
 		bizCdArr = getBizCdByProdCd(prodCdArr)
+		if len(bizCdArr) == 0 {
+			return &pb.StaticGetDicByProdAndBizResp{}, nil
+		}
+
 		dicTypeCondition = append(dicTypeCondition, "BIZ_CD")
 		results := getDicItemByCondition(dicTypeCondition, dicNameCondition, bizCdArr)
 		if len(results) == 0 {
