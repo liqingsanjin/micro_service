@@ -130,7 +130,7 @@ func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsR
 		return nil, err
 	}
 
-	idMap := make(map[int64][]*usermodel.Menu)
+	idMap := make(map[int32][]*usermodel.Menu)
 	for _, menu := range menus {
 		if menu.Parent == nil {
 			// 第一级菜单
@@ -1213,10 +1213,14 @@ func (u *userService) ListMenus(ctx context.Context, in *pb.ListMenusRequest) (*
 
 	ms := make([]*pb.Menu, 0)
 	for _, m := range menus {
+		var pid int32 = 0
+		if m.Parent != nil {
+			pid = *m.Parent
+		}
 		ms = append(ms, &pb.Menu{
 			Id:     m.ID,
 			Name:   m.Name,
-			Parent: *m.Parent,
+			Parent: pid,
 			Route:  m.MenuRoute,
 			Data:   m.MenuData,
 			Order:  m.MenuOrder,

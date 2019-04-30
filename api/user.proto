@@ -71,12 +71,12 @@ message GetPermissionsReply {
 }
 
 message Menu {
-    int64 id = 1;
+    int32 id = 1;
     string name = 2;
-    int64 parent = 3;
+    int32 parent = 3;
     string route = 4;
     string data = 5;
-    int64 order = 6;
+    int32 order = 6;
     repeated Menu children = 7;
 }
 

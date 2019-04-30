@@ -314,7 +314,9 @@ func encodeHttpResponse(_ context.Context, w http.ResponseWriter, response inter
 	}
 	pMsg, ok := response.(proto.Message)
 	if ok {
-		marshaler := jsonpb.Marshaler{EmitDefaults: true}
+		marshaler := jsonpb.Marshaler{
+			EmitDefaults: true,
+		}
 		return marshaler.Marshal(w, pMsg)
 	} else {
 		return json.NewEncoder(w).Encode(response)
