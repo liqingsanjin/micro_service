@@ -1229,3 +1229,54 @@ func (u *userService) ListMenus(ctx context.Context, in *pb.ListMenusRequest) (*
 
 	return &pb.ListMenusReply{Menus: ms}, nil
 }
+
+func (u *userService) CreateMenu(ctx context.Context, in *pb.CreateMenuRequest) (*pb.CreateMenuReply, error) {
+	reply := &pb.CreateMenuReply{}
+	if in.Name == "" || in.Order == 0 || in.Parent == "" || in.Route == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "名称，映射，父级名称，路由不能为空",
+		}
+		return reply, nil
+	}
+
+	db := common.DB
+
+	parent, err := usermodel.FindMenuByName(db, in.Parent)
+	if err != nil {
+		return nil, err
+	}
+
+	if parent == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "父级不存在",
+		}
+		return reply, nil
+	}
+
+	menu, err := usermodel.FindMenuByName(db, in.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	if menu != nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     AlreadyExists,
+			Description: "菜单已存在",
+		}
+		return reply, nil
+	}
+
+	err = usermodel.SaveMenu(db, &usermodel.Menu{
+		Name:      in.Name,
+		Parent:    &parent.ID,
+		MenuOrder: in.Order,
+		MenuRoute: in.Route,
+		MenuData:  in.Data,
+	})
+	return reply, err
+}

@@ -42,6 +42,7 @@ type UserEndpoints struct {
 	RemovePermissionForUserEndpoint       endpoint.Endpoint
 	RemoveRoleForUserEndpoint             endpoint.Endpoint
 	ListMenusEndpoint                     endpoint.Endpoint
+	CreateMenuEndpoint                    endpoint.Endpoint
 }
 
 func NewUserServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *UserEndpoints {
@@ -414,6 +415,19 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption
 		endpoints.ListMenusEndpoint = endpoint
 	}
 
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.User",
+			"CreateMenu",
+			encodeRequest,
+			decodeResponse,
+			pb.CreateMenuReply{},
+			options...,
+		).Endpoint()
+		endpoints.CreateMenuEndpoint = endpoint
+	}
+
 	return endpoints
 }
 func (u *UserEndpoints) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, error) {
@@ -772,4 +786,16 @@ func setUserInfoMD(ctx context.Context, md *metadata.MD) context.Context {
 		md.Set(k, v...)
 	}
 	return ctx
+}
+
+func (u *UserEndpoints) CreateMenu(ctx context.Context, in *pb.CreateMenuRequest) (*pb.CreateMenuReply, error) {
+	res, err := u.CreateMenuEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.CreateMenuReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
 }

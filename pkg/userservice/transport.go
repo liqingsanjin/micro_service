@@ -297,6 +297,16 @@ func MakeListMenusEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
+func MakeCreateMenuEndpoint(service pb.UserServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.CreateMenuRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.CreateMenu(ctx, req)
+	}
+}
+
 func decodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
 	return request, nil
 }

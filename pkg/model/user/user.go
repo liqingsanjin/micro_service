@@ -443,3 +443,16 @@ func ListMenus(db *gorm.DB) ([]*Menu, error) {
 	}
 	return menus, err
 }
+
+func FindMenuByName(db *gorm.DB, name string) (*Menu, error) {
+	menu := new(Menu)
+	err := db.Where(&Menu{Name: name}).Find(menu).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return menu, err
+}
+
+func SaveMenu(db *gorm.DB, menu *Menu) error {
+	return db.Create(menu).Error
+}
