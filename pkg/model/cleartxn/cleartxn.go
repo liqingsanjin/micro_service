@@ -124,7 +124,7 @@ type ClearTxn struct {
 	PinpFeeTop       string    `gorm:"column:PINP_FEE_TOP"`
 	PinpStat         string    `gorm:"column:PINP_STAT"`
 	T0Stat           string    `gorm:"column:T0_STAT"`
-	KeyRsp           *string   `gorm:"column:KEY_RSP; primary_key"`
+	KeyRsp           string    `gorm:"column:KEY_RSP; primary_key"`
 	Remark           *string   `gorm:"column:REMARK"`
 	Remark1          *string   `gorm:"column:REMARK1"`
 	Remark2          *string   `gorm:"column:REMARK2"`
@@ -276,9 +276,9 @@ func (t TfrTrnLog) TableName() string {
 
 //DownloadInstitutionFile 根据开始时间跟结束时间查找交易流水
 //@return Institution： 符合的实例
-func DownloadInstitutionFile(db *gorm.DB, startTime, endTime string) ([]*ClearTxn, error) {
+func (c ClearTxn) GetWithTime(db *gorm.DB, startTime, endTime string) ([]*ClearTxn, error) {
 	clearTxn := []*ClearTxn{}
-	err := db.Debug().Where("STLM_DATE < ? AND STLM_DATE > ?", endTime, startTime).Find(&clearTxn).Error
+	err := db.Debug().Where("STLM_DATE <= ? AND STLM_DATE >= ?", endTime, startTime).Find(&clearTxn).Error
 	if err != nil {
 		return nil, err
 	}

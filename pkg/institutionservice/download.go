@@ -3,7 +3,6 @@ package institutionservice
 import (
 	"archive/zip"
 	"errors"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -61,9 +60,9 @@ func DownloadFileWithDay(clearTxn []*cleartxnM.ClearTxn) (string, error) {
 				cell = row.AddCell()
 				cell.Value = clearTxn[j].TransDateTime
 				cell = row.AddCell()
-				cell.Value = "清算日期"
+				cell.Value = clearTxn[j].MaSettleDt.Format("20190430")
 				cell = row.AddCell()
-				cell.Value = "终端编号"
+				cell.Value = clearTxn[j].TermID
 				cell = row.AddCell()
 				cell.Value = clearTxn[j].TxnDesc
 				cell = row.AddCell()
@@ -201,8 +200,6 @@ func Compress(dis, src string) error {
 	for _, f := range filesInfo {
 		files = append(files, path.Join(disFileDir, f.Name()))
 	}
-
-	fmt.Println(files)
 
 	for _, file := range files {
 
