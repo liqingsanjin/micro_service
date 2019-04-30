@@ -433,3 +433,13 @@ func FindUserByID(db *gorm.DB, id int64) (*User, error) {
 	}
 	return user, err
 }
+
+func ListMenus(db *gorm.DB) ([]*Menu, error) {
+	menus := make([]*Menu, 0)
+
+	err := db.Find(&menus).Error
+	if err == gorm.ErrRecordNotFound {
+		return menus, nil
+	}
+	return menus, err
+}

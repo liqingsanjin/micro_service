@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/DataDog/datadog-go v2.2.0+incompatible // indirect
-	github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5 // indirect
+	github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5
 	github.com/boltdb/bolt v1.3.1 // indirect
 	github.com/casbin/casbin v1.8.1
 	github.com/circonus-labs/circonus-gometrics v2.3.1+incompatible // indirect

@@ -44,7 +44,7 @@ service User {
     rpc RemoveRoleForUser(RemoveRoleForUserRequest) returns (RemoveRoleForUserReply) {}
 
     // 菜单和路由
-    // rpc ListMenus(ListMenusRequest) returns (ListMenusReply) {}
+    rpc ListMenus(ListMenusRequest) returns (ListMenusReply) {}
     // rpc CreateMenu(CreateMenuRequest) returns (CreateMenuReply) {}
     // rpc RemoveMenu(RemoveMenuRequest) returns (RemoveMenuReply) {}
 }
@@ -71,10 +71,13 @@ message GetPermissionsReply {
 }
 
 message Menu {
-    string menu = 1;
-    string route = 2;
-    string data = 3;
-    repeated Menu children = 4;
+    int64 id = 1;
+    string name = 2;
+    int64 parent = 3;
+    string route = 4;
+    string data = 5;
+    int64 order = 6;
+    repeated Menu children = 7;
 }
 
 message CheckPermissionRequest {
@@ -321,7 +324,8 @@ message RemoveRoleForUserReply {
 message ListMenusRequest {}
 
 message ListMenusReply {
-    error err = 1;
+    repeated Menu menus = 1;
+    error err = 2;
 }
 
 message CreateMenuRequest {}

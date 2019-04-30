@@ -157,15 +157,19 @@ func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsR
 		children := make([]*pb.Menu, 0, len(idMap[rootMenu.ID]))
 		for _, child := range idMap[rootMenu.ID] {
 			children = append(children, &pb.Menu{
-				Menu:  child.Name,
+				Id:    child.ID,
+				Name:  child.Name,
 				Route: child.MenuRoute,
 				Data:  child.MenuData,
+				Order: child.MenuOrder,
 			})
 		}
 		replyMenus = append(replyMenus, &pb.Menu{
-			Menu:     rootMenu.Name,
+			Id:       rootMenu.ID,
+			Name:     rootMenu.Name,
 			Route:    rootMenu.MenuRoute,
 			Data:     rootMenu.MenuData,
+			Order:    rootMenu.MenuOrder,
 			Children: children,
 		})
 	}
@@ -1197,4 +1201,27 @@ func (u *userService) RemoveRoleForUser(ctx context.Context, in *pb.RemoveRoleFo
 	}
 	return reply, nil
 
+}
+
+func (u *userService) ListMenus(ctx context.Context, in *pb.ListMenusRequest) (*pb.ListMenusReply, error) {
+	db := common.DB
+
+	menus, err := usermodel.ListMenus(db)
+	if err != nil {
+		return nil, err
+	}
+
+	ms := make([]*pb.Menu, 0)
+	for _, m := range menus {
+		ms = append(ms, &pb.Menu{
+			Id:     m.ID,
+			Name:   m.Name,
+			Parent: *m.Parent,
+			Route:  m.MenuRoute,
+			Data:   m.MenuData,
+			Order:  m.MenuOrder,
+		})
+	}
+
+	return &pb.ListMenusReply{Menus: ms}, nil
 }
