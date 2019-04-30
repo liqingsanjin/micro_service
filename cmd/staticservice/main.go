@@ -22,7 +22,7 @@ import (
 )
 
 var (
-	logPath = "./data"
+	logPath = "./log"
 	logFile = "log"
 )
 

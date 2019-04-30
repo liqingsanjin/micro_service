@@ -6,6 +6,7 @@ import (
 	cleartxnM "userService/pkg/model/cleartxn"
 	"userService/pkg/pb"
 
+	"github.com/jinzhu/copier"
 	"golang.org/x/net/context"
 )
 
@@ -101,7 +102,16 @@ func (s *setService) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq)
 //GetTfrTrnLog .
 func (s *setService) GetTfrTrnLog(ctx context.Context, in *pb.GetTfrTrnLogReq) (*pb.GetTfrTrnLogResp, error) {
 	trfTrnLogsEnty := cleartxnM.TfrTrnLog{}
-	return trfTrnLogsEnty.GetByKeyRsp(common.DB, in.KeyRsp)
+	resp := new(pb.GetTfrTrnLogResp)
+	trfTrnLog, err := trfTrnLogsEnty.GetByKeyRsp(common.DB, in.KeyRsp)
+	if err != nil {
+		return nil, err
+	}
+	// if trfTrnLog == nil {
+	// 	return nil, err
+	// }
+	copier.Copy(resp, trfTrnLog)
+	return resp, nil
 }
 
 func (s *setService) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrTrnLogsReq) (*pb.DownloadTfrTrnLogsResp, error) {

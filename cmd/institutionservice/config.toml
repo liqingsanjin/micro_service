@@ -2,8 +2,8 @@
 [db.mysql]
 host = "127.0.0.1"
 port = 3306
-user = "debian-sys-maint"
-password = "alaswKYdb0O6Onj0"
+user = "test"
+password = "test"
 db = "apsmgm"
 [db.redis]
 host = "127.0.0.1"
@@ -11,7 +11,7 @@ port = 6379
 
 [grpc]
 host = "127.0.0.1"
-port = 5000
+port = 4800
 
 [consul]
 host = "127.0.0.1"

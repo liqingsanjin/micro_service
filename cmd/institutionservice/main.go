@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net"
 	"os"
@@ -69,7 +70,7 @@ func runGRPCServer(addr string) error {
 
 	insHandle := institutionservice.NewGRPCServer()
 
-	svr := grpc.NewServer()
+	svr := grpc.NewServer(passtimeInter())
 	pb.RegisterInstitutionServer(svr, insHandle)
 	return svr.Serve(l)
 }
@@ -151,4 +152,25 @@ func ParseConfigFile() (*Conf, error) {
 	conf.ConsulPort = viper.GetInt("consul.port")
 
 	return &conf, err
+}
+
+func passtimeInter() grpc.ServerOption {
+	return grpc.UnaryInterceptor(passtime)
+}
+
+func passtime(ctx context.Context,
+	req interface{},
+	info *grpc.UnaryServerInfo,
+	handler grpc.UnaryHandler) (interface{}, error) {
+
+	start := time.Now()
+	// Calls the handler
+	h, err := handler(ctx, req)
+	// Logic after invoking the invoker
+	logrus.Infof("Request - Method:%s\tDuration:%s\tError:%v\n",
+		info.FullMethod,
+		time.Since(start),
+		err)
+
+	return h, err
 }

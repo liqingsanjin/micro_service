@@ -8,10 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewHttpHandler(endpoints *UserEndpoints, staticEndpoints *StaticEndpoints) http.Handler {
+func NewHttpHandler(endpoints *UserEndpoints, staticEndpoints *StaticEndpoints, institutionEndpoints *InstitutionEndpoints) http.Handler {
 	engine := gin.New()
 	RegisterUserHandler(engine, endpoints)
 	RegisterStaticHandler(engine, staticEndpoints)
+	RegisterInstitutionHandler(engine, institutionEndpoints)
 	return engine
 }
 

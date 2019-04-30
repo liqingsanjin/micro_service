@@ -20,15 +20,18 @@ func main() {
 	log := &logger{}
 
 	var (
-		tags        = []string{}
-		passingOnly = true
-		instancer   = consulsd.NewInstancer(client, log, "userService", tags, passingOnly)
+		tags                 = []string{}
+		passingOnly          = true
+		instancer            = consulsd.NewInstancer(client, log, "userService", tags, passingOnly)
+		staticInstancer      = consulsd.NewInstancer(client, log, "staticService", tags, passingOnly)
+		institutionInstancer = consulsd.NewInstancer(client, log, "institutionService", tags, passingOnly)
 	)
 
 	userEndpoint := gateway.GetUserEndpoints(instancer, log)
-	staticEndpoint := GetStaticCliEndpoints()
+	staticEndpoint := gateway.GetStaticCliEndpoints(staticInstancer, log)
+	institutionEndpoint := gateway.GetInstitutionCliEndpoints(institutionInstancer, log)
 
-	userHandler := gateway.NewHttpHandler(userEndpoint, &staticEndpoint)
+	userHandler := gateway.NewHttpHandler(userEndpoint, &staticEndpoint, &institutionEndpoint)
 	http.ListenAndServe(":8080", userHandler)
 }
 
