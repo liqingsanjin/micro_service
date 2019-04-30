@@ -304,6 +304,15 @@ func GetUserEndpoints(instancer sd.Instancer, log log.Logger) *UserEndpoints {
 		endpoints.CreateMenuEndpoint = retry
 	}
 
+	{
+		factory := userserviceFactory(userservice.MakeRemoveMenuEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
+		endpoints.RemoveMenuEndpoint = retry
+	}
+
 	return &endpoints
 }
 

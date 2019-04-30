@@ -287,6 +287,15 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
+	engine.POST("/user/removeMenu",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.RemoveMenuEndpoint,
+			decodeHttpRequest(&pb.RemoveMenuRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
+
 }
 
 func convertHttpHandlerToGinHandler(handler http.Handler) gin.HandlerFunc {

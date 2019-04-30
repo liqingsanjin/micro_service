@@ -60,7 +60,7 @@ func (a AuthItemChild) TableName() string {
 }
 
 type Menu struct {
-	ID        int32  `gorm:"column:ID"`
+	ID        int32  `gorm:"column:ID;primary_key"`
 	Name      string `gorm:"column:NAME"`
 	Parent    *int32 `gorm:"column:PARENT"`
 	MenuRoute string `gorm:"column:MENU_ROUTE"`
@@ -453,6 +453,19 @@ func FindMenuByName(db *gorm.DB, name string) (*Menu, error) {
 	return menu, err
 }
 
+func FindMenuByID(db *gorm.DB, id int32) (*Menu, error) {
+	menu := new(Menu)
+	err := db.Where(&Menu{ID: id}).Find(menu).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return menu, err
+}
+
 func SaveMenu(db *gorm.DB, menu *Menu) error {
 	return db.Create(menu).Error
+}
+
+func DeleteMenu(db *gorm.DB, id int32) error {
+	return db.Delete(&Menu{ID: id}).Error
 }
