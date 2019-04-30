@@ -37,6 +37,7 @@ type userServer struct {
 	removePermissionForUserHandler       grpctransport.Handler
 	removeRoleForUserHandler             grpctransport.Handler
 	listMenusHandler                     grpctransport.Handler
+	createMenuHandler                    grpctransport.Handler
 }
 
 func New(tracer grpctransport.ServerOption) pb.UserServer {
@@ -359,6 +360,17 @@ func New(tracer grpctransport.ServerOption) pb.UserServer {
 		endpoint := MakeListMenusEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.listMenusHandler = grpctransport.NewServer(
+			endpoint,
+			decodeRequest,
+			encodeResponse,
+			options...,
+		)
+	}
+
+	{
+		endpoint := MakeCreateMenuEndpoint(userService)
+		endpoint = logginMiddleware(endpoint)
+		svr.createMenuHandler = grpctransport.NewServer(
 			endpoint,
 			decodeRequest,
 			encodeResponse,
@@ -710,6 +722,18 @@ func (u *userServer) ListMenus(ctx context.Context, in *pb.ListMenusRequest) (*p
 		return nil, err
 	}
 	reply, ok := res.(*pb.ListMenusReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (u *userServer) CreateMenu(ctx context.Context, in *pb.CreateMenuRequest) (*pb.CreateMenuReply, error) {
+	_, res, err := u.createMenuHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.CreateMenuReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

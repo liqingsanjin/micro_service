@@ -45,7 +45,7 @@ service User {
 
     // 菜单和路由
     rpc ListMenus(ListMenusRequest) returns (ListMenusReply) {}
-    // rpc CreateMenu(CreateMenuRequest) returns (CreateMenuReply) {}
+    rpc CreateMenu(CreateMenuRequest) returns (CreateMenuReply) {}
     // rpc RemoveMenu(RemoveMenuRequest) returns (RemoveMenuReply) {}
 }
 
@@ -328,7 +328,13 @@ message ListMenusReply {
     error err = 2;
 }
 
-message CreateMenuRequest {}
+message CreateMenuRequest {
+    string name = 1;
+    int32 order = 2;
+    string parent = 3;
+    string route = 4;
+    string data = 5;
+}
 
 message CreateMenuReply {
     error err = 1;
