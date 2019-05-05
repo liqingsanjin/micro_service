@@ -46,7 +46,7 @@ service User {
     // 菜单和路由
     rpc ListMenus(ListMenusRequest) returns (ListMenusReply) {}
     rpc CreateMenu(CreateMenuRequest) returns (CreateMenuReply) {}
-    // rpc RemoveMenu(RemoveMenuRequest) returns (RemoveMenuReply) {}
+    rpc RemoveMenu(RemoveMenuRequest) returns (RemoveMenuReply) {}
 }
 
 message LoginRequest {
@@ -340,7 +340,9 @@ message CreateMenuReply {
     error err = 1;
 }
 
-message RemoveMenuRequest {}
+message RemoveMenuRequest {
+    int32 id = 1;
+}
 
 message RemoveMenuReply {
     error err = 1;

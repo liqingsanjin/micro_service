@@ -43,6 +43,7 @@ type UserEndpoints struct {
 	RemoveRoleForUserEndpoint             endpoint.Endpoint
 	ListMenusEndpoint                     endpoint.Endpoint
 	CreateMenuEndpoint                    endpoint.Endpoint
+	RemoveMenuEndpoint                    endpoint.Endpoint
 }
 
 func NewUserServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *UserEndpoints {
@@ -428,6 +429,19 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption
 		endpoints.CreateMenuEndpoint = endpoint
 	}
 
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.User",
+			"RemoveMenu",
+			encodeRequest,
+			decodeResponse,
+			pb.RemoveMenuReply{},
+			options...,
+		).Endpoint()
+		endpoints.RemoveMenuEndpoint = endpoint
+	}
+
 	return endpoints
 }
 func (u *UserEndpoints) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, error) {
@@ -794,6 +808,18 @@ func (u *UserEndpoints) CreateMenu(ctx context.Context, in *pb.CreateMenuRequest
 		return nil, err
 	}
 	reply, ok := res.(*pb.CreateMenuReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (u *UserEndpoints) RemoveMenu(ctx context.Context, in *pb.RemoveMenuRequest) (*pb.RemoveMenuReply, error) {
+	res, err := u.RemoveMenuEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.RemoveMenuReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

@@ -307,6 +307,16 @@ func MakeCreateMenuEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
+func MakeRemoveMenuEndpoint(service pb.UserServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.RemoveMenuRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.RemoveMenu(ctx, req)
+	}
+}
+
 func decodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
 	return request, nil
 }

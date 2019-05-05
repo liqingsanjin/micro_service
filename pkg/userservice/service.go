@@ -1280,3 +1280,32 @@ func (u *userService) CreateMenu(ctx context.Context, in *pb.CreateMenuRequest) 
 	})
 	return reply, err
 }
+func (u *userService) RemoveMenu(ctx context.Context, in *pb.RemoveMenuRequest) (*pb.RemoveMenuReply, error) {
+	reply := &pb.RemoveMenuReply{}
+	if in.Id == 0 {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "id不能为空",
+		}
+		return reply, nil
+	}
+
+	db := common.DB
+
+	menu, err := usermodel.FindMenuByID(db, in.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	if menu == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "菜单不存在",
+		}
+		return reply, nil
+	}
+	err = usermodel.DeleteMenu(db, in.Id)
+	return reply, err
+}
