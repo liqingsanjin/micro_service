@@ -108,7 +108,7 @@ func (p Permissions) MarshalBinary() ([]byte, error) {
 }
 
 type Route struct {
-	ID        int64     `gorm:"column:ROUTE_ID;primary_key"`
+	ID        int32     `gorm:"column:ROUTE_ID;primary_key"`
 	Name      string    `gorm:"column:ROUTE_NAME"`
 	CreatedAt time.Time `gorm:"column:CREATED_AT"`
 	UpdatedAt time.Time `gorm:"column:UPDATED_AT"`

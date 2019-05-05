@@ -434,9 +434,12 @@ func (u *userService) ListRoutes(ctx context.Context, in *pb.ListRoutesRequest) 
 		return nil, err
 	}
 
-	names := make([]string, len(routes))
+	names := make([]*pb.Route, len(routes))
 	for i := range routes {
-		names[i] = routes[i].Name
+		names[i] = &pb.Route{
+			Id:   routes[i].ID,
+			Name: routes[i].Name,
+		}
 	}
 
 	return &pb.ListRoutesReply{
