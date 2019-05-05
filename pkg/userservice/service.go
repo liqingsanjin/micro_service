@@ -434,9 +434,12 @@ func (u *userService) ListRoutes(ctx context.Context, in *pb.ListRoutesRequest) 
 		return nil, err
 	}
 
-	names := make([]string, len(routes))
+	names := make([]*pb.Route, len(routes))
 	for i := range routes {
-		names[i] = routes[i].Name
+		names[i] = &pb.Route{
+			Id:   routes[i].ID,
+			Name: routes[i].Name,
+		}
 	}
 
 	return &pb.ListRoutesReply{
@@ -1211,16 +1214,38 @@ func (u *userService) ListMenus(ctx context.Context, in *pb.ListMenusRequest) (*
 		return nil, err
 	}
 
+	pidMap := make(map[int32]bool)
+	pids := make([]int32, 0)
+	for _, m := range menus {
+		if m.Parent != nil {
+			if !pidMap[*m.Parent] {
+				pidMap[*m.Parent] = true
+				pids = append(pids, *m.Parent)
+			}
+		}
+	}
+
+	parents, err := usermodel.ListMenusByIDs(db, pids)
+	if err != nil {
+		return nil, err
+	}
+	parentMap := make(map[int32]*usermodel.Menu)
+	for _, menu := range parents {
+		parentMap[menu.ID] = menu
+	}
+
 	ms := make([]*pb.Menu, 0)
 	for _, m := range menus {
-		var pid int32 = 0
+		var parent string
 		if m.Parent != nil {
-			pid = *m.Parent
+			if p := parentMap[*m.Parent]; p != nil {
+				parent = p.Name
+			}
 		}
 		ms = append(ms, &pb.Menu{
 			Id:     m.ID,
 			Name:   m.Name,
-			Parent: pid,
+			Parent: parent,
 			Route:  m.MenuRoute,
 			Data:   m.MenuData,
 			Order:  m.MenuOrder,

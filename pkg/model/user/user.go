@@ -108,7 +108,7 @@ func (p Permissions) MarshalBinary() ([]byte, error) {
 }
 
 type Route struct {
-	ID        int64     `gorm:"column:ROUTE_ID;primary_key"`
+	ID        int32     `gorm:"column:ROUTE_ID;primary_key"`
 	Name      string    `gorm:"column:ROUTE_NAME"`
 	CreatedAt time.Time `gorm:"column:CREATED_AT"`
 	UpdatedAt time.Time `gorm:"column:UPDATED_AT"`
@@ -438,6 +438,16 @@ func ListMenus(db *gorm.DB) ([]*Menu, error) {
 	menus := make([]*Menu, 0)
 
 	err := db.Find(&menus).Error
+	if err == gorm.ErrRecordNotFound {
+		return menus, nil
+	}
+	return menus, err
+}
+
+func ListMenusByIDs(db *gorm.DB, ids []int32) ([]*Menu, error) {
+	menus := make([]*Menu, 0)
+
+	err := db.Where("ID in (?)", ids).Find(&menus).Error
 	if err == gorm.ErrRecordNotFound {
 		return menus, nil
 	}

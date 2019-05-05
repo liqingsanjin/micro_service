@@ -73,7 +73,7 @@ message GetPermissionsReply {
 message Menu {
     int32 id = 1;
     string name = 2;
-    int32 parent = 3;
+    string parent = 3;
     string route = 4;
     string data = 5;
     int32 order = 6;
@@ -161,8 +161,13 @@ message AddRoutesReply {
 message ListRoutesRequest {}
 
 message ListRoutesReply {
-    repeated string routes = 1;
+    repeated Route routes = 1;
     error err = 2;
+}
+
+message Route {
+    int32 id = 1;
+    string name = 2;
 }
 
 message CreatePermissionRequest {
