@@ -444,6 +444,16 @@ func ListMenus(db *gorm.DB) ([]*Menu, error) {
 	return menus, err
 }
 
+func ListMenusByIDs(db *gorm.DB, ids []int32) ([]*Menu, error) {
+	menus := make([]*Menu, 0)
+
+	err := db.Where("ID in (?)", ids).Find(&menus).Error
+	if err == gorm.ErrRecordNotFound {
+		return menus, nil
+	}
+	return menus, err
+}
+
 func FindMenuByName(db *gorm.DB, name string) (*Menu, error) {
 	menu := new(Menu)
 	err := db.Where(&Menu{Name: name}).Find(menu).Error

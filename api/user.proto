@@ -73,7 +73,7 @@ message GetPermissionsReply {
 message Menu {
     int32 id = 1;
     string name = 2;
-    int32 parent = 3;
+    string parent = 3;
     string route = 4;
     string data = 5;
     int32 order = 6;
