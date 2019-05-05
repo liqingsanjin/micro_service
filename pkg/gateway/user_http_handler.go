@@ -19,14 +19,15 @@ import (
 )
 
 func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
-	engine.POST("/user/login", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	userGroup := engine.Group("/user")
+	userGroup.POST("/login", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.LoginEndpoint,
 		decodeHttpRequest(&pb.LoginRequest{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/user/getPermissions",
+	userGroup.POST("/getPermissions",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.GetPermissionsEndpoint,
@@ -36,7 +37,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerBefore(setUserInfoContext),
 		)))
 
-	engine.POST("/user/checkPermission",
+	userGroup.POST("/checkPermission",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.CheckPermissionEndpoint,
@@ -46,14 +47,14 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerBefore(setUserInfoContext),
 		)))
 
-	engine.POST("/user/register", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	userGroup.POST("/register", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.RegisterEndpoint,
 		decodeHttpRequest(&pb.RegisterRequest{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/user/addPermissionForRole",
+	userGroup.POST("/addPermissionForRole",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.AddPermissionForRoleEndpoint,
@@ -62,7 +63,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/createRole",
+	userGroup.POST("/createRole",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.CreateRoleEndpoint,
@@ -71,7 +72,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/addRoleForUser",
+	userGroup.POST("/addRoleForUser",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.AddRoleForUserEndpoint,
@@ -80,7 +81,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/addRoutes",
+	userGroup.POST("/addRoutes",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.AddRoutesEndpoint,
@@ -89,7 +90,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/listRoutes",
+	userGroup.POST("/listRoutes",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.ListRoutesEndpoint,
@@ -98,7 +99,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/createPermission",
+	userGroup.POST("/createPermission",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.CreatePermissionEndpoint,
@@ -107,7 +108,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/updatePermission",
+	userGroup.POST("/updatePermission",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.UpdatePermissionEndpoint,
@@ -116,7 +117,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/addRouteForPermission",
+	userGroup.POST("/addRouteForPermission",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.AddRouteForPermissionEndpoint,
@@ -125,7 +126,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/removeRouteForPermission",
+	userGroup.POST("/removeRouteForPermission",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.RemoveRouteForPermissionEndpoint,
@@ -134,7 +135,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/removePermission",
+	userGroup.POST("/removePermission",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.RemovePermissionEndpoint,
@@ -143,7 +144,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/listPermissions",
+	userGroup.POST("/listPermissions",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.ListPermissionsEndpoint,
@@ -152,7 +153,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/addPermissionForPermission",
+	userGroup.POST("/addPermissionForPermission",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.AddPermissionForPermissionEndpoint,
@@ -161,7 +162,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/removePermissionForPermission",
+	userGroup.POST("/removePermissionForPermission",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.RemovePermissionForPermissionEndpoint,
@@ -170,7 +171,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/listRole",
+	userGroup.POST("/listRole",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.ListRoleEndpoint,
@@ -179,7 +180,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/updateRole",
+	userGroup.POST("/updateRole",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.UpdateRoleEndpoint,
@@ -188,7 +189,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/removePermissionForRole",
+	userGroup.POST("/removePermissionForRole",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.RemovePermissionForRoleEndpoint,
@@ -197,7 +198,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/addRoleForRole",
+	userGroup.POST("/addRoleForRole",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.AddRoleForRoleEndpoint,
@@ -206,7 +207,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/removeRoleForRole",
+	userGroup.POST("/removeRoleForRole",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.RemoveRoleForRoleEndpoint,
@@ -215,7 +216,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/removeRole",
+	userGroup.POST("/removeRole",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.RemoveRoleEndpoint,
@@ -224,7 +225,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/listUsers",
+	userGroup.POST("/listUsers",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.ListUsersEndpoint,
@@ -233,7 +234,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/updateUser",
+	userGroup.POST("/updateUser",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.UpdateUserEndpoint,
@@ -242,7 +243,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/addPermissionForUser",
+	userGroup.POST("/addPermissionForUser",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.AddPermissionForUserEndpoint,
@@ -251,7 +252,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/removePermissionForUser",
+	userGroup.POST("/removePermissionForUser",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.RemovePermissionForUserEndpoint,
@@ -260,7 +261,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/removeRoleForUser",
+	userGroup.POST("/removeRoleForUser",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.RemoveRoleForUserEndpoint,
@@ -269,7 +270,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/listMenus",
+	userGroup.POST("/listMenus",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.ListMenusEndpoint,
@@ -278,7 +279,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/createMenu",
+	userGroup.POST("/createMenu",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.CreateMenuEndpoint,
@@ -287,7 +288,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	engine.POST("/user/removeMenu",
+	userGroup.POST("/removeMenu",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.RemoveMenuEndpoint,

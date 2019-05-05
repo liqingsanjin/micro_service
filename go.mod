@@ -46,7 +46,6 @@ require (
 	github.com/onsi/gomega v1.5.0 // indirect
 	github.com/opentracing/opentracing-go v1.1.0 // indirect
 	github.com/openzipkin/zipkin-go v0.1.6
-	github.com/pkg/errors v0.8.1 // indirect
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.4.1
@@ -54,6 +53,7 @@ require (
 	github.com/sony/gobreaker v0.0.0-20190329013020-a9b2a3fc7395 // indirect
 	github.com/spf13/viper v1.3.2
 	github.com/streadway/handy v0.0.0-20190108123426-d5acb3125c2a // indirect
+	github.com/swaggo/gin-swagger v1.1.0 // indirect
 	github.com/tealeg/xlsx v1.0.3
 	github.com/tebeka/strftime v0.0.0-20140926081919-3f9c7761e312 // indirect
 	github.com/tv42/httpunix v0.0.0-20150427012821-b75d8614f926 // indirect
@@ -64,5 +64,4 @@ require (
 	google.golang.org/appengine v1.5.0 // indirect
 	google.golang.org/genproto v0.0.0-20190404172233-64821d5d2107
 	google.golang.org/grpc v1.20.0
-	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 )
