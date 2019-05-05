@@ -3,7 +3,6 @@ package institutionservice
 import (
 	"archive/zip"
 	"errors"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -23,6 +22,7 @@ const fileZipPath = "/home/dj/zip"
 
 var (
 	titleTfrTrnLogs = "交易键值,商户编码,商户名称,交易日期,清算日期,交易时间,交易类型,收单机构代码,交易金额,交易卡号,发卡机构代码,终端编码,产品码,卡类型,交易状态,应答码"
+	titleClearTxn   = "商户编码,交易日期,交易时间,清算日期,终端编号,交易类型,交易流水号,交易卡号,卡类型,交易本金,交易手续费,交易结算资金,应收差错费用,应付差费用,系统流水号,机构基准收入,机构实际收入,机构营销返佣,代理编码,会员号"
 )
 
 //通过日期将数据分为不同的文件
@@ -48,65 +48,21 @@ func DownloadFileWithDay(clearTxn []*cleartxnM.ClearTxn) (string, error) {
 			return "", err
 		}
 
-		var cell *xlsx.Cell
-		{
-			row := sheet.AddRow()
-			cell = row.AddCell()
-			cell.Value = "商户编码"
-			cell = row.AddCell()
-			cell.Value = "交易日期"
-			cell = row.AddCell()
-			cell.Value = "交易时间"
-			cell = row.AddCell()
-			cell.Value = "清算日期"
-			cell = row.AddCell()
-			cell.Value = "终端编号"
-			cell = row.AddCell()
-			cell.Value = "交易类型"
-			cell = row.AddCell()
-			cell.Value = "交易流水号"
-			cell = row.AddCell()
-			cell.Value = "交易卡号"
-			cell = row.AddCell()
-			cell.Value = "卡类型"
-			cell = row.AddCell()
-			cell.Value = "交易本金"
-			cell = row.AddCell()
-			cell.Value = "交易手续费"
-			cell = row.AddCell()
-			cell.Value = "交易结算资金"
-			cell = row.AddCell()
-			cell.Value = "应收差错费用"
-			cell = row.AddCell()
-			cell.Value = "应付差费用"
-			cell = row.AddCell()
-			cell.Value = "系统流水号"
-			cell = row.AddCell()
-			cell.Value = "机构基准收入"
-			cell = row.AddCell()
-			cell.Value = "机构实际收入"
-			cell = row.AddCell()
-			cell.Value = "机构营销返佣"
-			cell = row.AddCell()
-			cell.Value = "代理编码"
-			cell = row.AddCell()
-			cell.Value = "会员号"
-		}
-
+		addTitle(sheet, titleClearTxn)
 		var j = index
 		for ; j < len(clearTxn); j++ {
 			if dataIndex == clearTxn[j].StlmDate {
 				row := sheet.AddRow()
-				cell = row.AddCell()
+				cell := row.AddCell()
 				cell.Value = clearTxn[j].MchtCd
 				cell = row.AddCell()
 				cell.Value = clearTxn[j].StlmDate
 				cell = row.AddCell()
 				cell.Value = clearTxn[j].TransDateTime
 				cell = row.AddCell()
-				cell.Value = "清算日期"
+				cell.Value = clearTxn[j].MaSettleDt.Format("20190430")
 				cell = row.AddCell()
-				cell.Value = "终端编号"
+				cell.Value = clearTxn[j].TermID
 				cell = row.AddCell()
 				cell.Value = clearTxn[j].TxnDesc
 				cell = row.AddCell()
@@ -244,8 +200,6 @@ func Compress(dis, src string) error {
 	for _, f := range filesInfo {
 		files = append(files, path.Join(disFileDir, f.Name()))
 	}
-
-	fmt.Println(files)
 
 	for _, file := range files {
 

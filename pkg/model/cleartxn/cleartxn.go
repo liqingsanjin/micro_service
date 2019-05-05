@@ -2,7 +2,6 @@ package cleartxn
 
 import (
 	"time"
-	"userService/pkg/pb"
 
 	"github.com/jinzhu/gorm"
 )
@@ -19,6 +18,12 @@ const (
 	clearTxnName  = "TBL_CLEAR_TXN"
 	TfrTrnLogName = "TBL_TFR_TRN_LOG1"
 )
+
+type CommonModel struct {
+	ID        uint      `gorm:"column:id;primary_key;auto_increment;"`
+	CreatedAt time.Time `gorm:"column:created_at;"`
+	UpdatedAt time.Time `gorm:"column:updated_at;"`
+}
 
 type ClearTxn struct {
 	CompanyCd        string    `gorm:"column:COMPANY_CD`
@@ -119,7 +124,7 @@ type ClearTxn struct {
 	PinpFeeTop       string    `gorm:"column:PINP_FEE_TOP"`
 	PinpStat         string    `gorm:"column:PINP_STAT"`
 	T0Stat           string    `gorm:"column:T0_STAT"`
-	KeyRsp           *string   `gorm:"column:KEY_RSP; primary_key"`
+	KeyRsp           string    `gorm:"column:KEY_RSP; primary_key"`
 	Remark           *string   `gorm:"column:REMARK"`
 	Remark1          *string   `gorm:"column:REMARK1"`
 	Remark2          *string   `gorm:"column:REMARK2"`
@@ -271,9 +276,9 @@ func (t TfrTrnLog) TableName() string {
 
 //DownloadInstitutionFile 根据开始时间跟结束时间查找交易流水
 //@return Institution： 符合的实例
-func DownloadInstitutionFile(db *gorm.DB, startTime, endTime string) ([]*ClearTxn, error) {
+func (c ClearTxn) GetWithTime(db *gorm.DB, startTime, endTime string) ([]*ClearTxn, error) {
 	clearTxn := []*ClearTxn{}
-	err := db.Debug().Where("STLM_DATE < ? AND STLM_DATE > ?", endTime, startTime).Find(&clearTxn).Error
+	err := db.Debug().Where("STLM_DATE <= ? AND STLM_DATE >= ?", endTime, startTime).Find(&clearTxn).Error
 	if err != nil {
 		return nil, err
 	}
@@ -322,17 +327,17 @@ func (t TfrTrnLog) Get(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string) ([]
 	return logs, nil
 }
 
-func (t TfrTrnLog) GetByKeyRsp(db *gorm.DB, keyRsp string) (*pb.GetTfrTrnLogResp, error) {
-	resp := new(pb.GetTfrTrnLogResp)
-	err := db.Debug().Table(t.TableName()).Where("key_rsp = ?", keyRsp).First(resp).Error
+func (t TfrTrnLog) GetByKeyRsp(db *gorm.DB, keyRsp string) (*TfrTrnLog, error) {
+	tfrTrnLog := new(TfrTrnLog)
+	err := db.Debug().Table(t.TableName()).Where("key_rsp = ?", keyRsp).First(tfrTrnLog).Error
 	if err == gorm.ErrRecordNotFound {
-		return resp, nil
+		return nil, nil
 	}
 	if err != nil {
 		return nil, err
 	}
 
-	return resp, nil
+	return tfrTrnLog, nil
 }
 
 func getLimitOffest(limit, page int64) (int64, int64) {

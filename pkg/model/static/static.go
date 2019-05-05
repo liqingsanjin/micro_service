@@ -6,6 +6,12 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+type CommonModel struct {
+	ID        uint      `gorm:"column:id;primary_key;auto_increment;"`
+	CreatedAt time.Time `gorm:"column:created_at;"`
+	UpdatedAt time.Time `gorm:"column:updated_at;"`
+}
+
 const (
 	tableDictItem            = "TBL_DICTIONARYITEM"
 	tableInsProdBizFeeMapInf = "TBL_INS_PROD_BIZ_FEE_MAP_INF"
@@ -14,6 +20,7 @@ const (
 )
 
 type DictionaryItem struct {
+	CommonModel
 	DicType    string    `gorm:"column:DIC_TYPE" json:"DicType"`
 	DicCode    string    `gorm:"column:DIC_CODE" json:"DicCode"`
 	DicName    string    `gorm:"column:DIC_NAME" json:"DicName"`
@@ -27,6 +34,7 @@ func (d DictionaryItem) TableName() string {
 }
 
 type InsProdBizFeeMapInf struct {
+	CommonModel
 	ProdCd       string    `gorm:"column:PROD_CD"`
 	BizCd        string    `gorm:"column:BIZ_CD"`
 	MccMTp       string    `gorm:"column:MCC_M_TP"`
@@ -54,6 +62,7 @@ func (i InsProdBizFeeMapInf) TableName() string {
 }
 
 type ProdBizTransMap struct {
+	CommonModel
 	ProdCd      string `gorm:"column:PROD_CD"`
 	BizCd       string `gorm:"column:BIZ_CD"`
 	TransCd     string `gorm:"column:TRANS_CD"`
@@ -69,6 +78,7 @@ func (p ProdBizTransMap) TableName() string {
 }
 
 type InsInf struct {
+	CommonModel
 	InsIDCd         string    `gorm:"column:INS_ID_CD"`
 	InsCompanyCd    string    `gorm:"column:INS_COMPANY_CD"`
 	InsType         string    `gorm:"column:INS_TYPE"`

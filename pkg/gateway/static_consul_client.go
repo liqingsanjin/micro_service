@@ -1,20 +1,18 @@
-package main
+package gateway
 
 import (
 	"io"
 	"time"
-	"userService/pkg/gateway"
 	"userService/pkg/pb"
 	"userService/pkg/staticservice"
 
 	"github.com/afex/hystrix-go/hystrix"
 	"github.com/go-kit/kit/circuitbreaker"
 	"github.com/go-kit/kit/endpoint"
+	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/sd"
-	consulsd "github.com/go-kit/kit/sd/consul"
 	"github.com/go-kit/kit/sd/lb"
 	"github.com/go-kit/kit/tracing/zipkin"
-	"github.com/hashicorp/consul/api"
 	stdzipkin "github.com/openzipkin/zipkin-go"
 	zipkinhttp "github.com/openzipkin/zipkin-go/reporter/http"
 	"github.com/sirupsen/logrus"
@@ -25,19 +23,9 @@ const (
 	staticbreaker = "staticbreaker"
 )
 
-func GetStaticCliEndpoints() gateway.StaticEndpoints {
-	log := &logger{}
-	consulClient, err := api.NewClient(api.DefaultConfig())
-	if err != nil {
-		logrus.Fatal(err)
-	}
-	client := consulsd.NewClient(consulClient)
-	var (
-		tags        = []string{}
-		passingOnly = true
-		instancer   = consulsd.NewInstancer(client, log, "staticService", tags, passingOnly)
-		endpoints   gateway.StaticEndpoints
-	)
+func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) StaticEndpoints {
+
+	var endpoints StaticEndpoints
 
 	hystrix.ConfigureCommand(staticbreaker, hystrix.CommandConfig{
 		MaxConcurrentRequests: 1000,
@@ -112,12 +100,12 @@ func staticserviceFactory(makeEndpoint func(pb.StaticServer) endpoint.Endpoint) 
 			logrus.Errorln(err)
 		}
 
-		var service *gateway.StaticEndpoints
+		var service *StaticEndpoints
 		if stdTracer == nil {
-			service = gateway.NewStaticServiceGRPCClient(conn, nil)
+			service = NewStaticServiceGRPCClient(conn, nil)
 		} else {
 			tracer := zipkin.GRPCClientTrace(stdTracer)
-			service = gateway.NewStaticServiceGRPCClient(conn, tracer)
+			service = NewStaticServiceGRPCClient(conn, tracer)
 		}
 
 		return makeEndpoint(service), conn, nil

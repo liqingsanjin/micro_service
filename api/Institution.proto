@@ -214,8 +214,7 @@ message DownloadTfrTrnLogsReq {
     string BizCd = 13;
     string MaTransCd = 14;
     string MsgResvFld2 = 15;
-    int64 Limit = 16;
-	int64 Page = 17;
+	string Name = 16;
 }
 
 

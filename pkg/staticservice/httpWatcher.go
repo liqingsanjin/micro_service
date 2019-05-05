@@ -43,7 +43,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 		if str == DictionaryConsulKey {
 			retPair, _, err := common.ConsulClient.KV().Get(DictionaryConsulKey, nil)
-			if err != nil {
+			if err != nil || retPair == nil {
 				return
 			}
 			returnDic := make([]*static.DictionaryItem, 0)
@@ -56,9 +56,10 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 		if str == InsProdBizFeeMapInfConsulKey {
 			retPair, _, err := common.ConsulClient.KV().Get(InsProdBizFeeMapInfConsulKey, nil)
-			if err != nil {
+			if err != nil || retPair == nil {
 				return
 			}
+
 			ret := make([]*static.InsProdBizFeeMapInf, 0)
 			err = json.Unmarshal([]byte(retPair.Value), &ret)
 			if err != nil {
@@ -69,9 +70,10 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 		if str == ProdBizTransMapConsulKey {
 			retPair, _, err := common.ConsulClient.KV().Get(ProdBizTransMapConsulKey, nil)
-			if err != nil {
+			if err != nil || retPair == nil {
 				return
 			}
+
 			ret := make([]*static.ProdBizTransMap, 0)
 			err = json.Unmarshal([]byte(retPair.Value), &ret)
 			if err != nil {
@@ -82,9 +84,10 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 		if str == InsInfConsulKey {
 			retPair, _, err := common.ConsulClient.KV().Get(InsInfConsulKey, nil)
-			if err != nil {
+			if err != nil || retPair == nil {
 				return
 			}
+
 			ret := make([]*static.InsInf, 0)
 			err = json.Unmarshal([]byte(retPair.Value), &ret)
 			if err != nil {

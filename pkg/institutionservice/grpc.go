@@ -51,7 +51,7 @@ func (g *grpcServer) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrT
 //NewGRPCServer .
 func NewGRPCServer() pb.InstitutionServer {
 	insSetService := NewSetService()
-	downEndpoint := MakeDownloadEndpoint(insSetService)
+	downEndpoint := MakeTnxHisDownloadEndpoint(insSetService)
 	getTfrTrnlogsEndpoint := MakeGetTfrTrnLogsEndpoint(insSetService)
 	getTfrTrnlogEndpoint := MakeGetTfrTrnLogEndpoint(insSetService)
 	downloadTfrTrnLogsEndpoint := MakeDownloadTfrTrnLogsEndpoint(insSetService)

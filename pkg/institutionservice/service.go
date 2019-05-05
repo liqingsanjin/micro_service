@@ -6,6 +6,7 @@ import (
 	cleartxnM "userService/pkg/model/cleartxn"
 	"userService/pkg/pb"
 
+	"github.com/jinzhu/copier"
 	"golang.org/x/net/context"
 )
 
@@ -20,7 +21,12 @@ func NewSetService() pb.InstitutionServer {
 
 //Download .
 func (s *setService) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHisDownloadReq) (*pb.InstitutionTnxHisDownloadResp, error) {
-	Txns, err := cleartxnM.DownloadInstitutionFile(common.DB, in.StartTime, in.EndTime)
+	if in.Name == "" {
+		return nil, ErrDownloadFileNameEmpty
+	}
+
+	clearTxnEnty := cleartxnM.ClearTxn{}
+	Txns, err := clearTxnEnty.GetWithTime(common.DB, in.StartTime, in.EndTime)
 	if err != nil {
 		return nil, err
 	}
@@ -101,10 +107,23 @@ func (s *setService) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq)
 //GetTfrTrnLog .
 func (s *setService) GetTfrTrnLog(ctx context.Context, in *pb.GetTfrTrnLogReq) (*pb.GetTfrTrnLogResp, error) {
 	trfTrnLogsEnty := cleartxnM.TfrTrnLog{}
-	return trfTrnLogsEnty.GetByKeyRsp(common.DB, in.KeyRsp)
+	resp := new(pb.GetTfrTrnLogResp)
+	trfTrnLog, err := trfTrnLogsEnty.GetByKeyRsp(common.DB, in.KeyRsp)
+	if err != nil {
+		return nil, err
+	}
+	// if trfTrnLog == nil {
+	// 	return nil, err
+	// }
+	copier.Copy(resp, trfTrnLog)
+	return resp, nil
 }
 
 func (s *setService) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrTrnLogsReq) (*pb.DownloadTfrTrnLogsResp, error) {
+	if in.Name == "" {
+		return nil, ErrDownloadFileNameEmpty
+	}
+
 	var cond cleartxnM.TfrTrnLog
 
 	cond.MchntCd = in.MchntCd
@@ -112,7 +131,7 @@ func (s *setService) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrT
 	cond.KeyRsp = in.KeyRsp
 	cond.PriAcctNo = in.PriAcctNO
 	cond.CardClass = in.CardClass
-	cond.RoutInsIdCd = in.RoutIndustryInsIdCd
+	cond.RoutIndustryInsIdCd = in.RoutIndustryInsIdCd
 	cond.FwdInsIdCd = in.FwdInsIdCd
 	cond.IssInsIdCd = in.IssInsIdCd
 	cond.RespCd = in.RespCd
@@ -137,8 +156,13 @@ func (s *setService) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrT
 		return nil, err
 	}
 	uid, err := DownloadTfrTrnLogs(results)
-	fmt.Println(err)
-	fmt.Println(uid)
+	if err != nil {
+		return nil, err
+	}
 
+	err = Compress(uid, in.Name)
+	if err != nil {
+		return nil, err
+	}
 	return &pb.DownloadTfrTrnLogsResp{Code: true}, nil
 }
