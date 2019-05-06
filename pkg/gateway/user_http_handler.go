@@ -28,7 +28,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	userGroup.POST("/getPermissions",
+	userGroup.GET("/getPermissions",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.GetPermissionsEndpoint,
@@ -313,9 +313,13 @@ func decodeHttpRequest(ins interface{}) httptransport.DecodeRequestFunc {
 	}
 	return func(_ context.Context, r *http.Request) (interface{}, error) {
 		request := reflect.New(tp).Interface()
-		defer r.Body.Close()
-		err := json.NewDecoder(r.Body).Decode(&request)
-		return request, err
+		if r.Method == http.MethodPost {
+			defer r.Body.Close()
+			err := json.NewDecoder(r.Body).Decode(&request)
+			return request, err
+		} else {
+			return request, nil
+		}
 	}
 }
 
