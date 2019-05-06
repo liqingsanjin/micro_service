@@ -20,6 +20,7 @@ import (
 
 func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 	userGroup := engine.Group("/user")
+
 	userGroup.POST("/login", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.LoginEndpoint,
 		decodeHttpRequest(&pb.LoginRequest{}),
@@ -336,9 +337,18 @@ func encodeHttpResponse(_ context.Context, w http.ResponseWriter, response inter
 		marshaler := jsonpb.Marshaler{
 			EmitDefaults: true,
 		}
-		return marshaler.Marshal(w, pMsg)
+
+		data, err := marshaler.MarshalToString(pMsg)
+		if err != nil {
+			return err
+		}
+
+		w.Write([]byte(`{"data":` + data + `}`))
+		return nil
 	} else {
-		return json.NewEncoder(w).Encode(response)
+		return json.NewEncoder(w).Encode(gin.H{
+			"data": response,
+		})
 	}
 }
 
