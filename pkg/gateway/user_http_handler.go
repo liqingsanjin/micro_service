@@ -20,6 +20,7 @@ import (
 
 func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 	userGroup := engine.Group("/user")
+
 	userGroup.POST("/login", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.LoginEndpoint,
 		decodeHttpRequest(&pb.LoginRequest{}),
@@ -27,7 +28,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	userGroup.POST("/getPermissions",
+	userGroup.GET("/getPermissions",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.GetPermissionsEndpoint,
@@ -312,9 +313,13 @@ func decodeHttpRequest(ins interface{}) httptransport.DecodeRequestFunc {
 	}
 	return func(_ context.Context, r *http.Request) (interface{}, error) {
 		request := reflect.New(tp).Interface()
-		defer r.Body.Close()
-		err := json.NewDecoder(r.Body).Decode(&request)
-		return request, err
+		if r.Method == http.MethodPost {
+			defer r.Body.Close()
+			err := json.NewDecoder(r.Body).Decode(&request)
+			return request, err
+		} else {
+			return request, nil
+		}
 	}
 }
 
@@ -336,9 +341,18 @@ func encodeHttpResponse(_ context.Context, w http.ResponseWriter, response inter
 		marshaler := jsonpb.Marshaler{
 			EmitDefaults: true,
 		}
-		return marshaler.Marshal(w, pMsg)
+
+		data, err := marshaler.MarshalToString(pMsg)
+		if err != nil {
+			return err
+		}
+
+		w.Write([]byte(`{"data":` + data + `}`))
+		return nil
 	} else {
-		return json.NewEncoder(w).Encode(response)
+		return json.NewEncoder(w).Encode(gin.H{
+			"data": response,
+		})
 	}
 }
 
