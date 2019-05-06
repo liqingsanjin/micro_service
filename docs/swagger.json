@@ -81,6 +81,53 @@
           }
         }
       }
+    },
+    "/user/checkPermission": {
+      "post": {
+        "operationId": "checkPermission",
+        "summary": "检查权限",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "route",
+            "in": "body",
+            "required": true,
+            "description": "路由",
+            "schema": {
+              "type": "object",
+              "allOf": [
+                {
+                  "required": [
+                    "route"
+                  ],
+                  "properties": {
+                    "route": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"data\": {\n    \"result\": false,\n    \"err\": null\n  }\n}"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -88,7 +135,9 @@
       "type": "object",
       "allOf": [
         {
-          "required": ["username"],
+          "required": [
+            "username"
+          ],
           "properties": {
             "username": {
               "type": "string"
