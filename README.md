@@ -20,9 +20,9 @@ go build -ldflags='-s -w' -o userService cmd/userservice/main.go
 ```
 ### 编译成 docker 镜像
 ```
-./build/ci/compile.sh
+./build/ci/compile_userservice.sh
 
-docker build -t userservice:1.0.0 -f build/deploy/Dockerfile .
+docker build -t userservice:1.0.0 -f build/deploy/Dockerfile_user .
 ```
 
 
@@ -49,4 +49,10 @@ protoc -I ./api -I $GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_part
 protoc -I ./api -I $GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis --grpc-gateway_out=logtostderr=true:./pkg/pb/ api/user.proto
 
 go build -ldflags='-s -w' -o apigateway cmd/apigateway/main.go
+```
+### 编译成 docker 镜像
+```
+./build/ci/compile_apigateway.sh
+
+docker build -t apigateway:1.0.0 -f build/deploy/Dockerfile_gateway .
 ```

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"net"
 	"os"
@@ -27,6 +26,7 @@ import (
 	"userService/pkg/pb"
 	"userService/pkg/rbac"
 	"userService/pkg/userservice"
+	"userService/pkg/util"
 )
 
 var (
@@ -62,7 +62,7 @@ func main() {
 	} else {
 		logrus.SetLevel(logrus.InfoLevel)
 	}
-	logrus.SetFormatter(&logFormatter{})
+	logrus.SetFormatter(&util.LogFormatter{})
 
 	var err error
 	if err = parseConfigFile(); err != nil {
@@ -225,29 +225,4 @@ func runGRPCServer(addr string, tracer grpctransport.ServerOption) error {
 	svr := grpc.NewServer()
 	pb.RegisterUserServer(svr, userservice.New(tracer))
 	return svr.Serve(l)
-}
-
-type logFormatter struct{}
-
-func (l logFormatter) Format(entry *logrus.Entry) ([]byte, error) {
-	var buffer *bytes.Buffer
-	if entry.Buffer != nil {
-		buffer = entry.Buffer
-	} else {
-		buffer = &bytes.Buffer{}
-	}
-	buffer.Write([]byte("["))
-	buffer.Write([]byte(entry.Time.Format("2006-01-02 15:04:05.000")))
-	buffer.Write([]byte("] "))
-	buffer.Write([]byte("["))
-	buffer.Write([]byte(entry.Level.String()))
-	buffer.Write([]byte("] "))
-	if entry.HasCaller() {
-		buffer.Write([]byte("["))
-		buffer.Write([]byte(fmt.Sprintf("%s:%d", entry.Caller.File, entry.Caller.Line)))
-		buffer.Write([]byte("] "))
-	}
-	buffer.Write([]byte(entry.Message))
-	buffer.Write([]byte("\n"))
-	return buffer.Bytes(), nil
 }
