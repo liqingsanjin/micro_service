@@ -10,6 +10,7 @@ import (
 
 func NewHttpHandler(endpoints *UserEndpoints, staticEndpoints *StaticEndpoints, institutionEndpoints *InstitutionEndpoints) http.Handler {
 	engine := gin.New()
+	engine.Use()
 	RegisterUserHandler(engine, endpoints)
 	RegisterStaticHandler(engine, staticEndpoints)
 	RegisterInstitutionHandler(engine, institutionEndpoints)
