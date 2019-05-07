@@ -91,7 +91,7 @@ func main() {
 				logrus.WarnLevel:  writer,
 				logrus.TraceLevel: writer,
 			},
-			&logFormatter{},
+			&util.LogFormatter{},
 		))
 
 	}
