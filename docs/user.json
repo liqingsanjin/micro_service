@@ -4,10 +4,9 @@
     "version": "0.0.1",
     "title": "user api"
   },
-  "host": "127.0.0.1:8080",
+  "host": "172.16.7.120",
   "schemes": [
-    "http",
-    "https"
+    "http"
   ],
   "paths": {
     "/user/login": {
@@ -22,7 +21,7 @@
             "name": "user",
             "in": "body",
             "required": true,
-            "description": "用户名",
+            "description": "用户",
             "schema": {
               "$ref": "#/definitions/UserLogin"
             }
@@ -98,7 +97,7 @@
             "type": "string"
           },
           {
-            "name": "route",
+            "name": "permission",
             "in": "body",
             "required": true,
             "description": "路由",
@@ -128,6 +127,34 @@
           }
         }
       }
+    },
+    "/user/register": {
+      "post": {
+        "operationId": "register",
+        "summary": "注册",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "description": "用户",
+            "schema": {
+              "$ref": "#/definitions/UserRegister"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": ""
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -136,13 +163,45 @@
       "allOf": [
         {
           "required": [
-            "username"
+            "username",
+            "password"
           ],
           "properties": {
             "username": {
               "type": "string"
             },
             "password": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "UserRegister": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "username",
+            "password",
+            "leaguerNo",
+            "email",
+            "userType"
+          ],
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "leaguerNo": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "userType": {
               "type": "string"
             }
           }
