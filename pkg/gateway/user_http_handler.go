@@ -341,18 +341,9 @@ func encodeHttpResponse(_ context.Context, w http.ResponseWriter, response inter
 		marshaler := jsonpb.Marshaler{
 			EmitDefaults: true,
 		}
-
-		data, err := marshaler.MarshalToString(pMsg)
-		if err != nil {
-			return err
-		}
-
-		w.Write([]byte(`{"data":` + data + `}`))
-		return nil
+		return marshaler.Marshal(w, pMsg)
 	} else {
-		return json.NewEncoder(w).Encode(gin.H{
-			"data": response,
-		})
+		return json.NewEncoder(w).Encode(response)
 	}
 }
 
