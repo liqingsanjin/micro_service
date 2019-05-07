@@ -11,6 +11,21 @@ services:
     depends_on:
       - consul
       - userservice
+  staticservice:
+    image: staticservice:1.0.0
+    container_name: staticservice
+    ports:
+      - 4900:4900
+      - 9000:9000
+    environment:
+      CONFIG_FILE: configs/staticservice/dev.toml
+      LOG_LEVEL: debug
+    volumes:
+      - ./configs/:/data/configs/
+    depends_on:
+      - zipkin
+      - mysql
+      - consul
   userservice:
     image: userservice:1.0.0
     container_name: userservice

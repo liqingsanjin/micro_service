@@ -104,7 +104,7 @@ func main() {
 		logrus.Fatal("consul链接失败： ", err)
 	}
 
-	err = registerService(consulClient, conf.ServiceName, conf.GrpcHost, conf.GrpcPort)
+	err = registerService(consulClient, conf.ServiceName, conf.GrpcRegistHost, conf.GrpcRegistPort)
 	if err != nil {
 		logrus.Fatal("服务注册失败:", err)
 	}
@@ -153,19 +153,21 @@ func registerService(client consul.Client, name, host string, port int) error {
 
 //Conf .
 type Conf struct {
-	MysqlHost     string
-	MysqlPort     int
-	MysqlUser     string
-	MysqlPassword string
-	MysqlDB       string
-	RedisHost     string
-	RedisPort     int
-	GrpcHost      string
-	GrpcPort      int
-	ConsulHost    string
-	ConsulPort    int
-	ServiceName   string
-	WatcherAddr   string
+	MysqlHost      string
+	MysqlPort      int
+	MysqlUser      string
+	MysqlPassword  string
+	MysqlDB        string
+	RedisHost      string
+	RedisPort      int
+	GrpcHost       string
+	GrpcPort       int
+	GrpcRegistHost string
+	GrpcRegistPort int
+	ConsulHost     string
+	ConsulPort     int
+	ServiceName    string
+	WatcherAddr    string
 }
 
 type logFormatter struct{}
@@ -223,6 +225,8 @@ func ParseConfigFile() (*Conf, error) {
 
 	conf.GrpcHost = viper.GetString("grpc.host")
 	conf.GrpcPort = viper.GetInt("grpc.port")
+	conf.GrpcRegistHost = viper.GetString("grpc.registHost")
+	conf.GrpcRegistPort = viper.GetInt("grpc.registPost")
 
 	conf.WatcherAddr = viper.GetString("watcher.addr")
 

@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package pb;
 
+import "error.proto";
+
 service Institution {
     rpc TnxHisDownload(InstitutionTnxHisDownloadReq) returns (InstitutionTnxHisDownloadResp){}
     rpc GetTfrTrnLogs(GetTfrTrnLogsReq) returns (GetTfrTrnLogsResp){}
@@ -16,7 +18,8 @@ message InstitutionTnxHisDownloadReq {
 }
 
 message InstitutionTnxHisDownloadResp {
-    bool Result = 1;
+	bool Result = 1;
+	error err = 2;
 }
 
 
@@ -43,7 +46,8 @@ message GetTfrTrnLogsReq {
 message GetTfrTrnLogsResp {
     repeated GetTfrTrnLogsItem Items = 1;
     int64 count = 2;
-    int64 total = 3;
+	int64 total = 3;
+	error err = 4;
 }
 
 message GetTfrTrnLogsItem {
@@ -195,7 +199,8 @@ message GetTfrTrnLogResp {
 	string MsgResvFld6 = 122;    
 	string MsgResvFld7 = 123;    
 	string MsgResvFld8 = 124;    
-	string MsgResvFld9 = 125;    
+	string MsgResvFld9 = 125;  
+	error err = 126;  
 }
 
 message DownloadTfrTrnLogsReq {
@@ -220,5 +225,6 @@ message DownloadTfrTrnLogsReq {
 
 //下载logs文件code 0代表失败， 1代表成功
 message DownloadTfrTrnLogsResp {
-    bool code = 1;
+	bool code = 1;
+	error err = 2;
 }
