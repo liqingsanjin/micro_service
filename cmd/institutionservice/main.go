@@ -1,10 +1,14 @@
 package main
 
 import (
-	"context"
+	"bytes"
 	"fmt"
 	"net"
 	"os"
+	"os/signal"
+	"path"
+	"sync/atomic"
+	"syscall"
 	"time"
 	"userService/pkg/common"
 	"userService/pkg/institutionservice"
@@ -13,18 +17,62 @@ import (
 
 	"github.com/go-kit/kit/sd/consul"
 	"github.com/hashicorp/consul/api"
+	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 )
 
+var (
+	logPath = "./log"
+	logFile = "log"
+)
+
 func main() {
+	//初始化log
+	level := os.Getenv("LOG_LEVEL")
+	if level == "debug" {
+		logrus.SetReportCaller(true)
+		logrus.SetLevel(logrus.DebugLevel)
+	} else {
+		logrus.SetLevel(logrus.InfoLevel)
+	}
+	logrus.SetFormatter(&logFormatter{})
+
 	conf, err := ParseConfigFile()
 	if err != nil {
 		logrus.Fatal("解析配置文件错误", err)
 	}
 
-	fmt.Println("正在链接mysql...")
+	if logFile != "" {
+		os.MkdirAll(logPath, os.ModePerm)
+		logFilePath := path.Join(logPath, logFile)
+		writer, err := rotatelogs.New(
+			logFilePath+".%Y%m%d%H%M",
+			rotatelogs.WithLinkName(logFilePath),
+			rotatelogs.WithMaxAge(time.Duration(24)*time.Hour),
+			rotatelogs.WithRotationTime(time.Duration(30*24)*time.Hour),
+		)
+		if err != nil {
+			logrus.Errorln(err)
+		}
+		logrus.AddHook(lfshook.NewHook(
+			lfshook.WriterMap{
+				logrus.InfoLevel:  writer,
+				logrus.DebugLevel: writer,
+				logrus.FatalLevel: writer,
+				logrus.PanicLevel: writer,
+				logrus.ErrorLevel: writer,
+				logrus.WarnLevel:  writer,
+				logrus.TraceLevel: writer,
+			},
+			&logFormatter{},
+		))
+
+	}
+
+	logrus.Info("正在链接mysql...")
 	common.DB, err = model.NewDB(&model.Options{
 		User:     conf.MysqlUser,
 		Password: conf.MysqlPassword,
@@ -36,6 +84,9 @@ func main() {
 	if err != nil {
 		logrus.Fatal("启动mysql错误", err)
 	}
+	if level == "debug" {
+		common.DB = common.DB.Debug()
+	}
 
 	go func() {
 		if err := runGRPCServer(fmt.Sprintf("%s:%d", conf.GrpcHost, conf.GrpcPort)); err != nil {
@@ -44,21 +95,29 @@ func main() {
 	}()
 
 	//register service.
-	fmt.Println("正在链接consul...")
+	logrus.Info("正在链接consul...")
 	consulClient, err := newConsulClient(fmt.Sprintf("%s:%d", conf.ConsulHost, conf.ConsulPort))
 	if err != nil {
 		logrus.Fatal("consul链接失败： ", err)
 	}
 
-	err = registerService(consulClient, conf.ServiceName, conf.GrpcHost, conf.GrpcPort)
+	err = registerService(consulClient, conf.ServiceName, conf.GrpcRegistHost, conf.GrpcRegistPort)
 	if err != nil {
 		logrus.Fatal("服务注册失败:", err)
 	}
 
 	logrus.Info("启动成功")
-	for {
-		time.Sleep(time.Hour)
+
+	var state int32 = 1
+	sc := make(chan os.Signal)
+	signal.Notify(sc, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+
+	select {
+	case sig := <-sc:
+		atomic.StoreInt32(&state, 0)
+		logrus.Infof("获取到退出信号[%s]", sig.String())
 	}
+	os.Exit(int(atomic.LoadInt32(&state)))
 }
 
 func runGRPCServer(addr string) error {
@@ -70,7 +129,7 @@ func runGRPCServer(addr string) error {
 
 	insHandle := institutionservice.NewGRPCServer()
 
-	svr := grpc.NewServer(passtimeInter())
+	svr := grpc.NewServer()
 	pb.RegisterInstitutionServer(svr, insHandle)
 	return svr.Serve(l)
 }
@@ -97,18 +156,45 @@ func registerService(client consul.Client, name, host string, port int) error {
 
 //Conf .
 type Conf struct {
-	MysqlHost     string
-	MysqlPort     int
-	MysqlUser     string
-	MysqlPassword string
-	MysqlDB       string
-	RedisHost     string
-	RedisPort     int
-	GrpcHost      string
-	GrpcPort      int
-	ConsulHost    string
-	ConsulPort    int
-	ServiceName   string
+	MysqlHost      string
+	MysqlPort      int
+	MysqlUser      string
+	MysqlPassword  string
+	MysqlDB        string
+	RedisHost      string
+	RedisPort      int
+	GrpcHost       string
+	GrpcPort       int
+	GrpcRegistHost string
+	GrpcRegistPort int
+	ConsulHost     string
+	ConsulPort     int
+	ServiceName    string
+}
+
+type logFormatter struct{}
+
+func (l logFormatter) Format(entry *logrus.Entry) ([]byte, error) {
+	var buffer *bytes.Buffer
+	if entry.Buffer != nil {
+		buffer = entry.Buffer
+	} else {
+		buffer = &bytes.Buffer{}
+	}
+	buffer.Write([]byte("["))
+	buffer.Write([]byte(entry.Time.Format("2006-01-02 15:04:05.000")))
+	buffer.Write([]byte("] "))
+	buffer.Write([]byte("["))
+	buffer.Write([]byte(entry.Level.String()))
+	buffer.Write([]byte("] "))
+	if entry.HasCaller() {
+		buffer.Write([]byte("["))
+		buffer.Write([]byte(fmt.Sprintf("%s:%d", entry.Caller.File, entry.Caller.Line)))
+		buffer.Write([]byte("] "))
+	}
+	buffer.Write([]byte(entry.Message))
+	buffer.Write([]byte("\n"))
+	return buffer.Bytes(), nil
 }
 
 //ParseConfigFile .
@@ -116,7 +202,7 @@ func ParseConfigFile() (*Conf, error) {
 	fileName := os.Getenv("CONFIG_FILE")
 
 	viper.SetConfigType("toml")
-	viper.AddConfigPath("./cmd/institutionservice")
+	viper.AddConfigPath("./configs/")
 
 	if fileName != "" {
 		viper.SetConfigFile(fileName)
@@ -141,6 +227,8 @@ func ParseConfigFile() (*Conf, error) {
 
 	conf.GrpcHost = viper.GetString("grpc.host")
 	conf.GrpcPort = viper.GetInt("grpc.port")
+	conf.GrpcRegistHost = viper.GetString("grpc.registHost")
+	conf.GrpcRegistPort = viper.GetInt("grpc.registPost")
 
 	conf.ServiceName = viper.GetString("info.serviceName")
 
@@ -154,23 +242,23 @@ func ParseConfigFile() (*Conf, error) {
 	return &conf, err
 }
 
-func passtimeInter() grpc.ServerOption {
-	return grpc.UnaryInterceptor(passtime)
-}
+// func passtimeInter() grpc.ServerOption {
+// 	return grpc.UnaryInterceptor(passtime)
+// }
 
-func passtime(ctx context.Context,
-	req interface{},
-	info *grpc.UnaryServerInfo,
-	handler grpc.UnaryHandler) (interface{}, error) {
+// func passtime(ctx context.Context,
+// 	req interface{},
+// 	info *grpc.UnaryServerInfo,
+// 	handler grpc.UnaryHandler) (interface{}, error) {
 
-	start := time.Now()
-	// Calls the handler
-	h, err := handler(ctx, req)
-	// Logic after invoking the invoker
-	logrus.Infof("Request - Method:%s\tDuration:%s\tError:%v\n",
-		info.FullMethod,
-		time.Since(start),
-		err)
+// 	start := time.Now()
+// 	// Calls the handler
+// 	h, err := handler(ctx, req)
+// 	// Logic after invoking the invoker
+// 	logrus.Infof("Request - Method:%s\tDuration:%s\tError:%v\n",
+// 		info.FullMethod,
+// 		time.Since(start),
+// 		err)
 
-	return h, err
-}
+// 	return h, err
+// }

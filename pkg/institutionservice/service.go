@@ -6,6 +6,8 @@ import (
 	cleartxnM "userService/pkg/model/cleartxn"
 	"userService/pkg/pb"
 
+	"net/http"
+
 	"github.com/jinzhu/copier"
 	"golang.org/x/net/context"
 )
@@ -112,9 +114,14 @@ func (s *setService) GetTfrTrnLog(ctx context.Context, in *pb.GetTfrTrnLogReq) (
 	if err != nil {
 		return nil, err
 	}
-	// if trfTrnLog == nil {
-	// 	return nil, err
-	// }
+	if trfTrnLog == nil {
+		resp.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "输入的参数错误",
+		}
+		return resp, nil
+	}
 	copier.Copy(resp, trfTrnLog)
 	return resp, nil
 }
