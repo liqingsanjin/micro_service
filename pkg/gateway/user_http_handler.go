@@ -145,7 +145,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	userGroup.POST("/listPermissions",
+	userGroup.GET("/listPermissions",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.ListPermissionsEndpoint,
@@ -172,7 +172,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	userGroup.POST("/listRole",
+	userGroup.GET("/listRole",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.ListRoleEndpoint,
@@ -226,7 +226,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	userGroup.POST("/listUsers",
+	userGroup.GET("/listUsers",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.ListUsersEndpoint,
@@ -271,7 +271,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	userGroup.POST("/listMenus",
+	userGroup.GET("/listMenus",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.ListMenusEndpoint,
