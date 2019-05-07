@@ -2,10 +2,10 @@ rbacFile = "configs/rbac.conf"
 
 [db]
 [db.mysql]
-host = "127.0.0.1"
+host = "172.16.7.120"
 port = 3306
-user = "root"
-password = "root"
+user = "micro"
+password = "micro"
 db = "apsmgm"
 
 [db.redis]
