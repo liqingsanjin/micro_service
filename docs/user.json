@@ -185,7 +185,7 @@
           "200": {
             "description": "正确返回",
             "examples": {
-              "application/json": ""
+              "application/json": "{\n  \"err\": null\n}"
             }
           }
         }
@@ -248,6 +248,670 @@
             "description": "给用户添加角色",
             "schema": {
               "$ref": "#/definitions/AddRoleForUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/addRoutes": {
+      "post": {
+        "operationId": "addRoutes",
+        "summary": "添加路由",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "addRoutes",
+            "in": "body",
+            "required": true,
+            "description": "添加路由",
+            "schema": {
+              "$ref": "#/definitions/AddRoutes"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/listRoutes": {
+      "get": {
+        "operationId": "listRoutes",
+        "summary": "路由列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"routes\": [\n    {\n      \"id\": 1,\n      \"name\": \"/test1\"\n    }\n  ],\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/createPermission": {
+      "post": {
+        "operationId": "createPermission",
+        "summary": "创建权限",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "createPermission",
+            "in": "body",
+            "required": true,
+            "description": "权限",
+            "schema": {
+              "$ref": "#/definitions/CreatePermission"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/updatePermission": {
+      "post": {
+        "operationId": "updatePermission",
+        "summary": "更新权限",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "updatePermission",
+            "in": "body",
+            "required": true,
+            "description": "权限",
+            "schema": {
+              "$ref": "#/definitions/UpdatePermission"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/addRouteForPermission": {
+      "post": {
+        "operationId": "addRouteForPermission",
+        "summary": "给权限添加路由",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "addRouteForPermission",
+            "in": "body",
+            "required": true,
+            "description": "给权限添加路由",
+            "schema": {
+              "$ref": "#/definitions/AddRouteForPermission"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/removeRouteForPermission": {
+      "post": {
+        "operationId": "removeRouteForPermission",
+        "summary": "给权限移除路由",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "removeRouteForPermission",
+            "in": "body",
+            "required": true,
+            "description": "给权限移除路由",
+            "schema": {
+              "$ref": "#/definitions/AddRouteForPermission"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/removePermission": {
+      "post": {
+        "operationId": "removePermission",
+        "summary": "删除权限",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "removePermission",
+            "in": "body",
+            "required": true,
+            "description": "删除权限",
+            "schema": {
+              "$ref": "#/definitions/RemovePermission"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/listPermissions": {
+      "get": {
+        "operationId": "listPermissions",
+        "summary": "权限列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"permissions\": [\n    \"测试权限1\"\n  ],\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/addPermissionForPermission": {
+      "post": {
+        "operationId": "addPermissionForPermission",
+        "summary": "给权限添加子权限",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "addPermissionForPermission",
+            "in": "body",
+            "required": true,
+            "description": "给权限添加子权限",
+            "schema": {
+              "$ref": "#/definitions/AddPermissionForPermission"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/removePermissionForPermission": {
+      "post": {
+        "operationId": "removePermissionForPermission",
+        "summary": "给权限删除子权限",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "removePermissionForPermission",
+            "in": "body",
+            "required": true,
+            "description": "给权限删除子权限",
+            "schema": {
+              "$ref": "#/definitions/AddPermissionForPermission"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/listRole": {
+      "get": {
+        "operationId": "listRole",
+        "summary": "角色列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"roles\": [\n    \"测试角色1\"\n  ],\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/updateRole": {
+      "post": {
+        "operationId": "updateRole",
+        "summary": "修改角色",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "updateRole",
+            "in": "body",
+            "required": true,
+            "description": "修改角色",
+            "schema": {
+              "$ref": "#/definitions/UpdatePermission"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/removePermissionForRole": {
+      "post": {
+        "operationId": "removePermissionForRole",
+        "summary": "删除角色权限",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "removePermissionForRole",
+            "in": "body",
+            "required": true,
+            "description": "删除角色权限",
+            "schema": {
+              "$ref": "#/definitions/AddPermissionForRole"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/addRoleForRole": {
+      "post": {
+        "operationId": "addRoleForRole",
+        "summary": "给角色添加角色",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "addRoleForRole",
+            "in": "body",
+            "required": true,
+            "description": "给角色添加角色",
+            "schema": {
+              "$ref": "#/definitions/AddPermissionForPermission"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/removeRoleForRole": {
+      "post": {
+        "operationId": "removeRoleForRole",
+        "summary": "给角色删除角色",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "removeRoleForRole",
+            "in": "body",
+            "required": true,
+            "description": "给角色删除角色",
+            "schema": {
+              "$ref": "#/definitions/AddPermissionForPermission"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/removeRole": {
+      "post": {
+        "operationId": "removeRole",
+        "summary": "删除角色",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "removeRole",
+            "in": "body",
+            "required": true,
+            "description": "删除角色",
+            "schema": {
+              "$ref": "#/definitions/CreateRole"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/listUsers": {
+      "get": {
+        "operationId": "listUsers",
+        "summary": "用户列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"users\": [\n    {\n      \"id\": \"2\",\n      \"username\": \"admin\"\n    },\n    {\n      \"id\": \"4\",\n      \"username\": \"test1\"\n    }\n  ],\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/updateUser": {
+      "post": {
+        "operationId": "updateUser",
+        "summary": "更新用户",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "updateUser",
+            "in": "body",
+            "required": true,
+            "description": "更新用户",
+            "schema": {
+              "$ref": "#/definitions/UpdateUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/addPermissionForUser": {
+      "post": {
+        "operationId": "addPermissionForUser",
+        "summary": "给用户添加权限",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "addPermissionForUser",
+            "in": "body",
+            "required": true,
+            "description": "给用户添加权限",
+            "schema": {
+              "$ref": "#/definitions/AddPermissionForUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/removePermissionForUser": {
+      "post": {
+        "operationId": "removePermissionForUser",
+        "summary": "给用户删除权限",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "removePermissionForUser",
+            "in": "body",
+            "required": true,
+            "description": "给用户删除权限",
+            "schema": {
+              "$ref": "#/definitions/AddPermissionForUser"
             }
           }
         ],
@@ -360,6 +1024,154 @@
               "type": "string"
             },
             "username": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AddRoutes": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "routes"
+          ],
+          "properties": {
+            "routes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "CreatePermission": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "UpdatePermission": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "name",
+            "id"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "id": {
+              "type": "integer"
+            }
+          }
+        }
+      ]
+    },
+    "AddRouteForPermission": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "permission",
+            "route"
+          ],
+          "properties": {
+            "permission": {
+              "type": "string"
+            },
+            "route": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "RemovePermission": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "permission"
+          ],
+          "properties": {
+            "permission": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AddPermissionForPermission": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "from",
+            "child"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "child": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "UpdateUser": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "id"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "username": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "userType": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AddPermissionForUser": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "username",
+            "permission"
+          ],
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "permission": {
               "type": "string"
             }
           }
