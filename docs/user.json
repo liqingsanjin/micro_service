@@ -924,6 +924,142 @@
           }
         }
       }
+    },
+    "/user/removeRoleForUser": {
+      "post": {
+        "operationId": "removeRoleForUser",
+        "summary": "给用户删除角色",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "removeRoleForUser",
+            "in": "body",
+            "required": true,
+            "description": "给用户删除角色",
+            "schema": {
+              "$ref": "#/definitions/AddRoleForUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/listMenus": {
+      "get": {
+        "operationId": "listMenus",
+        "summary": "菜单列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"menus\": [],\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/createMenu": {
+      "post": {
+        "operationId": "createMenu",
+        "summary": "创建菜单",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "createMenu",
+            "in": "body",
+            "required": true,
+            "description": "创建菜单",
+            "schema": {
+              "$ref": "#/definitions/CreateMenu"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/removeMenu": {
+      "post": {
+        "operationId": "removeMenu",
+        "summary": "删除菜单",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "removeMenu",
+            "in": "body",
+            "required": true,
+            "description": "删除菜单",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -1172,6 +1308,37 @@
               "type": "string"
             },
             "permission": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "CreateMenu": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "name",
+            "parent",
+            "order",
+            "route",
+            "data"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "order": {
+              "type": "integer"
+            },
+            "parent": {
+              "type": "string"
+            },
+            "route": {
+              "type": "string"
+            },
+            "data": {
               "type": "string"
             }
           }
