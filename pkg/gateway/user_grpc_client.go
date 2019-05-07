@@ -368,6 +368,19 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption
 		endpoint := grpctransport.NewClient(
 			conn,
 			"pb.User",
+			"RemovePermissionForRole",
+			encodeRequest,
+			decodeResponse,
+			pb.RemovePermissionForRoleReply{},
+			options...,
+		).Endpoint()
+		endpoints.RemovePermissionForRoleEndpoint = endpoint
+	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.User",
 			"AddPermissionForUser",
 			encodeRequest,
 			decodeResponse,
