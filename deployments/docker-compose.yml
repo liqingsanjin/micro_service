@@ -70,7 +70,7 @@ services:
     ports:
       - 8500:8500
       - 8600:8600
-    command: "agent -server -client 0.0.0.0 -bootstrap-expect=1"
+    command: '{"skip_leave_on_interrupt": true}'
   nginx:
     image: nginx:1.16
     container_name: nginx
