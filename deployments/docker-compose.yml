@@ -1,34 +1,16 @@
 version: '3'
 services:
-  mysql:
-    image: mysql:5.7.25
-    container_name: mysql
+  apigateway:
+    image: apigateway:1.0.0
+    container_name: apigateway
     ports:
-      - 3306:3306
+      - 8080:8080
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: test
-      MYSQL_PASSWORD: test
-    volumes:
-      - ./mysql_data/:/var/lib/mysql/
-  redis:
-    image: redis:5.0.4
-    container_name: reids
-    ports:
-      - 6379:6379
-  consul:
-    image: consul:1.4.4
-    container_name: consul
-    volumes:
-      - ./configs/consul.json:/consul/config/consul.json
-    ports:
-      - 8300:8300
-      - 8301:8301
-      - 8302:8302
-      - 8500:8500
-      - 8600:8600
-    environment:
-      CONSUL_LOCAL_CONFIG: '{"skip_leave_on_interrupt": true}'
+      LOG_LEVEL: debug
+      CONSUL_ADDR: 172.16.7.120:8500
+    depends_on:
+      - consul
+      - userservice
   userservice:
     image: userservice:1.0.0
     container_name: userservice
@@ -37,9 +19,36 @@ services:
     environment:
       CONFIG_FILE: configs/dev.toml
       LOG_LEVEL: debug
-    volumes:
-      - ./configs/:/data/configs/
     depends_on:
       - redis
-      - mysql
       - consul
+    #command: ['sleep', '200000']
+    volumes:
+      - ./configs/userservice/:/data/configs
+  swagger:
+    image: swaggerapi/swagger-ui:v3.22.1
+    container_name: swagger
+    ports:
+      - 8088:8080
+  redis:
+    image: redis:5.0.4
+    container_name: redis
+    ports:
+      - 6379:6379
+  consul:
+    image: consul:1.4.4
+    container_name: consul
+    ports:
+      - 8500:8500
+      - 8600:8600
+    command: "agent -server -client 0.0.0.0 -bootstrap-expect=1"
+  nginx:
+    image: nginx:1.16
+    container_name: nginx
+    ports:
+      - 80:80
+    environment:
+      - NGINX_PORT=80
+    volumes:
+      - ./nginx/conf/:/etc/nginx/
+      - ./app/:/app/
