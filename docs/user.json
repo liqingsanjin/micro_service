@@ -31,7 +31,7 @@
           "200": {
             "description": "正确返回",
             "examples": {
-              "application/json": "{\n    \"data\": {\n        \"id\": \"102258\",\n        \"username\": \"test1\",\n        \"userType\": \"ABC\",\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7IklEIjoxMDIyNTgsIlVzZXJOYW1lIjoidGVzdDEifSwiZXhwIjoxNTU3MzY4Njc5fQ.gI5Zihc_ZZC4v3eronIFL0pTUl7BitBlUjLoyTtZt4U\",\n        \"err\": null\n    }\n}"
+              "application/json": "{\n  \"id\": \"4\",\n  \"username\": \"test1\",\n  \"userType\": \"ABC\",\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7IklEIjo0LCJVc2VyTmFtZSI6InRlc3QxIn0sImV4cCI6MTU1NzQ3MDYxMX0.JCR-qtbIFHZIgMsnoefPyB0oPkWueydCcMCHL5UWvzU\",\n  \"err\": null\n}"
             }
           },
           "400": {
@@ -69,7 +69,7 @@
           "200": {
             "description": "正确返回",
             "examples": {
-              "application/json": "{\n  \"data\": {\n    \"menus\": [\n      {\n        \"id\": 4,\n        \"name\": \"后台设置\",\n        \"parent\": \"\",\n        \"route\": \"/\",\n        \"data\": \"{\\\"icon\\\": \\\"ic_htsz\\\", \\\"visible\\\": true}\",\n        \"order\": 10,\n        \"children\": [\n          {\n            \"id\": 5,\n            \"name\": \"路由管理\",\n            \"parent\": \"\",\n            \"route\": \"/admin/route/index\",\n            \"data\": \"{\\\"icon\\\": \\\"ic_luy\\\", \\\"visible\\\": true}\",\n            \"order\": 100,\n            \"children\": []\n          }\n        ]\n      }\n    ],\n    \"err\": null\n  }\n}"
+              "application/json": "{\n    \"menus\": [\n      {\n        \"id\": 4,\n        \"name\": \"后台设置\",\n        \"parent\": \"\",\n        \"route\": \"/\",\n        \"data\": \"{\\\"icon\\\": \\\"ic_htsz\\\", \\\"visible\\\": true}\",\n        \"order\": 10,\n        \"children\": [\n          {\n            \"id\": 5,\n            \"name\": \"路由管理\",\n            \"parent\": \"\",\n            \"route\": \"/admin/route/index\",\n            \"data\": \"{\\\"icon\\\": \\\"ic_luy\\\", \\\"visible\\\": true}\",\n            \"order\": 100,\n            \"children\": []\n          }\n        ]\n      }\n    ],\n    \"err\": null\n  }"
             }
           },
           "500": {
@@ -122,7 +122,7 @@
           "200": {
             "description": "正确返回",
             "examples": {
-              "application/json": "{\n  \"data\": {\n    \"result\": false,\n    \"err\": null\n  }\n}"
+              "application/json": "{\n    \"result\": false,\n    \"err\": null\n  }"
             }
           }
         }
@@ -150,7 +150,112 @@
           "200": {
             "description": "正确返回",
             "examples": {
+              "application/json": "{\n    \"id\": \"4\",\n    \"leaguerNo\": \"1\",\n    \"username\": \"test1\",\n    \"email\": \"123@qq.com\",\n    \"userType\": \"ABC\",\n    \"userStatus\": \"1\",\n    \"createdAt\": \"1557208312000\",\n    \"err\": null\n  }"
+            }
+          }
+        }
+      }
+    },
+    "/user/addPermissionForRole": {
+      "post": {
+        "operationId": "addPermissionForRole",
+        "summary": "给角色添加权限",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "addPermissionForRole",
+            "in": "body",
+            "required": true,
+            "description": "给角色添加权限",
+            "schema": {
+              "$ref": "#/definitions/AddPermissionForRole"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
               "application/json": ""
+            }
+          }
+        }
+      }
+    },
+    "/user/createRole": {
+      "post": {
+        "operationId": "createRole",
+        "summary": "创建角色",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "createRole",
+            "in": "body",
+            "required": true,
+            "description": "创建角色",
+            "schema": {
+              "$ref": "#/definitions/CreateRole"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/addRoleForUser": {
+      "post": {
+        "operationId": "addRoleForUser",
+        "summary": "给用户添加角色",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "addRoleForUser",
+            "in": "body",
+            "required": true,
+            "description": "给用户添加角色",
+            "schema": {
+              "$ref": "#/definitions/AddRoleForUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
             }
           }
         }
@@ -202,6 +307,59 @@
               "type": "string"
             },
             "userType": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AddPermissionForRole": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "role",
+            "permission"
+          ],
+          "properties": {
+            "role": {
+              "type": "string"
+            },
+            "permission": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "CreateRole": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "role"
+          ],
+          "properties": {
+            "role": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AddRoleForUser": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "username",
+            "role"
+          ],
+          "properties": {
+            "role": {
+              "type": "string"
+            },
+            "username": {
               "type": "string"
             }
           }
