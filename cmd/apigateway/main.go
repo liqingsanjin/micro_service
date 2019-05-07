@@ -2,7 +2,9 @@ package main
 
 import (
 	"net/http"
+	"os"
 	"userService/pkg/gateway"
+	"userService/pkg/util"
 
 	consulsd "github.com/go-kit/kit/sd/consul"
 	"github.com/hashicorp/consul/api"
@@ -10,9 +12,22 @@ import (
 )
 
 func main() {
-	logrus.SetLevel(logrus.DebugLevel)
+	level := os.Getenv("LOG_LEVEL")
+	if level == "debug" {
+		logrus.SetLevel(logrus.DebugLevel)
+	}
+	logrus.SetFormatter(&util.LogFormatter{})
+	port := os.Getenv("GATEWAY_PORT")
+	if port == "" {
+		port = "8080"
+	}
+	consulAddr := os.Getenv("CONSUL_ADDR")
 
-	consulClient, err := api.NewClient(api.DefaultConfig())
+	consulConfig := api.DefaultConfig()
+	if consulAddr != "" {
+		consulConfig.Address = consulAddr
+	}
+	consulClient, err := api.NewClient(consulConfig)
 	if err != nil {
 		logrus.Fatal(err)
 	}
@@ -32,7 +47,7 @@ func main() {
 	institutionEndpoint := gateway.GetInstitutionCliEndpoints(institutionInstancer, log)
 
 	userHandler := gateway.NewHttpHandler(userEndpoint, &staticEndpoint, &institutionEndpoint)
-	http.ListenAndServe(":8080", userHandler)
+	http.ListenAndServe(":"+port, userHandler)
 }
 
 type logger struct{}
