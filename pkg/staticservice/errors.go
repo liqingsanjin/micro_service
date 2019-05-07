@@ -1,3 +1,7 @@
 package staticservice
 
-var ()
+const (
+	InvalidParam  = "InvalidParamError"
+	AlreadyExists = "AlreadyExistsError"
+	NotFound      = "NotFoundError"
+)

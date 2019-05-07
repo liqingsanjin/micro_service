@@ -2,6 +2,7 @@ package staticservice
 
 import (
 	"encoding/json"
+	"net/http"
 	"userService/pkg/common"
 	"userService/pkg/model/static"
 	"userService/pkg/pb"
@@ -192,6 +193,13 @@ func (s *setService) GetDicByInsCmpCd(ctx context.Context, in *pb.StaticGetDicBy
 }
 
 func (s *setService) CheckValues(ctx context.Context, in *pb.StaticCheckValuesReq) (*pb.StaticCheckValuesResp, error) {
+	if in.ProdCd == "" && in.BizCd == "" && in.TransCd == "" && in.InsCompanyCd == "" && in.FwdInsIdCd == "" {
+		return &pb.StaticCheckValuesResp{Err: &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "必须传入参数",
+		}}, nil
+	}
 	result := checkProdBizAndTrans(in.ProdCd, in.BizCd, in.TransCd) && checkCpyCdAndFwd(in.InsCompanyCd, in.FwdInsIdCd)
 
 	return &pb.StaticCheckValuesResp{Result: result}, nil

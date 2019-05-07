@@ -8,28 +8,28 @@ import (
 )
 
 func RegisterInstitutionHandler(engine *gin.Engine, endpoints *InstitutionEndpoints) {
-	engine.POST("/Institution/TnxHisDownload", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	engine.POST("/institution/tnxHisDownload", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.TnxHisDownloadEndpoint,
 		decodeHttpRequest(&pb.InstitutionTnxHisDownloadReq{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/Institution/GetTfrTrnLogs", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	engine.POST("/institution/getTfrTrnLogs", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.GetTfrTrnLogsEndpoint,
 		decodeHttpRequest(&pb.GetTfrTrnLogsReq{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/Institution/GetTfrTrnLog", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	engine.POST("/institution/getTfrTrnLog", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.GetTfrTrnLogEndpoint,
 		decodeHttpRequest(&pb.GetTfrTrnLogReq{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/Institution/DownloadTfrTrnLogs", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	engine.POST("/institution/downloadTfrTrnLogs", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.DownloadTfrTrnLogsEndpoint,
 		decodeHttpRequest(&pb.DownloadTfrTrnLogsReq{}),
 		encodeHttpResponse,
