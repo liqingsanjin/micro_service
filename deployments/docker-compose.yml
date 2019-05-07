@@ -26,6 +26,20 @@ services:
       - zipkin
       - mysql
       - consul
+  institutionservice:
+    image: institutionservice:1.0.0
+    container_name: institutionservice
+    ports:
+      - 4800:4800
+    environment:
+      CONFIG_FILE: configs/institutionservice/dev.toml
+      LOG_LEVEL: debug
+    volumes:
+      - ./configs/:/data/configs/
+    depends_on:
+      - zipkin
+      - mysql
+      - consul
   userservice:
     image: userservice:1.0.0
     container_name: userservice

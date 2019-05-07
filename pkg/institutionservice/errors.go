@@ -8,3 +8,9 @@ import (
 var (
 	ErrDownloadFileNameEmpty = status.Error(codes.NotFound, "empty file name")
 )
+
+const (
+	InvalidParam  = "InvalidParamError"
+	AlreadyExists = "AlreadyExistsError"
+	NotFound      = "NotFoundError"
+)
