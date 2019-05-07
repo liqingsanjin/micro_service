@@ -980,7 +980,7 @@
           "200": {
             "description": "正确返回",
             "examples": {
-              "application/json": "{\n  \"menus\": [],\n  \"err\": null\n}"
+              "application/json": "{\n  \"menus\": [\n    {\n      \"id\": 4,\n      \"name\": \"后台设置\",\n      \"parent\": \"\",\n      \"route\": \"/\",\n      \"data\": \"{\\\"icon\\\": \\\"ic_htsz\\\", \\\"visible\\\": true}\",\n      \"order\": 10,\n      \"children\": []\n    }\n  ],\n  \"err\": null\n}"
             }
           }
         }
