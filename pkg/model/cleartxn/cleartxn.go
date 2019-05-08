@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
+	"github.com/sirupsen/logrus"
 )
 
 //Mysql Select
@@ -278,7 +279,7 @@ func (t TfrTrnLog) TableName() string {
 //@return Institution： 符合的实例
 func (c ClearTxn) GetWithTime(db *gorm.DB, startTime, endTime string) ([]*ClearTxn, error) {
 	clearTxn := []*ClearTxn{}
-	err := db.Debug().Where("STLM_DATE <= ? AND STLM_DATE >= ?", endTime, startTime).Find(&clearTxn).Error
+	err := db.Where("STLM_DATE <= ? AND STLM_DATE >= ?", endTime, startTime).Find(&clearTxn).Error
 	if err != nil {
 		return nil, err
 	}
@@ -289,13 +290,13 @@ func (c ClearTxn) GetWithTime(db *gorm.DB, startTime, endTime string) ([]*ClearT
 //@params option 查询的limit跟offset， 第一个为limit， 第二个为page
 //默认limit=10； page=0
 //@params amountCond 可以为空， a < TRANS_AT AND b > TRANS_AT
-func (t TfrTrnLog) GetWithLimit(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string, limit, page int64) ([]*TfrTrnLog, int64, int64, error) {
+func (t TfrTrnLog) GetWithLimit(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string, limit, page int64) ([]*TfrTrnLog, int64, string, error) {
 	limit, offset := getLimitOffest(limit, page)
 	logs := make([]*TfrTrnLog, 0)
 	var count int64
-	var total int64
+	var total string
 
-	err := db.Debug().Where(tfrTrnLog).Where(amountCond).Select(SelectInsTxnResp).Offset(offset).Limit(limit).Find(&logs).Error
+	err := db.Where(tfrTrnLog).Where(amountCond).Select(SelectInsTxnResp).Offset(offset).Limit(limit).Find(&logs).Error
 	if err == gorm.ErrRecordNotFound {
 		return logs, count, total, nil
 	}
@@ -303,13 +304,17 @@ func (t TfrTrnLog) GetWithLimit(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond st
 		return nil, count, total, err
 	}
 
-	rows, err := db.Debug().Table(tfrTrnLog.TableName()).Where(tfrTrnLog).Where(amountCond).Select("sum(TRANS_AT) as total, count(*) as count").Rows()
+	rows, err := db.Table(tfrTrnLog.TableName()).Where(tfrTrnLog).Where(amountCond).Select("sum(TRANS_AT) as total, count(*) as count").Rows()
 	if err != nil {
-		return nil, count, count, err
+		return nil, count, total, err
 	}
 	defer rows.Close()
 	for rows.Next() {
-		rows.Scan(&total, &count)
+		err := rows.Scan(&total, &count)
+		if err != nil {
+			logrus.Error(err)
+			return logs, 0, "", nil
+		}
 	}
 
 	return logs, count, total, nil
@@ -317,7 +322,7 @@ func (t TfrTrnLog) GetWithLimit(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond st
 
 func (t TfrTrnLog) Get(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string) ([]*TfrTrnLog, error) {
 	logs := make([]*TfrTrnLog, 0)
-	err := db.Debug().Where(tfrTrnLog).Where(amountCond).Select(SelectInsTxnResp).Find(&logs).Error
+	err := db.Where(tfrTrnLog).Where(amountCond).Select(SelectInsTxnResp).Find(&logs).Error
 	if err == gorm.ErrRecordNotFound {
 		return logs, nil
 	}
@@ -329,7 +334,7 @@ func (t TfrTrnLog) Get(db *gorm.DB, tfrTrnLog *TfrTrnLog, amountCond string) ([]
 
 func (t TfrTrnLog) GetByKeyRsp(db *gorm.DB, keyRsp string) (*TfrTrnLog, error) {
 	tfrTrnLog := new(TfrTrnLog)
-	err := db.Debug().Table(t.TableName()).Where("key_rsp = ?", keyRsp).First(tfrTrnLog).Error
+	err := db.Table(t.TableName()).Where("key_rsp = ?", keyRsp).First(tfrTrnLog).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}
