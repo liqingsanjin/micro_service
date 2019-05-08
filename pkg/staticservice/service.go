@@ -127,6 +127,13 @@ func (s *setService) GetDictionaryItem(ctx context.Context, in *pb.StaticGetDict
 }
 
 func (s *setService) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticGetDicByProdAndBizReq) (*pb.StaticGetDicByProdAndBizResp, error) {
+	if in.ProdCd == "" {
+		return &pb.StaticGetDicByProdAndBizResp{Err: &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "必须传入ProdCd",
+		}}, nil
+	}
 	bizCdArr := make([]string, 0)
 	prodCdArr := make([]string, 0)
 	dicTypeCondition := make([]string, 0)
@@ -157,6 +164,10 @@ func (s *setService) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticGetDic
 	}
 
 	transCds := getTransCdByProdAndBiz(in.ProdCd, in.BizCd)
+	if len(transCds) == 0 {
+		return &pb.StaticGetDicByProdAndBizResp{}, nil
+	}
+
 	dicTypeCondition = append(dicTypeCondition, "TRANS_CD")
 	results := getDicItemByCondition(dicTypeCondition, dicNameCondition, transCds)
 
@@ -173,6 +184,13 @@ func (s *setService) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticGetDic
 }
 
 func (s *setService) GetDicByInsCmpCd(ctx context.Context, in *pb.StaticGetDicByInsCmpCdReq) (*pb.StaticGetDicByInsCmpCdResp, error) {
+	if in.InsCompanyCd == "" {
+		return &pb.StaticGetDicByInsCmpCdResp{Err: &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "必须传入InsCompanyCd",
+		}}, nil
+	}
 	dicTypeCondition := []string{"INS_ID_CD"}
 	dicNameCondition := make([]string, 0)
 	insCds := getDicByInsCmpCd(in.InsCompanyCd)
