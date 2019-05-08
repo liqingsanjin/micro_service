@@ -7,10 +7,12 @@ services:
       - 8080:8080
     environment:
       LOG_LEVEL: debug
-      CONSUL_ADDR: 172.16.7.120:8500
+      CONSUL_ADDR: consul:8500
+      ZIPKIN_ADDR: zipkin:9411
     depends_on:
       - consul
       - userservice
+      - zipkin
   staticservice:
     image: staticservice:1.0.0
     container_name: staticservice
@@ -48,9 +50,11 @@ services:
     environment:
       CONFIG_FILE: configs/dev.toml
       LOG_LEVEL: debug
+      ZIPKIN_ADDR: zipkin:9411
     depends_on:
       - redis
       - consul
+      - zipkin
     #command: ['sleep', '200000']
     volumes:
       - ./configs/userservice/:/data/configs
