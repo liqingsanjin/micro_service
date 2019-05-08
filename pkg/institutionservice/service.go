@@ -67,11 +67,11 @@ func (s *setService) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq)
 
 	var accountRegion = ""
 	if in.BeginAt != "" && in.EndAt != "" {
-		accountRegion = fmt.Sprintf("'%s' < TRANS_AT AND TRANS_AT < '%s'", in.BeginAt, in.EndAt)
+		accountRegion = fmt.Sprintf("'%s' < TRANS_DT AND TRANS_DT < '%s'", in.BeginAt, in.EndAt)
 	} else if in.BeginAt != "" {
-		accountRegion = fmt.Sprintf("'%s' < TRANS_AT", in.BeginAt)
+		accountRegion = fmt.Sprintf("'%s' < TRANS_DT", in.BeginAt)
 	} else if in.EndAt != "" {
-		accountRegion = fmt.Sprintf("TRANS_AT < '%s'", in.EndAt)
+		accountRegion = fmt.Sprintf("TRANS_DT < '%s'", in.EndAt)
 	}
 
 	trfTrnLogsEnty := cleartxnM.TfrTrnLog{}
@@ -150,11 +150,11 @@ func (s *setService) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrT
 
 	var accountRegion = ""
 	if in.BeginAt != "" && in.EndAt != "" {
-		accountRegion = fmt.Sprintf("'%s' < TRANS_AT AND TRANS_AT < '%s'", in.BeginAt, in.EndAt)
+		accountRegion = fmt.Sprintf("'%s' < TRANS_DT AND TRANS_DT < '%s'", in.BeginAt, in.EndAt)
 	} else if in.BeginAt != "" {
-		accountRegion = fmt.Sprintf("'%s' < TRANS_AT", in.BeginAt)
+		accountRegion = fmt.Sprintf("'%s' < TRANS_DT", in.BeginAt)
 	} else if in.EndAt != "" {
-		accountRegion = fmt.Sprintf("TRANS_AT < '%s'", in.EndAt)
+		accountRegion = fmt.Sprintf("TRANS_DT < '%s'", in.EndAt)
 	}
 
 	trfTrnLogsEnty := cleartxnM.TfrTrnLog{}

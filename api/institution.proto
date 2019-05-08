@@ -46,7 +46,7 @@ message GetTfrTrnLogsReq {
 message GetTfrTrnLogsResp {
     repeated GetTfrTrnLogsItem Items = 1;
     int64 count = 2;
-	int64 total = 3;
+	string total = 3;
 	error err = 4;
 }
 
