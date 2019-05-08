@@ -213,8 +213,12 @@ message RemovePermissionReply {
 
 message ListPermissionsRequest {}
 message ListPermissionsReply {
-    repeated string permissions = 1;
+    repeated PermissionField permissions = 1;
     error err = 2;
+}
+message PermissionField {
+    int64 id = 1;
+    string permission = 2;
 }
 
 message AddPermissionForPermissionRequest {
@@ -237,8 +241,13 @@ message RemovePermissionForPermissionReply {
 
 message ListRoleRequest {}
 message ListRoleReply {
-    repeated string roles = 1;
+    repeated RoleField roles = 1;
     error err = 2;
+}
+
+message RoleField {
+    int64 id = 1;
+    string role = 2;
 }
 
 message UpdateRoleRequest {

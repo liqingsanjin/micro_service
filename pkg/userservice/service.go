@@ -661,9 +661,12 @@ func (u *userService) ListPermissions(ctx context.Context, in *pb.ListPermission
 		return nil, err
 	}
 
-	names := make([]string, len(ps))
+	names := make([]*pb.PermissionField, len(ps))
 	for i := range ps {
-		names[i] = ps[i].Name
+		names[i] = &pb.PermissionField{
+			Id:         ps[i].ID,
+			Permission: ps[i].Name,
+		}
 	}
 
 	return &pb.ListPermissionsReply{
@@ -774,9 +777,12 @@ func (u *userService) ListRole(ctx context.Context, in *pb.ListRoleRequest) (*pb
 		return nil, err
 	}
 
-	names := make([]string, len(roles))
+	names := make([]*pb.RoleField, len(roles))
 	for i := range roles {
-		names[i] = roles[i].Role
+		names[i] = &pb.RoleField{
+			Id:   roles[i].ID,
+			Role: roles[i].Role,
+		}
 	}
 	return &pb.ListRoleReply{Roles: names}, nil
 }
