@@ -517,7 +517,7 @@
           "200": {
             "description": "正确返回",
             "examples": {
-              "application/json": "{\n  \"permissions\": [\n    \"测试权限1\"\n  ],\n  \"err\": null\n}"
+              "application/json": "{\n  \"permissions\": [\n    {\n      \"id\": \"2\",\n      \"permission\": \"测试权限1\"\n    },\n    {\n      \"id\": \"3\",\n      \"permission\": \"测试权限2\"\n    }\n  ],\n  \"err\": null\n}"
             }
           }
         }
@@ -613,7 +613,7 @@
           "200": {
             "description": "正确返回",
             "examples": {
-              "application/json": "{\n  \"roles\": [\n    \"测试角色1\"\n  ],\n  \"err\": null\n}"
+              "application/json": "{\n  \"roles\": [\n    {\n      \"id\": \"1\",\n      \"role\": \"测试角色1\"\n    }\n  ],\n  \"err\": null\n}"
             }
           }
         }
