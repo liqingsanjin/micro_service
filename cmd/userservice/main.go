@@ -126,9 +126,13 @@ func main() {
 
 	// 启动grpc server
 	go func() {
+		addr := os.Getenv("ZIPKIN_ADDR")
+		if addr == "" {
+			addr = "127.0.0.1:9411"
+		}
 
 		localEndpoint, _ := stdzipkin.NewEndpoint("user", "localhost:9411")
-		reporter := zipkinhttp.NewReporter("http://localhost:9411/api/v2/spans")
+		reporter := zipkinhttp.NewReporter("http://" + addr + "/api/v2/spans")
 		stdTracer, err := stdzipkin.NewTracer(
 			reporter,
 			stdzipkin.WithLocalEndpoint(localEndpoint),
