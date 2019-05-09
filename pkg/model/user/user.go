@@ -25,12 +25,12 @@ type User struct {
 	AuthKey            string    `gorm:"column:AUTH_KEY"`
 	PasswordHash       string    `gorm:"column:PASSWORD_HASH"`
 	PasswordHashNew    string    `gorm:"column:PASSWORD_HASH_NEW"`
-	PasswordResetToken *string   `gorm:"column:PASSWORD_RESET_TOKEN"`
-	Email              *string   `gorm:"column:EMAIL"`
+	PasswordResetToken string    `gorm:"column:PASSWORD_RESET_TOKEN"`
+	Email              string    `gorm:"column:EMAIL"`
 	UserType           string    `gorm:"column:USER_TYPE"`
-	UserInfo           *string   `gorm:"column:USER_INFO"`
+	UserInfo           string    `gorm:"column:USER_INFO"`
 	UserStatus         int64     `gorm:"column:USER_STATUS"`
-	UserNotice         *string   `gorm:"column:USER_NOTICE"`
+	UserNotice         string    `gorm:"column:USER_NOTICE"`
 	CreatedAt          time.Time `gorm:"column:REC_CRT_TS"`
 	UpdatedAt          time.Time `gorm:"column:REC_UPD_TS"`
 	ParentUserName     *string   `gorm:"column:PARENT_USER_NAME"`

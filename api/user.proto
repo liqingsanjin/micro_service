@@ -56,10 +56,14 @@ message LoginRequest {
 
 message LoginReply {
     int64 id = 1;
-    string username =2;
-    string userType = 3;
-    string token = 4;
-    error err = 5;
+    string leaguerNo = 2;
+    string username = 3;
+    string email = 4;
+    string userType = 5;
+    int64 userStatus = 6;
+    int64 createdAt = 7;
+    string token = 8;
+    error err = 9;
 }
 
 message GetPermissionsRequest {

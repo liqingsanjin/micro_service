@@ -87,10 +87,14 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 		}
 	}
 	return &pb.LoginReply{
-		Id:       user.UserID,
-		Username: user.UserName,
-		UserType: user.UserType,
-		Token:    tk,
+		Id:         user.UserID,
+		Username:   user.UserName,
+		UserType:   user.UserType,
+		LeaguerNo:  user.LeaguerNO,
+		Email:      user.Email,
+		UserStatus: user.UserStatus,
+		CreatedAt:  user.CreatedAt.Unix(),
+		Token:      tk,
 	}, nil
 }
 
@@ -239,7 +243,7 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 	user = &usermodel.User{
 		UserName:        in.Username,
 		UserType:        in.UserType,
-		Email:           &in.Email,
+		Email:           in.Email,
 		LeaguerNO:       in.LeaguerNo,
 		PasswordHash:    string(bs),
 		PasswordHashNew: string(bs),
@@ -255,7 +259,7 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 		Id:         newUser.UserID,
 		LeaguerNo:  newUser.LeaguerNO,
 		Username:   newUser.UserName,
-		Email:      *newUser.Email,
+		Email:      newUser.Email,
 		UserType:   newUser.UserType,
 		UserStatus: newUser.UserStatus,
 		CreatedAt:  newUser.CreatedAt.UnixNano() / int64(time.Millisecond),
@@ -1054,7 +1058,7 @@ func (u *userService) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) 
 
 	err = usermodel.UpdateUser(db, in.Id, &usermodel.User{
 		UserName: in.Username,
-		Email:    &in.Email,
+		Email:    in.Email,
 		UserType: in.UserType,
 	})
 	if err != nil {
