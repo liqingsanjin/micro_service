@@ -1060,6 +1060,32 @@
           }
         }
       }
+    },
+    "/user/getUserTypeInfo": {
+      "get": {
+        "operationId": "getUserTypeInfo",
+        "summary": "获取用户类型列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"infos\": [\n    {\n      \"userType\": \"A\",\n      \"userDesc\": \"系统管理用户\",\n      \"userInfo\": \"\"\n    },\n    {\n      \"userType\": \"AB\",\n      \"userDesc\": \"管理用户\",\n      \"userInfo\": \"{\\\"alowMenuList\\\": [\\\"角色管理\\\",\\\"角色分配\\\",\\\"用户管理\\\",\\\"会员管理\\\"]}\"\n    },\n    {\n      \"userType\": \"ABC\",\n      \"userDesc\": \"普通用户\",\n      \"userInfo\": \"\"\n    },\n    {\n      \"userType\": \"B\",\n      \"userDesc\": \"内部管理会员\",\n      \"userInfo\": \"\"\n    },\n    {\n      \"userType\": \"BC\",\n      \"userDesc\": \"机构组会员\",\n      \"userInfo\": \"{\\\"ext\\\":{\\\"id\\\":\\\"ins_id_cd\\\", \\\"desc\\\":\\\"机构号(逗号分隔)\\\", \\\"array\\\":true,\\\"require\\\": true}}\"\n    },\n    {\n      \"userType\": \"BCE\",\n      \"userDesc\": \"机构会员\",\n      \"userInfo\": \"{\\\"ext\\\":{\\\"id\\\":\\\"ins_id_cd\\\", \\\"desc\\\":\\\"机构号\\\", \\\"array\\\":false,\\\"require\\\": true}}\"\n    },\n    {\n      \"userType\": \"BCEFG\",\n      \"userDesc\": \"集团会员\",\n      \"userInfo\": \"{\\\"ext\\\":{\\\"id\\\":\\\"group_cd\\\", \\\"desc\\\":\\\"集团号\\\", \\\"array\\\":false,\\\"require\\\": true}}\"\n    },\n    {\n      \"userType\": \"BCEFGHI\",\n      \"userDesc\": \"商户会员\",\n      \"userInfo\": \"{\\\"ext\\\":{\\\"id\\\":\\\"mcht_cd\\\", \\\"desc\\\":\\\"商户号\\\", \\\"array\\\":false,\\\"require\\\": true}}\"\n    }\n  ],\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
