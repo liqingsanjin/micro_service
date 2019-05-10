@@ -16,6 +16,7 @@ const (
 	TableRole           = "TBL_ROLE"
 	TableRoute          = "TBL_ROUTE"
 	TablePermission     = "TBL_PERMISSION"
+	TableUserInfo       = "TBL_USER_INFO"
 )
 
 type User struct {
@@ -478,4 +479,23 @@ func SaveMenu(db *gorm.DB, menu *Menu) error {
 
 func DeleteMenu(db *gorm.DB, id int32) error {
 	return db.Delete(&Menu{ID: id}).Error
+}
+
+type UserInfo struct {
+	UserType string `gorm:"column:USER_TYPE"`
+	UserDesc string `gorm:"column:USER_DESC"`
+	UserInfo string `gorm:"column:USER_INFO"`
+}
+
+func (t UserInfo) TableName() string {
+	return TableUserInfo
+}
+
+func ListUserInfo(db *gorm.DB) ([]*UserInfo, error) {
+	infos := make([]*UserInfo, 0)
+	err := db.Find(&infos).Error
+	if err == gorm.ErrRecordNotFound {
+		err = nil
+	}
+	return infos, err
 }

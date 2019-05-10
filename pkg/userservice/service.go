@@ -1344,3 +1344,25 @@ func (u *userService) RemoveMenu(ctx context.Context, in *pb.RemoveMenuRequest) 
 	err = usermodel.DeleteMenu(db, in.Id)
 	return reply, err
 }
+
+func (u *userService) GetUserTypeInfo(ctx context.Context, in *pb.GetUserTypeInfoRequest) (*pb.GetUserTypeInfoReply, error) {
+	reply := &pb.GetUserTypeInfoReply{}
+
+	db := common.DB
+	infos, err := usermodel.ListUserInfo(db)
+	if err != nil {
+		return nil, err
+	}
+
+	userTypeInfos := make([]*pb.UserTypeInfo, len(infos))
+	for i := range infos {
+		userTypeInfos[i] = &pb.UserTypeInfo{
+			UserType: infos[i].UserType,
+			UserDesc: infos[i].UserDesc,
+			UserInfo: infos[i].UserInfo,
+		}
+	}
+
+	reply.Infos = userTypeInfos
+	return reply, nil
+}

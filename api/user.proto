@@ -12,6 +12,7 @@ service User {
     rpc Register(RegisterRequest) returns (RegisterReply) {}
     rpc GetPermissions(GetPermissionsRequest) returns (GetPermissionsReply) {}
     rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionReply) {}
+    rpc GetUserTypeInfo(GetUserTypeInfoRequest) returns (GetUserTypeInfoReply) {}
 
     // 权限和路由
     rpc AddRoutes(AddRoutesRequest) returns (AddRoutesReply) {}
@@ -364,4 +365,18 @@ message RemoveMenuRequest {
 
 message RemoveMenuReply {
     error err = 1;
+}
+
+message GetUserTypeInfoRequest {
+}
+
+message GetUserTypeInfoReply {
+    repeated UserTypeInfo infos = 1;
+    error err = 2;
+}
+
+message UserTypeInfo {
+    string userType = 1;
+    string userDesc = 2;
+    string userInfo = 3;
 }
