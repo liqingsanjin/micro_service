@@ -40,6 +40,7 @@ type userServer struct {
 	createMenuHandler                    grpctransport.Handler
 	removeMenuHandler                    grpctransport.Handler
 	getUserTypeInfoHandler               grpctransport.Handler
+	getUserHandler                       grpctransport.Handler
 }
 
 func New(tracer grpctransport.ServerOption) pb.UserServer {
@@ -395,6 +396,17 @@ func New(tracer grpctransport.ServerOption) pb.UserServer {
 		endpoint := MakeGetUserTypeInfoEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.getUserTypeInfoHandler = grpctransport.NewServer(
+			endpoint,
+			decodeRequest,
+			encodeResponse,
+			options...,
+		)
+	}
+
+	{
+		endpoint := MakeGetUserEndpoint(userService)
+		endpoint = logginMiddleware(endpoint)
+		svr.getUserHandler = grpctransport.NewServer(
 			endpoint,
 			decodeRequest,
 			encodeResponse,
@@ -786,4 +798,16 @@ func (u *userServer) GetUserTypeInfo(ctx context.Context, in *pb.GetUserTypeInfo
 		return nil, ErrReplyTypeInvalid
 	}
 	return reply, nil
+}
+func (u *userServer) GetUser(ctx context.Context, in *pb.GetUserRequest) (*pb.GetUserReply, error) {
+	_, res, err := u.getUserHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.GetUserReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+
 }

@@ -327,6 +327,16 @@ func MakeGetUserTypeInfoEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
+func MakeGetUserEndpoint(service pb.UserServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.GetUserRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.GetUser(ctx, req)
+	}
+}
+
 func decodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
 	return request, nil
 }

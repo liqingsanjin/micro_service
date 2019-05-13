@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"reflect"
+	"strconv"
 	"userService/pkg/pb"
 	"userService/pkg/userservice"
 
@@ -299,10 +300,19 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		)))
 
 	userGroup.GET("/getUserTypeInfo",
-		//userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.GetUserTypeInfoEndpoint,
 			decodeHttpRequest(&pb.GetUserTypeInfoRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
+
+	userGroup.GET("/getUser",
+		//userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.GetUserEndpoint,
+			decodeGetUserRequest,
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
@@ -389,4 +399,12 @@ func setUserInfoContext(ctx context.Context, r *http.Request) context.Context {
 		"userid":   id,
 	})
 	return context.WithValue(ctx, "userInfo", md)
+}
+
+func decodeGetUserRequest(ctx context.Context, r *http.Request) (interface{}, error) {
+	idStr := r.URL.Query().Get("id")
+	id, _ := strconv.Atoi(idStr)
+	return &pb.GetUserRequest{
+		Id: int64(id),
+	}, nil
 }

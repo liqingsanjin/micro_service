@@ -13,6 +13,7 @@ service User {
     rpc GetPermissions(GetPermissionsRequest) returns (GetPermissionsReply) {}
     rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionReply) {}
     rpc GetUserTypeInfo(GetUserTypeInfoRequest) returns (GetUserTypeInfoReply) {}
+    rpc GetUser(GetUserRequest) returns (GetUserReply) {}
 
     // 权限和路由
     rpc AddRoutes(AddRoutesRequest) returns (AddRoutesReply) {}
@@ -299,7 +300,13 @@ message ListUsersReply {
 
 message UserField {
     int64 id = 1;
-    string username = 2;
+    string leaguerNo = 2;
+    string username = 3;
+    string email = 4;
+    string userType = 5;
+    int64 userStatus = 6;
+    int64 createdAt = 7;
+    string token = 8;
 }
 
 message UpdateUserRequest {
@@ -379,4 +386,19 @@ message UserTypeInfo {
     string userType = 1;
     string userDesc = 2;
     string userInfo = 3;
+}
+
+message GetUserRequest {
+    int64 id = 1;
+}
+
+message GetUserReply {
+    int64 id = 1;
+    string leaguerNo = 2;
+    string username = 3;
+    string email = 4;
+    string userType = 5;
+    int64 userStatus = 6;
+    int64 createdAt = 7;
+    error err = 8;
 }

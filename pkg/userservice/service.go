@@ -1020,8 +1020,13 @@ func (u *userService) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*
 
 	for _, u := range us {
 		users = append(users, &pb.UserField{
-			Id:       u.UserID,
-			Username: u.UserName,
+			Id:         u.UserID,
+			Username:   u.UserName,
+			UserType:   u.UserType,
+			LeaguerNo:  u.LeaguerNO,
+			Email:      u.Email,
+			UserStatus: u.UserStatus,
+			CreatedAt:  u.CreatedAt.Unix(),
 		})
 	}
 
@@ -1364,5 +1369,41 @@ func (u *userService) GetUserTypeInfo(ctx context.Context, in *pb.GetUserTypeInf
 	}
 
 	reply.Infos = userTypeInfos
+	return reply, nil
+}
+
+func (u *userService) GetUser(ctx context.Context, in *pb.GetUserRequest) (*pb.GetUserReply, error) {
+	reply := &pb.GetUserReply{}
+	if in.Id == 0 {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "id不能为空",
+		}
+		return reply, nil
+	}
+	db := common.DB
+
+	user, err := usermodel.FindUserByID(db, in.Id)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusNotFound,
+			Message:     NotFound,
+			Description: "用户不存在",
+		}
+		return reply, nil
+	}
+	reply = &pb.GetUserReply{
+		Id:         user.UserID,
+		Username:   user.UserName,
+		UserType:   user.UserType,
+		LeaguerNo:  user.LeaguerNO,
+		Email:      user.Email,
+		UserStatus: user.UserStatus,
+		CreatedAt:  user.CreatedAt.Unix(),
+	}
 	return reply, nil
 }
