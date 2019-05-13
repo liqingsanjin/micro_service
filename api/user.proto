@@ -306,7 +306,6 @@ message UserField {
     string userType = 5;
     int64 userStatus = 6;
     int64 createdAt = 7;
-    string token = 8;
 }
 
 message UpdateUserRequest {

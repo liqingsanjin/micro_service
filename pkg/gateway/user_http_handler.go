@@ -309,7 +309,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		)))
 
 	userGroup.GET("/getUser",
-		//userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.GetUserEndpoint,
 			decodeGetUserRequest,
