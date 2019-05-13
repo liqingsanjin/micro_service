@@ -12,7 +12,7 @@ import (
 
 func NewHttpHandler(endpoints *UserEndpoints, staticEndpoints *StaticEndpoints, institutionEndpoints *InstitutionEndpoints) http.Handler {
 	engine := gin.New()
-	engine.Use()
+	engine.Use(logRequest)
 	engine.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH"},

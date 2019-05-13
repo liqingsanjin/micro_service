@@ -49,18 +49,27 @@ func JwtMiddleware(keyFunc jwt.Keyfunc, method jwt.SigningMethod, newClaims Clai
 		})
 		if err != nil {
 			logrus.Errorln(err)
-			c.AbortWithStatus(http.StatusUnauthorized)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"err":  "Unauthorized",
+				"desc": "auth 认证失败",
+			})
 			return
 		}
 		if !token.Valid {
 			logrus.Errorln(err)
-			c.AbortWithStatus(http.StatusUnauthorized)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"err":  "Unauthorized",
+				"desc": "auth 认证失败",
+			})
 			return
 		}
 
 		claims, ok := token.Claims.(*UserClaims)
 		if !ok || claims.User == nil {
-			c.AbortWithStatus(http.StatusUnauthorized)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"err":  "Unauthorized",
+				"desc": "auth 认证失败",
+			})
 			return
 		}
 		c.Request.Form = url.Values{}
