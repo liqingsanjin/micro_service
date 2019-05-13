@@ -7,10 +7,12 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 func NewHttpHandler(endpoints *UserEndpoints, staticEndpoints *StaticEndpoints, institutionEndpoints *InstitutionEndpoints) http.Handler {
 	engine := gin.New()
+	engine.Use()
 	engine.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
@@ -33,4 +35,9 @@ func decodeResponse(ctx context.Context, response interface{}) (interface{}, err
 
 type StatusError interface {
 	GetErr() *pb.Error
+}
+
+func logRequest(c *gin.Context) {
+	logrus.Debugln(c.Request.URL.String())
+	c.Next()
 }
