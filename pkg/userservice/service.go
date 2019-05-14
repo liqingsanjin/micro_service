@@ -134,47 +134,15 @@ func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsR
 		return nil, err
 	}
 
-	idMap := make(map[int32][]*usermodel.Menu)
-	for _, menu := range menus {
-		if menu.Parent == nil {
-			// 第一级菜单
-			ms, ok := idMap[-1]
-			if !ok {
-				ms = make([]*usermodel.Menu, 0)
-			}
-			ms = append(ms, menu)
-			idMap[-1] = ms
-		} else {
-			// 第二级菜单
-			ms, ok := idMap[*menu.Parent]
-			if !ok {
-				ms = make([]*usermodel.Menu, 0)
-			}
-			ms = append(ms, menu)
-			idMap[*menu.Parent] = ms
-		}
-	}
-
-	replyMenus := make([]*pb.Menu, 0)
-	rootMenus := idMap[-1]
-	for _, rootMenu := range rootMenus {
-		children := make([]*pb.Menu, 0, len(idMap[rootMenu.ID]))
-		for _, child := range idMap[rootMenu.ID] {
-			children = append(children, &pb.Menu{
-				Id:    child.ID,
-				Name:  child.Name,
-				Route: child.MenuRoute,
-				Data:  child.MenuData,
-				Order: child.MenuOrder,
-			})
-		}
+	replyMenus := make([]*pb.Menu, 0, len(menus))
+	for _, m := range menus {
 		replyMenus = append(replyMenus, &pb.Menu{
-			Id:       rootMenu.ID,
-			Name:     rootMenu.Name,
-			Route:    rootMenu.MenuRoute,
-			Data:     rootMenu.MenuData,
-			Order:    rootMenu.MenuOrder,
-			Children: children,
+			Id:     m.ID,
+			Name:   m.Name,
+			Parent: m.Parent,
+			Route:  m.MenuRoute,
+			Data:   m.MenuData,
+			Order:  m.MenuOrder,
 		})
 	}
 
@@ -1229,38 +1197,12 @@ func (u *userService) ListMenus(ctx context.Context, in *pb.ListMenusRequest) (*
 		return nil, err
 	}
 
-	pidMap := make(map[int32]bool)
-	pids := make([]int32, 0)
-	for _, m := range menus {
-		if m.Parent != nil {
-			if !pidMap[*m.Parent] {
-				pidMap[*m.Parent] = true
-				pids = append(pids, *m.Parent)
-			}
-		}
-	}
-
-	parents, err := usermodel.ListMenusByIDs(db, pids)
-	if err != nil {
-		return nil, err
-	}
-	parentMap := make(map[int32]*usermodel.Menu)
-	for _, menu := range parents {
-		parentMap[menu.ID] = menu
-	}
-
 	ms := make([]*pb.Menu, 0)
 	for _, m := range menus {
-		var parent string
-		if m.Parent != nil {
-			if p := parentMap[*m.Parent]; p != nil {
-				parent = p.Name
-			}
-		}
 		ms = append(ms, &pb.Menu{
 			Id:     m.ID,
 			Name:   m.Name,
-			Parent: parent,
+			Parent: m.Parent,
 			Route:  m.MenuRoute,
 			Data:   m.MenuData,
 			Order:  m.MenuOrder,
@@ -1313,7 +1255,7 @@ func (u *userService) CreateMenu(ctx context.Context, in *pb.CreateMenuRequest) 
 
 	err = usermodel.SaveMenu(db, &usermodel.Menu{
 		Name:      in.Name,
-		Parent:    &parent.ID,
+		Parent:    parent.ID,
 		MenuOrder: in.Order,
 		MenuRoute: in.Route,
 		MenuData:  in.Data,

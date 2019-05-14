@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package pb;
+
+import "error.proto";
+
+service Merchant {
+}
+message a {
+    error err = 1;
+}

@@ -63,7 +63,7 @@ func (a AuthItemChild) TableName() string {
 type Menu struct {
 	ID        int32  `gorm:"column:ID;primary_key"`
 	Name      string `gorm:"column:NAME"`
-	Parent    *int32 `gorm:"column:PARENT"`
+	Parent    int32  `gorm:"column:PARENT"`
 	MenuRoute string `gorm:"column:MENU_ROUTE"`
 	MenuOrder int32  `gorm:"column:MENU_ORDER"`
 	MenuData  string `gorm:"column:MENU_DATA"`
@@ -233,8 +233,8 @@ func GetAuthMenu(db *gorm.DB, items []string) ([]*Menu, error) {
 	parents := make(map[int32]bool)
 	if len(menus) != 0 {
 		for _, menu := range menus {
-			if menu.Parent != nil {
-				parents[*menu.Parent] = true
+			if menu.Parent != 0 {
+				parents[menu.Parent] = true
 			}
 		}
 	}

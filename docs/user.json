@@ -69,7 +69,7 @@
           "200": {
             "description": "正确返回",
             "examples": {
-              "application/json": "{\n    \"menus\": [\n      {\n        \"id\": 4,\n        \"name\": \"后台设置\",\n        \"parent\": \"\",\n        \"route\": \"/\",\n        \"data\": \"{\\\"icon\\\": \\\"ic_htsz\\\", \\\"visible\\\": true}\",\n        \"order\": 10,\n        \"children\": [\n          {\n            \"id\": 5,\n            \"name\": \"路由管理\",\n            \"parent\": \"\",\n            \"route\": \"/admin/route/index\",\n            \"data\": \"{\\\"icon\\\": \\\"ic_luy\\\", \\\"visible\\\": true}\",\n            \"order\": 100,\n            \"children\": []\n          }\n        ]\n      }\n    ],\n    \"err\": null\n  }"
+              "application/json": "{\n    \"menus\": [\n        {\n            \"id\": 5,\n            \"name\": \"路由管理\",\n            \"parent\": 4,\n            \"route\": \"/admin/route/index\",\n            \"data\": \"{\\\"icon\\\": \\\"ic_luy\\\", \\\"visible\\\": true}\",\n            \"order\": 100,\n            \"children\": []\n        },\n        {\n            \"id\": 4,\n            \"name\": \"后台设置\",\n            \"parent\": 0,\n            \"route\": \"/\",\n            \"data\": \"{\\\"icon\\\": \\\"ic_htsz\\\", \\\"visible\\\": true}\",\n            \"order\": 10,\n            \"children\": []\n        }\n    ],\n    \"err\": null\n}"
             }
           },
           "500": {
