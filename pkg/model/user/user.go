@@ -425,7 +425,7 @@ func ListUsers(db *gorm.DB, page, size int32) ([]*User, int32, error) {
 		return nil, 0, err
 	}
 	all := count / size
-	if all%size != 0 {
+	if count%size != 0 {
 		all++
 	}
 	return us, all, nil
