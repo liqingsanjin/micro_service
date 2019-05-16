@@ -424,11 +424,7 @@ func ListUsers(db *gorm.DB, page, size int32) ([]*User, int32, error) {
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, 0, err
 	}
-	all := count / size
-	if count%size != 0 {
-		all++
-	}
-	return us, all, nil
+	return us, count, nil
 }
 
 func UpdateUser(db *gorm.DB, id int64, user *User) error {
