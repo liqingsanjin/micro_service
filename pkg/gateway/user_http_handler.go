@@ -231,7 +231,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.ListUsersEndpoint,
-			decodeHttpRequest(&pb.ListUsersRequest{}),
+			decodeListUserRequest,
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
@@ -406,5 +406,16 @@ func decodeGetUserRequest(ctx context.Context, r *http.Request) (interface{}, er
 	id, _ := strconv.Atoi(idStr)
 	return &pb.GetUserRequest{
 		Id: int64(id),
+	}, nil
+}
+
+func decodeListUserRequest(ctx context.Context, r *http.Request) (interface{}, error) {
+	pageStr := r.URL.Query().Get("page")
+	sizeStr := r.URL.Query().Get("size")
+	page, _ := strconv.Atoi(pageStr)
+	size, _ := strconv.Atoi(sizeStr)
+	return &pb.ListUsersRequest{
+		Page: int32(page),
+		Size: int32(size),
 	}, nil
 }

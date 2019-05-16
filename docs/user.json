@@ -808,13 +808,27 @@
             "required": true,
             "description": "Authorization",
             "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "description": "页码",
+            "type": "string"
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": true,
+            "description": "一页大小",
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "正确返回",
             "examples": {
-              "application/json": "{\nusers: [\n{\nid: \"102258\",\nleaguerNo: \"admin\",\nusername: \"test1\",\nemail: \"\",\nuserType: \"ABC\",\nuserStatus: \"1\",\ncreatedAt: \"1555517204\"\n},\n{\nid: \"1111121\",\nleaguerNo: \"admin\",\nusername: \"test222\",\nemail: \"123@qq.com\",\nuserType: \"ABC\",\nuserStatus: \"1\",\ncreatedAt: \"1556259426\"\n}\n],\nerr: null\n}"
+              "application/json": "{\nusers: [\n{\nid: \"102258\",\nleaguerNo: \"admin\",\nusername: \"test1\",\nemail: \"\",\nuserType: \"ABC\",\nuserStatus: \"1\",\ncreatedAt: \"1555517204\"\n}\n],\ncount: 2,\nsize: 1,\npage: 1,\nerr: null\n}"
             }
           }
         }

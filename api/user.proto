@@ -291,11 +291,17 @@ message RemoveRoleReply {
     error err = 1;
 }
 
-message ListUsersRequest {}
+message ListUsersRequest {
+    int32 page = 1;
+    int32 size = 2;
+}
 
 message ListUsersReply {
     repeated UserField users = 1;
-    error err = 2;
+    int32 count = 2;
+    int32 size = 3;
+    int32 page = 4;
+    error err = 5;
 }
 
 message UserField {
