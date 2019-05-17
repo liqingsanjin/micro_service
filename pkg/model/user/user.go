@@ -413,14 +413,17 @@ func DeleteRole(db *gorm.DB, role *Role) error {
 	return db.Delete(role).Error
 }
 
-func ListUsers(db *gorm.DB, page, size int32) ([]*User, int32, error) {
-	us := make([]*User, 0)
-	if size == 0 || page == 0 {
-		return us, 0, nil
+func ListUsers(db *gorm.DB, query *User, page, size int32) ([]*User, int32, error) {
+	if size == 0 {
+		size = 10
 	}
+	if page == 0 {
+		page = 1
+	}
+	us := make([]*User, 0)
 	var count int32 = 0
-	db.Model(&User{}).Count(&count)
-	err := db.Limit(size).Offset((page - 1) * size).Find(&us).Error
+	db.Model(&User{}).Where(query).Count(&count)
+	err := db.Where(query).Limit(size).Offset((page - 1) * size).Find(&us).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, 0, err
 	}

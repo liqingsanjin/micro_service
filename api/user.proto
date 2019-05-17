@@ -294,6 +294,7 @@ message RemoveRoleReply {
 message ListUsersRequest {
     int32 page = 1;
     int32 size = 2;
+    UserField user = 3;
 }
 
 message ListUsersReply {

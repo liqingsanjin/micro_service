@@ -979,7 +979,20 @@ func (u *userService) RemoveRole(ctx context.Context, in *pb.RemoveRoleRequest) 
 func (u *userService) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*pb.ListUsersReply, error) {
 	db := common.DB
 
-	us, count, err := usermodel.ListUsers(db, in.Page, in.Size)
+	query := &usermodel.User{}
+	if in.User != nil {
+		query.UserID = in.User.Id
+		query.UserName = in.User.Username
+		query.LeaguerNO = in.User.LeaguerNo
+		query.Email = in.User.Email
+		query.UserType = in.User.UserType
+		query.UserStatus = in.User.UserStatus
+		if in.User.CreatedAt != 0 {
+			query.CreatedAt = time.Unix(in.User.CreatedAt, 0)
+		}
+	}
+
+	us, count, err := usermodel.ListUsers(db, query, in.Page, in.Size)
 	if err != nil {
 		return nil, err
 	}

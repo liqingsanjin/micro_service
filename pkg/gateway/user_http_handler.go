@@ -410,12 +410,27 @@ func decodeGetUserRequest(ctx context.Context, r *http.Request) (interface{}, er
 }
 
 func decodeListUserRequest(ctx context.Context, r *http.Request) (interface{}, error) {
-	pageStr := r.URL.Query().Get("page")
-	sizeStr := r.URL.Query().Get("size")
-	page, _ := strconv.Atoi(pageStr)
-	size, _ := strconv.Atoi(sizeStr)
+	query := r.URL.Query()
+	page, _ := strconv.Atoi(query.Get("page"))
+	size, _ := strconv.Atoi(query.Get("size"))
+	id, _ := strconv.Atoi(query.Get("id"))
+	userStatus, _ := strconv.Atoi(query.Get("userStatus"))
+	createdAt, _ := strconv.Atoi(query.Get("createdAt"))
+	leaguerNo := query.Get("leaguerNo")
+	username := query.Get("username")
+	email := query.Get("email")
+	userType := query.Get("userType")
 	return &pb.ListUsersRequest{
 		Page: int32(page),
 		Size: int32(size),
+		User: &pb.UserField{
+			Id:         int64(id),
+			LeaguerNo:  leaguerNo,
+			Username:   username,
+			Email:      email,
+			UserType:   userType,
+			UserStatus: int64(userStatus),
+			CreatedAt:  int64(createdAt),
+		},
 	}, nil
 }
