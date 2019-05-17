@@ -822,6 +822,48 @@
             "required": true,
             "description": "一页大小",
             "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "用户id",
+            "type": "string"
+          },
+          {
+            "name": "leaguerNo",
+            "in": "query",
+            "description": "机构号",
+            "type": "string"
+          },
+          {
+            "name": "username",
+            "in": "query",
+            "description": "用户名",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "email",
+            "type": "string"
+          },
+          {
+            "name": "userType",
+            "in": "query",
+            "description": "用户类型",
+            "type": "string"
+          },
+          {
+            "name": "userStatus",
+            "in": "query",
+            "description": "用户状态",
+            "type": "integer"
+          },
+          {
+            "name": "createdAt",
+            "in": "query",
+            "description": "创建时间",
+            "type": "integer"
           }
         ],
         "responses": {
