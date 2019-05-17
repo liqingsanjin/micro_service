@@ -795,7 +795,7 @@
       }
     },
     "/user/listUsers": {
-      "get": {
+      "post": {
         "operationId": "listUsers",
         "summary": "用户列表",
         "produces": [
@@ -810,60 +810,13 @@
             "type": "string"
           },
           {
-            "name": "page",
-            "in": "query",
+            "name": "listUsers",
+            "in": "body",
             "required": true,
-            "description": "页码",
-            "type": "string"
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "required": true,
-            "description": "一页大小",
-            "type": "string"
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "description": "用户id",
-            "type": "string"
-          },
-          {
-            "name": "leaguerNo",
-            "in": "query",
-            "description": "机构号",
-            "type": "string"
-          },
-          {
-            "name": "username",
-            "in": "query",
-            "description": "用户名",
-            "type": "string"
-          },
-          {
-            "name": "email",
-            "in": "query",
-            "description": "email",
-            "type": "string"
-          },
-          {
-            "name": "userType",
-            "in": "query",
-            "description": "用户类型",
-            "type": "string"
-          },
-          {
-            "name": "userStatus",
-            "in": "query",
-            "description": "用户状态",
-            "type": "integer"
-          },
-          {
-            "name": "createdAt",
-            "in": "query",
-            "description": "创建时间",
-            "type": "integer"
+            "description": "查询条件",
+            "schema": {
+              "$ref": "#/definitions/ListUsers"
+            }
           }
         ],
         "responses": {
@@ -1455,6 +1408,55 @@
             },
             "data": {
               "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "ListUsers": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "page",
+            "size"
+          ],
+          "properties": {
+            "page": {
+              "type": "integer"
+            },
+            "size": {
+              "type": "integer"
+            },
+            "user": {
+              "type": "object",
+              "allOf": [
+                {
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "leaguerNo": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "userType": {
+                      "type": "string"
+                    },
+                    "userStatus": {
+                      "type": "integer"
+                    },
+                    "createdAt": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              ]
             }
           }
         }

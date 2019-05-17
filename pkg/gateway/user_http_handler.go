@@ -227,11 +227,11 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	userGroup.GET("/listUsers",
+	userGroup.POST("/listUsers",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.ListUsersEndpoint,
-			decodeListUserRequest,
+			decodeHttpRequest(&pb.ListUsersRequest{}),
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
