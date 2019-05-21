@@ -332,6 +332,15 @@ func GetUserEndpoints(instancer sd.Instancer, log log.Logger) *UserEndpoints {
 		endpoints.GetUserEndpoint = retry
 	}
 
+	{
+		factory := userserviceFactory(userservice.MakeGetUserPermissionsAndRolesEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 500*time.Millisecond, balancer)
+		retry = userBreaker(retry)
+		endpoints.GetUserPermissionsAndRolesEndpoint = retry
+	}
+
 	return &endpoints
 }
 

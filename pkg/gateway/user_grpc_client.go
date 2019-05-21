@@ -46,6 +46,7 @@ type UserEndpoints struct {
 	RemoveMenuEndpoint                    endpoint.Endpoint
 	GetUserTypeInfoEndpoint               endpoint.Endpoint
 	GetUserEndpoint                       endpoint.Endpoint
+	GetUserPermissionsAndRolesEndpoint    endpoint.Endpoint
 }
 
 func NewUserServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *UserEndpoints {
@@ -483,6 +484,19 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption
 		endpoints.GetUserEndpoint = endpoint
 	}
 
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.User",
+			"GetUserPermissionsAndRoles",
+			encodeRequest,
+			decodeResponse,
+			pb.GetUserPermissionsAndRolesReply{},
+			options...,
+		).Endpoint()
+		endpoints.GetUserPermissionsAndRolesEndpoint = endpoint
+	}
+
 	return endpoints
 }
 func (u *UserEndpoints) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, error) {
@@ -885,6 +899,18 @@ func (u *UserEndpoints) GetUser(ctx context.Context, in *pb.GetUserRequest) (*pb
 		return nil, err
 	}
 	reply, ok := res.(*pb.GetUserReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (u *UserEndpoints) GetUserPermissionsAndRoles(ctx context.Context, in *pb.GetUserPermissionsAndRolesRequest) (*pb.GetUserPermissionsAndRolesReply, error) {
+	res, err := u.GetUserPermissionsAndRolesEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.GetUserPermissionsAndRolesReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

@@ -1128,6 +1128,41 @@
           }
         }
       }
+    },
+    "/user/getUserPermissionsAndRoles": {
+      "post": {
+        "operationId": "getUserPermissionsAndRoles",
+        "summary": "获取用户角色和权限",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "body",
+            "required": true,
+            "description": "用户id",
+            "schema": {
+              "$ref": "#/definitions/GetUserPermissionsAndRoles"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\nid: \"102258\",\nleaguerNo: \"admin\",\nusername: \"test1\",\nemail: \"\",\nuserType: \"ABC\",\nuserStatus: \"1\",\ncreatedAt: \"1555517204\",\nerr: null\n}"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -1457,6 +1492,21 @@
                   }
                 }
               ]
+            }
+          }
+        }
+      ]
+    },
+    "GetUserPermissionsAndRoles": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "id"
+          ],
+          "properties": {
+            "id": {
+              "type": "integer"
             }
           }
         }

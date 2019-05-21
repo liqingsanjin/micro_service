@@ -44,8 +44,19 @@ service User {
     rpc RemovePermissionForUser(RemovePermissionForUserRequest) returns (RemovePermissionForUserReply) {}
     rpc AddRoleForUser(AddRoleForUserRequest) returns (AddRoleForUserReply) {}
     rpc RemoveRoleForUser(RemoveRoleForUserRequest) returns (RemoveRoleForUserReply) {}
+    rpc GetUserPermissionsAndRoles(GetUserPermissionsAndRolesRequest) returns (GetUserPermissionsAndRolesReply) {}
 
     // 菜单和路由
+	{
+		endpoint := MakeGetUserEndpoint(userService)
+		endpoint = logginMiddleware(endpoint)
+		svr.getUserHandler = grpctransport.NewServer(
+			endpoint,
+			decodeRequest,
+			encodeResponse,
+			options...,
+		)
+	}
     rpc ListMenus(ListMenusRequest) returns (ListMenusReply) {}
     rpc CreateMenu(CreateMenuRequest) returns (CreateMenuReply) {}
     rpc RemoveMenu(RemoveMenuRequest) returns (RemoveMenuReply) {}
@@ -407,4 +418,14 @@ message GetUserReply {
     int64 userStatus = 6;
     int64 createdAt = 7;
     error err = 8;
+}
+
+message GetUserPermissionsAndRolesRequest {
+    int64 id = 1;
+}
+
+message GetUserPermissionsAndRolesReply {
+    repeated PermissionField permissions = 1;
+    repeated RoleField roles = 2;
+    error err = 3;
 }

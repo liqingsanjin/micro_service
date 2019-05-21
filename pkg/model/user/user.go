@@ -507,3 +507,21 @@ func ListUserInfo(db *gorm.DB) ([]*UserInfo, error) {
 	}
 	return infos, err
 }
+
+func FindRolesByIds(db *gorm.DB, ids []int64) ([]*Role, error) {
+	roles := make([]*Role, 0)
+	err := db.Find(&roles, "ROLE_ID in (?)", ids).Error
+	if err == gorm.ErrRecordNotFound {
+		return roles, nil
+	}
+	return roles, err
+}
+
+func FindPermissionsByIds(db *gorm.DB, ids []int64) ([]*Permission, error) {
+	permissions := make([]*Permission, 0)
+	err := db.Find(&permissions, "PERMISSION_ID in (?)", ids).Error
+	if err == gorm.ErrRecordNotFound {
+		return permissions, nil
+	}
+	return permissions, err
+}
