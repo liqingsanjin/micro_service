@@ -47,16 +47,6 @@ service User {
     rpc GetUserPermissionsAndRoles(GetUserPermissionsAndRolesRequest) returns (GetUserPermissionsAndRolesReply) {}
 
     // 菜单和路由
-	{
-		endpoint := MakeGetUserEndpoint(userService)
-		endpoint = logginMiddleware(endpoint)
-		svr.getUserHandler = grpctransport.NewServer(
-			endpoint,
-			decodeRequest,
-			encodeResponse,
-			options...,
-		)
-	}
     rpc ListMenus(ListMenusRequest) returns (ListMenusReply) {}
     rpc CreateMenu(CreateMenuRequest) returns (CreateMenuReply) {}
     rpc RemoveMenu(RemoveMenuRequest) returns (RemoveMenuReply) {}
