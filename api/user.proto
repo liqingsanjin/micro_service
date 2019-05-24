@@ -36,6 +36,7 @@ service User {
     rpc AddRoleForRole(AddRoleForRoleRequest) returns (AddRoleForRoleReply) {}
     rpc RemoveRoleForRole(RemoveRoleForRoleRequest) returns (RemoveRoleForRoleReply) {}
     rpc RemoveRole(RemoveRoleRequest) returns (RemoveRoleReply) {}
+    rpc GetRolePermissionsAndRoles(GetRolePermissionsAndRolesRequest) returns (GetRolePermissionsAndRolesReply) {}
 
     // 用户和角色
     rpc ListUsers(ListUsersRequest) returns (ListUsersReply) {}
@@ -415,6 +416,16 @@ message GetUserPermissionsAndRolesRequest {
 }
 
 message GetUserPermissionsAndRolesReply {
+    repeated PermissionField permissions = 1;
+    repeated RoleField roles = 2;
+    error err = 3;
+}
+
+message GetRolePermissionsAndRolesRequest {
+    int64 id = 1;
+}
+
+message GetRolePermissionsAndRolesReply {
     repeated PermissionField permissions = 1;
     repeated RoleField roles = 2;
     error err = 3;

@@ -11,6 +11,9 @@
   "paths": {
     "/user/login": {
       "post": {
+        "tags": [
+          "user"
+        ],
         "operationId": "login",
         "summary": "登录",
         "produces": [
@@ -51,6 +54,9 @@
     },
     "/user/getPermissions": {
       "get": {
+        "tags": [
+          "user"
+        ],
         "operationId": "getPermissions",
         "summary": "获取用户权限列表以及用户菜单列表",
         "produces": [
@@ -83,6 +89,9 @@
     },
     "/user/checkPermission": {
       "post": {
+        "tags": [
+          "user"
+        ],
         "operationId": "checkPermission",
         "summary": "检查权限",
         "produces": [
@@ -130,6 +139,9 @@
     },
     "/user/register": {
       "post": {
+        "tags": [
+          "user"
+        ],
         "operationId": "register",
         "summary": "注册",
         "produces": [
@@ -158,6 +170,10 @@
     },
     "/user/addPermissionForRole": {
       "post": {
+        "tags": [
+          "permission",
+          "role"
+        ],
         "operationId": "addPermissionForRole",
         "summary": "给角色添加权限",
         "produces": [
@@ -193,6 +209,9 @@
     },
     "/user/createRole": {
       "post": {
+        "tags": [
+          "role"
+        ],
         "operationId": "createRole",
         "summary": "创建角色",
         "produces": [
@@ -228,6 +247,10 @@
     },
     "/user/addRoleForUser": {
       "post": {
+        "tags": [
+          "user",
+          "role"
+        ],
         "operationId": "addRoleForUser",
         "summary": "给用户添加角色",
         "produces": [
@@ -263,6 +286,9 @@
     },
     "/user/addRoutes": {
       "post": {
+        "tags": [
+          "route"
+        ],
         "operationId": "addRoutes",
         "summary": "添加路由",
         "produces": [
@@ -298,6 +324,9 @@
     },
     "/user/listRoutes": {
       "get": {
+        "tags": [
+          "route"
+        ],
         "operationId": "listRoutes",
         "summary": "路由列表",
         "produces": [
@@ -324,6 +353,9 @@
     },
     "/user/createPermission": {
       "post": {
+        "tags": [
+          "permission"
+        ],
         "operationId": "createPermission",
         "summary": "创建权限",
         "produces": [
@@ -359,6 +391,9 @@
     },
     "/user/updatePermission": {
       "post": {
+        "tags": [
+          "permission"
+        ],
         "operationId": "updatePermission",
         "summary": "更新权限",
         "produces": [
@@ -394,6 +429,10 @@
     },
     "/user/addRouteForPermission": {
       "post": {
+        "tags": [
+          "route",
+          "permission"
+        ],
         "operationId": "addRouteForPermission",
         "summary": "给权限添加路由",
         "produces": [
@@ -429,6 +468,10 @@
     },
     "/user/removeRouteForPermission": {
       "post": {
+        "tags": [
+          "route",
+          "permission"
+        ],
         "operationId": "removeRouteForPermission",
         "summary": "给权限移除路由",
         "produces": [
@@ -464,6 +507,9 @@
     },
     "/user/removePermission": {
       "post": {
+        "tags": [
+          "permission"
+        ],
         "operationId": "removePermission",
         "summary": "删除权限",
         "produces": [
@@ -499,6 +545,9 @@
     },
     "/user/listPermissions": {
       "get": {
+        "tags": [
+          "permission"
+        ],
         "operationId": "listPermissions",
         "summary": "权限列表",
         "produces": [
@@ -525,6 +574,9 @@
     },
     "/user/addPermissionForPermission": {
       "post": {
+        "tags": [
+          "permission"
+        ],
         "operationId": "addPermissionForPermission",
         "summary": "给权限添加子权限",
         "produces": [
@@ -560,6 +612,9 @@
     },
     "/user/removePermissionForPermission": {
       "post": {
+        "tags": [
+          "permission"
+        ],
         "operationId": "removePermissionForPermission",
         "summary": "给权限删除子权限",
         "produces": [
@@ -595,6 +650,9 @@
     },
     "/user/listRole": {
       "get": {
+        "tags": [
+          "role"
+        ],
         "operationId": "listRole",
         "summary": "角色列表",
         "produces": [
@@ -621,6 +679,9 @@
     },
     "/user/updateRole": {
       "post": {
+        "tags": [
+          "role"
+        ],
         "operationId": "updateRole",
         "summary": "修改角色",
         "produces": [
@@ -656,6 +717,10 @@
     },
     "/user/removePermissionForRole": {
       "post": {
+        "tags": [
+          "role",
+          "permission"
+        ],
         "operationId": "removePermissionForRole",
         "summary": "删除角色权限",
         "produces": [
@@ -691,6 +756,9 @@
     },
     "/user/addRoleForRole": {
       "post": {
+        "tags": [
+          "role"
+        ],
         "operationId": "addRoleForRole",
         "summary": "给角色添加角色",
         "produces": [
@@ -726,6 +794,9 @@
     },
     "/user/removeRoleForRole": {
       "post": {
+        "tags": [
+          "role"
+        ],
         "operationId": "removeRoleForRole",
         "summary": "给角色删除角色",
         "produces": [
@@ -761,6 +832,9 @@
     },
     "/user/removeRole": {
       "post": {
+        "tags": [
+          "role"
+        ],
         "operationId": "removeRole",
         "summary": "删除角色",
         "produces": [
@@ -796,6 +870,9 @@
     },
     "/user/listUsers": {
       "post": {
+        "tags": [
+          "user"
+        ],
         "operationId": "listUsers",
         "summary": "用户列表",
         "produces": [
@@ -831,6 +908,9 @@
     },
     "/user/updateUser": {
       "post": {
+        "tags": [
+          "user"
+        ],
         "operationId": "updateUser",
         "summary": "更新用户",
         "produces": [
@@ -866,6 +946,10 @@
     },
     "/user/addPermissionForUser": {
       "post": {
+        "tags": [
+          "user",
+          "permission"
+        ],
         "operationId": "addPermissionForUser",
         "summary": "给用户添加权限",
         "produces": [
@@ -901,6 +985,10 @@
     },
     "/user/removePermissionForUser": {
       "post": {
+        "tags": [
+          "user",
+          "permission"
+        ],
         "operationId": "removePermissionForUser",
         "summary": "给用户删除权限",
         "produces": [
@@ -936,6 +1024,10 @@
     },
     "/user/removeRoleForUser": {
       "post": {
+        "tags": [
+          "user",
+          "role"
+        ],
         "operationId": "removeRoleForUser",
         "summary": "给用户删除角色",
         "produces": [
@@ -971,6 +1063,9 @@
     },
     "/user/listMenus": {
       "get": {
+        "tags": [
+          "menu"
+        ],
         "operationId": "listMenus",
         "summary": "菜单列表",
         "produces": [
@@ -997,6 +1092,9 @@
     },
     "/user/createMenu": {
       "post": {
+        "tags": [
+          "menu"
+        ],
         "operationId": "createMenu",
         "summary": "创建菜单",
         "produces": [
@@ -1032,6 +1130,9 @@
     },
     "/user/removeMenu": {
       "post": {
+        "tags": [
+          "menu"
+        ],
         "operationId": "removeMenu",
         "summary": "删除菜单",
         "produces": [
@@ -1072,6 +1173,9 @@
     },
     "/user/getUserTypeInfo": {
       "get": {
+        "tags": [
+          "user"
+        ],
         "operationId": "getUserTypeInfo",
         "summary": "获取用户类型列表",
         "produces": [
@@ -1098,6 +1202,9 @@
     },
     "/user/getUser": {
       "get": {
+        "tags": [
+          "user"
+        ],
         "operationId": "getUser",
         "summary": "获取用户信息",
         "produces": [
@@ -1131,6 +1238,9 @@
     },
     "/user/getUserPermissionsAndRoles": {
       "post": {
+        "tags": [
+          "user"
+        ],
         "operationId": "getUserPermissionsAndRoles",
         "summary": "获取用户角色和权限",
         "produces": [
@@ -1159,6 +1269,44 @@
             "description": "正确返回",
             "examples": {
               "application/json": "{\nid: \"102258\",\nleaguerNo: \"admin\",\nusername: \"test1\",\nemail: \"\",\nuserType: \"ABC\",\nuserStatus: \"1\",\ncreatedAt: \"1555517204\",\nerr: null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/getRolePermissionsAndRoles": {
+      "post": {
+        "tags": [
+          "role"
+        ],
+        "operationId": "getRolePermissionsAndRoles",
+        "summary": "获取角色的角色和权限",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "body",
+            "required": true,
+            "description": "用户id",
+            "schema": {
+              "$ref": "#/definitions/GetUserPermissionsAndRoles"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n    \"permissions\": [\n        {\n            \"id\": \"8\",\n            \"permission\": \"测试权限1\"\n        },\n        {\n            \"id\": \"9\",\n            \"permission\": \"测试权限2\"\n        }\n    ],\n    \"roles\": [\n        {\n            \"id\": \"6\",\n            \"role\": \"测试角色2\"\n        }\n    ],\n    \"err\": null\n}"
             }
           }
         }

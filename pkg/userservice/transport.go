@@ -347,6 +347,16 @@ func MakeGetUserPermissionsAndRolesEndpoint(service pb.UserServer) endpoint.Endp
 	}
 }
 
+func MakeGetRolePermissionsAndRolesEndpoint(service pb.UserServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.GetRolePermissionsAndRolesRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.GetRolePermissionsAndRoles(ctx, req)
+	}
+}
+
 func decodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
 	return request, nil
 }

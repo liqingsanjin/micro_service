@@ -42,6 +42,7 @@ type userServer struct {
 	getUserTypeInfoHandler               grpctransport.Handler
 	getUserHandler                       grpctransport.Handler
 	getUserPermissionsAndRolesHandler    grpctransport.Handler
+	getRolePermissionsAndRolesHandler    grpctransport.Handler
 }
 
 func New(tracer grpctransport.ServerOption) pb.UserServer {
@@ -418,6 +419,16 @@ func New(tracer grpctransport.ServerOption) pb.UserServer {
 		endpoint := MakeGetUserPermissionsAndRolesEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.getUserPermissionsAndRolesHandler = grpctransport.NewServer(
+			endpoint,
+			decodeRequest,
+			encodeResponse,
+			options...,
+		)
+	}
+	{
+		endpoint := MakeGetRolePermissionsAndRolesEndpoint(userService)
+		endpoint = logginMiddleware(endpoint)
+		svr.getRolePermissionsAndRolesHandler = grpctransport.NewServer(
 			endpoint,
 			decodeRequest,
 			encodeResponse,
@@ -828,6 +839,18 @@ func (u *userServer) GetUserPermissionsAndRoles(ctx context.Context, in *pb.GetU
 		return nil, err
 	}
 	reply, ok := res.(*pb.GetUserPermissionsAndRolesReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (u *userServer) GetRolePermissionsAndRoles(ctx context.Context, in *pb.GetRolePermissionsAndRolesRequest) (*pb.GetRolePermissionsAndRolesReply, error) {
+	_, res, err := u.getRolePermissionsAndRolesHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.GetRolePermissionsAndRolesReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}
