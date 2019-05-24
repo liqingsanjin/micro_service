@@ -4,7 +4,7 @@
     "version": "0.0.1",
     "title": "user api"
   },
-  "host": "127.0.0.1:8080",
+  "host": "172.16.7.120",
   "schemes": [
     "http"
   ],
