@@ -4,7 +4,7 @@
     "version": "0.0.1",
     "title": "user api"
   },
-  "host": "172.16.7.120",
+  "host": "127.0.0.1:8080",
   "schemes": [
     "http"
   ],
@@ -1307,6 +1307,44 @@
             "description": "正确返回",
             "examples": {
               "application/json": "{\n    \"permissions\": [\n        {\n            \"id\": \"8\",\n            \"permission\": \"测试权限1\"\n        },\n        {\n            \"id\": \"9\",\n            \"permission\": \"测试权限2\"\n        }\n    ],\n    \"roles\": [\n        {\n            \"id\": \"6\",\n            \"role\": \"测试角色2\"\n        }\n    ],\n    \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
+    "/user/getPermissionsAndRoutes": {
+      "post": {
+        "tags": [
+          "permission"
+        ],
+        "operationId": "getPermissionsAndRoutes",
+        "summary": "获取权限的权限和路由",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "body",
+            "required": true,
+            "description": "用户id",
+            "schema": {
+              "$ref": "#/definitions/GetUserPermissionsAndRoles"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"permissions\": [\n    {\n      \"id\": \"8\",\n      \"permission\": \"测试权限1\"\n    }\n  ],\n  \"routes\": [\n    \"/123\",\n    \"/trnlog/repay/repay\",\n    \"/admin/route/index\"\n  ],\n  \"err\": null\n}"
             }
           }
         }

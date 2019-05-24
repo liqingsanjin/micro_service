@@ -26,6 +26,7 @@ service User {
     rpc ListPermissions(ListPermissionsRequest) returns (ListPermissionsReply) {}
     rpc AddPermissionForPermission(AddPermissionForPermissionRequest) returns (AddPermissionForPermissionReply) {}
     rpc RemovePermissionForPermission(RemovePermissionForPermissionRequest) returns (RemovePermissionForPermissionReply) {}
+    rpc GetPermissionsAndRoutes(GetPermissionsAndRoutesRequest) returns (GetPermissionsAndRoutesReply) {}
 
     // 角色和权限
     rpc CreateRole(CreateRoleRequest) returns(CreateRoleReply) {}
@@ -428,5 +429,15 @@ message GetRolePermissionsAndRolesRequest {
 message GetRolePermissionsAndRolesReply {
     repeated PermissionField permissions = 1;
     repeated RoleField roles = 2;
+    error err = 3;
+}
+
+message GetPermissionsAndRoutesRequest {
+    int64 id = 1;
+}
+
+message GetPermissionsAndRoutesReply {
+    repeated PermissionField permissions = 1;
+    repeated string routes = 2;
     error err = 3;
 }

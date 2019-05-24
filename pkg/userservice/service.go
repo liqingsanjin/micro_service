@@ -1478,3 +1478,51 @@ func (u *userService) GetRolePermissionsAndRoles(ctx context.Context, in *pb.Get
 	reply.Permissions = repPermissions
 	return reply, nil
 }
+
+func (u *userService) GetPermissionsAndRoutes(ctx context.Context, in *pb.GetPermissionsAndRoutesRequest) (*pb.GetPermissionsAndRoutesReply, error) {
+	reply := &pb.GetPermissionsAndRoutesReply{}
+	if in.Id == 0 {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "id不能为空",
+		}
+		return reply, nil
+	}
+	db := common.DB
+
+	values := common.Enforcer.GetImplicitRolesForUser(fmt.Sprintf("permission:%d", in.Id))
+	policy := common.Enforcer.GetImplicitPermissionsForUser(fmt.Sprintf("permission:%d", in.Id))
+	routes := make([]string, 0)
+	for _, p := range policy {
+		if len(p) >= 2 {
+			routes = append(routes, p[1])
+		}
+	}
+
+	permissionIds := make([]int64, 0)
+
+	for _, value := range values {
+		info, id := rbac.Split(value)
+		if info == "permission" {
+			permissionIds = append(permissionIds, id)
+		}
+	}
+
+	permissions, err := usermodel.FindPermissionsByIds(db, permissionIds)
+	if err != nil {
+		return nil, err
+	}
+
+	repPermissions := make([]*pb.PermissionField, 0, len(permissions))
+
+	for _, permission := range permissions {
+		repPermissions = append(repPermissions, &pb.PermissionField{
+			Id:         permission.ID,
+			Permission: permission.Name,
+		})
+	}
+	reply.Permissions = repPermissions
+	reply.Routes = routes
+	return reply, nil
+}

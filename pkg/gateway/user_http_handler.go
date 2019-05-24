@@ -334,6 +334,16 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
+
+	userGroup.POST("/getPermissionsAndRoutes",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.GetPermissionsAndRoutesEndpoint,
+			decodeHttpRequest(&pb.GetPermissionsAndRoutesRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
+
 }
 
 func convertHttpHandlerToGinHandler(handler http.Handler) gin.HandlerFunc {
