@@ -2,10 +2,10 @@ syntax = "proto3";
 
 package pb;
 
-import "error.proto";
-
 service Merchant {
+    rpc MerchantQuery(MerchantQueryRequest) returns (MerchantQueryReply) {}
 }
-message a {
-    error err = 1;
-}
+
+message MerchantQueryRequest {}
+
+message MerchantQueryReply {}
