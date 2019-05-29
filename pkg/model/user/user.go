@@ -443,14 +443,17 @@ func FindUserByID(db *gorm.DB, id int64) (*User, error) {
 	return user, err
 }
 
-func ListMenus(db *gorm.DB) ([]*Menu, error) {
-	menus := make([]*Menu, 0)
+func ListMenus(db *gorm.DB, query *Menu, page int32, size int32) ([]*Menu, int32, error) {
 
-	err := db.Find(&menus).Error
+	menus := make([]*Menu, 0)
+	var count int32 = 0
+	db.Model(query).Where(query).Count(&count)
+
+	err := db.Where(query).Limit(size).Offset((page - 1) * size).Find(&menus).Error
 	if err == gorm.ErrRecordNotFound {
-		return menus, nil
+		return menus, count, nil
 	}
-	return menus, err
+	return menus, count, err
 }
 
 func ListMenusByIDs(db *gorm.DB, ids []int32) ([]*Menu, error) {

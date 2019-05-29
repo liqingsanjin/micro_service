@@ -979,6 +979,12 @@ func (u *userService) RemoveRole(ctx context.Context, in *pb.RemoveRoleRequest) 
 
 func (u *userService) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*pb.ListUsersReply, error) {
 	db := common.DB
+	if in.Size == 0 {
+		in.Size = 10
+	}
+	if in.Page == 0 {
+		in.Page = 1
+	}
 
 	query := &usermodel.User{}
 	if in.User != nil {
@@ -1208,8 +1214,23 @@ func (u *userService) RemoveRoleForUser(ctx context.Context, in *pb.RemoveRoleFo
 
 func (u *userService) ListMenus(ctx context.Context, in *pb.ListMenusRequest) (*pb.ListMenusReply, error) {
 	db := common.DB
+	if in.Size == 0 {
+		in.Size = 10
+	}
+	if in.Page == 0 {
+		in.Page = 1
+	}
 
-	menus, err := usermodel.ListMenus(db)
+	query := &usermodel.Menu{}
+	if in.Menu != nil {
+		query.ID = in.Menu.Id
+		query.Name = in.Menu.Name
+		query.Parent = in.Menu.Parent
+		query.MenuData = in.Menu.Data
+		query.MenuRoute = in.Menu.Route
+		query.MenuOrder = in.Menu.Order
+	}
+	menus, count, err := usermodel.ListMenus(db, query, in.Page, in.Size)
 	if err != nil {
 		return nil, err
 	}
@@ -1226,7 +1247,12 @@ func (u *userService) ListMenus(ctx context.Context, in *pb.ListMenusRequest) (*
 		})
 	}
 
-	return &pb.ListMenusReply{Menus: ms}, nil
+	return &pb.ListMenusReply{
+		Menus: ms,
+		Page:  in.Page,
+		Size:  in.Size,
+		Count: count,
+	}, nil
 }
 
 func (u *userService) CreateMenu(ctx context.Context, in *pb.CreateMenuRequest) (*pb.CreateMenuReply, error) {

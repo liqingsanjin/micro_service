@@ -356,11 +356,18 @@ message RemoveRoleForUserReply {
     error err = 1;
 }
 
-message ListMenusRequest {}
+message ListMenusRequest {
+    int32 page = 1;
+    int32 size = 2;
+    Menu menu = 3;
+}
 
 message ListMenusReply {
     repeated Menu menus = 1;
-    error err = 2;
+    int32 count = 2;
+    int32 size = 3;
+    int32 page = 4;
+    error err = 5;
 }
 
 message CreateMenuRequest {
