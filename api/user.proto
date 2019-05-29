@@ -52,6 +52,9 @@ service User {
     rpc ListMenus(ListMenusRequest) returns (ListMenusReply) {}
     rpc CreateMenu(CreateMenuRequest) returns (CreateMenuReply) {}
     rpc RemoveMenu(RemoveMenuRequest) returns (RemoveMenuReply) {}
+
+    // 会员
+    rpc ListLeaguer(ListLeaguerRequest) returns (ListLeaguerReply) {}
 }
 
 message LoginRequest {
@@ -447,4 +450,28 @@ message GetPermissionsAndRoutesReply {
     repeated PermissionField permissions = 1;
     repeated string routes = 2;
     error err = 3;
+}
+
+message ListLeaguerRequest {
+    int32 page = 1;
+    int32 size = 2;
+    LeaguerField leaguer = 3;
+}
+
+message ListLeaguerReply {
+    int32 page = 1;
+    int32 size = 2;
+    int32 count = 3;
+    repeated LeaguerField leaguers = 4;
+    error err = 5;
+}
+
+message LeaguerField {
+    string leaguerNo = 1;
+    string leaguerName = 2;
+    string leaguerType = 3;
+    string leaguerInfo = 4;
+    int32 leaguerStatus = 5;
+    int64 created = 6;
+    int64 updated = 7;
 }

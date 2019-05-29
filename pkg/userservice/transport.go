@@ -367,6 +367,16 @@ func MakeGetPermissionsAndRoutesEndpoint(service pb.UserServer) endpoint.Endpoin
 	}
 }
 
+func MakeListLeaguerEndpoint(service pb.UserServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.ListLeaguerRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.ListLeaguer(ctx, req)
+	}
+}
+
 func decodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
 	return request, nil
 }

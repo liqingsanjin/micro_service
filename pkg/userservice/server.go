@@ -44,6 +44,7 @@ type userServer struct {
 	getUserPermissionsAndRolesHandler    grpctransport.Handler
 	getRolePermissionsAndRolesHandler    grpctransport.Handler
 	getPermissionsAndRoutesHandler       grpctransport.Handler
+	listLeaguerHandler                   grpctransport.Handler
 }
 
 func New(tracer grpctransport.ServerOption) pb.UserServer {
@@ -443,6 +444,17 @@ func New(tracer grpctransport.ServerOption) pb.UserServer {
 		endpoint := MakeGetPermissionsAndRoutesEndpoint(userService)
 		endpoint = logginMiddleware(endpoint)
 		svr.getPermissionsAndRoutesHandler = grpctransport.NewServer(
+			endpoint,
+			decodeRequest,
+			encodeResponse,
+			options...,
+		)
+	}
+
+	{
+		endpoint := MakeListLeaguerEndpoint(userService)
+		endpoint = logginMiddleware(endpoint)
+		svr.listLeaguerHandler = grpctransport.NewServer(
 			endpoint,
 			decodeRequest,
 			encodeResponse,
@@ -878,6 +890,18 @@ func (u *userServer) GetPermissionsAndRoutes(ctx context.Context, in *pb.GetPerm
 		return nil, err
 	}
 	reply, ok := res.(*pb.GetPermissionsAndRoutesReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (u *userServer) ListLeaguer(ctx context.Context, in *pb.ListLeaguerRequest) (*pb.ListLeaguerReply, error) {
+	_, res, err := u.listLeaguerHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.ListLeaguerReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

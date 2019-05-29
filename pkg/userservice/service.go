@@ -1552,3 +1552,46 @@ func (u *userService) GetPermissionsAndRoutes(ctx context.Context, in *pb.GetPer
 	reply.Routes = routes
 	return reply, nil
 }
+
+func (u *userService) ListLeaguer(ctx context.Context, in *pb.ListLeaguerRequest) (*pb.ListLeaguerReply, error) {
+	db := common.DB
+	if in.Size == 0 {
+		in.Size = 10
+	}
+	if in.Page == 0 {
+		in.Page = 1
+	}
+
+	query := &usermodel.Leaguer{}
+	if in.Leaguer != nil {
+		query.LeaguerNo = in.Leaguer.LeaguerNo
+		query.LeaguerName = in.Leaguer.LeaguerName
+		query.LeaguerType = in.Leaguer.LeaguerType
+		query.LeaguerInfo = in.Leaguer.LeaguerInfo
+		query.LeaguerStatus = in.Leaguer.LeaguerStatus
+	}
+	leaguers, count, err := usermodel.ListLeaguers(db, query, in.Page, in.Size)
+	if err != nil {
+		return nil, err
+	}
+
+	ms := make([]*pb.LeaguerField, 0)
+	for _, m := range leaguers {
+		ms = append(ms, &pb.LeaguerField{
+			LeaguerNo:     m.LeaguerNo,
+			LeaguerName:   m.LeaguerName,
+			LeaguerType:   m.LeaguerType,
+			LeaguerInfo:   m.LeaguerInfo,
+			LeaguerStatus: m.LeaguerStatus,
+			Created:       int64(m.Created.Unix()),
+			Updated:       int64(m.Updated.Unix()),
+		})
+	}
+
+	return &pb.ListLeaguerReply{
+		Leaguers: ms,
+		Page:     in.Page,
+		Size:     in.Size,
+		Count:    count,
+	}, nil
+}

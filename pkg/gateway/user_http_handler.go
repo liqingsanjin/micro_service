@@ -344,6 +344,14 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
+	userGroup.POST("/listLeaguer",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.ListLeaguerEndpoint,
+			decodeHttpRequest(&pb.ListLeaguerRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
 }
 
 func convertHttpHandlerToGinHandler(handler http.Handler) gin.HandlerFunc {
