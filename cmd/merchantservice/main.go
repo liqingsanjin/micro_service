@@ -34,8 +34,6 @@ var (
 
 	consulHost = "localhost"
 	consulPort = 8500
-
-	zipkinUrl = "http://127.0.0.1:9411/api/v2/spans"
 )
 
 func main() {

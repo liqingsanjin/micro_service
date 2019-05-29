@@ -2,10 +2,21 @@ syntax = "proto3";
 
 package pb;
 
+import "error.proto";
+
 service Merchant {
     rpc MerchantQuery(MerchantQueryRequest) returns (MerchantQueryReply) {}
 }
 
 message MerchantQueryRequest {}
 
-message MerchantQueryReply {}
+message MerchantQueryReply {
+    repeated MerchantField merchants = 1;
+    int32 count = 2;
+    int32 size = 3;
+    int32 page = 4;
+    error err = 5;
+}
+
+message MerchantField {
+}
