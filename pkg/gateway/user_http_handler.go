@@ -16,7 +16,6 @@ import (
 	httptransport "github.com/go-kit/kit/transport/http"
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
-	"google.golang.org/grpc/metadata"
 )
 
 func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
@@ -427,13 +426,8 @@ func keyFunc(token *jwt.Token) (interface{}, error) {
 }
 
 func setUserInfoContext(ctx context.Context, r *http.Request) context.Context {
-	username := r.Form.Get("username")
 	id := r.Form.Get("userid")
-	md := metadata.New(map[string]string{
-		"username": username,
-		"userid":   id,
-	})
-	return context.WithValue(ctx, "userInfo", md)
+	return context.WithValue(ctx, "userid", id)
 }
 
 func decodeGetUserRequest(ctx context.Context, r *http.Request) (interface{}, error) {

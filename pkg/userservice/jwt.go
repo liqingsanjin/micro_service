@@ -1,7 +1,6 @@
 package userservice
 
 import (
-	"fmt"
 	"net/http"
 	"net/url"
 	"time"
@@ -18,13 +17,13 @@ var (
 type ClaimsFactory func() jwt.Claims
 
 type UserClaims struct {
-	User *UserInfo
+	UserId string
 	jwt.StandardClaims
 }
 
-func genToken(user *UserInfo, exTime time.Time) (string, error) {
+func genToken(userId string, exTime time.Time) (string, error) {
 	claims := UserClaims{
-		User: user,
+		UserId: userId,
 	}
 	claims.ExpiresAt = exTime.Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -65,7 +64,7 @@ func JwtMiddleware(keyFunc jwt.Keyfunc, method jwt.SigningMethod, newClaims Clai
 		}
 
 		claims, ok := token.Claims.(*UserClaims)
-		if !ok || claims.User == nil {
+		if !ok || claims.UserId == "" {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"err":  "Unauthorized",
 				"desc": "auth 认证失败",
@@ -73,8 +72,7 @@ func JwtMiddleware(keyFunc jwt.Keyfunc, method jwt.SigningMethod, newClaims Clai
 			return
 		}
 		c.Request.Form = url.Values{}
-		c.Request.Form.Set("username", claims.User.UserName)
-		c.Request.Form.Set("userid", fmt.Sprintf("%d", claims.User.ID))
+		c.Request.Form.Set("userid", claims.UserId)
 		c.Next()
 	}
 }

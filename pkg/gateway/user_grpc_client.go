@@ -889,13 +889,11 @@ func (u *UserEndpoints) ListMenus(ctx context.Context, in *pb.ListMenusRequest) 
 }
 
 func setUserInfoMD(ctx context.Context, md *metadata.MD) context.Context {
-	old, ok := ctx.Value("userInfo").(metadata.MD)
+	id, ok := ctx.Value("userid").(string)
 	if !ok {
 		return ctx
 	}
-	for k, v := range old {
-		md.Set(k, v...)
-	}
+	md.Set("userid", id)
 	return ctx
 }
 

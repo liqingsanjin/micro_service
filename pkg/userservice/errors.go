@@ -15,4 +15,5 @@ const (
 	InvalidParam  = "InvalidParamError"
 	AlreadyExists = "AlreadyExistsError"
 	NotFound      = "NotFoundError"
+	INTERNAL      = "InternalServerError"
 )

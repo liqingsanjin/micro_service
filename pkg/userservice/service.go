@@ -2,9 +2,11 @@ package userservice
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
+	"userService/pkg/cache"
 	"userService/pkg/common"
 	usermodel "userService/pkg/model/user"
 	"userService/pkg/pb"
@@ -67,12 +69,31 @@ func (u *userService) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Login
 
 	// 生成token
 	expiredAt := time.Now().Add(time.Hour * 72)
-	tk, err := genToken(&UserInfo{
-		ID:       user.UserID,
-		UserName: user.UserName,
-	}, expiredAt)
+	userIdStr := fmt.Sprintf("%d", user.UserID)
+	tk, err := genToken(userIdStr, expiredAt)
 	if err != nil {
 		return nil, err
+	}
+
+	userMap := map[string]interface{}{
+		"id":        user.UserID,
+		"username":  user.UserName,
+		"email":     user.Email,
+		"leaguerNo": user.LeaguerNO,
+		"token":     tk,
+	}
+
+	bs, _ := json.Marshal(userMap)
+	client := common.RedisClient
+	err = cache.SetUserInfo(client, userIdStr, string(bs), time.Duration(expiredAt.UnixNano()))
+	if err != nil {
+		return &pb.LoginReply{
+			Err: &pb.Error{
+				Code:        http.StatusInternalServerError,
+				Message:     INTERNAL,
+				Description: err.Error(),
+			},
+		}, nil
 	}
 
 	//添加新密码
