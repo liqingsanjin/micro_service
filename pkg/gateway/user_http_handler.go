@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"reflect"
 	"strconv"
+	"userService/pkg/common"
 	"userService/pkg/pb"
 	"userService/pkg/userservice"
 
@@ -422,7 +423,7 @@ func err2codeAndMessage(err error) (int, string) {
 }
 
 func keyFunc(token *jwt.Token) (interface{}, error) {
-	return []byte(userservice.SignedKey), nil
+	return []byte(common.SignKey), nil
 }
 
 func setUserInfoContext(ctx context.Context, r *http.Request) context.Context {

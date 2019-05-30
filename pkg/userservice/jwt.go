@@ -4,14 +4,11 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+	"userService/pkg/common"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-)
-
-var (
-	SignedKey = "huiepay"
 )
 
 type ClaimsFactory func() jwt.Claims
@@ -27,7 +24,7 @@ func genToken(userId string, exTime time.Time) (string, error) {
 	}
 	claims.ExpiresAt = exTime.Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(SignedKey))
+	return token.SignedString([]byte(common.SignKey))
 }
 
 func UserClaimFactory() jwt.Claims {
