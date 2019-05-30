@@ -1099,6 +1099,7 @@ func (u *userService) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) 
 	if err != nil {
 		return nil, err
 	}
+	_ = cache.DelUserInfo(common.RedisClient, fmt.Sprintf("%d", user.UserID))
 
 	return reply, nil
 }
