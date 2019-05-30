@@ -745,7 +745,20 @@ func (u *userService) RemovePermissionForPermission(ctx context.Context, in *pb.
 func (u *userService) ListRole(ctx context.Context, in *pb.ListRoleRequest) (*pb.ListRoleReply, error) {
 	db := common.DB
 
-	roles, err := usermodel.ListRole(db)
+	if in.Size == 0 {
+		in.Size = 10
+	}
+	if in.Page == 0 {
+		in.Page = 1
+	}
+
+	query := &usermodel.Role{}
+
+	if in.Role != nil {
+		query.ID = in.Role.Id
+		query.Role = in.Role.Role
+	}
+	roles, count, err := usermodel.ListRole(db, query, in.Page, in.Size)
 	if err != nil {
 		return nil, err
 	}
@@ -757,7 +770,12 @@ func (u *userService) ListRole(ctx context.Context, in *pb.ListRoleRequest) (*pb
 			Role: roles[i].Role,
 		}
 	}
-	return &pb.ListRoleReply{Roles: names}, nil
+	return &pb.ListRoleReply{
+		Roles: names,
+		Page:  in.Page,
+		Size:  in.Size,
+		Count: count,
+	}, nil
 }
 
 func (u *userService) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest) (*pb.UpdateRoleReply, error) {

@@ -251,10 +251,17 @@ message RemovePermissionForPermissionReply {
     error err = 1;
 }
 
-message ListRoleRequest {}
+message ListRoleRequest {
+    int32 page = 1;
+    int32 size = 2;
+    RoleField role = 3;
+}
 message ListRoleReply {
-    repeated RoleField roles = 1;
-    error err = 2;
+    int32 page = 1;
+    int32 size = 2;
+    int32 count = 3;
+    repeated RoleField roles = 4;
+    error err = 5;
 }
 
 message RoleField {

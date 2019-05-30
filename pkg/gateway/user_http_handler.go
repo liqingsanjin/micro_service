@@ -173,7 +173,7 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
 
-	userGroup.GET("/listRole",
+	userGroup.POST("/listRole",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
 		convertHttpHandlerToGinHandler(httptransport.NewServer(
 			endpoints.ListRoleEndpoint,

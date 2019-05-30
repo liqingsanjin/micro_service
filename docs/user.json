@@ -649,7 +649,7 @@
       }
     },
     "/user/listRole": {
-      "get": {
+      "post": {
         "tags": [
           "role"
         ],
@@ -665,6 +665,13 @@
             "required": true,
             "description": "Authorization",
             "type": "string"
+          },
+          {
+            "name": "listRole",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ListRole"
+            }
           }
         ],
         "responses": {
@@ -1816,6 +1823,36 @@
                 },
                 "leaguerStatus": {
                   "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ListRole": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "page",
+            "size"
+          ],
+          "properties": {
+            "page": {
+              "type": "integer"
+            },
+            "size": {
+              "type": "integer"
+            },
+            "role": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "role": {
+                  "type": "string"
                 }
               }
             }
