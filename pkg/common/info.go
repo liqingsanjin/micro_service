@@ -12,8 +12,5 @@ var (
 	DB           *gorm.DB
 	Enforcer     *casbin.Enforcer
 	ConsulClient *api.Client
-)
-
-const (
-	SignKey = "huiepay"
+	SignKey      = "huiepay"
 )
