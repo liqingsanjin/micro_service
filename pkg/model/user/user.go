@@ -375,13 +375,16 @@ func DeletePermission(db *gorm.DB, permission *Permission) error {
 	return db.Delete(permission).Error
 }
 
-func ListPermissions(db *gorm.DB) ([]*Permission, error) {
+func ListPermissions(db *gorm.DB, query *Permission, page int32, size int32) ([]*Permission, int32, error) {
 	ps := make([]*Permission, 0)
-	err := db.Find(&ps).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, err
+	var count int32 = 0
+	db.Model(query).Where(query).Count(&count)
+
+	err := db.Where(query).Limit(size).Offset((page - 1) * size).Find(&ps).Error
+	if err == gorm.ErrRecordNotFound {
+		return ps, count, nil
 	}
-	return ps, nil
+	return ps, count, err
 }
 
 func ListRole(db *gorm.DB, query *Role, page int32, size int32) ([]*Role, int32, error) {

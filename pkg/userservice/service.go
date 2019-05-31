@@ -650,7 +650,19 @@ func (u *userService) RemovePermission(ctx context.Context, in *pb.RemovePermiss
 func (u *userService) ListPermissions(ctx context.Context, in *pb.ListPermissionsRequest) (*pb.ListPermissionsReply, error) {
 	db := common.DB
 
-	ps, err := usermodel.ListPermissions(db)
+	if in.Size == 0 {
+		in.Size = 10
+	}
+	if in.Page == 0 {
+		in.Page = 1
+	}
+
+	query := &usermodel.Permission{}
+	if in.Permission != nil {
+		query.ID = in.Permission.Id
+		query.Name = in.Permission.Permission
+	}
+	ps, count, err := usermodel.ListPermissions(db, query, in.Page, in.Size)
 	if err != nil {
 		return nil, err
 	}
@@ -665,6 +677,9 @@ func (u *userService) ListPermissions(ctx context.Context, in *pb.ListPermission
 
 	return &pb.ListPermissionsReply{
 		Permissions: names,
+		Page:        in.Page,
+		Size:        in.Size,
+		Count:       count,
 	}, nil
 }
 

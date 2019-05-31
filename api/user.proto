@@ -223,10 +223,17 @@ message RemovePermissionReply {
     error err = 1;
 }
 
-message ListPermissionsRequest {}
+message ListPermissionsRequest {
+    int32 page = 1;
+    int32 size = 2;
+    PermissionField permission = 3;
+}
 message ListPermissionsReply {
-    repeated PermissionField permissions = 1;
-    error err = 2;
+    int32 page = 1;
+    int32 size = 2;
+    int32 count = 3;
+    repeated PermissionField permissions = 4;
+    error err = 5;
 }
 message PermissionField {
     int64 id = 1;

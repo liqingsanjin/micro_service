@@ -4,7 +4,7 @@
     "version": "0.0.1",
     "title": "user api"
   },
-  "host": "172.16.7.120",
+  "host": "127.0.0.1:8080",
   "schemes": [
     "http"
   ],
@@ -544,7 +544,7 @@
       }
     },
     "/user/listPermissions": {
-      "get": {
+      "post": {
         "tags": [
           "permission"
         ],
@@ -560,6 +560,14 @@
             "required": true,
             "description": "Authorization",
             "type": "string"
+          },
+          {
+            "name": "listPermissions",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ListPermissions"
+            }
           }
         ],
         "responses": {
@@ -1852,6 +1860,36 @@
                   "type": "integer"
                 },
                 "role": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ListPermissions": {
+      "type": "object",
+      "allOf": [
+        {
+          "required": [
+            "page",
+            "size"
+          ],
+          "properties": {
+            "page": {
+              "type": "integer"
+            },
+            "size": {
+              "type": "integer"
+            },
+            "permission": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "permission": {
                   "type": "string"
                 }
               }
