@@ -8,15 +8,15 @@ import (
 
 type CommonModel struct {
 	ID        uint      `gorm:"column:id;primary_key;auto_increment;"`
-	CreatedAt time.Time `gorm:"column:created_at;"`
-	UpdatedAt time.Time `gorm:"column:updated_at;"`
+	CreatedAt time.Time `gorm:"column:REC_CRT_TS;"`
+	UpdatedAt time.Time `gorm:"column:REC_UPD_TS;"`
 }
 
 const (
 	tableDictItem            = "TBL_DICTIONARYITEM"
 	tableInsProdBizFeeMapInf = "TBL_INS_PROD_BIZ_FEE_MAP_INF"
 	tableProdBizTransMap     = "TBL_PROD_BIZ_TRANS_MAP"
-	tableInsInf              = "TBL_INS_INF"
+	tableInsInf              = "TBL_EDIT_INS_INF"
 )
 
 type DictionaryItem struct {
@@ -78,8 +78,7 @@ func (p ProdBizTransMap) TableName() string {
 }
 
 type InsInf struct {
-	CommonModel
-	InsIDCd         string    `gorm:"column:INS_ID_CD"`
+	InsIDCd         string    `gorm:"column:INS_ID_CD;primary_key"`
 	InsCompanyCd    string    `gorm:"column:INS_COMPANY_CD"`
 	InsType         string    `gorm:"column:INS_TYPE"`
 	InsName         string    `gorm:"column:INS_NAME"`
@@ -110,8 +109,8 @@ type InsInf struct {
 	MsgResvFld10    string    `gorm:"column:MSG_RESV_FLD10"`
 	RecOprID        string    `gorm:"column:REC_OPR_ID"`
 	RecUpdOpr       string    `gorm:"column:REC_UPD_OPR"`
-	RecCrtTs        time.Time `gorm:"column:REC_CRT_TS"`
-	RecUpdTs        time.Time `gorm:"column:REC_UPD_TS"`
+	CreatedAt       time.Time `gorm:"column:REC_CRT_TS"`
+	UpdatedAt       time.Time `gorm:"column:REC_UPD_TS"`
 }
 
 func (p InsInf) TableName() string {
@@ -140,4 +139,22 @@ func GetInsInf(db *gorm.DB) []*InsInf {
 	insInf := make([]*InsInf, 0)
 	db.Find(&insInf)
 	return insInf
+}
+
+func QueryInstitutionInfo(db *gorm.DB, query *InsInf) ([]*InsInf, error) {
+	out := make([]*InsInf, 0)
+	err := db.Where(query).Find(&out).Error
+	if err == gorm.ErrRecordNotFound {
+		return out, nil
+	}
+	return out, err
+}
+
+func FindInstitutionInfoById(db *gorm.DB, id string) (*InsInf, error) {
+	out := new(InsInf)
+	err := db.Where("INS_ID_CD = ?", id).First(out).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return out, err
 }

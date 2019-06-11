@@ -1,6 +1,10 @@
 package merchant
 
-import "time"
+import (
+	"time"
+
+	"github.com/jinzhu/gorm"
+)
 
 const (
 	TableMerchantInfo        = "TBL_EDIT_MCHT_INF"
@@ -112,4 +116,13 @@ type MerchantBankAccount struct {
 
 func (m MerchantBankAccount) TableName() string {
 	return TableMerchantBankAccount
+}
+
+func FindMerchantInfoById(db *gorm.DB, id string) (*MerchantInfo, error) {
+	out := new(MerchantInfo)
+	err := db.Where("MCHT_CD = ?", id).First(out).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return out, err
 }

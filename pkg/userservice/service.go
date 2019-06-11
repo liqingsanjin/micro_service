@@ -8,6 +8,8 @@ import (
 	"time"
 	"userService/pkg/cache"
 	"userService/pkg/common"
+	mchtmodel "userService/pkg/model/merchant"
+	insmodel "userService/pkg/model/static"
 	usermodel "userService/pkg/model/user"
 	"userService/pkg/pb"
 	"userService/pkg/rbac"
@@ -208,6 +210,43 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 			Code:        http.StatusBadRequest,
 			Message:     InvalidParam,
 			Description: "用户信息不全",
+		}
+		return reply, nil
+	}
+	switch in.UserType {
+	case "admin":
+		break
+	case "merchant":
+		mcht, err := mchtmodel.FindMerchantInfoById(db, in.UserGroupNo)
+		if err != nil {
+			return nil, err
+		}
+		if mcht == nil {
+			reply.Err = &pb.Error{
+				Code:        http.StatusBadRequest,
+				Message:     InvalidParam,
+				Description: "商户号不存在",
+			}
+			return reply, nil
+		}
+	case "institution", "institution_group":
+		ins, err := insmodel.FindInstitutionInfoById(db, in.UserGroupNo)
+		if err != nil {
+			return nil, err
+		}
+		if ins == nil {
+			reply.Err = &pb.Error{
+				Code:        http.StatusBadRequest,
+				Message:     InvalidParam,
+				Description: "机构号不存在",
+			}
+			return reply, nil
+		}
+	default:
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "用户类型错误",
 		}
 		return reply, nil
 	}
