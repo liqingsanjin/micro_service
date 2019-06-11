@@ -29,6 +29,7 @@ type User struct {
 	PasswordResetToken string    `gorm:"column:PASSWORD_RESET_TOKEN"`
 	Email              string    `gorm:"column:EMAIL"`
 	UserType           string    `gorm:"column:USER_TYPE"`
+	UserGroupNo        string    `gorm:"column:USER_GROUP_NO"`
 	UserInfo           string    `gorm:"column:USER_INFO"`
 	UserStatus         int64     `gorm:"column:USER_STATUS"`
 	UserNotice         string    `gorm:"column:USER_NOTICE"`

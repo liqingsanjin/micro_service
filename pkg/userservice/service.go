@@ -238,6 +238,7 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 		PasswordHash:    string(bs),
 		PasswordHashNew: string(bs),
 		UserStatus:      1,
+		UserGroupNo:     in.UserGroupNo,
 	}
 
 	newUser, err := usermodel.SaveUser(db, user)

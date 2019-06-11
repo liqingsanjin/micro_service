@@ -1439,7 +1439,8 @@
             "password",
             "leaguerNo",
             "email",
-            "userType"
+            "userType",
+            "userGroupNo"
           ],
           "properties": {
             "username": {
@@ -1455,6 +1456,9 @@
               "type": "string"
             },
             "userType": {
+              "type": "string"
+            },
+            "userGroupNo": {
               "type": "string"
             }
           }

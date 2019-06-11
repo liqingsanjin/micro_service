@@ -107,6 +107,7 @@ message RegisterRequest {
     string leaguerNo = 3;
     string email = 4;
     string userType = 5;
+    string userGroupNo = 6;
 }
 
 message RegisterReply {
