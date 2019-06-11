@@ -16,6 +16,7 @@ type InstitutionEndpoints struct {
 	GetTfrTrnLogsEndpoint      endpoint.Endpoint
 	GetTfrTrnLogEndpoint       endpoint.Endpoint
 	DownloadTfrTrnLogsEndpoint endpoint.Endpoint
+	ListGroupsEndpoint         endpoint.Endpoint
 }
 
 func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *InstitutionEndpoints {
@@ -75,6 +76,19 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 		).Endpoint()
 		endpoints.DownloadTfrTrnLogsEndpoint = endpoint
 	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Institution",
+			"ListGroups",
+			encodeRequest,
+			decodeResponse,
+			pb.ListGroupsReply{},
+			options...,
+		).Endpoint()
+		endpoints.ListGroupsEndpoint = endpoint
+	}
 	return endpoints
 }
 func (s *InstitutionEndpoints) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHisDownloadReq) (*pb.InstitutionTnxHisDownloadResp, error) {
@@ -119,6 +133,18 @@ func (s *InstitutionEndpoints) DownloadTfrTrnLogs(ctx context.Context, in *pb.Do
 		return nil, err
 	}
 	reply, ok := res.(*pb.DownloadTfrTrnLogsResp)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (s *InstitutionEndpoints) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListGroupsReply, error) {
+	res, err := s.ListGroupsEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.ListGroupsReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

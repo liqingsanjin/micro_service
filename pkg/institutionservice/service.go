@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"userService/pkg/common"
 	cleartxnM "userService/pkg/model/cleartxn"
+	insmodel "userService/pkg/model/institution"
 	"userService/pkg/pb"
 
 	"net/http"
@@ -172,4 +173,22 @@ func (s *setService) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrT
 		return nil, err
 	}
 	return &pb.DownloadTfrTrnLogsResp{Code: true}, nil
+}
+
+func (s *setService) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListGroupsReply, error) {
+	reply := new(pb.ListGroupsReply)
+	db := common.DB
+
+	groups, err := insmodel.ListGroups(db)
+	if err != nil {
+		return nil, err
+	}
+
+	list := make([]string, len(groups))
+	for i := range groups {
+		list[i] = groups[i].InsGroup
+	}
+
+	reply.Groups = list
+	return reply, nil
 }

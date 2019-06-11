@@ -4,16 +4,16 @@ import (
 	"userService/pkg/pb"
 
 	"github.com/go-kit/kit/endpoint"
-
-	"github.com/go-kit/kit/transport/grpc"
+	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"golang.org/x/net/context"
 )
 
 type grpcServer struct {
-	tnxHisDownload     grpc.Handler
-	getTfrTrnLogs      grpc.Handler
-	getTfrTrnLog       grpc.Handler
-	downloadTfrTrnLogs grpc.Handler
+	tnxHisDownload     grpctransport.Handler
+	getTfrTrnLogs      grpctransport.Handler
+	getTfrTrnLog       grpctransport.Handler
+	downloadTfrTrnLogs grpctransport.Handler
+	listGroupsHandler  grpctransport.Handler
 }
 
 func (g *grpcServer) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHisDownloadReq) (*pb.InstitutionTnxHisDownloadResp, error) {
@@ -50,22 +50,36 @@ func (g *grpcServer) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrT
 
 //NewGRPCServer .
 func NewGRPCServer() pb.InstitutionServer {
-	insSetService := NewSetService()
-	downEndpoint := MakeTnxHisDownloadEndpoint(insSetService)
-	getTfrTrnlogsEndpoint := MakeGetTfrTrnLogsEndpoint(insSetService)
-	getTfrTrnlogEndpoint := MakeGetTfrTrnLogEndpoint(insSetService)
-	downloadTfrTrnLogsEndpoint := MakeDownloadTfrTrnLogsEndpoint(insSetService)
+	options := make([]grpctransport.ServerOption, 0)
 
-	return &grpcServer{
+	service := NewSetService()
+	downEndpoint := MakeTnxHisDownloadEndpoint(service)
+	getTfrTrnlogsEndpoint := MakeGetTfrTrnLogsEndpoint(service)
+	getTfrTrnlogEndpoint := MakeGetTfrTrnLogEndpoint(service)
+	downloadTfrTrnLogsEndpoint := MakeDownloadTfrTrnLogsEndpoint(service)
+
+	server := &grpcServer{
 		tnxHisDownload:     grpcNewServer(downEndpoint),
 		getTfrTrnLogs:      grpcNewServer(getTfrTrnlogsEndpoint),
 		getTfrTrnLog:       grpcNewServer(getTfrTrnlogEndpoint),
 		downloadTfrTrnLogs: grpcNewServer(downloadTfrTrnLogsEndpoint),
 	}
+
+	{
+		endpoint := MakeListGroupsEndpoint(service)
+		server.listGroupsHandler = grpctransport.NewServer(
+			endpoint,
+			grpcDecode,
+			grpcEncode,
+			options...,
+		)
+	}
+
+	return server
 }
 
-func grpcNewServer(endpoint endpoint.Endpoint) *grpc.Server {
-	return grpc.NewServer(endpoint, grpcDecode, grpcEncode)
+func grpcNewServer(endpoint endpoint.Endpoint) *grpctransport.Server {
+	return grpctransport.NewServer(endpoint, grpcDecode, grpcEncode)
 }
 
 func grpcDecode(_ context.Context, req interface{}) (interface{}, error) {
@@ -74,4 +88,16 @@ func grpcDecode(_ context.Context, req interface{}) (interface{}, error) {
 
 func grpcEncode(_ context.Context, res interface{}) (interface{}, error) {
 	return res, nil
+}
+
+func (g *grpcServer) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListGroupsReply, error) {
+	_, res, err := g.listGroupsHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.ListGroupsReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
 }

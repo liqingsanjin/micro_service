@@ -36,3 +36,13 @@ func MakeDownloadTfrTrnLogsEndpoint(s pb.InstitutionServer) endpoint.Endpoint {
 		return s.DownloadTfrTrnLogs(ctx, req)
 	}
 }
+
+func MakeListGroupsEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.ListGroupsRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.ListGroups(ctx, req)
+	}
+}

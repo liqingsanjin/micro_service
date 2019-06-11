@@ -140,21 +140,3 @@ func GetInsInf(db *gorm.DB) []*InsInf {
 	db.Find(&insInf)
 	return insInf
 }
-
-func QueryInstitutionInfo(db *gorm.DB, query *InsInf) ([]*InsInf, error) {
-	out := make([]*InsInf, 0)
-	err := db.Where(query).Find(&out).Error
-	if err == gorm.ErrRecordNotFound {
-		return out, nil
-	}
-	return out, err
-}
-
-func FindInstitutionInfoById(db *gorm.DB, id string) (*InsInf, error) {
-	out := new(InsInf)
-	err := db.Where("INS_ID_CD = ?", id).First(out).Error
-	if err == gorm.ErrRecordNotFound {
-		return nil, nil
-	}
-	return out, err
-}

@@ -1,305 +1,345 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "version": "0.0.1",
-        "title": "static api"
-    },
-    "host": "172.16.7.120:8080",
-    "schemes": [
-        "http"
-    ],
-    "paths": {
-        "/institution/getTfrTrnLogs": {
-            "post": {
-                "operationId": "getTfrTrnLogs",
-                "summary": "交易机构查询流水",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [{
-                    "name": "trnLogParms",
-                    "in": "body",
-                    "description": "根据条件查询交易机构",
-                    "schema": {
-                        "type": "object",
-                        "allOf": [{
-                            "properties": {
-                                "MchntCd": {
-                                    "type": "string"
-                                },
-                                "PriAcctNO": {
-                                    "type": "string"
-                                },
-                                "BeginAt": {
-                                    "type": "string"
-                                },
-                                "EndAt": {
-                                    "type": "string"
-                                },
-                                "CardClass": {
-                                    "type": "string"
-                                },
-                                "RoutIndustryInsIdCd": {
-                                    "type": "string"
-                                },
-                                "FwdInsIdCd": {
-                                    "type": "string"
-                                },
-                                "IssInsIdCd": {
-                                    "type": "string"
-                                },
-                                "RespCd": {
-                                    "type": "string"
-                                },
-                                "TermId": {
-                                    "type": "string"
-                                },
-                                "ProdCd": {
-                                    "type": "string"
-                                },
-                                "BizCd": {
-                                    "type": "string"
-                                },
-                                "MaTransCd": {
-                                    "type": "string"
-                                },
-                                "MsgResvFld2": {
-                                    "type": "string"
-                                },
-                                "Limit": {
-                                    "type": "integer"
-                                },
-                                "Page": {
-                                    "type": "integer"
-                                }
-                            }
-                        }]
-                    }
-                }],
-                "responses": {
-                    "200": {
-                        "description": "正确返回",
-                        "examples": {
-                            "application/json": {
-                                "Items": [{
-                                        "KeyRsp": "20180101000001417319",
-                                        "MchntCd": "999230641190000",
-                                        "CardAccptrNm": "王德宇测试专户不要乱动",
-                                        "TransDt": "20190101",
-                                        "MaSettleDt": "20180421",
-                                        "TransMt": "000001",
-                                        "MaTransCd": "4011",
-                                        "FwdInsIdCd": "10001000",
-                                        "TransAt": "000000000001",
-                                        "PriAcctNo": "6221560200870833",
-                                        "IssInsIdCd": "05105840",
-                                        "TermId": "00000002",
-                                        "ProdCd": "1000",
-                                        "CardClass": "00",
-                                        "TransSt": "2000000000",
-                                        "RespCd": "25"
-                                    },
-                                    {
-                                        "KeyRsp": "20180115153558417375",
-                                        "MchntCd": "852421141190000",
-                                        "CardAccptrNm": "龟苓膏",
-                                        "TransDt": "20190115",
-                                        "MaSettleDt": "20180421",
-                                        "TransMt": "153558",
-                                        "MaTransCd": "1011",
-                                        "FwdInsIdCd": "11225599",
-                                        "TransAt": "000000074100",
-                                        "PriAcctNo": "6214850214157858",
-                                        "IssInsIdCd": "03080000",
-                                        "TermId": "00000001",
-                                        "ProdCd": "1000",
-                                        "CardClass": "01",
-                                        "TransSt": "1000000000",
-                                        "RespCd": "00"
-                                    }
-                                ],
-                                "count": "2583",
-                                "total": "123727482377",
-                                "err": null
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/institution/getTfrTrnLog": {
-            "post": {
-                "operationId": "getTfrTrnLog",
-                "summary": "获取流水详情",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [{
-                    "name": "keyRsp",
-                    "in": "body",
-                    "required": true,
-                    "description": "流水主键",
-                    "schema": {
-                        "type": "object",
-                        "allOf": [{
-                            "required": [
-                                "KeyRsp"
-                            ],
-                            "properties": {
-                                "KeyRsp": {
-                                    "type": "string"
-                                }
-                            }
-                        }]
-                    }
-                }],
-                "responses": {
-                    "200": {
-                        "description": "正确返回",
-                        "examples": {
-                            "application/json": {
-                                "TransDt": "20190101",
-                                "TransMt": "000001",
-                                "SrcQid": "8",
-                                "DesQid": "Ë",
-                                "MaTransCd": "4011",
-                                "MaTransNm": "",
-                                "KeyRsp": "20180101000001417319",
-                                "KeyRevsal": "20181212144901417154",
-                                "KeyCancel": "",
-                                "RespCd": "25",
-                                "TransSt": "2000000000",
-                                "MaTransSeq": "\ufffd",
-                                "OrigMaTransSeq": "\ufffd",
-                                "OrigTransSeq": "1011",
-                                "OrigTermSeq": "745397",
-                                "OrigTransDt": "20181212",
-                                "MaSettleDt": "20180421",
-                                "AccessMd": "",
-                                "MsgTp": "0420",
-                                "PriAcctNo": "6221560200870833",
-                                "AcctTp": "",
-                                "TransProcCd": "000000",
-                                "TransAt": "000000000001",
-                                "TransTdTm": "1231233157",
-                                "TermSeq": "746632",
-                                "AcptTransTm": "142609",
-                                "AcptTransDt": "1212",
-                                "MchntTp": "4119",
-                                "PosEntryMdCd": "071",
-                                "PosCondCd": "00",
-                                "AcptInsIdCd": "10003633",
-                                "FwdInsIdCd": "10001000",
-                                "TermId": "00000002",
-                                "MchntCd": "999230641190000",
-                                "CardAccptrNm": "王德宇测试专户不要乱动",
-                                "RetriRefNo": "834614745397",
-                                "ReqAuthId": "",
-                                "TransSubcata": "",
-                                "IndustryAddnInf": "",
-                                "TransCurrCd": "156",
-                                "SecCtrlInf": "",
-                                "IcData": "",
-                                "UdfFldPure": "00000600030000000000",
-                                "CertifId": "",
-                                "NetworkMgmtInfCd": "",
-                                "OrigDataElemnt": "020074539712121426090001000363300010001000",
-                                "RcvInsIdCd": "",
-                                "TfrInAcctNoPure": "",
-                                "TfrInAcctTp": "",
-                                "TfrOutAcctNoPure": "",
-                                "AcptInsResvPure": "01000000  103410",
-                                "TrrOutAcctTp": "",
-                                "IssInsIdCd": "05105840",
-                                "CardAttr": "",
-                                "CardClass": "00",
-                                "CardMedia": "",
-                                "CardBin": "622156",
-                                "CardBrand": "",
-                                "RoutInsIdCd": "99991000",
-                                "AcptRegionCd": "",
-                                "BussRegionCd": "",
-                                "UsrNoTp": "",
-                                "UsrNoRegionCd": "",
-                                "UsrNoRegionAddnCd": "",
-                                "UsrNo": "",
-                                "SpInsIdCd": "10003633",
-                                "IndustryInsIdCd": "10001001",
-                                "RoutIndustryInsIdCd": "10001000",
-                                "IndustryMchntCd": "",
-                                "IndustryTermCd": "",
-                                "IndustryMchntTp": "",
-                                "EntrustTp": "",
-                                "PmtMd": "",
-                                "PmtTp": "00",
-                                "PmtNo": "",
-                                "PmtMchntCd": "",
-                                "PmtNoIndustryInsIdCd": "",
-                                "PriAcctNoConv": "6221560200870833",
-                                "TransAtConv": "000000000001",
-                                "TransDtTmConv": "0101000001",
-                                "TransSeqConv": "417319",
-                                "MchntTpConv": "4119",
-                                "RetriRefNoConv": "834614745397",
-                                "AcptInsIdCdConv": "10003633",
-                                "TermIdConv": "12201000",
-                                "MchntCdConv": "829095115200089",
-                                "MchntNmConv": "王德宇测试专户不要乱动",
-                                "UdfFldPureConv": "00000600030000000000000",
-                                "SpInsIdCdConv": "000",
-                                "ExpireDt": "",
-                                "SettleDt": "0101",
-                                "TransFee": "",
-                                "RespAuthId": "",
-                                "AcptRespCd": "25",
-                                "AddnRespDataPure": "",
-                                "AddnAtPure": "",
-                                "IssAddnDataPure": "",
-                                "IcResDatCups": "",
-                                "SwResvPure": "122010000062",
-                                "IssInsResvPure": "",
-                                "IndustryRespCd": "",
-                                "DebtAt": "",
-                                "DtlInqData": "9F36020064",
-                                "TransChnl": "03",
-                                "InterchMdCd": "",
-                                "TransChkIn": "",
-                                "MchtStlmFlg": "2",
-                                "InsStlmFlg": "0",
-                                "MsgResvFld1": "",
-                                "MsgResvFld2": "",
-                                "MsgResvFld3": "99990000",
-                                "TransMth": "\u0001",
-                                "RecUpdTs": "",
-                                "RecCrtTs": "",
-                                "ProdCd": "1000",
-                                "TranTp": "A0",
-                                "BizCd": "0000000",
-                                "RevelFlg": "0",
-                                "CancelFlg": "0",
-                                "MsgResvFld4": "",
-                                "MsgResvFld5": "",
-                                "MsgResvFld6": "",
-                                "MsgResvFld7": "",
-                                "MsgResvFld8": "",
-                                "MsgResvFld9": "",
-                                "err": null
-                            }
-                        }
+  "swagger": "2.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "static api"
+  },
+  "host": "172.16.7.120:8080",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/institution/getTfrTrnLogs": {
+      "post": {
+        "operationId": "getTfrTrnLogs",
+        "summary": "交易机构查询流水",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "trnLogParms",
+            "in": "body",
+            "description": "根据条件查询交易机构",
+            "schema": {
+              "type": "object",
+              "allOf": [
+                {
+                  "properties": {
+                    "MchntCd": {
+                      "type": "string"
                     },
-                    "400": {
-                        "description": "返回错误",
-                        "examples": {
-                            "application/json": {
-                                "desc": "输入的参数错误",
-                                "err": "InvalidParamError"
-                            }
-                        }
+                    "PriAcctNO": {
+                      "type": "string"
+                    },
+                    "BeginAt": {
+                      "type": "string"
+                    },
+                    "EndAt": {
+                      "type": "string"
+                    },
+                    "CardClass": {
+                      "type": "string"
+                    },
+                    "RoutIndustryInsIdCd": {
+                      "type": "string"
+                    },
+                    "FwdInsIdCd": {
+                      "type": "string"
+                    },
+                    "IssInsIdCd": {
+                      "type": "string"
+                    },
+                    "RespCd": {
+                      "type": "string"
+                    },
+                    "TermId": {
+                      "type": "string"
+                    },
+                    "ProdCd": {
+                      "type": "string"
+                    },
+                    "BizCd": {
+                      "type": "string"
+                    },
+                    "MaTransCd": {
+                      "type": "string"
+                    },
+                    "MsgResvFld2": {
+                      "type": "string"
+                    },
+                    "Limit": {
+                      "type": "integer"
+                    },
+                    "Page": {
+                      "type": "integer"
                     }
-
+                  }
                 }
+              ]
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "Items": [
+                  {
+                    "KeyRsp": "20180101000001417319",
+                    "MchntCd": "999230641190000",
+                    "CardAccptrNm": "王德宇测试专户不要乱动",
+                    "TransDt": "20190101",
+                    "MaSettleDt": "20180421",
+                    "TransMt": "000001",
+                    "MaTransCd": "4011",
+                    "FwdInsIdCd": "10001000",
+                    "TransAt": "000000000001",
+                    "PriAcctNo": "6221560200870833",
+                    "IssInsIdCd": "05105840",
+                    "TermId": "00000002",
+                    "ProdCd": "1000",
+                    "CardClass": "00",
+                    "TransSt": "2000000000",
+                    "RespCd": "25"
+                  },
+                  {
+                    "KeyRsp": "20180115153558417375",
+                    "MchntCd": "852421141190000",
+                    "CardAccptrNm": "龟苓膏",
+                    "TransDt": "20190115",
+                    "MaSettleDt": "20180421",
+                    "TransMt": "153558",
+                    "MaTransCd": "1011",
+                    "FwdInsIdCd": "11225599",
+                    "TransAt": "000000074100",
+                    "PriAcctNo": "6214850214157858",
+                    "IssInsIdCd": "03080000",
+                    "TermId": "00000001",
+                    "ProdCd": "1000",
+                    "CardClass": "01",
+                    "TransSt": "1000000000",
+                    "RespCd": "00"
+                  }
+                ],
+                "count": "2583",
+                "total": "123727482377",
+                "err": null
+              }
+            }
+          }
         }
+      }
+    },
+    "/institution/getTfrTrnLog": {
+      "post": {
+        "operationId": "getTfrTrnLog",
+        "summary": "获取流水详情",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "keyRsp",
+            "in": "body",
+            "required": true,
+            "description": "流水主键",
+            "schema": {
+              "type": "object",
+              "allOf": [
+                {
+                  "required": [
+                    "KeyRsp"
+                  ],
+                  "properties": {
+                    "KeyRsp": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "TransDt": "20190101",
+                "TransMt": "000001",
+                "SrcQid": "8",
+                "DesQid": "Ë",
+                "MaTransCd": "4011",
+                "MaTransNm": "",
+                "KeyRsp": "20180101000001417319",
+                "KeyRevsal": "20181212144901417154",
+                "KeyCancel": "",
+                "RespCd": "25",
+                "TransSt": "2000000000",
+                "MaTransSeq": "\ufffd",
+                "OrigMaTransSeq": "\ufffd",
+                "OrigTransSeq": "1011",
+                "OrigTermSeq": "745397",
+                "OrigTransDt": "20181212",
+                "MaSettleDt": "20180421",
+                "AccessMd": "",
+                "MsgTp": "0420",
+                "PriAcctNo": "6221560200870833",
+                "AcctTp": "",
+                "TransProcCd": "000000",
+                "TransAt": "000000000001",
+                "TransTdTm": "1231233157",
+                "TermSeq": "746632",
+                "AcptTransTm": "142609",
+                "AcptTransDt": "1212",
+                "MchntTp": "4119",
+                "PosEntryMdCd": "071",
+                "PosCondCd": "00",
+                "AcptInsIdCd": "10003633",
+                "FwdInsIdCd": "10001000",
+                "TermId": "00000002",
+                "MchntCd": "999230641190000",
+                "CardAccptrNm": "王德宇测试专户不要乱动",
+                "RetriRefNo": "834614745397",
+                "ReqAuthId": "",
+                "TransSubcata": "",
+                "IndustryAddnInf": "",
+                "TransCurrCd": "156",
+                "SecCtrlInf": "",
+                "IcData": "",
+                "UdfFldPure": "00000600030000000000",
+                "CertifId": "",
+                "NetworkMgmtInfCd": "",
+                "OrigDataElemnt": "020074539712121426090001000363300010001000",
+                "RcvInsIdCd": "",
+                "TfrInAcctNoPure": "",
+                "TfrInAcctTp": "",
+                "TfrOutAcctNoPure": "",
+                "AcptInsResvPure": "01000000  103410",
+                "TrrOutAcctTp": "",
+                "IssInsIdCd": "05105840",
+                "CardAttr": "",
+                "CardClass": "00",
+                "CardMedia": "",
+                "CardBin": "622156",
+                "CardBrand": "",
+                "RoutInsIdCd": "99991000",
+                "AcptRegionCd": "",
+                "BussRegionCd": "",
+                "UsrNoTp": "",
+                "UsrNoRegionCd": "",
+                "UsrNoRegionAddnCd": "",
+                "UsrNo": "",
+                "SpInsIdCd": "10003633",
+                "IndustryInsIdCd": "10001001",
+                "RoutIndustryInsIdCd": "10001000",
+                "IndustryMchntCd": "",
+                "IndustryTermCd": "",
+                "IndustryMchntTp": "",
+                "EntrustTp": "",
+                "PmtMd": "",
+                "PmtTp": "00",
+                "PmtNo": "",
+                "PmtMchntCd": "",
+                "PmtNoIndustryInsIdCd": "",
+                "PriAcctNoConv": "6221560200870833",
+                "TransAtConv": "000000000001",
+                "TransDtTmConv": "0101000001",
+                "TransSeqConv": "417319",
+                "MchntTpConv": "4119",
+                "RetriRefNoConv": "834614745397",
+                "AcptInsIdCdConv": "10003633",
+                "TermIdConv": "12201000",
+                "MchntCdConv": "829095115200089",
+                "MchntNmConv": "王德宇测试专户不要乱动",
+                "UdfFldPureConv": "00000600030000000000000",
+                "SpInsIdCdConv": "000",
+                "ExpireDt": "",
+                "SettleDt": "0101",
+                "TransFee": "",
+                "RespAuthId": "",
+                "AcptRespCd": "25",
+                "AddnRespDataPure": "",
+                "AddnAtPure": "",
+                "IssAddnDataPure": "",
+                "IcResDatCups": "",
+                "SwResvPure": "122010000062",
+                "IssInsResvPure": "",
+                "IndustryRespCd": "",
+                "DebtAt": "",
+                "DtlInqData": "9F36020064",
+                "TransChnl": "03",
+                "InterchMdCd": "",
+                "TransChkIn": "",
+                "MchtStlmFlg": "2",
+                "InsStlmFlg": "0",
+                "MsgResvFld1": "",
+                "MsgResvFld2": "",
+                "MsgResvFld3": "99990000",
+                "TransMth": "\u0001",
+                "RecUpdTs": "",
+                "RecCrtTs": "",
+                "ProdCd": "1000",
+                "TranTp": "A0",
+                "BizCd": "0000000",
+                "RevelFlg": "0",
+                "CancelFlg": "0",
+                "MsgResvFld4": "",
+                "MsgResvFld5": "",
+                "MsgResvFld6": "",
+                "MsgResvFld7": "",
+                "MsgResvFld8": "",
+                "MsgResvFld9": "",
+                "err": null
+              }
+            }
+          },
+          "400": {
+            "description": "返回错误",
+            "examples": {
+              "application/json": {
+                "desc": "输入的参数错误",
+                "err": "InvalidParamError"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/institution/listGroups": {
+      "post": {
+        "operationId": "listGroups",
+        "summary": "查询机构组号列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "listGroups",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "groups": [
+                  "00007388",
+                  "10005512"
+                ],
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
-
+  }
 }

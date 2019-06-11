@@ -9,6 +9,7 @@ service Institution {
     rpc GetTfrTrnLogs(GetTfrTrnLogsReq) returns (GetTfrTrnLogsResp){}
     rpc GetTfrTrnLog(GetTfrTrnLogReq) returns (GetTfrTrnLogResp){}
     rpc DownloadTfrTrnLogs(DownloadTfrTrnLogsReq) returns (DownloadTfrTrnLogsResp){}
+    rpc ListGroups(ListGroupsRequest) returns (ListGroupsReply) {}
 }
 
 message InstitutionTnxHisDownloadReq {
@@ -227,4 +228,11 @@ message DownloadTfrTrnLogsReq {
 message DownloadTfrTrnLogsResp {
 	bool code = 1;
 	error err = 2;
+}
+
+message ListGroupsRequest {}
+
+message ListGroupsReply {
+    repeated string groups = 1;
+    error err = 2;
 }
