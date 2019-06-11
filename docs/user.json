@@ -1456,10 +1456,12 @@
               "type": "string"
             },
             "userType": {
-              "type": "string"
+              "type": "string",
+              "description": "admin: 管理员用户，不用填用户组号。merchant: 商户用户，需要填商户号。institution: 机构用户，需要机构号。institution_group: 机构组用户，需要机构组号。"
             },
             "userGroupNo": {
-              "type": "string"
+              "type": "string",
+              "description": "用户组号，根据用户类型不同，填写不同用户组号。"
             }
           }
         }
