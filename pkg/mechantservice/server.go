@@ -14,13 +14,13 @@ type merchantServer struct {
 
 func New(tracer grpctransport.ServerOption) pb.MerchantServer {
 	svr := &merchantServer{}
-	userService := &merchantService{}
+	service := &merchantService{}
 	options := make([]grpctransport.ServerOption, 0)
 	if tracer != nil {
 		options = append(options, tracer)
 	}
 	{
-		endpoint := MakeMerchantQueryEndpoint(userService)
+		endpoint := MakeListMerchantEndpoint(service)
 		endpoint = kit.LogginMiddleware(endpoint)
 		svr.MerchantQueryHandler = grpctransport.NewServer(
 			endpoint,
@@ -33,12 +33,12 @@ func New(tracer grpctransport.ServerOption) pb.MerchantServer {
 	return svr
 }
 
-func (m *merchantServer) MerchantQuery(ctx context.Context, in *pb.MerchantQueryRequest) (*pb.MerchantQueryReply, error) {
+func (m *merchantServer) ListMerchant(ctx context.Context, in *pb.ListMerchantRequest) (*pb.ListMerchantReply, error) {
 	_, res, err := m.MerchantQueryHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.MerchantQueryReply)
+	reply, ok := res.(*pb.ListMerchantReply)
 	if !ok {
 		return nil, kit.ErrReplyTypeInvalid
 	}

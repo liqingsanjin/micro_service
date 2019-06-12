@@ -5,12 +5,16 @@ package pb;
 import "error.proto";
 
 service Merchant {
-    rpc MerchantQuery(MerchantQueryRequest) returns (MerchantQueryReply) {}
+    rpc ListMerchant(ListMerchantRequest) returns (ListMerchantReply) {}
 }
 
-message MerchantQueryRequest {}
+message ListMerchantRequest {
+    int32 page = 1;
+    int32 size = 2;
+    MerchantField merchant = 3;
+}
 
-message MerchantQueryReply {
+message ListMerchantReply {
     repeated MerchantField merchants = 1;
     int32 count = 2;
     int32 size = 3;
@@ -19,4 +23,73 @@ message MerchantQueryReply {
 }
 
 message MerchantField {
+    string mchtCd = 1;
+    string sn = 2;
+    string aipBranCd = 3;
+    string groupCd = 4;
+    string oriChnl = 5;
+    string oriChnlDesc = 6;
+    string bankBelongCd = 7;
+    string dvpBy = 8;
+    string mccCd18 = 9;
+    string applDate = 10;
+    string upBcCd = 11;
+    string upAcCd = 12;
+    string upMccCd = 13;
+    string name = 14;
+    string nameBusi = 15;
+    string busiLiceNo = 16;
+    string busiRang = 17;
+    string busiMain = 18;
+    string certif = 19;
+    string certifType = 20;
+    string certifNo = 21;
+    string cityCd = 22;
+    string areaCd = 23;
+    string regAddr = 24;
+    string contactName = 25;
+    string contactPhoneNo = 26;
+    string isGroup = 27;
+    string moneyToGroup = 28;
+    string stlmWay = 29;
+    string stlmWayDesc = 30;
+    string stlmInsCircle = 31;
+    string apprDate = 32;
+    string status = 33;
+    string deleteDate = 34;
+    string ucBcCd32 = 35;
+    string k2WorkflowId = 36;
+    string systemFlag = 37;
+    string approvalUsername = 38;
+    string finalApprovalUsername = 39;
+    string isUpStandard = 40;
+    string billingType = 41;
+    string billingLevel = 42;
+    string slogan = 43;
+    string ext1 = 44;
+    string ext2 = 45;
+    string ext3 = 46;
+    string ext4 = 47;
+    string areaStandard = 48;
+    string mchtCdAreaCd = 49;
+    string ucBcCdArea = 50;
+    string recOprId = 51;
+    string recUpdOpr = 52;
+    string recCrtTs = 53;
+    string recUpdTs = 54;
+    string operIn = 55;
+    string recApllyTs = 56;
+    string oemOrgCode = 57;
+    string isEleInvoice = 58;
+    string dutyParagraph = 59;
+    string taxMachineBrand = 60;
+    string ext5 = 61;
+    string ext6 = 62;
+    string ext7 = 63;
+    string ext8 = 64;
+    string ext9 = 65;
+    string busiLiceSt = 66;
+    string busiLiceDt = 67;
+    string certifSt = 68;
+    string certifDt = 69;
 }
