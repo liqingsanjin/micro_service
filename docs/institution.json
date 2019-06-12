@@ -321,7 +321,21 @@
             "in": "body",
             "required": true,
             "schema": {
-              "type": "object"
+              "type": "object",
+              "required": [
+                "page",
+                "size"
+              ],
+              "properties": {
+                "page": {
+                  "type": "integer",
+                  "description": "页码"
+                },
+                "size": {
+                  "type": "integer",
+                  "description": "单页大小"
+                }
+              }
             }
           }
         ],
@@ -330,10 +344,202 @@
             "description": "正确返回",
             "examples": {
               "application/json": {
-                "groups": [
-                  "00007388",
-                  "10005512"
+                "institutions": [
+                  {
+                    "insIdCd": "00007388",
+                    "insCompanyCd": "00007294",
+                    "insType": "1",
+                    "insName": "00007388收单机构",
+                    "insProvCd": "310000",
+                    "insCityCd": "310100",
+                    "insRegionCd": "",
+                    "insSta": "01",
+                    "insStlmTp": "0",
+                    "insAloStlmCycle": "0",
+                    "insAloStlmMd": "1",
+                    "insStlmCNm": "段辉",
+                    "insStlmCAcct": "62159936221233",
+                    "insStlmCBkNo": "105290080077",
+                    "insStlmCBkNm": "中国建设银行股份有限公司上海东开支行",
+                    "insStlmDNm": "王军军",
+                    "insStlmDAcct": "62156632563636",
+                    "insStlmDBkNo": "102290002406",
+                    "insStlmDBkNm": "中国工商银行上海市港汇广场支行",
+                    "msgResvFld1": "",
+                    "msgResvFld2": "",
+                    "msgResvFld3": "",
+                    "msgResvFld4": "",
+                    "msgResvFld5": "",
+                    "msgResvFld6": "",
+                    "msgResvFld7": "",
+                    "msgResvFld8": "",
+                    "msgResvFld9": "",
+                    "msgResvFld10": "",
+                    "recOprId": "U",
+                    "recCrtTs": "1552329465",
+                    "recUpdTs": "1556653918"
+                  },
+                  {
+                    "insIdCd": "10005512",
+                    "insCompanyCd": "00005512",
+                    "insType": "1",
+                    "insName": "001",
+                    "insProvCd": "110000",
+                    "insCityCd": "110100",
+                    "insRegionCd": "",
+                    "insSta": "01",
+                    "insStlmTp": "0",
+                    "insAloStlmCycle": "0",
+                    "insAloStlmMd": "1",
+                    "insStlmCNm": "3131",
+                    "insStlmCAcct": "13154616131",
+                    "insStlmCBkNo": "001121004535",
+                    "insStlmCBkNm": "中国人民银行赞皇县支行",
+                    "insStlmDNm": "",
+                    "insStlmDAcct": "",
+                    "insStlmDBkNo": "",
+                    "insStlmDBkNm": "",
+                    "msgResvFld1": "",
+                    "msgResvFld2": "",
+                    "msgResvFld3": "",
+                    "msgResvFld4": "",
+                    "msgResvFld5": "",
+                    "msgResvFld6": "",
+                    "msgResvFld7": "",
+                    "msgResvFld8": "",
+                    "msgResvFld9": "",
+                    "msgResvFld10": "",
+                    "recOprId": "I",
+                    "recCrtTs": "1481602035",
+                    "recUpdTs": "1546632360"
+                  }
                 ],
+                "count": 2,
+                "size": 10,
+                "page": 1,
+                "err": null
+              }
+            }
+          }
+        }
+      }
+    },
+    "/institution/listInstitutions": {
+      "post": {
+        "operationId": "listInstitutions",
+        "summary": "查询机构号列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "listInstitutions",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "page",
+                "size"
+              ],
+              "properties": {
+                "page": {
+                  "type": "integer",
+                  "description": "页码"
+                },
+                "size": {
+                  "type": "integer",
+                  "description": "单页大小"
+                },
+                "institution": {
+                  "type": "object",
+                  "description": "机构具体查询字段",
+                  "properties": {
+
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "institutions": [
+                  {
+                    "insIdCd": "00007388",
+                    "insCompanyCd": "00007294",
+                    "insType": "1",
+                    "insName": "00007388收单机构",
+                    "insProvCd": "310000",
+                    "insCityCd": "310100",
+                    "insRegionCd": "",
+                    "insSta": "01",
+                    "insStlmTp": "0",
+                    "insAloStlmCycle": "0",
+                    "insAloStlmMd": "1",
+                    "insStlmCNm": "段辉",
+                    "insStlmCAcct": "62159936221233",
+                    "insStlmCBkNo": "105290080077",
+                    "insStlmCBkNm": "中国建设银行股份有限公司上海东开支行",
+                    "insStlmDNm": "王军军",
+                    "insStlmDAcct": "62156632563636",
+                    "insStlmDBkNo": "102290002406",
+                    "insStlmDBkNm": "中国工商银行上海市港汇广场支行",
+                    "msgResvFld1": "",
+                    "msgResvFld2": "",
+                    "msgResvFld3": "",
+                    "msgResvFld4": "",
+                    "msgResvFld5": "",
+                    "msgResvFld6": "",
+                    "msgResvFld7": "",
+                    "msgResvFld8": "",
+                    "msgResvFld9": "",
+                    "msgResvFld10": "",
+                    "recOprId": "U",
+                    "recCrtTs": "1552329465",
+                    "recUpdTs": "1556653918"
+                  },
+                  {
+                    "insIdCd": "10005512",
+                    "insCompanyCd": "00005512",
+                    "insType": "1",
+                    "insName": "001",
+                    "insProvCd": "110000",
+                    "insCityCd": "110100",
+                    "insRegionCd": "",
+                    "insSta": "01",
+                    "insStlmTp": "0",
+                    "insAloStlmCycle": "0",
+                    "insAloStlmMd": "1",
+                    "insStlmCNm": "3131",
+                    "insStlmCAcct": "13154616131",
+                    "insStlmCBkNo": "001121004535",
+                    "insStlmCBkNm": "中国人民银行赞皇县支行",
+                    "insStlmDNm": "",
+                    "insStlmDAcct": "",
+                    "insStlmDBkNo": "",
+                    "insStlmDBkNm": "",
+                    "msgResvFld1": "",
+                    "msgResvFld2": "",
+                    "msgResvFld3": "",
+                    "msgResvFld4": "",
+                    "msgResvFld5": "",
+                    "msgResvFld6": "",
+                    "msgResvFld7": "",
+                    "msgResvFld8": "",
+                    "msgResvFld9": "",
+                    "msgResvFld10": "",
+                    "recOprId": "I",
+                    "recCrtTs": "1481602035",
+                    "recUpdTs": "1546632360"
+                  }
+                ],
+                "count": 2,
+                "size": 10,
+                "page": 1,
                 "err": null
               }
             }
