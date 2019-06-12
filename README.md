@@ -56,3 +56,15 @@ go build -ldflags='-s -w' -o apigateway cmd/apigateway/main.go
 
 docker build -t apigateway:1.0.0 -f build/deploy/Dockerfile_gateway .
 ```
+
+# 商户服务
+### 编译
+```
+./build/ci/compile_merchantservice.sh
+```
+### 编译成 docker 镜像
+```
+./build/ci/compile_merchantservice.sh
+
+docker build -t merchantservice:1.0.0 -f build/deploy/Dockerfile_merchant .
+```
