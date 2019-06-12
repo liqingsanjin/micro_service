@@ -84,7 +84,7 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 			"ListGroups",
 			encodeRequest,
 			decodeResponse,
-			pb.ListGroupsReply{},
+			pb.ListInstitutionsReply{},
 			options...,
 		).Endpoint()
 		endpoints.ListGroupsEndpoint = endpoint
@@ -139,12 +139,12 @@ func (s *InstitutionEndpoints) DownloadTfrTrnLogs(ctx context.Context, in *pb.Do
 	return reply, nil
 }
 
-func (s *InstitutionEndpoints) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListGroupsReply, error) {
+func (s *InstitutionEndpoints) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListInstitutionsReply, error) {
 	res, err := s.ListGroupsEndpoint(ctx, in)
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.ListGroupsReply)
+	reply, ok := res.(*pb.ListInstitutionsReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

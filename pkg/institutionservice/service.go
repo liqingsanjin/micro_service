@@ -175,11 +175,17 @@ func (s *setService) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrT
 	return &pb.DownloadTfrTrnLogsResp{Code: true}, nil
 }
 
-func (s *setService) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListGroupsReply, error) {
-	reply := new(pb.ListGroupsReply)
+func (s *setService) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListInstitutionsReply, error) {
+	reply := new(pb.ListInstitutionsReply)
 	db := common.DB
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	if in.Size == 0 {
+		in.Size = 10
+	}
 
-	groups, err := insmodel.ListGroups(db)
+	groups, count, err := insmodel.ListGroups(db, in.Page, in.Size)
 	if err != nil {
 		return nil, err
 	}
@@ -188,7 +194,52 @@ func (s *setService) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (
 	for i := range groups {
 		list[i] = groups[i].InsGroup
 	}
+	ins, err := insmodel.FindInstitutionInfosByIdList(db, list)
+	if err != nil {
+		return nil, err
+	}
 
-	reply.Groups = list
+	pbIns := make([]*pb.InstitutionField, len(ins))
+	for i := range ins {
+		pbIns[i] = &pb.InstitutionField{
+			InsIdCd:         ins[i].InsIDCd,
+			InsCompanyCd:    ins[i].InsCompanyCd,
+			InsType:         ins[i].InsType,
+			InsName:         ins[i].InsName,
+			InsProvCd:       ins[i].InsProvCd,
+			InsCityCd:       ins[i].InsCityCd,
+			InsRegionCd:     ins[i].InsRegionCd,
+			InsSta:          ins[i].InsSta,
+			InsStlmTp:       ins[i].InsStlmTp,
+			InsAloStlmCycle: ins[i].InsAloStlmCycle,
+			InsAloStlmMd:    ins[i].InsAloStlmMd,
+			InsStlmCNm:      ins[i].InsStlmCNm,
+			InsStlmCAcct:    ins[i].InsStlmCAcct,
+			InsStlmCBkNo:    ins[i].InsStlmCBkNo,
+			InsStlmCBkNm:    ins[i].InsStlmCBkNm,
+			InsStlmDNm:      ins[i].InsStlmDNm,
+			InsStlmDAcct:    ins[i].InsStlmDAcct,
+			InsStlmDBkNo:    ins[i].InsStlmDBkNo,
+			InsStlmDBkNm:    ins[i].InsStlmDBkNm,
+			MsgResvFld1:     ins[i].MsgResvFld1,
+			MsgResvFld2:     ins[i].MsgResvFld2,
+			MsgResvFld3:     ins[i].MsgResvFld3,
+			MsgResvFld4:     ins[i].MsgResvFld4,
+			MsgResvFld5:     ins[i].MsgResvFld5,
+			MsgResvFld6:     ins[i].MsgResvFld6,
+			MsgResvFld7:     ins[i].MsgResvFld7,
+			MsgResvFld8:     ins[i].MsgResvFld8,
+			MsgResvFld9:     ins[i].MsgResvFld9,
+			MsgResvFld10:    ins[i].MsgResvFld10,
+			RecOprId:        ins[i].RecOprID,
+			RecCrtTs:        ins[i].CreatedAt.Unix(),
+			RecUpdTs:        ins[i].UpdatedAt.Unix(),
+		}
+	}
+
+	reply.Institutions = pbIns
+	reply.Count = count
+	reply.Size = in.Size
+	reply.Page = in.Page
 	return reply, nil
 }

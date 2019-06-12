@@ -9,7 +9,8 @@ service Institution {
     rpc GetTfrTrnLogs(GetTfrTrnLogsReq) returns (GetTfrTrnLogsResp){}
     rpc GetTfrTrnLog(GetTfrTrnLogReq) returns (GetTfrTrnLogResp){}
     rpc DownloadTfrTrnLogs(DownloadTfrTrnLogsReq) returns (DownloadTfrTrnLogsResp){}
-    rpc ListGroups(ListGroupsRequest) returns (ListGroupsReply) {}
+    rpc ListGroups(ListGroupsRequest) returns (ListInstitutionsReply) {}
+    //rpc ListInstitutionIds(ListInstitutionIdsRequest) returns (ListInstitutionsReply) {}
 }
 
 message InstitutionTnxHisDownloadReq {
@@ -230,9 +231,56 @@ message DownloadTfrTrnLogsResp {
 	error err = 2;
 }
 
-message ListGroupsRequest {}
+message ListGroupsRequest {
+    int32 page = 1;
+    int32 size = 2;
+}
 
-message ListGroupsReply {
-    repeated string groups = 1;
-    error err = 2;
+message ListInstitutionsReply {
+    repeated InstitutionField institutions = 1;
+    int32 count = 2;
+    int32 size = 3;
+    int32 page = 4;
+    error err = 5;
+}
+
+message ListInstitutionIdsRequest {
+    int32 page = 1;
+    int32 size = 2;
+    InstitutionField institution = 3;
+}
+
+message InstitutionField {
+    string insIdCd = 1;
+    string insCompanyCd = 2;
+    string insType = 3;
+    string insName = 4;
+    string insProvCd = 5;
+    string insCityCd = 6;
+    string insRegionCd= 7;
+    string insSta = 8;
+    string insStlmTp = 9;
+    string insAloStlmCycle = 10;
+    string insAloStlmMd = 11;
+    string insStlmCNm = 12;
+    string insStlmCAcct = 13;
+    string insStlmCBkNo = 14;
+    string insStlmCBkNm = 15;
+    string insStlmDNm = 16;
+    string insStlmDAcct = 17;
+    string insStlmDBkNo = 18;
+    string insStlmDBkNm = 19;
+    string msgResvFld1 = 20;
+    string msgResvFld2 = 21;
+    string msgResvFld3 = 22;
+    string msgResvFld4 = 23;
+    string msgResvFld5 = 24;
+    string msgResvFld6 = 25;
+    string msgResvFld7 = 26;
+    string msgResvFld8 = 27;
+    string msgResvFld9 = 28;
+    string msgResvFld10 = 29;
+    string recOprId = 30;
+    int64 recCrtTs = 31;
+    int64 recUpdTs = 32;
 }

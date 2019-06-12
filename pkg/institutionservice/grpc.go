@@ -90,12 +90,12 @@ func grpcEncode(_ context.Context, res interface{}) (interface{}, error) {
 	return res, nil
 }
 
-func (g *grpcServer) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListGroupsReply, error) {
+func (g *grpcServer) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListInstitutionsReply, error) {
 	_, res, err := g.listGroupsHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.ListGroupsReply)
+	reply, ok := res.(*pb.ListInstitutionsReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

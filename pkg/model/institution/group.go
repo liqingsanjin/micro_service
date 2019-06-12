@@ -17,11 +17,13 @@ func (i InstitutionGroup) TableName() string {
 	return "TBL_INS_GROUP"
 }
 
-func ListGroups(db *gorm.DB) ([]*InstitutionGroup, error) {
+func ListGroups(db *gorm.DB, page int32, size int32) ([]*InstitutionGroup, int32, error) {
 	gs := make([]*InstitutionGroup, 0)
-	err := db.Select("INS_GROUP").Group("INS_GROUP").Find(&gs).Error
+	var count int32
+	db.Model(&InstitutionGroup{}).Group("INS_GROUP").Count(&count)
+	err := db.Select("INS_GROUP").Offset((page - 1) * size).Limit(size).Group("INS_GROUP").Find(&gs).Error
 	if err == gorm.ErrRecordNotFound {
-		return gs, nil
+		return gs, count, nil
 	}
-	return gs, err
+	return gs, count, err
 }
