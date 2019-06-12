@@ -1,0 +1,138 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "static api"
+  },
+  "host": "172.16.7.120:8080",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/merchant/listMerchant": {
+      "post": {
+        "operationId": "listMerchant",
+        "summary": "查询商户号列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "listMerchant",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "page",
+                "size"
+              ],
+              "properties": {
+                "page": {
+                  "type": "integer",
+                  "description": "页码"
+                },
+                "size": {
+                  "type": "integer",
+                  "description": "单页大小"
+                },
+                "merchant": {
+                  "type": "object",
+                  "description": "商户具体查询字段",
+                  "properties": {
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "merchants": [
+                  {
+                    "mchtCd": "0001000F0507465",
+                    "sn": "7465",
+                    "aipBranCd": "80009999",
+                    "groupCd": "",
+                    "oriChnl": "0",
+                    "oriChnlDesc": "",
+                    "bankBelongCd": "80000000",
+                    "dvpBy": "",
+                    "mccCd18": "5499",
+                    "applDate": "2017-12-14",
+                    "upBcCd": "996",
+                    "upAcCd": "",
+                    "upMccCd": "5499",
+                    "name": "买乐便利店",
+                    "nameBusi": "买乐便利店",
+                    "busiLiceNo": "10086",
+                    "busiRang": "专业化服务移交",
+                    "busiMain": "专业化服务移交",
+                    "certif": "刘金令",
+                    "certifType": "01",
+                    "certifNo": "272924198912175431",
+                    "cityCd": "510100",
+                    "areaCd": "510132",
+                    "regAddr": "名扬国际",
+                    "contactName": "刘金令",
+                    "contactPhoneNo": "18616306119",
+                    "isGroup": "0",
+                    "moneyToGroup": "",
+                    "stlmWay": "1",
+                    "stlmWayDesc": "",
+                    "stlmInsCircle": "0",
+                    "apprDate": "",
+                    "status": "01",
+                    "deleteDate": "",
+                    "ucBcCd32": "80002900",
+                    "k2WorkflowId": "",
+                    "systemFlag": "01",
+                    "approvalUsername": "",
+                    "finalApprovalUsername": "",
+                    "isUpStandard": "0",
+                    "billingType": "00",
+                    "billingLevel": "000",
+                    "slogan": "",
+                    "ext1": "",
+                    "ext2": "",
+                    "ext3": "",
+                    "ext4": "",
+                    "areaStandard": "0",
+                    "mchtCdAreaCd": "510000510100",
+                    "ucBcCdArea": "29002900",
+                    "recOprId": "",
+                    "recUpdOpr": "",
+                    "recCrtTs": "2017-12-15 00:50:34",
+                    "recUpdTs": "2017-12-15 00:50:34",
+                    "operIn": "I",
+                    "recApllyTs": "2017-12-15 00:50:34",
+                    "oemOrgCode": "",
+                    "isEleInvoice": "",
+                    "dutyParagraph": "",
+                    "taxMachineBrand": "",
+                    "ext5": "",
+                    "ext6": "",
+                    "ext7": "",
+                    "ext8": "1",
+                    "ext9": "",
+                    "busiLiceSt": "",
+                    "busiLiceDt": "",
+                    "certifSt": "",
+                    "certifDt": ""
+                  }
+                ],
+                "count": 12425,
+                "size": 1,
+                "page": 1,
+                "err": null
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
