@@ -243,3 +243,98 @@ func (s *setService) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (
 	reply.Page = in.Page
 	return reply, nil
 }
+
+func (s *setService) ListInstitutions(ctx context.Context, in *pb.ListInstitutionsRequest) (*pb.ListInstitutionsReply, error) {
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	if in.Size == 0 {
+		in.Size = 10
+	}
+
+	db := common.DB
+
+	query := new(insmodel.InstitutionInfo)
+	if in.Institution != nil {
+		query.InsIDCd = in.Institution.InsIdCd
+		query.InsCompanyCd = in.Institution.InsCompanyCd
+		query.InsType = in.Institution.InsType
+		query.InsName = in.Institution.InsName
+		query.InsProvCd = in.Institution.InsProvCd
+		query.InsCityCd = in.Institution.InsCityCd
+		query.InsRegionCd = in.Institution.InsRegionCd
+		query.InsSta = in.Institution.InsSta
+		query.InsStlmTp = in.Institution.InsStlmTp
+		query.InsAloStlmCycle = in.Institution.InsAloStlmCycle
+		query.InsAloStlmMd = in.Institution.InsAloStlmMd
+		query.InsStlmCNm = in.Institution.InsStlmCNm
+		query.InsStlmCAcct = in.Institution.InsStlmCAcct
+		query.InsStlmCBkNo = in.Institution.InsStlmCBkNo
+		query.InsStlmCBkNm = in.Institution.InsStlmCBkNm
+		query.InsStlmDNm = in.Institution.InsStlmDNm
+		query.InsStlmDAcct = in.Institution.InsStlmDAcct
+		query.InsStlmDBkNo = in.Institution.InsStlmDBkNo
+		query.InsStlmDBkNm = in.Institution.InsStlmDBkNm
+		query.MsgResvFld1 = in.Institution.MsgResvFld1
+		query.MsgResvFld2 = in.Institution.MsgResvFld2
+		query.MsgResvFld3 = in.Institution.MsgResvFld3
+		query.MsgResvFld4 = in.Institution.MsgResvFld4
+		query.MsgResvFld5 = in.Institution.MsgResvFld5
+		query.MsgResvFld6 = in.Institution.MsgResvFld6
+		query.MsgResvFld7 = in.Institution.MsgResvFld7
+		query.MsgResvFld8 = in.Institution.MsgResvFld8
+		query.MsgResvFld9 = in.Institution.MsgResvFld9
+		query.MsgResvFld10 = in.Institution.MsgResvFld10
+		query.RecOprID = in.Institution.RecOprId
+	}
+	ins, count, err := insmodel.QueryInstitutionInfo(db, query, in.Page, in.Size)
+	if err != nil {
+		return nil, err
+	}
+
+	pbIns := make([]*pb.InstitutionField, len(ins))
+
+	for i := range ins {
+		pbIns[i] = &pb.InstitutionField{
+			InsIdCd:         ins[i].InsIDCd,
+			InsCompanyCd:    ins[i].InsCompanyCd,
+			InsType:         ins[i].InsType,
+			InsName:         ins[i].InsName,
+			InsProvCd:       ins[i].InsProvCd,
+			InsCityCd:       ins[i].InsCityCd,
+			InsRegionCd:     ins[i].InsRegionCd,
+			InsSta:          ins[i].InsSta,
+			InsStlmTp:       ins[i].InsStlmTp,
+			InsAloStlmCycle: ins[i].InsAloStlmCycle,
+			InsAloStlmMd:    ins[i].InsAloStlmMd,
+			InsStlmCNm:      ins[i].InsStlmCNm,
+			InsStlmCAcct:    ins[i].InsStlmCAcct,
+			InsStlmCBkNo:    ins[i].InsStlmCBkNo,
+			InsStlmCBkNm:    ins[i].InsStlmCBkNm,
+			InsStlmDNm:      ins[i].InsStlmDNm,
+			InsStlmDAcct:    ins[i].InsStlmDAcct,
+			InsStlmDBkNo:    ins[i].InsStlmDBkNo,
+			InsStlmDBkNm:    ins[i].InsStlmDBkNm,
+			MsgResvFld1:     ins[i].MsgResvFld1,
+			MsgResvFld2:     ins[i].MsgResvFld2,
+			MsgResvFld3:     ins[i].MsgResvFld3,
+			MsgResvFld4:     ins[i].MsgResvFld4,
+			MsgResvFld5:     ins[i].MsgResvFld5,
+			MsgResvFld6:     ins[i].MsgResvFld6,
+			MsgResvFld7:     ins[i].MsgResvFld7,
+			MsgResvFld8:     ins[i].MsgResvFld8,
+			MsgResvFld9:     ins[i].MsgResvFld9,
+			MsgResvFld10:    ins[i].MsgResvFld10,
+			RecOprId:        ins[i].RecOprID,
+			RecCrtTs:        ins[i].CreatedAt.Unix(),
+			RecUpdTs:        ins[i].UpdatedAt.Unix(),
+		}
+	}
+
+	return &pb.ListInstitutionsReply{
+		Institutions: pbIns,
+		Count:        count,
+		Page:         in.Page,
+		Size:         in.Size,
+	}, nil
+}

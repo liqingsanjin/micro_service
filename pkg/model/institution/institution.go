@@ -46,13 +46,15 @@ func (i InstitutionInfo) TableName() string {
 	return "TBL_EDIT_INS_INF"
 }
 
-func QueryInstitutionInfo(db *gorm.DB, query *InstitutionInfo) ([]*InstitutionInfo, error) {
+func QueryInstitutionInfo(db *gorm.DB, query *InstitutionInfo, page int32, size int32) ([]*InstitutionInfo, int32, error) {
 	out := make([]*InstitutionInfo, 0)
-	err := db.Where(query).Find(&out).Error
+	var count int32
+	db.Model(&InstitutionInfo{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
 	if err == gorm.ErrRecordNotFound {
-		return out, nil
+		return out, count, nil
 	}
-	return out, err
+	return out, count, err
 }
 
 func FindInstitutionInfoById(db *gorm.DB, id string) (*InstitutionInfo, error) {

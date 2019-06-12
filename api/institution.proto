@@ -10,7 +10,7 @@ service Institution {
     rpc GetTfrTrnLog(GetTfrTrnLogReq) returns (GetTfrTrnLogResp){}
     rpc DownloadTfrTrnLogs(DownloadTfrTrnLogsReq) returns (DownloadTfrTrnLogsResp){}
     rpc ListGroups(ListGroupsRequest) returns (ListInstitutionsReply) {}
-    //rpc ListInstitutionIds(ListInstitutionIdsRequest) returns (ListInstitutionsReply) {}
+    rpc ListInstitutions(ListInstitutionsRequest) returns (ListInstitutionsReply) {}
 }
 
 message InstitutionTnxHisDownloadReq {
@@ -244,7 +244,7 @@ message ListInstitutionsReply {
     error err = 5;
 }
 
-message ListInstitutionIdsRequest {
+message ListInstitutionsRequest {
     int32 page = 1;
     int32 size = 2;
     InstitutionField institution = 3;
