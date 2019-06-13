@@ -6,6 +6,7 @@ import "error.proto";
 
 service Merchant {
     rpc ListMerchant(ListMerchantRequest) returns (ListMerchantReply) {}
+    rpc ListGroupMerchant(ListGroupMerchantRequest) returns (ListGroupMerchantReply) {}
 }
 
 message ListMerchantRequest {
@@ -92,4 +93,39 @@ message MerchantField {
     string busiLiceDt = 67;
     string certifSt = 68;
     string certifDt = 69;
+}
+
+message MerchantGroupField {
+    string jtMchtCd = 1;
+    string jtMchtNm = 2;
+    string jtArea = 3;
+    string mchtStlmCNm = 4;
+    string mchtStlmCAcct = 5;
+    string chtStlmInsIdCd = 6;
+    string mchtStlmInsNm = 7;
+    string mchtPaySysAcct = 8;
+    string provCd = 9;
+    string cityCd = 10;
+    string aipBranCd = 11;
+    string systemFlag = 12;
+    string status = 13;
+    string updatedAt = 14;
+    string createdAt = 15;
+    string recOprId = 16;
+    string recUpdOpr = 17;
+    string jtAddr = 18;
+}
+
+message ListGroupMerchantRequest {
+    int32 page = 1;
+    int32 size = 2;
+    MerchantGroupField group = 3;
+}
+
+message ListGroupMerchantReply {
+    repeated MerchantGroupField groups = 1;
+    int32 count = 2;
+    int32 size = 3;
+    int32 page = 4;
+    error err = 5;
 }

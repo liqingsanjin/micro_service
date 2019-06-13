@@ -9,7 +9,8 @@ import (
 )
 
 type merchantServer struct {
-	MerchantQueryHandler grpctransport.Handler
+	ListMerchantHandler      grpctransport.Handler
+	ListGroupMerchantHandler grpctransport.Handler
 }
 
 func New(tracer grpctransport.ServerOption) pb.MerchantServer {
@@ -22,7 +23,17 @@ func New(tracer grpctransport.ServerOption) pb.MerchantServer {
 	{
 		endpoint := MakeListMerchantEndpoint(service)
 		endpoint = kit.LogginMiddleware(endpoint)
-		svr.MerchantQueryHandler = grpctransport.NewServer(
+		svr.ListMerchantHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+	{
+		endpoint := MakeListGroupMerchantEndpoint(service)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.ListGroupMerchantHandler = grpctransport.NewServer(
 			endpoint,
 			kit.DecodeRequest,
 			kit.EncodeResponse,
@@ -34,11 +45,22 @@ func New(tracer grpctransport.ServerOption) pb.MerchantServer {
 }
 
 func (m *merchantServer) ListMerchant(ctx context.Context, in *pb.ListMerchantRequest) (*pb.ListMerchantReply, error) {
-	_, res, err := m.MerchantQueryHandler.ServeGRPC(ctx, in)
+	_, res, err := m.ListMerchantHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
 	}
 	reply, ok := res.(*pb.ListMerchantReply)
+	if !ok {
+		return nil, kit.ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+func (m *merchantServer) ListGroupMerchant(ctx context.Context, in *pb.ListGroupMerchantRequest) (*pb.ListGroupMerchantReply, error) {
+	_, res, err := m.ListGroupMerchantHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.ListGroupMerchantReply)
 	if !ok {
 		return nil, kit.ErrReplyTypeInvalid
 	}

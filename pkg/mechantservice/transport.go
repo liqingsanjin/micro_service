@@ -18,3 +18,13 @@ func MakeListMerchantEndpoint(service pb.MerchantServer) endpoint.Endpoint {
 		return service.ListMerchant(ctx, req)
 	}
 }
+
+func MakeListGroupMerchantEndpoint(service pb.MerchantServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.ListGroupMerchantRequest)
+		if !ok {
+			return nil, kit.ErrRequestTypeInvalid
+		}
+		return service.ListGroupMerchant(ctx, req)
+	}
+}

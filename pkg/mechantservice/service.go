@@ -185,3 +185,73 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 		Size:      in.Size,
 	}, nil
 }
+
+func (m *merchantService) ListGroupMerchant(ctx context.Context, in *pb.ListGroupMerchantRequest) (*pb.ListGroupMerchantReply, error) {
+	if in.Size == 0 {
+		in.Size = 10
+	}
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	db := common.DB
+
+	query := new(merchantmodel.Group)
+	if in.Group != nil {
+		query.JtMchtCd = in.Group.JtMchtCd
+		query.JtMchtNm = in.Group.JtMchtNm
+		query.JtArea = in.Group.JtArea
+		query.MchtStlmCNm = in.Group.MchtStlmCNm
+		query.MchtStlmCAcct = in.Group.MchtStlmCAcct
+		query.ChtStlmInsIdCd = in.Group.ChtStlmInsIdCd
+		query.MchtStlmInsNm = in.Group.MchtStlmInsNm
+		query.MchtPaySysAcct = in.Group.MchtPaySysAcct
+		query.ProvCd = in.Group.ProvCd
+		query.CityCd = in.Group.CityCd
+		query.AipBranCd = in.Group.AipBranCd
+		query.SystemFlag = in.Group.SystemFlag
+		query.Status = in.Group.Status
+		query.RecOprId = in.Group.RecOprId
+		query.RecUpdOpr = in.Group.RecUpdOpr
+		query.JtAddr = in.Group.JtAddr
+	}
+
+	groups, count, err := merchantmodel.QueryMerchantGroups(db, query, in.Page, in.Size)
+	if err != nil {
+		return nil, err
+	}
+
+	pbGroups := make([]*pb.MerchantGroupField, len(groups))
+
+	for i := range groups {
+		pbGroups[i] = &pb.MerchantGroupField{
+			JtMchtCd:       groups[i].JtMchtCd,
+			JtMchtNm:       groups[i].JtMchtNm,
+			JtArea:         groups[i].JtArea,
+			MchtStlmCNm:    groups[i].MchtStlmCNm,
+			MchtStlmCAcct:  groups[i].MchtStlmCAcct,
+			ChtStlmInsIdCd: groups[i].ChtStlmInsIdCd,
+			MchtStlmInsNm:  groups[i].MchtStlmInsNm,
+			MchtPaySysAcct: groups[i].MchtPaySysAcct,
+			ProvCd:         groups[i].ProvCd,
+			CityCd:         groups[i].CityCd,
+			AipBranCd:      groups[i].AipBranCd,
+			SystemFlag:     groups[i].SystemFlag,
+			Status:         groups[i].Status,
+			RecOprId:       groups[i].RecOprId,
+			RecUpdOpr:      groups[i].RecUpdOpr,
+			JtAddr:         groups[i].JtAddr,
+		}
+		if !groups[i].CreatedAt.IsZero() {
+			pbGroups[i].CreatedAt = groups[i].CreatedAt.Format("2006-01-02 15:04:05")
+		}
+		if !groups[i].UpdatedAt.IsZero() {
+			pbGroups[i].UpdatedAt = groups[i].UpdatedAt.Format("2006-01-02 15:04:05")
+		}
+	}
+	return &pb.ListGroupMerchantReply{
+		Groups: pbGroups,
+		Count:  count,
+		Page:   in.Page,
+		Size:   in.Size,
+	}, nil
+}

@@ -30,6 +30,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		SleepWindow:           10000,
 	})
 	userBreaker := circuitbreaker.Hystrix(userbreaker)
+
 	{
 		factory := merchantServiceFactory(merchantservice.MakeListMerchantEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
@@ -38,6 +39,16 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		retry = userBreaker(retry)
 		endpoints.ListMerchantEndpoint = retry
 	}
+
+	{
+		factory := merchantServiceFactory(merchantservice.MakeListGroupMerchantEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = userBreaker(retry)
+		endpoints.ListGroupMerchantEndpoint = retry
+	}
+
 	return &endpoints
 }
 

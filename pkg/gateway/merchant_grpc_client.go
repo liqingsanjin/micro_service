@@ -12,7 +12,8 @@ import (
 )
 
 type MerchantEndpoint struct {
-	ListMerchantEndpoint endpoint.Endpoint
+	ListMerchantEndpoint      endpoint.Endpoint
+	ListGroupMerchantEndpoint endpoint.Endpoint
 }
 
 func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *MerchantEndpoint {
@@ -34,6 +35,20 @@ func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption
 		).Endpoint()
 		endpoints.ListMerchantEndpoint = endpoint
 	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Merchant",
+			"ListGroupMerchant",
+			encodeRequest,
+			decodeResponse,
+			pb.ListGroupMerchantReply{},
+			options...,
+		).Endpoint()
+		endpoints.ListGroupMerchantEndpoint = endpoint
+	}
+
 	return endpoints
 }
 
@@ -43,6 +58,18 @@ func (m *MerchantEndpoint) ListMerchant(ctx context.Context, in *pb.ListMerchant
 		return nil, err
 	}
 	reply, ok := res.(*pb.ListMerchantReply)
+	if !ok {
+		return nil, kit.ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (m *MerchantEndpoint) ListGroupMerchant(ctx context.Context, in *pb.ListGroupMerchantRequest) (*pb.ListGroupMerchantReply, error) {
+	res, err := m.ListGroupMerchantEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.ListGroupMerchantReply)
 	if !ok {
 		return nil, kit.ErrReplyTypeInvalid
 	}
