@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "version": "0.0.1",
-    "title": "static api"
+    "title": "merchant api"
   },
   "host": "172.16.7.120:8080",
   "schemes": [

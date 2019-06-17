@@ -1,0 +1,103 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "term api"
+  },
+  "host": "172.16.7.120:8080",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/term/listTermInfo": {
+      "post": {
+        "operationId": "listTermInfo",
+        "summary": "终端查询",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "listTermInfo",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "page",
+                "size"
+              ],
+              "properties": {
+                "page": {
+                  "type": "integer",
+                  "description": "页码"
+                },
+                "size": {
+                  "type": "integer",
+                  "description": "单页大小"
+                },
+                "term": {
+                  "type": "object",
+                  "description": "商户具体查询字段",
+                  "properties": {
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "page": 1,
+                "size": 2,
+                "count": 1,
+                "terms": [
+                  {
+                    "mchtCd": "002130307630000",
+                    "termId": "00000001",
+                    "termTp": "98",
+                    "belong": "7",
+                    "belongSub": "7700",
+                    "tmnlMoneyIntype": "0",
+                    "tmnlMoney": 1111,
+                    "tmnlBrand": "04",
+                    "tmnlModelNo": "22",
+                    "tmnlBarcode": "11",
+                    "deviceCd": "04A81603090232",
+                    "installLocation": "0.0-0.0",
+                    "tmnlIntype": "0",
+                    "dialOut": "11",
+                    "dealTypes": "",
+                    "recOprId": "I",
+                    "recUpdOpr": "42378",
+                    "createdAt": "2016-10-13 04:54:47",
+                    "updatedAt": "2016-10-13 04:58:39",
+                    "appCd": "00",
+                    "systemFlag": "01",
+                    "status": "01",
+                    "activeCode": "P73Z5I",
+                    "noFlag": "",
+                    "msgResvFld1": "",
+                    "msgResvFld2": "",
+                    "msgResvFld3": "",
+                    "msgResvFld4": "",
+                    "msgResvFld5": "",
+                    "msgResvFld6": "",
+                    "msgResvFld7": "",
+                    "msgResvFld8": "",
+                    "msgResvFld9": "",
+                    "msgResvFld10": ""
+                  }
+                ],
+                "err": null
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
