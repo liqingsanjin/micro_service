@@ -7,7 +7,7 @@ import (
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
-func RegisterMerchantHandler(engine *gin.Engine, endpoints *MerchantEndpoint) {
+func RegisterMerchantHandler(engine *gin.Engine, endpoints *MerchantEndpoints) {
 	group := engine.Group("/merchant")
 
 	group.POST("/listMerchant", convertHttpHandlerToGinHandler(httptransport.NewServer(

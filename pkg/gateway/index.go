@@ -10,7 +10,15 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func NewHttpHandler(endpoints *UserEndpoints, staticEndpoints *StaticEndpoints, institutionEndpoints *InstitutionEndpoints, merchantEndpoints *MerchantEndpoint) http.Handler {
+type ClientEndpoints struct {
+	UserEndpoints        *UserEndpoints
+	StaticEndpoints      *StaticEndpoints
+	InstitutionEndpoints *InstitutionEndpoints
+	MerchantEndpoints    *MerchantEndpoints
+	TermEndpoints        *TermEndpoints
+}
+
+func NewHttpHandler(c *ClientEndpoints) http.Handler {
 	engine := gin.New()
 	engine.Use(logRequest)
 	engine.Use(cors.New(cors.Config{
@@ -19,10 +27,11 @@ func NewHttpHandler(endpoints *UserEndpoints, staticEndpoints *StaticEndpoints, 
 		AllowHeaders:     []string{"*"},
 		AllowCredentials: true,
 	}))
-	RegisterUserHandler(engine, endpoints)
-	RegisterStaticHandler(engine, staticEndpoints)
-	RegisterInstitutionHandler(engine, institutionEndpoints)
-	RegisterMerchantHandler(engine, merchantEndpoints)
+	RegisterUserHandler(engine, c.UserEndpoints)
+	RegisterStaticHandler(engine, c.StaticEndpoints)
+	RegisterInstitutionHandler(engine, c.InstitutionEndpoints)
+	RegisterMerchantHandler(engine, c.MerchantEndpoints)
+	RegisterTermHandler(engine, c.TermEndpoints)
 	return engine
 }
 

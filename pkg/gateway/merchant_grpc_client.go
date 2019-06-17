@@ -11,13 +11,13 @@ import (
 	"google.golang.org/grpc"
 )
 
-type MerchantEndpoint struct {
+type MerchantEndpoints struct {
 	ListMerchantEndpoint      endpoint.Endpoint
 	ListGroupMerchantEndpoint endpoint.Endpoint
 }
 
-func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *MerchantEndpoint {
-	endpoints := new(MerchantEndpoint)
+func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *MerchantEndpoints {
+	endpoints := new(MerchantEndpoints)
 	options := make([]kitgrpc.ClientOption, 0)
 	if tracer != nil {
 		options = append(options, tracer)
@@ -52,7 +52,7 @@ func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption
 	return endpoints
 }
 
-func (m *MerchantEndpoint) ListMerchant(ctx context.Context, in *pb.ListMerchantRequest) (*pb.ListMerchantReply, error) {
+func (m *MerchantEndpoints) ListMerchant(ctx context.Context, in *pb.ListMerchantRequest) (*pb.ListMerchantReply, error) {
 	res, err := m.ListMerchantEndpoint(ctx, in)
 	if err != nil {
 		return nil, err
@@ -64,7 +64,7 @@ func (m *MerchantEndpoint) ListMerchant(ctx context.Context, in *pb.ListMerchant
 	return reply, nil
 }
 
-func (m *MerchantEndpoint) ListGroupMerchant(ctx context.Context, in *pb.ListGroupMerchantRequest) (*pb.ListGroupMerchantReply, error) {
+func (m *MerchantEndpoints) ListGroupMerchant(ctx context.Context, in *pb.ListGroupMerchantRequest) (*pb.ListGroupMerchantReply, error) {
 	res, err := m.ListGroupMerchantEndpoint(ctx, in)
 	if err != nil {
 		return nil, err

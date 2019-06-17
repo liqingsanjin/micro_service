@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package pb;
+
+import "error.proto";
+
+service Term {
+    rpc ListTermInfo(ListTermInfoRequest) returns (ListTermInfoReply) {}
+}
+
+message ListTermInfoRequest {
+    int32 page = 1;
+    int32 size = 2;
+    TermInfoField term = 3;
+}
+
+message ListTermInfoReply {
+    int32 page = 1;
+    int32 size = 2;
+    int32 count = 3;
+    repeated TermInfoField terms = 4;
+    error err = 5;
+}
+
+message TermInfoField {
+    string mchtCd = 1;
+    string termId = 2;
+    string termTp = 3;
+    string belong = 4;
+    string belongSub = 5;
+    string tmnlMoneyIntype = 6;
+    double tmnlMoney = 7;
+    string tmnlBrand = 8;
+    string tmnlModelNo = 9;
+    string tmnlBarcode = 10;
+    string deviceCd = 11;
+    string installLocation = 12;
+    string tmnlIntype = 13;
+    string dialOut = 14;
+    string dealTypes = 15;
+    string recOprId = 16;
+    string recUpdOpr = 17;
+    string createdAt = 18;
+    string updatedAt = 19;
+    string appCd = 20;
+    string systemFlag = 21;
+    string status = 22;
+    string activeCode = 23;
+    string noFlag = 24;
+    string msgResvFld1 = 25;
+    string msgResvFld2 = 26;
+    string msgResvFld3 = 27;
+    string msgResvFld4 = 28;
+    string msgResvFld5 = 29;
+    string msgResvFld6 = 30;
+    string msgResvFld7 = 31;
+    string msgResvFld8 = 32;
+    string msgResvFld9 = 33;
+    string msgResvFld10 = 34;
+}

@@ -23,7 +23,7 @@ const (
 	institutionbreaker = "institutionbreaker"
 )
 
-func GetInstitutionCliEndpoints(instancer sd.Instancer, log log.Logger) InstitutionEndpoints {
+func GetInstitutionCliEndpoints(instancer sd.Instancer, log log.Logger) *InstitutionEndpoints {
 	var endpoints InstitutionEndpoints
 
 	hystrix.ConfigureCommand(institutionbreaker, hystrix.CommandConfig{
@@ -87,7 +87,7 @@ func GetInstitutionCliEndpoints(instancer sd.Instancer, log log.Logger) Institut
 		retry = institutionBreaker(retry)
 		endpoints.ListInstitutionsEndpoint = retry
 	}
-	return endpoints
+	return &endpoints
 }
 
 func institutionserviceFactory(makeEndpoint func(pb.InstitutionServer) endpoint.Endpoint) sd.Factory {

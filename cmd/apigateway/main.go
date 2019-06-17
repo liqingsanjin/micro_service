@@ -41,14 +41,16 @@ func main() {
 		staticInstancer      = consulsd.NewInstancer(client, log, "staticService", tags, passingOnly)
 		institutionInstancer = consulsd.NewInstancer(client, log, "institutionService", tags, passingOnly)
 		merchantInstancer    = consulsd.NewInstancer(client, log, "merchantService", tags, passingOnly)
+		termInstancer        = consulsd.NewInstancer(client, log, "termService", tags, passingOnly)
 	)
+	endpoints := new(gateway.ClientEndpoints)
+	endpoints.UserEndpoints = gateway.GetUserEndpoints(instancer, log)
+	endpoints.StaticEndpoints = gateway.GetStaticCliEndpoints(staticInstancer, log)
+	endpoints.InstitutionEndpoints = gateway.GetInstitutionCliEndpoints(institutionInstancer, log)
+	endpoints.MerchantEndpoints = gateway.GetMerchantEndpoints(merchantInstancer, log)
+	endpoints.TermEndpoints = gateway.GetTermEndpoints(termInstancer, log)
 
-	userEndpoint := gateway.GetUserEndpoints(instancer, log)
-	staticEndpoint := gateway.GetStaticCliEndpoints(staticInstancer, log)
-	institutionEndpoint := gateway.GetInstitutionCliEndpoints(institutionInstancer, log)
-	merchantEndpoint := gateway.GetMerchantEndpoints(merchantInstancer, log)
-
-	userHandler := gateway.NewHttpHandler(userEndpoint, &staticEndpoint, &institutionEndpoint, merchantEndpoint)
+	userHandler := gateway.NewHttpHandler(endpoints)
 	http.ListenAndServe(":"+port, userHandler)
 }
 

@@ -23,7 +23,7 @@ const (
 	staticbreaker = "staticbreaker"
 )
 
-func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) StaticEndpoints {
+func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoints {
 
 	var endpoints StaticEndpoints
 
@@ -80,7 +80,7 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) StaticEndpoin
 		endpoints.CheckValuesEndpoint = retry
 	}
 
-	return endpoints
+	return &endpoints
 }
 
 func staticserviceFactory(makeEndpoint func(pb.StaticServer) endpoint.Endpoint) sd.Factory {
