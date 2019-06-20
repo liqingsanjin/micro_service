@@ -13,6 +13,7 @@ service Institution {
     rpc ListInstitutions(ListInstitutionsRequest) returns (ListInstitutionsReply) {}
     rpc AddInstitution(AddInstitutionRequest) returns (AddInstitutionReply) {}
     rpc AddInstitutionFee(AddInstitutionFeeRequest) returns (AddInstitutionFeeReply) {}
+    rpc AddInstitutionControl(AddInstitutionControlRequest) returns (AddInstitutionControlReply) {}
 }
 
 message InstitutionTnxHisDownloadReq {
@@ -336,4 +337,36 @@ message InstitutionFeeField {
     string recUpdOpr = 30;
     string createdAt = 31;
     string updatedAt = 32;
+}
+
+message AddInstitutionControlRequest {
+    AddInstitutionControlField institutionControl = 1;
+}
+
+message AddInstitutionControlReply {
+    error err = 1;
+}
+
+message AddInstitutionControlField {
+    string insIdCd = 1;
+    string insCompanyCd = 2;
+    string prodCd = 3;
+    string bizCd = 4;
+    string ctrlSta = 5;
+    string insBegTm = 6;
+    string insEndTm = 7;
+    string msgResvFld1 = 8;
+    string msgResvFld2 = 9;
+    string msgResvFld3 = 10;
+    string msgResvFld4 = 11;
+    string msgResvFld5 = 12;
+    string msgResvFld6 = 13;
+    string msgResvFld7 = 14;
+    string msgResvFld8 = 15;
+    string msgResvFld9 = 16;
+    string msgResvFld10 = 17;
+    string recOprId = 18;
+    string recUpdOpr = 19;
+    string createdAt = 20;
+    string updatedAt = 21;
 }

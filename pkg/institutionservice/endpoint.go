@@ -76,3 +76,13 @@ func MakeAddInstitutionFeeEndpoint(service pb.InstitutionServer) endpoint.Endpoi
 		return service.AddInstitutionFee(ctx, req)
 	}
 }
+
+func MakeAddInstitutionControlEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.AddInstitutionControlRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.AddInstitutionControl(ctx, req)
+	}
+}

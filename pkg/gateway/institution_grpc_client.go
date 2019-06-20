@@ -12,14 +12,15 @@ import (
 )
 
 type InstitutionEndpoints struct {
-	TnxHisDownloadEndpoint     endpoint.Endpoint
-	GetTfrTrnLogsEndpoint      endpoint.Endpoint
-	GetTfrTrnLogEndpoint       endpoint.Endpoint
-	DownloadTfrTrnLogsEndpoint endpoint.Endpoint
-	ListGroupsEndpoint         endpoint.Endpoint
-	ListInstitutionsEndpoint   endpoint.Endpoint
-	AddInstitutionEndpoint     endpoint.Endpoint
-	AddInstitutionFeeEndpoint  endpoint.Endpoint
+	TnxHisDownloadEndpoint        endpoint.Endpoint
+	GetTfrTrnLogsEndpoint         endpoint.Endpoint
+	GetTfrTrnLogEndpoint          endpoint.Endpoint
+	DownloadTfrTrnLogsEndpoint    endpoint.Endpoint
+	ListGroupsEndpoint            endpoint.Endpoint
+	ListInstitutionsEndpoint      endpoint.Endpoint
+	AddInstitutionEndpoint        endpoint.Endpoint
+	AddInstitutionFeeEndpoint     endpoint.Endpoint
+	AddInstitutionControlEndpoint endpoint.Endpoint
 }
 
 func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *InstitutionEndpoints {
@@ -132,6 +133,19 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 		endpoints.AddInstitutionFeeEndpoint = endpoint
 	}
 
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Institution",
+			"AddInstitutionControl",
+			encodeRequest,
+			decodeResponse,
+			pb.AddInstitutionControlReply{},
+			options...,
+		).Endpoint()
+		endpoints.AddInstitutionControlEndpoint = endpoint
+	}
+
 	return endpoints
 }
 func (s *InstitutionEndpoints) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHisDownloadReq) (*pb.InstitutionTnxHisDownloadResp, error) {
@@ -224,6 +238,18 @@ func (s *InstitutionEndpoints) AddInstitutionFee(ctx context.Context, in *pb.Add
 		return nil, err
 	}
 	reply, ok := res.(*pb.AddInstitutionFeeReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (s *InstitutionEndpoints) AddInstitutionControl(ctx context.Context, in *pb.AddInstitutionControlRequest) (*pb.AddInstitutionControlReply, error) {
+	res, err := s.AddInstitutionControlEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.AddInstitutionControlReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

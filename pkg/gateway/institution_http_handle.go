@@ -63,4 +63,12 @@ func RegisterInstitutionHandler(engine *gin.Engine, endpoints *InstitutionEndpoi
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
+
+	engine.POST("/institution/addInstitutionControl", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.AddInstitutionControlEndpoint,
+		decodeHttpRequest(&pb.AddInstitutionControlRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
+
 }

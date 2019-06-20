@@ -427,7 +427,7 @@ func (s *setService) AddInstitutionFee(ctx context.Context, in *pb.AddInstitutio
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
-			Description: "机构信息为空",
+			Description: "支付方式为空",
 		}
 		return &reply, nil
 	}
@@ -487,6 +487,66 @@ func (s *setService) AddInstitutionFee(ctx context.Context, in *pb.AddInstitutio
 		ins.RecUpdOpr = in.InstitutionFee.RecUpdOpr
 	}
 	err = insmodel.SaveInstitutionFee(db, ins)
+	if err != nil {
+		return nil, err
+	}
+
+	return &reply, nil
+}
+
+func (s *setService) AddInstitutionControl(ctx context.Context, in *pb.AddInstitutionControlRequest) (*pb.AddInstitutionControlReply, error) {
+	var reply pb.AddInstitutionControlReply
+	if in.InstitutionControl == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "机构权限为空",
+		}
+		return &reply, nil
+	}
+	db := common.DB
+
+	ins, err := insmodel.FindInstitutionControlByPrimaryKey(
+		db,
+		in.InstitutionControl.InsIdCd,
+		in.InstitutionControl.ProdCd,
+		in.InstitutionControl.BizCd,
+	)
+	if err != nil {
+		return nil, err
+	}
+	if ins != nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "机构权限已存在",
+		}
+		return &reply, nil
+	}
+
+	ins = new(insmodel.Control)
+	{
+		ins.InsIdCd = in.InstitutionControl.InsIdCd
+		ins.InsCompanyCd = in.InstitutionControl.InsCompanyCd
+		ins.ProdCd = in.InstitutionControl.ProdCd
+		ins.BizCd = in.InstitutionControl.BizCd
+		ins.CtrlSta = in.InstitutionControl.CtrlSta
+		ins.InsBegTm = in.InstitutionControl.InsBegTm
+		ins.InsEndTm = in.InstitutionControl.InsEndTm
+		ins.MsgResvFld1 = in.InstitutionControl.MsgResvFld1
+		ins.MsgResvFld2 = in.InstitutionControl.MsgResvFld2
+		ins.MsgResvFld3 = in.InstitutionControl.MsgResvFld3
+		ins.MsgResvFld4 = in.InstitutionControl.MsgResvFld4
+		ins.MsgResvFld5 = in.InstitutionControl.MsgResvFld5
+		ins.MsgResvFld6 = in.InstitutionControl.MsgResvFld6
+		ins.MsgResvFld7 = in.InstitutionControl.MsgResvFld7
+		ins.MsgResvFld8 = in.InstitutionControl.MsgResvFld8
+		ins.MsgResvFld9 = in.InstitutionControl.MsgResvFld9
+		ins.MsgResvFld10 = in.InstitutionControl.MsgResvFld10
+		ins.RecOprId = in.InstitutionControl.RecOprId
+		ins.RecUpdOpr = in.InstitutionControl.RecUpdOpr
+	}
+	err = insmodel.SaveInstitutionControl(db, ins)
 	if err != nil {
 		return nil, err
 	}
