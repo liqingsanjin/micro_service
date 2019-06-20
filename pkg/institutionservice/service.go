@@ -202,7 +202,7 @@ func (s *setService) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (
 	pbIns := make([]*pb.InstitutionField, len(ins))
 	for i := range ins {
 		pbIns[i] = &pb.InstitutionField{
-			InsIdCd:         ins[i].InsIDCd,
+			InsIdCd:         ins[i].InsIdCd,
 			InsCompanyCd:    ins[i].InsCompanyCd,
 			InsType:         ins[i].InsType,
 			InsName:         ins[i].InsName,
@@ -231,14 +231,14 @@ func (s *setService) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (
 			MsgResvFld8:     ins[i].MsgResvFld8,
 			MsgResvFld9:     ins[i].MsgResvFld9,
 			MsgResvFld10:    ins[i].MsgResvFld10,
-			RecOprId:        ins[i].RecOprID,
+			RecOprId:        ins[i].RecOprId,
 		}
 		if !ins[i].CreatedAt.IsZero() {
-			pbIns[i].Created = ins[i].CreatedAt.Format("2006-01-02 15:04:05")
+			pbIns[i].CreatedAt = ins[i].CreatedAt.Format("2006-01-02 15:04:05")
 		}
 
 		if !ins[i].UpdatedAt.IsZero() {
-			pbIns[i].Updated = ins[i].UpdatedAt.Format("2006-01-02 15:04:05")
+			pbIns[i].UpdatedAt = ins[i].UpdatedAt.Format("2006-01-02 15:04:05")
 		}
 	}
 
@@ -261,7 +261,7 @@ func (s *setService) ListInstitutions(ctx context.Context, in *pb.ListInstitutio
 
 	query := new(insmodel.InstitutionInfo)
 	if in.Institution != nil {
-		query.InsIDCd = in.Institution.InsIdCd
+		query.InsIdCd = in.Institution.InsIdCd
 		query.InsCompanyCd = in.Institution.InsCompanyCd
 		query.InsType = in.Institution.InsType
 		query.InsName = in.Institution.InsName
@@ -290,7 +290,7 @@ func (s *setService) ListInstitutions(ctx context.Context, in *pb.ListInstitutio
 		query.MsgResvFld8 = in.Institution.MsgResvFld8
 		query.MsgResvFld9 = in.Institution.MsgResvFld9
 		query.MsgResvFld10 = in.Institution.MsgResvFld10
-		query.RecOprID = in.Institution.RecOprId
+		query.RecOprId = in.Institution.RecOprId
 	}
 	ins, count, err := insmodel.QueryInstitutionInfo(db, query, in.Page, in.Size)
 	if err != nil {
@@ -301,7 +301,7 @@ func (s *setService) ListInstitutions(ctx context.Context, in *pb.ListInstitutio
 
 	for i := range ins {
 		pbIns[i] = &pb.InstitutionField{
-			InsIdCd:         ins[i].InsIDCd,
+			InsIdCd:         ins[i].InsIdCd,
 			InsCompanyCd:    ins[i].InsCompanyCd,
 			InsType:         ins[i].InsType,
 			InsName:         ins[i].InsName,
@@ -330,14 +330,14 @@ func (s *setService) ListInstitutions(ctx context.Context, in *pb.ListInstitutio
 			MsgResvFld8:     ins[i].MsgResvFld8,
 			MsgResvFld9:     ins[i].MsgResvFld9,
 			MsgResvFld10:    ins[i].MsgResvFld10,
-			RecOprId:        ins[i].RecOprID,
+			RecOprId:        ins[i].RecOprId,
 		}
 		if !ins[i].CreatedAt.IsZero() {
-			pbIns[i].Created = ins[i].CreatedAt.Format("2006-01-02 15:04:05")
+			pbIns[i].CreatedAt = ins[i].CreatedAt.Format("2006-01-02 15:04:05")
 		}
 
 		if !ins[i].UpdatedAt.IsZero() {
-			pbIns[i].Updated = ins[i].UpdatedAt.Format("2006-01-02 15:04:05")
+			pbIns[i].UpdatedAt = ins[i].UpdatedAt.Format("2006-01-02 15:04:05")
 		}
 
 	}
@@ -378,7 +378,7 @@ func (s *setService) AddInstitution(ctx context.Context, in *pb.AddInstitutionRe
 
 	ins = new(insmodel.InstitutionInfo)
 	{
-		ins.InsIDCd = in.Institution.InsIdCd
+		ins.InsIdCd = in.Institution.InsIdCd
 		ins.InsCompanyCd = in.Institution.InsCompanyCd
 		ins.InsType = in.Institution.InsType
 		ins.InsName = in.Institution.InsName
@@ -407,7 +407,7 @@ func (s *setService) AddInstitution(ctx context.Context, in *pb.AddInstitutionRe
 		ins.MsgResvFld8 = in.Institution.MsgResvFld8
 		ins.MsgResvFld9 = in.Institution.MsgResvFld9
 		ins.MsgResvFld10 = in.Institution.MsgResvFld10
-		ins.RecOprID = in.Institution.RecOprId
+		ins.RecOprId = in.Institution.RecOprId
 	}
 	err = insmodel.SaveInstitution(db, ins)
 	if err != nil {
@@ -417,6 +417,79 @@ func (s *setService) AddInstitution(ctx context.Context, in *pb.AddInstitutionRe
 	//todo 写入工作流
 
 	db.Commit()
+
+	return &reply, nil
+}
+
+func (s *setService) AddInstitutionFee(ctx context.Context, in *pb.AddInstitutionFeeRequest) (*pb.AddInstitutionFeeReply, error) {
+	var reply pb.AddInstitutionFeeReply
+	if in.InstitutionFee == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "机构信息为空",
+		}
+		return &reply, nil
+	}
+	db := common.DB
+
+	ins, err := insmodel.FindInstitutionFeeByPrimaryKey(
+		db,
+		in.InstitutionFee.InsIdCd,
+		in.InstitutionFee.ProdCd,
+		in.InstitutionFee.BizCd,
+		in.InstitutionFee.SubBizCd,
+		in.InstitutionFee.InsFeeCd,
+	)
+	if err != nil {
+		return nil, err
+	}
+	if ins != nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "支付方式已存在",
+		}
+		return &reply, nil
+	}
+
+	ins = new(insmodel.Fee)
+	{
+		ins.InsIdCd = in.InstitutionFee.InsIdCd
+		ins.ProdCd = in.InstitutionFee.ProdCd
+		ins.BizCd = in.InstitutionFee.BizCd
+		ins.SubBizCd = in.InstitutionFee.SubBizCd
+		ins.InsFeeBizCd = in.InstitutionFee.InsFeeBizCd
+		ins.InsFeeCd = in.InstitutionFee.InsFeeCd
+		ins.InsFeeTp = in.InstitutionFee.InsFeeTp
+		ins.InsFeeParam = in.InstitutionFee.InsFeeParam
+		ins.InsFeePercent = in.InstitutionFee.InsFeePercent
+		ins.InsFeePct = in.InstitutionFee.InsFeePct
+		ins.InsFeePctMin = in.InstitutionFee.InsFeePctMin
+		ins.InsFeePctMax = in.InstitutionFee.InsFeePctMax
+		ins.InsAFeeSame = in.InstitutionFee.InsAFeeSame
+		ins.InsAFeeParam = in.InstitutionFee.InsAFeeParam
+		ins.InsAFeePercent = in.InstitutionFee.InsAFeePercent
+		ins.InsAFeePct = in.InstitutionFee.InsAFeePct
+		ins.InsAFeePctMin = in.InstitutionFee.InsAFeePctMin
+		ins.InsAFeePctMax = in.InstitutionFee.InsAFeePctMax
+		ins.MsgResvFld1 = in.InstitutionFee.MsgResvFld1
+		ins.MsgResvFld2 = in.InstitutionFee.MsgResvFld2
+		ins.MsgResvFld3 = in.InstitutionFee.MsgResvFld3
+		ins.MsgResvFld4 = in.InstitutionFee.MsgResvFld4
+		ins.MsgResvFld5 = in.InstitutionFee.MsgResvFld5
+		ins.MsgResvFld6 = in.InstitutionFee.MsgResvFld6
+		ins.MsgResvFld7 = in.InstitutionFee.MsgResvFld7
+		ins.MsgResvFld8 = in.InstitutionFee.MsgResvFld8
+		ins.MsgResvFld9 = in.InstitutionFee.MsgResvFld9
+		ins.MsgResvFld10 = in.InstitutionFee.MsgResvFld10
+		ins.RecOprId = in.InstitutionFee.RecOprId
+		ins.RecUpdOpr = in.InstitutionFee.RecUpdOpr
+	}
+	err = insmodel.SaveInstitutionFee(db, ins)
+	if err != nil {
+		return nil, err
+	}
 
 	return &reply, nil
 }

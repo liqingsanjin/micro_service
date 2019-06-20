@@ -9,13 +9,14 @@ import (
 )
 
 type grpcServer struct {
-	tnxHisDownload          grpctransport.Handler
-	getTfrTrnLogs           grpctransport.Handler
-	getTfrTrnLog            grpctransport.Handler
-	downloadTfrTrnLogs      grpctransport.Handler
-	listGroupsHandler       grpctransport.Handler
-	listInstitutionsHandler grpctransport.Handler
-	addInstitutionHandler   grpctransport.Handler
+	tnxHisDownload           grpctransport.Handler
+	getTfrTrnLogs            grpctransport.Handler
+	getTfrTrnLog             grpctransport.Handler
+	downloadTfrTrnLogs       grpctransport.Handler
+	listGroupsHandler        grpctransport.Handler
+	listInstitutionsHandler  grpctransport.Handler
+	addInstitutionHandler    grpctransport.Handler
+	addInstitutionFeeHandler grpctransport.Handler
 }
 
 func (g *grpcServer) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHisDownloadReq) (*pb.InstitutionTnxHisDownloadResp, error) {
@@ -97,6 +98,16 @@ func NewGRPCServer() pb.InstitutionServer {
 		)
 	}
 
+	{
+		endpoint := MakeAddInstitutionFeeEndpoint(service)
+		server.addInstitutionFeeHandler = grpctransport.NewServer(
+			endpoint,
+			grpcDecode,
+			grpcEncode,
+			options...,
+		)
+	}
+
 	return server
 }
 
@@ -147,4 +158,16 @@ func (g *grpcServer) AddInstitution(ctx context.Context, in *pb.AddInstitutionRe
 	}
 	return reply, nil
 
+}
+
+func (g *grpcServer) AddInstitutionFee(ctx context.Context, in *pb.AddInstitutionFeeRequest) (*pb.AddInstitutionFeeReply, error) {
+	_, res, err := g.addInstitutionFeeHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.AddInstitutionFeeReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
 }

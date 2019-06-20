@@ -12,6 +12,7 @@ service Institution {
     rpc ListGroups(ListGroupsRequest) returns (ListInstitutionsReply) {}
     rpc ListInstitutions(ListInstitutionsRequest) returns (ListInstitutionsReply) {}
     rpc AddInstitution(AddInstitutionRequest) returns (AddInstitutionReply) {}
+    rpc AddInstitutionFee(AddInstitutionFeeRequest) returns (AddInstitutionFeeReply) {}
 }
 
 message InstitutionTnxHisDownloadReq {
@@ -282,8 +283,8 @@ message InstitutionField {
     string msgResvFld9 = 28;
     string msgResvFld10 = 29;
     string recOprId = 30;
-    string created = 31;
-    string updated = 32;
+    string createdAt = 31;
+    string updatedAt = 32;
 }
 
 message AddInstitutionRequest {
@@ -292,4 +293,47 @@ message AddInstitutionRequest {
 
 message AddInstitutionReply {
     error err = 1;
+}
+
+message AddInstitutionFeeRequest {
+    InstitutionFeeField institutionFee = 1;
+}
+
+message AddInstitutionFeeReply {
+    error err = 1;
+}
+
+message InstitutionFeeField {
+    string insIdCd = 1;
+    string prodCd = 2;
+    string bizCd = 3;
+    string subBizCd = 4;
+    string insFeeBizCd = 5;
+    string insFeeCd = 6;
+    string insFeeTp = 7;
+    string insFeeParam = 8;
+    double insFeePercent = 9;
+    double insFeePct = 10;
+    double insFeePctMin = 11;
+    double insFeePctMax = 12;
+    string insAFeeSame = 13;
+    string insAFeeParam = 14;
+    double insAFeePercent = 15;
+    double insAFeePct = 16;
+    double insAFeePctMin = 17;
+    double insAFeePctMax = 18;
+    string msgResvFld1 = 19;
+    string msgResvFld2 = 20;
+    string msgResvFld3 = 21;
+    string msgResvFld4 = 22;
+    string msgResvFld5 = 23;
+    string msgResvFld6 = 24;
+    string msgResvFld7 = 25;
+    string msgResvFld8 = 26;
+    string msgResvFld9 = 27;
+    string msgResvFld10 = 28;
+    string recOprId = 29;
+    string recUpdOpr = 30;
+    string createdAt = 31;
+    string updatedAt = 32;
 }

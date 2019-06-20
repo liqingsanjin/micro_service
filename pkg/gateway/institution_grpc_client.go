@@ -19,6 +19,7 @@ type InstitutionEndpoints struct {
 	ListGroupsEndpoint         endpoint.Endpoint
 	ListInstitutionsEndpoint   endpoint.Endpoint
 	AddInstitutionEndpoint     endpoint.Endpoint
+	AddInstitutionFeeEndpoint  endpoint.Endpoint
 }
 
 func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *InstitutionEndpoints {
@@ -118,6 +119,19 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 		endpoints.AddInstitutionEndpoint = endpoint
 	}
 
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Institution",
+			"AddInstitutionFee",
+			encodeRequest,
+			decodeResponse,
+			pb.AddInstitutionFeeReply{},
+			options...,
+		).Endpoint()
+		endpoints.AddInstitutionFeeEndpoint = endpoint
+	}
+
 	return endpoints
 }
 func (s *InstitutionEndpoints) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHisDownloadReq) (*pb.InstitutionTnxHisDownloadResp, error) {
@@ -191,12 +205,25 @@ func (s *InstitutionEndpoints) ListInstitutions(ctx context.Context, in *pb.List
 	}
 	return reply, nil
 }
+
 func (s *InstitutionEndpoints) AddInstitution(ctx context.Context, in *pb.AddInstitutionRequest) (*pb.AddInstitutionReply, error) {
 	res, err := s.AddInstitutionEndpoint(ctx, in)
 	if err != nil {
 		return nil, err
 	}
 	reply, ok := res.(*pb.AddInstitutionReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (s *InstitutionEndpoints) AddInstitutionFee(ctx context.Context, in *pb.AddInstitutionFeeRequest) (*pb.AddInstitutionFeeReply, error) {
+	res, err := s.AddInstitutionFeeEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.AddInstitutionFeeReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

@@ -7,7 +7,7 @@ import (
 )
 
 type InstitutionInfo struct {
-	InsIDCd         string    `gorm:"column:INS_ID_CD;primary_key"`
+	InsIdCd         string    `gorm:"column:INS_ID_CD"`
 	InsCompanyCd    string    `gorm:"column:INS_COMPANY_CD"`
 	InsType         string    `gorm:"column:INS_TYPE"`
 	InsName         string    `gorm:"column:INS_NAME"`
@@ -18,7 +18,7 @@ type InstitutionInfo struct {
 	InsStlmTp       string    `gorm:"column:INS_STLM_TP"`
 	InsAloStlmCycle string    `gorm:"column:INS_ALO_STLM_CYCLE"`
 	InsAloStlmMd    string    `gorm:"column:INS_ALO_STLM_MD"`
-	InsStlmCNm      string    `gorm:"column:INS_STLM_C_NM"`
+	InsStlmCNm      string    `gorm:"column:INS_STLM_C_NM "`
 	InsStlmCAcct    string    `gorm:"column:INS_STLM_C_ACCT"`
 	InsStlmCBkNo    string    `gorm:"column:INS_STLM_C_BK_NO"`
 	InsStlmCBkNm    string    `gorm:"column:INS_STLM_C_BK_NM"`
@@ -36,7 +36,7 @@ type InstitutionInfo struct {
 	MsgResvFld8     string    `gorm:"column:MSG_RESV_FLD8"`
 	MsgResvFld9     string    `gorm:"column:MSG_RESV_FLD9"`
 	MsgResvFld10    string    `gorm:"column:MSG_RESV_FLD10"`
-	RecOprID        string    `gorm:"column:REC_OPR_ID"`
+	RecOprId        string    `gorm:"column:REC_OPR_ID"`
 	RecUpdOpr       string    `gorm:"column:REC_UPD_OPR"`
 	CreatedAt       time.Time `gorm:"column:REC_CRT_TS"`
 	UpdatedAt       time.Time `gorm:"column:REC_UPD_TS"`
