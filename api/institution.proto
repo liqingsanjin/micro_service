@@ -11,6 +11,7 @@ service Institution {
     rpc DownloadTfrTrnLogs(DownloadTfrTrnLogsReq) returns (DownloadTfrTrnLogsResp){}
     rpc ListGroups(ListGroupsRequest) returns (ListInstitutionsReply) {}
     rpc ListInstitutions(ListInstitutionsRequest) returns (ListInstitutionsReply) {}
+    rpc AddInstitution(AddInstitutionRequest) returns (AddInstitutionReply) {}
 }
 
 message InstitutionTnxHisDownloadReq {
@@ -281,6 +282,14 @@ message InstitutionField {
     string msgResvFld9 = 28;
     string msgResvFld10 = 29;
     string recOprId = 30;
-    int64 recCrtTs = 31;
-    int64 recUpdTs = 32;
+    string created = 31;
+    string updated = 32;
+}
+
+message AddInstitutionRequest {
+    InstitutionField institution = 1;
+}
+
+message AddInstitutionReply {
+    error err = 1;
 }

@@ -13,7 +13,7 @@ func Passport() endpoint.Middleware {
 		return func(ctx context.Context, req interface{}) (resp interface{}, err error) {
 			fmt.Println("into passport")
 			ctx = context.WithValue(ctx, "result", "true")
-			return (next(ctx, req))
+			return next(ctx, req)
 		}
 	}
 }

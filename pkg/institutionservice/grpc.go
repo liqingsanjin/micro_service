@@ -15,6 +15,7 @@ type grpcServer struct {
 	downloadTfrTrnLogs      grpctransport.Handler
 	listGroupsHandler       grpctransport.Handler
 	listInstitutionsHandler grpctransport.Handler
+	addInstitutionHandler   grpctransport.Handler
 }
 
 func (g *grpcServer) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHisDownloadReq) (*pb.InstitutionTnxHisDownloadResp, error) {
@@ -86,6 +87,16 @@ func NewGRPCServer() pb.InstitutionServer {
 		)
 	}
 
+	{
+		endpoint := MakeAddInstitutionEndpoint(service)
+		server.addInstitutionHandler = grpctransport.NewServer(
+			endpoint,
+			grpcDecode,
+			grpcEncode,
+			options...,
+		)
+	}
+
 	return server
 }
 
@@ -123,4 +134,17 @@ func (g *grpcServer) ListInstitutions(ctx context.Context, in *pb.ListInstitutio
 		return nil, ErrReplyTypeInvalid
 	}
 	return reply, nil
+}
+
+func (g *grpcServer) AddInstitution(ctx context.Context, in *pb.AddInstitutionRequest) (*pb.AddInstitutionReply, error) {
+	_, res, err := g.addInstitutionHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.AddInstitutionReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+
 }

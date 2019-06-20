@@ -56,3 +56,13 @@ func MakeListInstitutionsEndpoint(service pb.InstitutionServer) endpoint.Endpoin
 		return service.ListInstitutions(ctx, req)
 	}
 }
+
+func MakeAddInstitutionEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.AddInstitutionRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.AddInstitution(ctx, req)
+	}
+}

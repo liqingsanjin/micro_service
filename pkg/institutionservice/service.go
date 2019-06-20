@@ -232,8 +232,13 @@ func (s *setService) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (
 			MsgResvFld9:     ins[i].MsgResvFld9,
 			MsgResvFld10:    ins[i].MsgResvFld10,
 			RecOprId:        ins[i].RecOprID,
-			RecCrtTs:        ins[i].CreatedAt.Unix(),
-			RecUpdTs:        ins[i].UpdatedAt.Unix(),
+		}
+		if !ins[i].CreatedAt.IsZero() {
+			pbIns[i].Created = ins[i].CreatedAt.Format("2006-01-02 15:04:05")
+		}
+
+		if !ins[i].UpdatedAt.IsZero() {
+			pbIns[i].Updated = ins[i].UpdatedAt.Format("2006-01-02 15:04:05")
 		}
 	}
 
@@ -326,9 +331,15 @@ func (s *setService) ListInstitutions(ctx context.Context, in *pb.ListInstitutio
 			MsgResvFld9:     ins[i].MsgResvFld9,
 			MsgResvFld10:    ins[i].MsgResvFld10,
 			RecOprId:        ins[i].RecOprID,
-			RecCrtTs:        ins[i].CreatedAt.Unix(),
-			RecUpdTs:        ins[i].UpdatedAt.Unix(),
 		}
+		if !ins[i].CreatedAt.IsZero() {
+			pbIns[i].Created = ins[i].CreatedAt.Format("2006-01-02 15:04:05")
+		}
+
+		if !ins[i].UpdatedAt.IsZero() {
+			pbIns[i].Updated = ins[i].UpdatedAt.Format("2006-01-02 15:04:05")
+		}
+
 	}
 
 	return &pb.ListInstitutionsReply{
@@ -337,4 +348,75 @@ func (s *setService) ListInstitutions(ctx context.Context, in *pb.ListInstitutio
 		Page:         in.Page,
 		Size:         in.Size,
 	}, nil
+}
+
+func (s *setService) AddInstitution(ctx context.Context, in *pb.AddInstitutionRequest) (*pb.AddInstitutionReply, error) {
+	var reply pb.AddInstitutionReply
+	if in.Institution == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "机构信息为空",
+		}
+		return &reply, nil
+	}
+	db := common.DB.Begin()
+	defer db.Rollback()
+
+	ins, err := insmodel.FindInstitutionInfoById(db, in.Institution.InsIdCd)
+	if err != nil {
+		return nil, err
+	}
+	if ins != nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "机构代码已存在",
+		}
+		return &reply, nil
+	}
+
+	ins = new(insmodel.InstitutionInfo)
+	{
+		ins.InsIDCd = in.Institution.InsIdCd
+		ins.InsCompanyCd = in.Institution.InsCompanyCd
+		ins.InsType = in.Institution.InsType
+		ins.InsName = in.Institution.InsName
+		ins.InsProvCd = in.Institution.InsProvCd
+		ins.InsCityCd = in.Institution.InsCityCd
+		ins.InsRegionCd = in.Institution.InsRegionCd
+		ins.InsSta = in.Institution.InsSta
+		ins.InsStlmTp = in.Institution.InsStlmTp
+		ins.InsAloStlmCycle = in.Institution.InsAloStlmCycle
+		ins.InsAloStlmMd = in.Institution.InsAloStlmMd
+		ins.InsStlmCNm = in.Institution.InsStlmCNm
+		ins.InsStlmCAcct = in.Institution.InsStlmCAcct
+		ins.InsStlmCBkNo = in.Institution.InsStlmCBkNo
+		ins.InsStlmCBkNm = in.Institution.InsStlmCBkNm
+		ins.InsStlmDNm = in.Institution.InsStlmDNm
+		ins.InsStlmDAcct = in.Institution.InsStlmDAcct
+		ins.InsStlmDBkNo = in.Institution.InsStlmDBkNo
+		ins.InsStlmDBkNm = in.Institution.InsStlmDBkNm
+		ins.MsgResvFld1 = in.Institution.MsgResvFld1
+		ins.MsgResvFld2 = in.Institution.MsgResvFld2
+		ins.MsgResvFld3 = in.Institution.MsgResvFld3
+		ins.MsgResvFld4 = in.Institution.MsgResvFld4
+		ins.MsgResvFld5 = in.Institution.MsgResvFld5
+		ins.MsgResvFld6 = in.Institution.MsgResvFld6
+		ins.MsgResvFld7 = in.Institution.MsgResvFld7
+		ins.MsgResvFld8 = in.Institution.MsgResvFld8
+		ins.MsgResvFld9 = in.Institution.MsgResvFld9
+		ins.MsgResvFld10 = in.Institution.MsgResvFld10
+		ins.RecOprID = in.Institution.RecOprId
+	}
+	err = insmodel.SaveInstitution(db, ins)
+	if err != nil {
+		return nil, err
+	}
+
+	//todo 写入工作流
+
+	db.Commit()
+
+	return &reply, nil
 }

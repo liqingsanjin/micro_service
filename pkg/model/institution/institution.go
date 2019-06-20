@@ -74,3 +74,7 @@ func FindInstitutionInfosByIdList(db *gorm.DB, ids []string) ([]*InstitutionInfo
 	}
 	return out, err
 }
+
+func SaveInstitution(db *gorm.DB, ins *InstitutionInfo) error {
+	return db.Save(ins).Error
+}
