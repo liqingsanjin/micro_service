@@ -350,9 +350,9 @@ func (s *setService) ListInstitutions(ctx context.Context, in *pb.ListInstitutio
 	}, nil
 }
 
-func (s *setService) AddInstitution(ctx context.Context, in *pb.AddInstitutionRequest) (*pb.AddInstitutionReply, error) {
-	var reply pb.AddInstitutionReply
-	if in.Institution == nil {
+func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitutionRequest) (*pb.SaveInstitutionReply, error) {
+	var reply pb.SaveInstitutionReply
+	if in.Field == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
@@ -363,53 +363,40 @@ func (s *setService) AddInstitution(ctx context.Context, in *pb.AddInstitutionRe
 	db := common.DB.Begin()
 	defer db.Rollback()
 
-	ins, err := insmodel.FindInstitutionInfoById(db, in.Institution.InsIdCd)
-	if err != nil {
-		return nil, err
-	}
-	if ins != nil {
-		reply.Err = &pb.Error{
-			Code:        http.StatusBadRequest,
-			Message:     "InvalidParamsError",
-			Description: "机构代码已存在",
-		}
-		return &reply, nil
-	}
-
-	ins = new(insmodel.InstitutionInfo)
+	ins := new(insmodel.InstitutionInfo)
 	{
-		ins.InsIdCd = in.Institution.InsIdCd
-		ins.InsCompanyCd = in.Institution.InsCompanyCd
-		ins.InsType = in.Institution.InsType
-		ins.InsName = in.Institution.InsName
-		ins.InsProvCd = in.Institution.InsProvCd
-		ins.InsCityCd = in.Institution.InsCityCd
-		ins.InsRegionCd = in.Institution.InsRegionCd
-		ins.InsSta = in.Institution.InsSta
-		ins.InsStlmTp = in.Institution.InsStlmTp
-		ins.InsAloStlmCycle = in.Institution.InsAloStlmCycle
-		ins.InsAloStlmMd = in.Institution.InsAloStlmMd
-		ins.InsStlmCNm = in.Institution.InsStlmCNm
-		ins.InsStlmCAcct = in.Institution.InsStlmCAcct
-		ins.InsStlmCBkNo = in.Institution.InsStlmCBkNo
-		ins.InsStlmCBkNm = in.Institution.InsStlmCBkNm
-		ins.InsStlmDNm = in.Institution.InsStlmDNm
-		ins.InsStlmDAcct = in.Institution.InsStlmDAcct
-		ins.InsStlmDBkNo = in.Institution.InsStlmDBkNo
-		ins.InsStlmDBkNm = in.Institution.InsStlmDBkNm
-		ins.MsgResvFld1 = in.Institution.MsgResvFld1
-		ins.MsgResvFld2 = in.Institution.MsgResvFld2
-		ins.MsgResvFld3 = in.Institution.MsgResvFld3
-		ins.MsgResvFld4 = in.Institution.MsgResvFld4
-		ins.MsgResvFld5 = in.Institution.MsgResvFld5
-		ins.MsgResvFld6 = in.Institution.MsgResvFld6
-		ins.MsgResvFld7 = in.Institution.MsgResvFld7
-		ins.MsgResvFld8 = in.Institution.MsgResvFld8
-		ins.MsgResvFld9 = in.Institution.MsgResvFld9
-		ins.MsgResvFld10 = in.Institution.MsgResvFld10
-		ins.RecOprId = in.Institution.RecOprId
+		ins.InsIdCd = in.Field.InsIdCd
+		ins.InsCompanyCd = in.Field.InsCompanyCd
+		ins.InsType = in.Field.InsType
+		ins.InsName = in.Field.InsName
+		ins.InsProvCd = in.Field.InsProvCd
+		ins.InsCityCd = in.Field.InsCityCd
+		ins.InsRegionCd = in.Field.InsRegionCd
+		ins.InsSta = in.Field.InsSta
+		ins.InsStlmTp = in.Field.InsStlmTp
+		ins.InsAloStlmCycle = in.Field.InsAloStlmCycle
+		ins.InsAloStlmMd = in.Field.InsAloStlmMd
+		ins.InsStlmCNm = in.Field.InsStlmCNm
+		ins.InsStlmCAcct = in.Field.InsStlmCAcct
+		ins.InsStlmCBkNo = in.Field.InsStlmCBkNo
+		ins.InsStlmCBkNm = in.Field.InsStlmCBkNm
+		ins.InsStlmDNm = in.Field.InsStlmDNm
+		ins.InsStlmDAcct = in.Field.InsStlmDAcct
+		ins.InsStlmDBkNo = in.Field.InsStlmDBkNo
+		ins.InsStlmDBkNm = in.Field.InsStlmDBkNm
+		ins.MsgResvFld1 = in.Field.MsgResvFld1
+		ins.MsgResvFld2 = in.Field.MsgResvFld2
+		ins.MsgResvFld3 = in.Field.MsgResvFld3
+		ins.MsgResvFld4 = in.Field.MsgResvFld4
+		ins.MsgResvFld5 = in.Field.MsgResvFld5
+		ins.MsgResvFld6 = in.Field.MsgResvFld6
+		ins.MsgResvFld7 = in.Field.MsgResvFld7
+		ins.MsgResvFld8 = in.Field.MsgResvFld8
+		ins.MsgResvFld9 = in.Field.MsgResvFld9
+		ins.MsgResvFld10 = in.Field.MsgResvFld10
+		ins.RecOprId = in.Field.RecOprId
 	}
-	err = insmodel.SaveInstitution(db, ins)
+	err := insmodel.SaveInstitution(db, ins)
 	if err != nil {
 		return nil, err
 	}
@@ -421,9 +408,9 @@ func (s *setService) AddInstitution(ctx context.Context, in *pb.AddInstitutionRe
 	return &reply, nil
 }
 
-func (s *setService) AddInstitutionFee(ctx context.Context, in *pb.AddInstitutionFeeRequest) (*pb.AddInstitutionFeeReply, error) {
-	var reply pb.AddInstitutionFeeReply
-	if in.InstitutionFee == nil {
+func (s *setService) SaveInstitutionFee(ctx context.Context, in *pb.SaveInstitutionFeeRequest) (*pb.SaveInstitutionFeeReply, error) {
+	var reply pb.SaveInstitutionFeeReply
+	if in.Field == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
@@ -433,60 +420,40 @@ func (s *setService) AddInstitutionFee(ctx context.Context, in *pb.AddInstitutio
 	}
 	db := common.DB
 
-	ins, err := insmodel.FindInstitutionFeeByPrimaryKey(
-		db,
-		in.InstitutionFee.InsIdCd,
-		in.InstitutionFee.ProdCd,
-		in.InstitutionFee.BizCd,
-		in.InstitutionFee.SubBizCd,
-		in.InstitutionFee.InsFeeCd,
-	)
-	if err != nil {
-		return nil, err
-	}
-	if ins != nil {
-		reply.Err = &pb.Error{
-			Code:        http.StatusBadRequest,
-			Message:     "InvalidParamsError",
-			Description: "支付方式已存在",
-		}
-		return &reply, nil
-	}
-
-	ins = new(insmodel.Fee)
+	ins := new(insmodel.Fee)
 	{
-		ins.InsIdCd = in.InstitutionFee.InsIdCd
-		ins.ProdCd = in.InstitutionFee.ProdCd
-		ins.BizCd = in.InstitutionFee.BizCd
-		ins.SubBizCd = in.InstitutionFee.SubBizCd
-		ins.InsFeeBizCd = in.InstitutionFee.InsFeeBizCd
-		ins.InsFeeCd = in.InstitutionFee.InsFeeCd
-		ins.InsFeeTp = in.InstitutionFee.InsFeeTp
-		ins.InsFeeParam = in.InstitutionFee.InsFeeParam
-		ins.InsFeePercent = in.InstitutionFee.InsFeePercent
-		ins.InsFeePct = in.InstitutionFee.InsFeePct
-		ins.InsFeePctMin = in.InstitutionFee.InsFeePctMin
-		ins.InsFeePctMax = in.InstitutionFee.InsFeePctMax
-		ins.InsAFeeSame = in.InstitutionFee.InsAFeeSame
-		ins.InsAFeeParam = in.InstitutionFee.InsAFeeParam
-		ins.InsAFeePercent = in.InstitutionFee.InsAFeePercent
-		ins.InsAFeePct = in.InstitutionFee.InsAFeePct
-		ins.InsAFeePctMin = in.InstitutionFee.InsAFeePctMin
-		ins.InsAFeePctMax = in.InstitutionFee.InsAFeePctMax
-		ins.MsgResvFld1 = in.InstitutionFee.MsgResvFld1
-		ins.MsgResvFld2 = in.InstitutionFee.MsgResvFld2
-		ins.MsgResvFld3 = in.InstitutionFee.MsgResvFld3
-		ins.MsgResvFld4 = in.InstitutionFee.MsgResvFld4
-		ins.MsgResvFld5 = in.InstitutionFee.MsgResvFld5
-		ins.MsgResvFld6 = in.InstitutionFee.MsgResvFld6
-		ins.MsgResvFld7 = in.InstitutionFee.MsgResvFld7
-		ins.MsgResvFld8 = in.InstitutionFee.MsgResvFld8
-		ins.MsgResvFld9 = in.InstitutionFee.MsgResvFld9
-		ins.MsgResvFld10 = in.InstitutionFee.MsgResvFld10
-		ins.RecOprId = in.InstitutionFee.RecOprId
-		ins.RecUpdOpr = in.InstitutionFee.RecUpdOpr
+		ins.InsIdCd = in.Field.InsIdCd
+		ins.ProdCd = in.Field.ProdCd
+		ins.BizCd = in.Field.BizCd
+		ins.SubBizCd = in.Field.SubBizCd
+		ins.InsFeeBizCd = in.Field.InsFeeBizCd
+		ins.InsFeeCd = in.Field.InsFeeCd
+		ins.InsFeeTp = in.Field.InsFeeTp
+		ins.InsFeeParam = in.Field.InsFeeParam
+		ins.InsFeePercent = in.Field.InsFeePercent
+		ins.InsFeePct = in.Field.InsFeePct
+		ins.InsFeePctMin = in.Field.InsFeePctMin
+		ins.InsFeePctMax = in.Field.InsFeePctMax
+		ins.InsAFeeSame = in.Field.InsAFeeSame
+		ins.InsAFeeParam = in.Field.InsAFeeParam
+		ins.InsAFeePercent = in.Field.InsAFeePercent
+		ins.InsAFeePct = in.Field.InsAFeePct
+		ins.InsAFeePctMin = in.Field.InsAFeePctMin
+		ins.InsAFeePctMax = in.Field.InsAFeePctMax
+		ins.MsgResvFld1 = in.Field.MsgResvFld1
+		ins.MsgResvFld2 = in.Field.MsgResvFld2
+		ins.MsgResvFld3 = in.Field.MsgResvFld3
+		ins.MsgResvFld4 = in.Field.MsgResvFld4
+		ins.MsgResvFld5 = in.Field.MsgResvFld5
+		ins.MsgResvFld6 = in.Field.MsgResvFld6
+		ins.MsgResvFld7 = in.Field.MsgResvFld7
+		ins.MsgResvFld8 = in.Field.MsgResvFld8
+		ins.MsgResvFld9 = in.Field.MsgResvFld9
+		ins.MsgResvFld10 = in.Field.MsgResvFld10
+		ins.RecOprId = in.Field.RecOprId
+		ins.RecUpdOpr = in.Field.RecUpdOpr
 	}
-	err = insmodel.SaveInstitutionFee(db, ins)
+	err := insmodel.SaveInstitutionFee(db, ins)
 	if err != nil {
 		return nil, err
 	}
@@ -494,9 +461,9 @@ func (s *setService) AddInstitutionFee(ctx context.Context, in *pb.AddInstitutio
 	return &reply, nil
 }
 
-func (s *setService) AddInstitutionControl(ctx context.Context, in *pb.AddInstitutionControlRequest) (*pb.AddInstitutionControlReply, error) {
-	var reply pb.AddInstitutionControlReply
-	if in.InstitutionControl == nil {
+func (s *setService) SaveInstitutionControl(ctx context.Context, in *pb.SaveInstitutionControlRequest) (*pb.SaveInstitutionControlReply, error) {
+	var reply pb.SaveInstitutionControlReply
+	if in.Field == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
@@ -506,47 +473,69 @@ func (s *setService) AddInstitutionControl(ctx context.Context, in *pb.AddInstit
 	}
 	db := common.DB
 
-	ins, err := insmodel.FindInstitutionControlByPrimaryKey(
-		db,
-		in.InstitutionControl.InsIdCd,
-		in.InstitutionControl.ProdCd,
-		in.InstitutionControl.BizCd,
-	)
+	ins := new(insmodel.Control)
+	{
+		ins.InsIdCd = in.Field.InsIdCd
+		ins.InsCompanyCd = in.Field.InsCompanyCd
+		ins.ProdCd = in.Field.ProdCd
+		ins.BizCd = in.Field.BizCd
+		ins.CtrlSta = in.Field.CtrlSta
+		ins.InsBegTm = in.Field.InsBegTm
+		ins.InsEndTm = in.Field.InsEndTm
+		ins.MsgResvFld1 = in.Field.MsgResvFld1
+		ins.MsgResvFld2 = in.Field.MsgResvFld2
+		ins.MsgResvFld3 = in.Field.MsgResvFld3
+		ins.MsgResvFld4 = in.Field.MsgResvFld4
+		ins.MsgResvFld5 = in.Field.MsgResvFld5
+		ins.MsgResvFld6 = in.Field.MsgResvFld6
+		ins.MsgResvFld7 = in.Field.MsgResvFld7
+		ins.MsgResvFld8 = in.Field.MsgResvFld8
+		ins.MsgResvFld9 = in.Field.MsgResvFld9
+		ins.MsgResvFld10 = in.Field.MsgResvFld10
+		ins.RecOprId = in.Field.RecOprId
+		ins.RecUpdOpr = in.Field.RecUpdOpr
+	}
+	err := insmodel.SaveInstitutionControl(db, ins)
 	if err != nil {
 		return nil, err
 	}
-	if ins != nil {
+
+	return &reply, nil
+}
+
+func (s *setService) SaveInstitutionCash(ctx context.Context, in *pb.SaveInstitutionCashRequest) (*pb.SaveInstitutionCashReply, error) {
+	var reply pb.SaveInstitutionCashReply
+	if in.Field == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
-			Description: "机构权限已存在",
+			Description: "头寸信息为空",
 		}
 		return &reply, nil
 	}
+	db := common.DB
 
-	ins = new(insmodel.Control)
+	ins := new(insmodel.Cash)
 	{
-		ins.InsIdCd = in.InstitutionControl.InsIdCd
-		ins.InsCompanyCd = in.InstitutionControl.InsCompanyCd
-		ins.ProdCd = in.InstitutionControl.ProdCd
-		ins.BizCd = in.InstitutionControl.BizCd
-		ins.CtrlSta = in.InstitutionControl.CtrlSta
-		ins.InsBegTm = in.InstitutionControl.InsBegTm
-		ins.InsEndTm = in.InstitutionControl.InsEndTm
-		ins.MsgResvFld1 = in.InstitutionControl.MsgResvFld1
-		ins.MsgResvFld2 = in.InstitutionControl.MsgResvFld2
-		ins.MsgResvFld3 = in.InstitutionControl.MsgResvFld3
-		ins.MsgResvFld4 = in.InstitutionControl.MsgResvFld4
-		ins.MsgResvFld5 = in.InstitutionControl.MsgResvFld5
-		ins.MsgResvFld6 = in.InstitutionControl.MsgResvFld6
-		ins.MsgResvFld7 = in.InstitutionControl.MsgResvFld7
-		ins.MsgResvFld8 = in.InstitutionControl.MsgResvFld8
-		ins.MsgResvFld9 = in.InstitutionControl.MsgResvFld9
-		ins.MsgResvFld10 = in.InstitutionControl.MsgResvFld10
-		ins.RecOprId = in.InstitutionControl.RecOprId
-		ins.RecUpdOpr = in.InstitutionControl.RecUpdOpr
+		ins.InsIdCd = in.Field.InsIdCd
+		ins.ProdCd = in.Field.ProdCd
+		ins.InsDefaultFlag = in.Field.InsDefaultFlag
+		ins.InsDefaultCash = in.Field.InsDefaultCash
+		ins.InsCurrentCash = in.Field.InsCurrentCash
+		ins.MsgResvFld1 = in.Field.MsgResvFld1
+		ins.MsgResvFld2 = in.Field.MsgResvFld2
+		ins.MsgResvFld3 = in.Field.MsgResvFld3
+		ins.MsgResvFld4 = in.Field.MsgResvFld4
+		ins.MsgResvFld5 = in.Field.MsgResvFld5
+		ins.MsgResvFld6 = in.Field.MsgResvFld6
+		ins.MsgResvFld7 = in.Field.MsgResvFld7
+		ins.MsgResvFld8 = in.Field.MsgResvFld8
+		ins.MsgResvFld9 = in.Field.MsgResvFld9
+		ins.MsgResvFld10 = in.Field.MsgResvFld10
+		ins.RecOprid = in.Field.RecOprid
+		ins.RecUpdopr = in.Field.RecUpdopr
 	}
-	err = insmodel.SaveInstitutionControl(db, ins)
+	err := insmodel.SaveInstitutionCash(db, ins)
 	if err != nil {
 		return nil, err
 	}

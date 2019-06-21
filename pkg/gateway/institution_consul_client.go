@@ -89,30 +89,39 @@ func GetInstitutionCliEndpoints(instancer sd.Instancer, log log.Logger) *Institu
 	}
 
 	{
-		factory := institutionserviceFactory(institutionservice.MakeAddInstitutionEndpoint)
+		factory := institutionserviceFactory(institutionservice.MakeSaveInstitutionEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
 		retry = institutionBreaker(retry)
-		endpoints.AddInstitutionEndpoint = retry
+		endpoints.SaveInstitutionEndpoint = retry
 	}
 
 	{
-		factory := institutionserviceFactory(institutionservice.MakeAddInstitutionFeeEndpoint)
+		factory := institutionserviceFactory(institutionservice.MakeSaveInstitutionFeeEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
 		retry = institutionBreaker(retry)
-		endpoints.AddInstitutionFeeEndpoint = retry
+		endpoints.SaveInstitutionFeeEndpoint = retry
 	}
 
 	{
-		factory := institutionserviceFactory(institutionservice.MakeAddInstitutionControlEndpoint)
+		factory := institutionserviceFactory(institutionservice.MakeSaveInstitutionControlEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
 		retry = institutionBreaker(retry)
-		endpoints.AddInstitutionControlEndpoint = retry
+		endpoints.SaveInstitutionControlEndpoint = retry
+	}
+
+	{
+		factory := institutionserviceFactory(institutionservice.MakeSaveInstitutionCashEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = institutionBreaker(retry)
+		endpoints.SaveInstitutionCashEndpoint = retry
 	}
 
 	return &endpoints

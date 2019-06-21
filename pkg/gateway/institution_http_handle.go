@@ -50,23 +50,30 @@ func RegisterInstitutionHandler(engine *gin.Engine, endpoints *InstitutionEndpoi
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/institution/addInstitution", convertHttpHandlerToGinHandler(httptransport.NewServer(
-		endpoints.AddInstitutionEndpoint,
-		decodeHttpRequest(&pb.AddInstitutionRequest{}),
+	engine.POST("/institution/saveInstitution", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.SaveInstitutionEndpoint,
+		decodeHttpRequest(&pb.SaveInstitutionRequest{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/institution/addInstitutionFee", convertHttpHandlerToGinHandler(httptransport.NewServer(
-		endpoints.AddInstitutionFeeEndpoint,
-		decodeHttpRequest(&pb.AddInstitutionFeeRequest{}),
+	engine.POST("/institution/saveInstitutionFee", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.SaveInstitutionFeeEndpoint,
+		decodeHttpRequest(&pb.SaveInstitutionFeeRequest{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/institution/addInstitutionControl", convertHttpHandlerToGinHandler(httptransport.NewServer(
-		endpoints.AddInstitutionControlEndpoint,
-		decodeHttpRequest(&pb.AddInstitutionControlRequest{}),
+	engine.POST("/institution/saveInstitutionControl", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.SaveInstitutionControlEndpoint,
+		decodeHttpRequest(&pb.SaveInstitutionControlRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
+
+	engine.POST("/institution/saveInstitutionCash", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.SaveInstitutionCashEndpoint,
+		decodeHttpRequest(&pb.SaveInstitutionCashRequest{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))

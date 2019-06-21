@@ -57,32 +57,42 @@ func MakeListInstitutionsEndpoint(service pb.InstitutionServer) endpoint.Endpoin
 	}
 }
 
-func MakeAddInstitutionEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+func MakeSaveInstitutionEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		req, ok := request.(*pb.AddInstitutionRequest)
+		req, ok := request.(*pb.SaveInstitutionRequest)
 		if !ok {
 			return nil, ErrRequestTypeInvalid
 		}
-		return service.AddInstitution(ctx, req)
+		return service.SaveInstitution(ctx, req)
 	}
 }
 
-func MakeAddInstitutionFeeEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+func MakeSaveInstitutionFeeEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		req, ok := request.(*pb.AddInstitutionFeeRequest)
+		req, ok := request.(*pb.SaveInstitutionFeeRequest)
 		if !ok {
 			return nil, ErrRequestTypeInvalid
 		}
-		return service.AddInstitutionFee(ctx, req)
+		return service.SaveInstitutionFee(ctx, req)
 	}
 }
 
-func MakeAddInstitutionControlEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+func MakeSaveInstitutionControlEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		req, ok := request.(*pb.AddInstitutionControlRequest)
+		req, ok := request.(*pb.SaveInstitutionControlRequest)
 		if !ok {
 			return nil, ErrRequestTypeInvalid
 		}
-		return service.AddInstitutionControl(ctx, req)
+		return service.SaveInstitutionControl(ctx, req)
+	}
+}
+
+func MakeSaveInstitutionCashEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.SaveInstitutionCashRequest)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.SaveInstitutionCash(ctx, req)
 	}
 }

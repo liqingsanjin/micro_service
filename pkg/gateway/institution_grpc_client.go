@@ -12,15 +12,16 @@ import (
 )
 
 type InstitutionEndpoints struct {
-	TnxHisDownloadEndpoint        endpoint.Endpoint
-	GetTfrTrnLogsEndpoint         endpoint.Endpoint
-	GetTfrTrnLogEndpoint          endpoint.Endpoint
-	DownloadTfrTrnLogsEndpoint    endpoint.Endpoint
-	ListGroupsEndpoint            endpoint.Endpoint
-	ListInstitutionsEndpoint      endpoint.Endpoint
-	AddInstitutionEndpoint        endpoint.Endpoint
-	AddInstitutionFeeEndpoint     endpoint.Endpoint
-	AddInstitutionControlEndpoint endpoint.Endpoint
+	TnxHisDownloadEndpoint         endpoint.Endpoint
+	GetTfrTrnLogsEndpoint          endpoint.Endpoint
+	GetTfrTrnLogEndpoint           endpoint.Endpoint
+	DownloadTfrTrnLogsEndpoint     endpoint.Endpoint
+	ListGroupsEndpoint             endpoint.Endpoint
+	ListInstitutionsEndpoint       endpoint.Endpoint
+	SaveInstitutionEndpoint        endpoint.Endpoint
+	SaveInstitutionFeeEndpoint     endpoint.Endpoint
+	SaveInstitutionControlEndpoint endpoint.Endpoint
+	SaveInstitutionCashEndpoint    endpoint.Endpoint
 }
 
 func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *InstitutionEndpoints {
@@ -111,39 +112,52 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 		endpoint := grpctransport.NewClient(
 			conn,
 			"pb.Institution",
-			"AddInstitution",
+			"SaveInstitution",
 			encodeRequest,
 			decodeResponse,
-			pb.AddInstitutionReply{},
+			pb.SaveInstitutionReply{},
 			options...,
 		).Endpoint()
-		endpoints.AddInstitutionEndpoint = endpoint
+		endpoints.SaveInstitutionEndpoint = endpoint
 	}
 
 	{
 		endpoint := grpctransport.NewClient(
 			conn,
 			"pb.Institution",
-			"AddInstitutionFee",
+			"SaveInstitutionFee",
 			encodeRequest,
 			decodeResponse,
-			pb.AddInstitutionFeeReply{},
+			pb.SaveInstitutionFeeReply{},
 			options...,
 		).Endpoint()
-		endpoints.AddInstitutionFeeEndpoint = endpoint
+		endpoints.SaveInstitutionFeeEndpoint = endpoint
 	}
 
 	{
 		endpoint := grpctransport.NewClient(
 			conn,
 			"pb.Institution",
-			"AddInstitutionControl",
+			"SaveInstitutionControl",
 			encodeRequest,
 			decodeResponse,
-			pb.AddInstitutionControlReply{},
+			pb.SaveInstitutionControlReply{},
 			options...,
 		).Endpoint()
-		endpoints.AddInstitutionControlEndpoint = endpoint
+		endpoints.SaveInstitutionControlEndpoint = endpoint
+	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Institution",
+			"SaveInstitutionCash",
+			encodeRequest,
+			decodeResponse,
+			pb.SaveInstitutionCashReply{},
+			options...,
+		).Endpoint()
+		endpoints.SaveInstitutionCashEndpoint = endpoint
 	}
 
 	return endpoints
@@ -220,36 +234,48 @@ func (s *InstitutionEndpoints) ListInstitutions(ctx context.Context, in *pb.List
 	return reply, nil
 }
 
-func (s *InstitutionEndpoints) AddInstitution(ctx context.Context, in *pb.AddInstitutionRequest) (*pb.AddInstitutionReply, error) {
-	res, err := s.AddInstitutionEndpoint(ctx, in)
+func (s *InstitutionEndpoints) SaveInstitution(ctx context.Context, in *pb.SaveInstitutionRequest) (*pb.SaveInstitutionReply, error) {
+	res, err := s.SaveInstitutionEndpoint(ctx, in)
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.AddInstitutionReply)
+	reply, ok := res.(*pb.SaveInstitutionReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}
 	return reply, nil
 }
 
-func (s *InstitutionEndpoints) AddInstitutionFee(ctx context.Context, in *pb.AddInstitutionFeeRequest) (*pb.AddInstitutionFeeReply, error) {
-	res, err := s.AddInstitutionFeeEndpoint(ctx, in)
+func (s *InstitutionEndpoints) SaveInstitutionFee(ctx context.Context, in *pb.SaveInstitutionFeeRequest) (*pb.SaveInstitutionFeeReply, error) {
+	res, err := s.SaveInstitutionFeeEndpoint(ctx, in)
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.AddInstitutionFeeReply)
+	reply, ok := res.(*pb.SaveInstitutionFeeReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}
 	return reply, nil
 }
 
-func (s *InstitutionEndpoints) AddInstitutionControl(ctx context.Context, in *pb.AddInstitutionControlRequest) (*pb.AddInstitutionControlReply, error) {
-	res, err := s.AddInstitutionControlEndpoint(ctx, in)
+func (s *InstitutionEndpoints) SaveInstitutionControl(ctx context.Context, in *pb.SaveInstitutionControlRequest) (*pb.SaveInstitutionControlReply, error) {
+	res, err := s.SaveInstitutionControlEndpoint(ctx, in)
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.AddInstitutionControlReply)
+	reply, ok := res.(*pb.SaveInstitutionControlReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (s *InstitutionEndpoints) SaveInstitutionCash(ctx context.Context, in *pb.SaveInstitutionCashRequest) (*pb.SaveInstitutionCashReply, error) {
+	res, err := s.SaveInstitutionCashEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.SaveInstitutionCashReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}

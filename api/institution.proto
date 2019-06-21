@@ -11,9 +11,10 @@ service Institution {
     rpc DownloadTfrTrnLogs(DownloadTfrTrnLogsReq) returns (DownloadTfrTrnLogsResp){}
     rpc ListGroups(ListGroupsRequest) returns (ListInstitutionsReply) {}
     rpc ListInstitutions(ListInstitutionsRequest) returns (ListInstitutionsReply) {}
-    rpc AddInstitution(AddInstitutionRequest) returns (AddInstitutionReply) {}
-    rpc AddInstitutionFee(AddInstitutionFeeRequest) returns (AddInstitutionFeeReply) {}
-    rpc AddInstitutionControl(AddInstitutionControlRequest) returns (AddInstitutionControlReply) {}
+    rpc SaveInstitution(SaveInstitutionRequest) returns (SaveInstitutionReply) {}
+    rpc SaveInstitutionFee(SaveInstitutionFeeRequest) returns (SaveInstitutionFeeReply) {}
+    rpc SaveInstitutionControl(SaveInstitutionControlRequest) returns (SaveInstitutionControlReply) {}
+    rpc SaveInstitutionCash(SaveInstitutionCashRequest) returns (SaveInstitutionCashReply) {}
 }
 
 message InstitutionTnxHisDownloadReq {
@@ -288,19 +289,19 @@ message InstitutionField {
     string updatedAt = 32;
 }
 
-message AddInstitutionRequest {
-    InstitutionField institution = 1;
+message SaveInstitutionRequest {
+    InstitutionField field = 1;
 }
 
-message AddInstitutionReply {
+message SaveInstitutionReply {
     error err = 1;
 }
 
-message AddInstitutionFeeRequest {
-    InstitutionFeeField institutionFee = 1;
+message SaveInstitutionFeeRequest {
+    InstitutionFeeField field = 1;
 }
 
-message AddInstitutionFeeReply {
+message SaveInstitutionFeeReply {
     error err = 1;
 }
 
@@ -339,15 +340,15 @@ message InstitutionFeeField {
     string updatedAt = 32;
 }
 
-message AddInstitutionControlRequest {
-    AddInstitutionControlField institutionControl = 1;
+message SaveInstitutionControlRequest {
+    InstitutionControlField field = 1;
 }
 
-message AddInstitutionControlReply {
+message SaveInstitutionControlReply {
     error err = 1;
 }
 
-message AddInstitutionControlField {
+message InstitutionControlField {
     string insIdCd = 1;
     string insCompanyCd = 2;
     string prodCd = 3;
@@ -369,4 +370,34 @@ message AddInstitutionControlField {
     string recUpdOpr = 19;
     string createdAt = 20;
     string updatedAt = 21;
+}
+
+message SaveInstitutionCashRequest {
+    InstitutionCashField field = 1;
+}
+
+message SaveInstitutionCashReply {
+    error err = 1;
+}
+
+message InstitutionCashField {
+     string insIdCd = 1;
+     string prodCd = 2;
+     string insDefaultFlag = 3;
+     double insDefaultCash = 4;
+     double insCurrentCash = 5;
+     string msgResvFld1 = 6;
+     string msgResvFld2 = 7;
+     string msgResvFld3 = 8;
+     string msgResvFld4 = 9;
+     string msgResvFld5 = 10;
+     string msgResvFld6 = 11;
+     string msgResvFld7 = 12;
+     string msgResvFld8 = 13;
+     string msgResvFld9 = 14;
+     string msgResvFld10 = 15;
+     string recOprid = 16;
+     string recUpdopr = 17;
+     string createdAt = 18;
+     string updatedAt = 19;
 }
