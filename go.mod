@@ -18,6 +18,7 @@ require (
 	github.com/jinzhu/copier v0.0.0-20180308034124-7e38e58719c3
 	github.com/jinzhu/gorm v1.9.7
 	github.com/jonboulle/clockwork v0.1.0 // indirect
+	github.com/kr/pretty v0.1.0 // indirect
 	github.com/lestrrat-go/envload v0.0.0-20180220234015-a3eb8ddeffcc // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.2.0+incompatible
 	github.com/lestrrat-go/strftime v0.0.0-20180821113735-8b31f9c59b0f // indirect

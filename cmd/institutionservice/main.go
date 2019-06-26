@@ -10,10 +10,12 @@ import (
 	"sync/atomic"
 	"syscall"
 	"time"
+	"userService/pkg/camunda"
 	"userService/pkg/common"
 	"userService/pkg/institutionservice"
 	"userService/pkg/model"
 	"userService/pkg/pb"
+	"userService/pkg/util"
 
 	"github.com/go-kit/kit/sd/consul"
 	"github.com/hashicorp/consul/api"
@@ -94,7 +96,7 @@ func main() {
 		}
 	}()
 
-	//register service.
+	// register service.
 	logrus.Info("正在链接consul...")
 	consulClient, err := newConsulClient(fmt.Sprintf("%s:%d", conf.ConsulHost, conf.ConsulPort))
 	if err != nil {
@@ -107,6 +109,10 @@ func main() {
 	}
 
 	logrus.Info("启动成功")
+
+	// 加载 camunda grpc 服务
+	log := &util.ConsulLogger{}
+	camunda.Load(consulClient, log)
 
 	var state int32 = 1
 	sc := make(chan os.Signal)
@@ -241,24 +247,3 @@ func ParseConfigFile() (*Conf, error) {
 
 	return &conf, err
 }
-
-// func passtimeInter() grpc.ServerOption {
-// 	return grpc.UnaryInterceptor(passtime)
-// }
-
-// func passtime(ctx context.Context,
-// 	req interface{},
-// 	info *grpc.UnaryServerInfo,
-// 	handler grpc.UnaryHandler) (interface{}, error) {
-
-// 	start := time.Now()
-// 	// Calls the handler
-// 	h, err := handler(ctx, req)
-// 	// Logic after invoking the invoker
-// 	logrus.Infof("Request - Method:%s\tDuration:%s\tError:%v\n",
-// 		info.FullMethod,
-// 		time.Since(start),
-// 		err)
-
-// 	return h, err
-// }

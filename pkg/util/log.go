@@ -31,3 +31,10 @@ func (l LogFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	buffer.Write([]byte("\n"))
 	return buffer.Bytes(), nil
 }
+
+type ConsulLogger struct{}
+
+func (l *ConsulLogger) Log(args ...interface{}) error {
+	logrus.Infoln(args...)
+	return nil
+}
