@@ -2,10 +2,12 @@ package institutionservice
 
 import (
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"userService/pkg/common"
 	cleartxnM "userService/pkg/model/cleartxn"
 	insmodel "userService/pkg/model/institution"
 	"userService/pkg/pb"
+	"userService/pkg/camunda"
 
 	"net/http"
 
@@ -402,7 +404,14 @@ func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitution
 	}
 
 	//todo 写入工作流
-
+	camundaService := camunda.Get()
+	res, err := camundaService.ProcessDefinition.Get(ctx, &pb.GetProcessDefinitionReq{
+		Id: "ins_add",
+	})
+	if err != nil {
+		return nil, err
+	}
+	logrus.Debugln("工作流返回", res)
 	db.Commit()
 
 	return &reply, nil

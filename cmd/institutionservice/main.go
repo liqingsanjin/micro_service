@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"os/signal"
 	"path"
-	"sync/atomic"
-	"syscall"
+	"runtime"
 	"time"
 	"userService/pkg/camunda"
 	"userService/pkg/common"
@@ -114,16 +112,7 @@ func main() {
 	log := &util.ConsulLogger{}
 	camunda.Load(consulClient, log)
 
-	var state int32 = 1
-	sc := make(chan os.Signal)
-	signal.Notify(sc, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
-
-	select {
-	case sig := <-sc:
-		atomic.StoreInt32(&state, 0)
-		logrus.Infof("获取到退出信号[%s]", sig.String())
-	}
-	os.Exit(int(atomic.LoadInt32(&state)))
+	runtime.Goexit()
 }
 
 func runGRPCServer(addr string) error {

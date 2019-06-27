@@ -1,7 +1,7 @@
 package camunda
 
 import (
-	"userService/pkg/gateway"
+	"context"
 	"userService/pkg/pb"
 
 	"github.com/go-kit/kit/log"
@@ -21,9 +21,17 @@ func Load(client consul.Client, log log.Logger) {
 		passingOnly = true
 	)
 	processDefinitionInstancer := consul.NewInstancer(client, log, "processDefinitionService", tags, passingOnly)
-	defaultService.ProcessDefinition = gateway.GetProcessDefinitionConsulEndpoints(processDefinitionInstancer, log)
+	defaultService.ProcessDefinition = GetProcessDefinitionConsulEndpoints(processDefinitionInstancer, log)
 }
 
 func Get() *Service {
 	return defaultService
+}
+
+func encodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
+	return request, nil
+}
+
+func decodeResponse(ctx context.Context, response interface{}) (interface{}, error) {
+	return response, nil
 }
