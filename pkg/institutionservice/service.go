@@ -476,7 +476,7 @@ func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitution
 		logrus.Debugln("工作流返回", res)
 		instanceId = res.Item.Id
 	}
-	// todo 获取编辑任务
+	// 获取编辑任务
 	taskListResp, err := camundaService.Task.GetList(ctx, &camundapb.GetListTaskReq{
 		ProcessInstanceId: instanceId,
 	})
@@ -503,6 +503,9 @@ func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitution
 	}
 	taskCompleteResp, err := camundaService.Task.Complete(ctx, &camundapb.CompleteTaskReq{
 		Id: taskListResp.Tasks[0].Id,
+		Body: &camundapb.CompleteTaskReqBody{
+			Variables: map[string]*camundapb.Variable{},
+		},
 	})
 	if err != nil {
 		logrus.Errorln(err)

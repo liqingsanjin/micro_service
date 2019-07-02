@@ -36,3 +36,30 @@ func MakeListProcessInstanceEndpoint(service pb.ProcessInstanceServer) endpoint.
 		return service.List(ctx, req)
 	}
 }
+func MakeTaskGetListEndpoint(service pb.TaskServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.GetListTaskReq)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.GetList(ctx, req)
+	}
+}
+func MakeTaskGetEndpoint(service pb.TaskServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.GetTaskReq)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.Get(ctx, req)
+	}
+}
+func MakeTaskCompleteEndpoint(service pb.TaskServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.CompleteTaskReq)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.Complete(ctx, req)
+	}
+}

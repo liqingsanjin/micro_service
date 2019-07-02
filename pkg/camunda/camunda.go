@@ -25,6 +25,7 @@ func Load(client consul.Client, log log.Logger) {
 	instancer := consul.NewInstancer(client, log, "camundaService", tags, passingOnly)
 	defaultService.ProcessDefinition = GetProcessDefinitionConsulEndpoints(instancer, log)
 	defaultService.ProcessInstance = GetProcessInstanceConsulEndpoints(instancer, log)
+	defaultService.Task = GetTaskConsulEndpoints(instancer, log)
 }
 
 func Get() *Service {
