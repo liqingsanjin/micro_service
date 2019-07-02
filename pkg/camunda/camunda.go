@@ -10,6 +10,8 @@ import (
 
 type Service struct {
 	ProcessDefinition pb.ProcessDefinitionServer
+	ProcessInstance   pb.ProcessInstanceServer
+	Task              pb.TaskServer
 }
 
 var defaultService *Service
@@ -22,6 +24,7 @@ func Load(client consul.Client, log log.Logger) {
 	)
 	processDefinitionInstancer := consul.NewInstancer(client, log, "camundaService", tags, passingOnly)
 	defaultService.ProcessDefinition = GetProcessDefinitionConsulEndpoints(processDefinitionInstancer, log)
+	//defaultService.ProcessInstance =
 }
 
 func Get() *Service {

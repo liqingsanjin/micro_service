@@ -68,3 +68,9 @@ docker build -t apigateway:1.0.0 -f build/deploy/Dockerfile_gateway .
 
 docker build -t merchantservice:1.0.0 -f build/deploy/Dockerfile_merchant .
 ```
+
+## camunda
+### 编译
+```
+protoc -I ./api/camunda --go_out=plugins=grpc:./pkg/camunda/pb api/camunda/*.proto
+```
