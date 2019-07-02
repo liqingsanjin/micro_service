@@ -3,7 +3,7 @@ package camunda
 import (
 	"io"
 	"time"
-	"userService/pkg/pb"
+	"userService/pkg/camunda/pb"
 	"userService/pkg/transport"
 
 	"github.com/afex/hystrix-go/hystrix"

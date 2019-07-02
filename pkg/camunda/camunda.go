@@ -2,7 +2,7 @@ package camunda
 
 import (
 	"context"
-	"userService/pkg/pb"
+	"userService/pkg/camunda/pb"
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/sd/consul"
