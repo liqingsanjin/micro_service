@@ -18,7 +18,7 @@ type InstitutionInfo struct {
 	InsStlmTp       string    `gorm:"column:INS_STLM_TP"`
 	InsAloStlmCycle string    `gorm:"column:INS_ALO_STLM_CYCLE"`
 	InsAloStlmMd    string    `gorm:"column:INS_ALO_STLM_MD"`
-	InsStlmCNm      string    `gorm:"column:INS_STLM_C_NM "`
+	InsStlmCNm      string    `gorm:"column:INS_STLM_C_NM"`
 	InsStlmCAcct    string    `gorm:"column:INS_STLM_C_ACCT"`
 	InsStlmCBkNo    string    `gorm:"column:INS_STLM_C_BK_NO"`
 	InsStlmCBkNm    string    `gorm:"column:INS_STLM_C_BK_NM"`

@@ -5,11 +5,14 @@ import "common.proto";
 package pb;
 
 message StartProcessDefinitionReq {
-  string key = 1;
+  string id = 1;
   StartProcessDefinitionReqBody body = 2;
 }
 
-message StartProcessDefinitionReqBody { map<string, Variable> variables = 1; }
+message StartProcessDefinitionReqBody {
+    map<string, Variable> variables = 1;
+    string businessKey = 2;
+}
 
 message StartProcessDefinitionResp {
   StartProcessDefinitionRespItem item = 1;
@@ -28,7 +31,9 @@ message StartProcessDefinitionRespItem {
   map<string, Variable> variable = 8;
 }
 
-message GetProcessDefinitionReq { string id = 1; }
+message GetProcessDefinitionReq {
+    string id = 1;
+}
 
 message GetProcessDefinitionResp {
   string id = 1;

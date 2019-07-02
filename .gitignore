@@ -1,6 +1,5 @@
 .idea/
 .DS_Store
 vendor/
-pkg/pb/
 log/
 .vscode

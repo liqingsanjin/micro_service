@@ -79,7 +79,6 @@ func main() {
 		DB:       conf.MysqlDB,
 		Addr:     fmt.Sprintf("%s:%d", conf.MysqlHost, conf.MysqlPort),
 	})
-	defer common.DB.Close()
 
 	if err != nil {
 		logrus.Fatal("启动mysql错误", err)

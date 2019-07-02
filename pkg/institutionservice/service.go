@@ -2,12 +2,13 @@ package institutionservice
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
+	"userService/pkg/camunda"
 	"userService/pkg/common"
 	cleartxnM "userService/pkg/model/cleartxn"
 	insmodel "userService/pkg/model/institution"
 	"userService/pkg/pb"
-	"userService/pkg/camunda"
+
+	"github.com/sirupsen/logrus"
 
 	"net/http"
 
@@ -362,6 +363,15 @@ func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitution
 		}
 		return &reply, nil
 	}
+
+	if in.Field.InsIdCd == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "id不能为空",
+		}
+		return &reply, nil
+	}
 	db := common.DB.Begin()
 	defer db.Rollback()
 
@@ -406,9 +416,10 @@ func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitution
 	//todo 写入工作流
 	camundaService := camunda.Get()
 	res, err := camundaService.ProcessDefinition.Get(ctx, &pb.GetProcessDefinitionReq{
-		Id: "ins_add",
+		DeploymentId: "ins_add",
 	})
 	if err != nil {
+		logrus.Errorln(err)
 		return nil, err
 	}
 	logrus.Debugln("工作流返回", res)
