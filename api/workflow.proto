@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package pb;
+
+import "error.proto";
+
+service Workflow {
+    rpc Start(StartWorkflowRequest) returns (StartWorkflowReply) {}
+    rpc ListTask(ListTaskRequest) returns (ListTaskReply) {}
+    rpc HandleTask(HandleTaskRequest) returns (HandleTaskReply) {}
+}
+
+message StartWorkflowRequest {
+    string name = 1;
+    string id = 2;
+}
+
+message StartWorkflowReply {
+    error err = 1;
+}
+
+message ListTaskRequest {
+}
+
+message ListTaskReply {
+}
+
+message HandleTaskRequest {
+}
+
+message HandleTaskReply {
+}

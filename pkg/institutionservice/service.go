@@ -2,7 +2,10 @@ package institutionservice
 
 import (
 	"fmt"
+	"userService/pkg/camunda"
+	camundapb "userService/pkg/camunda/pb"
 	"userService/pkg/common"
+	camundamodel "userService/pkg/model/camunda"
 	cleartxnM "userService/pkg/model/cleartxn"
 	insmodel "userService/pkg/model/institution"
 	"userService/pkg/pb"
@@ -411,66 +414,54 @@ func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitution
 	}
 
 	// 查询是否存在工作流
-	//camundaService := camunda.Get()
-	//listProcessInstanceRes, err := camundaService.ProcessInstance.List(ctx, &camundapb.ProcessInstanceListReq{
-	//	BusinessKey: "ins_add_1:" + ins.InsIdCd,
-	//})
-	//if err != nil {
-	//	return nil, err
-	//}
-	//if listProcessInstanceRes.Err != nil {
-	//	logrus.Error(listProcessInstanceRes.Err)
-	//	reply.Err = &pb.Error{
-	//		Code:        http.StatusBadRequest,
-	//		Message:     "WorkFlowError",
-	//		Description: "查询工作流错误: " + listProcessInstanceRes.Err.Message,
-	//	}
-	//	return &reply, nil
-	//}
+	camundaService := camunda.Get()
+	listProcessInstanceRes, err := camundaService.ProcessInstance.List(ctx, &camundapb.ProcessInstanceListReq{
+		BusinessKey: "ins_add:" + ins.InsIdCd,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if camunda.CheckError(listProcessInstanceRes) {
+		reply.Err = camunda.TransError(listProcessInstanceRes)
+		return &reply, nil
+	}
 	//var instanceId string
-	//if len(listProcessInstanceRes.Items) != 0 {
-	//	// 已开启工作流
-	//	instanceId = listProcessInstanceRes.Items[0].Id
-	//} else {
-	//	// 需要开启工作流
-	//	processes, err := camundamodel.QueryProcessDefinition(db, &camundamodel.ProcessDefinition{
-	//		OperateName: "ins_add_1",
-	//	})
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//	if len(processes) == 0 {
-	//		reply.Err = &pb.Error{
-	//			Code:        http.StatusBadRequest,
-	//			Message:     "WorkFlowError",
-	//			Description: "没有工作流信息",
-	//		}
-	//		return &reply, nil
-	//	}
-	//
-	//	// 开启工作流
-	//	res, err := camundaService.ProcessDefinition.Start(ctx, &camundapb.StartProcessDefinitionReq{
-	//		Id: processes[0].Id,
-	//		Body: &camundapb.StartProcessDefinitionReqBody{
-	//			BusinessKey: "ins_add_1:" + ins.InsIdCd,
-	//		},
-	//	})
-	//	if err != nil {
-	//		logrus.Errorln(err)
-	//		return nil, err
-	//	}
-	//	if res.Err != nil {
-	//		logrus.Error(res.Err)
-	//		reply.Err = &pb.Error{
-	//			Code:        http.StatusBadRequest,
-	//			Message:     "WorkFlowError",
-	//			Description: "开启工作流错误: " + res.Err.Message,
-	//		}
-	//		return &reply, nil
-	//	}
-	//	logrus.Debugln("工作流返回", res)
-	//	instanceId = res.Item.Id
-	//}
+	if len(listProcessInstanceRes.Items) != 0 {
+		// 已开启工作流
+		//	instanceId = listProcessInstanceRes.Items[0].Id
+	} else {
+		// 需要开启工作流
+		processes, err := camundamodel.QueryProcessDefinition(db, &camundamodel.ProcessDefinition{
+			Name: "ins_add",
+		})
+		if err != nil {
+			return nil, err
+		}
+		if len(processes) == 0 {
+			reply.Err = &pb.Error{
+				Code:        http.StatusBadRequest,
+				Message:     "WorkFlowError",
+				Description: "没有工作流信息",
+			}
+			return &reply, nil
+		}
+		//
+		// 开启工作流
+		res, err := camundaService.ProcessDefinition.Start(ctx, &camundapb.StartProcessDefinitionReq{
+			Id: processes[0].Id,
+			Body: &camundapb.StartProcessDefinitionReqBody{
+				BusinessKey: "ins_add:" + ins.InsIdCd,
+			},
+		})
+		if err != nil {
+			return nil, err
+		}
+		if camunda.CheckError(res) {
+			reply.Err = camunda.TransError(res)
+			return &reply, nil
+		}
+		//	instanceId = res.Item.Id
+	}
 	//// 获取编辑任务
 	//taskListResp, err := camundaService.Task.GetList(ctx, &camundapb.GetListTaskReq{
 	//	ProcessInstanceId: instanceId,

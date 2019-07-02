@@ -7,10 +7,10 @@ import (
 )
 
 type ProcessDefinition struct {
-	Id          string    `gorm:"column:process_def_id;primary_key"`
-	OperateName string    `gorm:"column:operate_name;index"`
-	CreatedAt   time.Time `gorm:"column:created_at"`
-	UpdatedAt   time.Time `gorm:"column:updated_at"`
+	Id        string    `gorm:"column:process_def_id;primary_key"`
+	Name      string    `gorm:"column:name;index"`
+	CreatedAt time.Time `gorm:"column:created_at"`
+	UpdatedAt time.Time `gorm:"column:updated_at"`
 }
 
 func (p ProcessDefinition) TableName() string {
