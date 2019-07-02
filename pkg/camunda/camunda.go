@@ -22,9 +22,9 @@ func Load(client consul.Client, log log.Logger) {
 		tags        []string
 		passingOnly = true
 	)
-	processDefinitionInstancer := consul.NewInstancer(client, log, "camundaService", tags, passingOnly)
-	defaultService.ProcessDefinition = GetProcessDefinitionConsulEndpoints(processDefinitionInstancer, log)
-	//defaultService.ProcessInstance =
+	instancer := consul.NewInstancer(client, log, "camundaService", tags, passingOnly)
+	defaultService.ProcessDefinition = GetProcessDefinitionConsulEndpoints(instancer, log)
+	defaultService.ProcessInstance = GetProcessInstanceConsulEndpoints(instancer, log)
 }
 
 func Get() *Service {

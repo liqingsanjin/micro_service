@@ -2,7 +2,7 @@ package transport
 
 import (
 	"context"
-	"userService/pkg/pb"
+	"userService/pkg/camunda/pb"
 
 	"github.com/go-kit/kit/endpoint"
 )
@@ -24,5 +24,15 @@ func MakeStartProcessDefinitionEndpoint(service pb.ProcessDefinitionServer) endp
 			return nil, ErrRequestTypeInvalid
 		}
 		return service.Start(ctx, req)
+	}
+}
+
+func MakeListProcessInstanceEndpoint(service pb.ProcessInstanceServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req, ok := request.(*pb.ProcessInstanceListReq)
+		if !ok {
+			return nil, ErrRequestTypeInvalid
+		}
+		return service.List(ctx, req)
 	}
 }
