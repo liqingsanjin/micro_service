@@ -45,6 +45,7 @@ func main() {
 	endpoints.InstitutionEndpoints = gateway.GetInstitutionCliEndpoints(instancer, log)
 	endpoints.MerchantEndpoints = gateway.GetMerchantEndpoints(instancer, log)
 	endpoints.TermEndpoints = gateway.GetTermEndpoints(instancer, log)
+	endpoints.WorkflowEndpoints = gateway.GetWorkflowEndpoints(instancer, log)
 
 	userHandler := gateway.NewHttpHandler(endpoints)
 	http.ListenAndServe(":"+port, userHandler)

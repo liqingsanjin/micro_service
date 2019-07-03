@@ -13,7 +13,7 @@ service Workflow {
 message StartWorkflowRequest {
     string type = 1;
     string name = 2;
-    string user_id = 3;
+    string userId = 3;
 }
 
 message StartWorkflowReply {

@@ -7,6 +7,7 @@ import (
 	"path"
 	"runtime"
 	"time"
+	"userService/pkg/camunda"
 	"userService/pkg/institutionservice"
 	merchantservice "userService/pkg/mechantservice"
 	"userService/pkg/staticservice"
@@ -158,6 +159,8 @@ func main() {
 		}
 	}()
 
+	log := &util.ConsulLogger{}
+	camunda.Load(consulClient, log)
 	// 注册consul service
 	err = registerConsulService(consulClient, "userService", grpcHost, grpcPort)
 	if err != nil {
