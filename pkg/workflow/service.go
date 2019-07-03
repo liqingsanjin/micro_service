@@ -8,6 +8,7 @@ import (
 	"userService/pkg/common"
 	camundamodel "userService/pkg/model/camunda"
 	"userService/pkg/pb"
+	"userService/pkg/util"
 )
 
 type service struct{}
@@ -217,4 +218,43 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 	})
 
 	return reply, err
+}
+
+func (s *service) ListRemark(ctx context.Context, in *pb.ListRemarkRequest) (*pb.ListRemarkReply, error) {
+	if in.Size == 0 {
+		in.Size = 10
+	}
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	query := new(camundamodel.Remark)
+	if in.Item != nil {
+		query.RemarkId = in.Item.RemarkId
+		query.Comment = in.Item.Comment
+		query.TaskId = in.Item.TaskId
+
+	}
+	db := common.DB
+	items, count, err := camundamodel.QueryRemark(db, query, in.Page, in.Size)
+	if err != nil {
+		return nil, err
+	}
+
+	docs := make([]*pb.RemarkField, len(items))
+	for i := range items {
+		docs[i] = &pb.RemarkField{
+			RemarkId:  items[i].RemarkId,
+			Comment:   items[i].Comment,
+			TaskId:    items[i].TaskId,
+			CreatedAt: items[i].CreatedAt.Format(util.TimePattern),
+			UpdatedAt: items[i].UpdatedAt.Format(util.TimePattern),
+		}
+	}
+
+	return &pb.ListRemarkReply{
+		Items: docs,
+		Count: count,
+		Page:  in.Page,
+		Size:  in.Size,
+	}, nil
 }

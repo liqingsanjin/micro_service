@@ -32,3 +32,9 @@ func MakeStartWorkflowEndpoint(service pb.WorkflowServer) endpoint.Endpoint {
 		return service.Start(ctx, request.(*pb.StartWorkflowRequest))
 	}
 }
+
+func MakeListRemarkEndpoint(service pb.WorkflowServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.ListRemark(ctx, request.(*pb.ListRemarkRequest))
+	}
+}

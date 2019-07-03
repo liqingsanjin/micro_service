@@ -8,6 +8,7 @@ service Workflow {
     rpc Start(StartWorkflowRequest) returns (StartWorkflowReply) {}
     rpc ListTask(ListTaskRequest) returns (ListTaskReply) {}
     rpc HandleTask(HandleTaskRequest) returns (HandleTaskReply) {}
+    rpc ListRemark(ListRemarkRequest) returns (ListRemarkReply) {}
 }
 
 message StartWorkflowRequest {
@@ -54,4 +55,26 @@ message HandleTaskRequest {
 
 message HandleTaskReply {
     error err = 1;
+}
+
+message RemarkField {
+    int64 remarkId = 1;
+    string comment = 2;
+    int64 taskId = 3;
+    string createdAt = 4;
+    string updatedAt = 5;
+}
+
+message ListRemarkRequest {
+    int32 page = 1;
+    int32 size = 2;
+    RemarkField item = 3;
+}
+
+message ListRemarkReply {
+    repeated RemarkField items = 1;
+    int32 count = 2;
+    int32 size = 3;
+    int32 page = 4;
+    error err = 5;
 }

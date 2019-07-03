@@ -14,6 +14,7 @@ type WorkflowEndpoints struct {
 	StartEndpoint      endpoint.Endpoint
 	ListTaskEndpoint   endpoint.Endpoint
 	HandleTaskEndpoint endpoint.Endpoint
+	ListRemarkEndpoint endpoint.Endpoint
 }
 
 func (w *WorkflowEndpoints) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.StartWorkflowReply, error) {
@@ -38,6 +39,14 @@ func (w *WorkflowEndpoints) HandleTask(ctx context.Context, in *pb.HandleTaskReq
 		return nil, err
 	}
 	return res.(*pb.HandleTaskReply), nil
+}
+
+func (w *WorkflowEndpoints) ListRemark(ctx context.Context, in *pb.ListRemarkRequest) (*pb.ListRemarkReply, error) {
+	res, err := w.ListRemarkEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.ListRemarkReply), nil
 }
 
 func NewWorkflowGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *WorkflowEndpoints {
@@ -84,6 +93,19 @@ func NewWorkflowGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *
 			options...,
 		).Endpoint()
 		endpoints.StartEndpoint = e
+	}
+
+	{
+		e := grpctransport.NewClient(
+			conn,
+			"pb.Workflow",
+			"ListRemark",
+			encodeRequest,
+			decodeResponse,
+			pb.ListRemarkReply{},
+			options...,
+		).Endpoint()
+		endpoints.ListRemarkEndpoint = e
 	}
 
 	return endpoints

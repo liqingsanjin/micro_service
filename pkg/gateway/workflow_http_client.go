@@ -30,4 +30,11 @@ func RegisterWorkflowHandler(engine *gin.Engine, endpoints *WorkflowEndpoints) {
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
+
+	group.POST("/listRemark", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.ListRemarkEndpoint,
+		decodeHttpRequest(&pb.ListRemarkRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
 }

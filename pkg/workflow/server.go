@@ -11,6 +11,7 @@ type server struct {
 	ListTaskHandler   grpctransport.Handler
 	HandleTaskHandler grpctransport.Handler
 	StartHandler      grpctransport.Handler
+	ListRemarkHandler grpctransport.Handler
 }
 
 func (s *server) ListTask(ctx context.Context, in *pb.ListTaskRequest) (*pb.ListTaskReply, error) {
@@ -35,6 +36,13 @@ func (s *server) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.St
 		return nil, err
 	}
 	return res.(*pb.StartWorkflowReply), nil
+}
+func (s *server) ListRemark(ctx context.Context, in *pb.ListRemarkRequest) (*pb.ListRemarkReply, error) {
+	_, res, err := s.ListRemarkHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.ListRemarkReply), nil
 }
 
 func New(tracer grpctransport.ServerOption) pb.WorkflowServer {
@@ -68,6 +76,16 @@ func New(tracer grpctransport.ServerOption) pb.WorkflowServer {
 	{
 		endpoint := MakeStartWorkflowEndpoint(svc)
 		svr.StartHandler = grpctransport.NewServer(
+			endpoint,
+			decodeRequest,
+			encodeResponse,
+			options...,
+		)
+	}
+
+	{
+		endpoint := MakeListRemarkEndpoint(svc)
+		svr.ListRemarkHandler = grpctransport.NewServer(
 			endpoint,
 			decodeRequest,
 			encodeResponse,

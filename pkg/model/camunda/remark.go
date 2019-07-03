@@ -21,3 +21,14 @@ func (Remark) TableName() string {
 func SaveRemark(db *gorm.DB, remark *Remark) error {
 	return db.Create(remark).Error
 }
+
+func QueryRemark(db *gorm.DB, query *Remark, page int32, size int32) ([]*Remark, int32, error) {
+	out := make([]*Remark, 0)
+	var count int32
+	db.Model(query).Where(query).Count(&count)
+	err := db.Where(query).Find(&out).Error
+	if err == gorm.ErrRecordNotFound {
+		return out, count, nil
+	}
+	return out, count, err
+}
