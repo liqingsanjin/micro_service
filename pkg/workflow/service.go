@@ -3,6 +3,7 @@ package workflow
 import (
 	"context"
 	"net/http"
+	"time"
 	"userService/pkg/camunda"
 	camundapb "userService/pkg/camunda/pb"
 	"userService/pkg/common"
@@ -55,8 +56,76 @@ func (s *service) ListTask(ctx context.Context, in *pb.ListTaskRequest) (*pb.Lis
 	}, nil
 }
 
-func (s *service) HandleTask(context.Context, *pb.HandleTaskRequest) (*pb.HandleTaskReply, error) {
-	panic("implement me")
+func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb.HandleTaskReply, error) {
+	reply := new(pb.HandleTaskReply)
+	if in.Id == 0 || in.Result == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamError",
+			Description: "result和taskId不能为空",
+		}
+		return reply, nil
+	}
+	db := common.DB
+	task, err := camundamodel.FindTaskById(db, in.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	client := camunda.Get()
+	values := make(map[string]*camundapb.Variable)
+	values["result"] = &camundapb.Variable{
+		Value: in.Result,
+		Type:  "string",
+	}
+	if in.Remark != "" {
+		values["remark"] = &camundapb.Variable{
+			Value: in.Remark,
+			Type:  "string",
+		}
+	}
+	completeTaskRes, err := client.Task.Complete(ctx, &camundapb.CompleteTaskReq{
+		Id: task.CamundaTaskId,
+		Body: &camundapb.CompleteTaskReqBody{
+			Variables: values,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if camunda.CheckError(completeTaskRes) {
+		reply.Err = camunda.TransError(completeTaskRes)
+		return reply, nil
+	}
+
+	listTaskRes, err := client.Task.GetList(ctx, &camundapb.GetListTaskReq{
+		ProcessInstanceId: task.InstanceId,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if camunda.CheckError(listTaskRes) {
+		reply.Err = camunda.TransError(listTaskRes)
+		return reply, nil
+	}
+
+	if len(listTaskRes.Tasks) != 0 {
+		task.UpdatedAt = time.Now()
+		task.CurrentNode = listTaskRes.Tasks[0].Name
+		task.CamundaTaskId = listTaskRes.Tasks[0].Id
+		err = camundamodel.UpdateTask(db, &camundamodel.Task{
+			Id: task.Id,
+		}, &camundamodel.Task{
+			CurrentNode:   listTaskRes.Tasks[0].Name,
+			CamundaTaskId: listTaskRes.Tasks[0].Id,
+		})
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return reply, nil
 }
 
 func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.StartWorkflowReply, error) {

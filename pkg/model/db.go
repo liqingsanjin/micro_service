@@ -16,7 +16,7 @@ type Options struct {
 }
 
 func NewDB(opt *Options) (*gorm.DB, error) {
-	url := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=true",
+	url := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=true&loc=Local",
 		opt.User,
 		opt.Password,
 		opt.Addr,

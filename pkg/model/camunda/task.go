@@ -35,3 +35,16 @@ func QueryTask(db *gorm.DB, query *Task, page int32, size int32) ([]*Task, int32
 func SaveTask(db *gorm.DB, task *Task) error {
 	return db.Save(task).Error
 }
+
+func UpdateTask(db *gorm.DB, query *Task, task *Task) error {
+	return db.Model(task).Where(query).Update(task).Error
+}
+
+func FindTaskById(db *gorm.DB, id int64) (*Task, error) {
+	out := new(Task)
+	err := db.Where("id = ?", id).Take(out).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return out, err
+}
