@@ -13,12 +13,20 @@ type server struct {
 	StartHandler      grpctransport.Handler
 }
 
-func (s *server) ListTask(context.Context, *pb.ListTaskRequest) (*pb.ListTaskReply, error) {
-	panic("implement me")
+func (s *server) ListTask(ctx context.Context, in *pb.ListTaskRequest) (*pb.ListTaskReply, error) {
+	_, res, err := s.ListTaskHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.ListTaskReply), nil
 }
 
-func (s *server) HandleTask(context.Context, *pb.HandleTaskRequest) (*pb.HandleTaskReply, error) {
-	panic("implement me")
+func (s *server) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb.HandleTaskReply, error) {
+	_, res, err := s.HandleTaskHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.HandleTaskReply), nil
 }
 
 func (s *server) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.StartWorkflowReply, error) {

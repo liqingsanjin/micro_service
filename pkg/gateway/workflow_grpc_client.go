@@ -25,7 +25,7 @@ func (w *WorkflowEndpoints) Start(ctx context.Context, in *pb.StartWorkflowReque
 }
 
 func (w *WorkflowEndpoints) ListTask(ctx context.Context, in *pb.ListTaskRequest) (*pb.ListTaskReply, error) {
-	res, err := w.StartEndpoint(ctx, in)
+	res, err := w.ListTaskEndpoint(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +33,7 @@ func (w *WorkflowEndpoints) ListTask(ctx context.Context, in *pb.ListTaskRequest
 }
 
 func (w *WorkflowEndpoints) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb.HandleTaskReply, error) {
-	res, err := w.StartEndpoint(ctx, in)
+	res, err := w.HandleTaskEndpoint(ctx, in)
 	if err != nil {
 		return nil, err
 	}

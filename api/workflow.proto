@@ -21,9 +21,28 @@ message StartWorkflowReply {
 }
 
 message ListTaskRequest {
+    int32 page = 1;
+    int32 size = 2;
+    TaskField item = 3;
+}
+
+message TaskField {
+    int64 id = 1;
+    string title = 2;
+    string userId = 3;
+    string currentNode = 4;
+    string camundaTaskId = 5;
+    string instanceId = 6;
+    string createdAt = 7;
+    string updatedAt = 8;
 }
 
 message ListTaskReply {
+    repeated TaskField items = 1;
+    int32 count = 2;
+    int32 size = 3;
+    int32 page = 4;
+    error err = 5;
 }
 
 message HandleTaskRequest {

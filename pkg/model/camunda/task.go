@@ -21,13 +21,15 @@ func (t Task) TableName() string {
 	return "TBL_CAMUNDA_TASK"
 }
 
-func QueryTask(db *gorm.DB, query *Task) ([]*Task, error) {
+func QueryTask(db *gorm.DB, query *Task, page int32, size int32) ([]*Task, int32, error) {
 	out := make([]*Task, 0)
+	var count int32
+	db.Model(&Task{}).Where(query).Count(&count)
 	err := db.Where(query).Find(&out).Error
 	if err == gorm.ErrRecordNotFound {
-		return out, nil
+		return out, count, nil
 	}
-	return out, err
+	return out, count, err
 }
 
 func SaveTask(db *gorm.DB, task *Task) error {
