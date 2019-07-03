@@ -2,10 +2,7 @@ package institutionservice
 
 import (
 	"fmt"
-	"userService/pkg/camunda"
-	camundapb "userService/pkg/camunda/pb"
 	"userService/pkg/common"
-	camundamodel "userService/pkg/model/camunda"
 	cleartxnM "userService/pkg/model/cleartxn"
 	insmodel "userService/pkg/model/institution"
 	"userService/pkg/pb"
@@ -414,78 +411,86 @@ func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitution
 	}
 
 	// 查询是否存在工作流
-	camundaService := camunda.Get()
-	listProcessInstanceRes, err := camundaService.ProcessInstance.List(ctx, &camundapb.ProcessInstanceListReq{
-		BusinessKey: "ins_add:" + ins.InsIdCd,
-	})
-	if err != nil {
-		return nil, err
-	}
-	if camunda.CheckError(listProcessInstanceRes) {
-		reply.Err = camunda.TransError(listProcessInstanceRes)
-		return &reply, nil
-	}
-	//var instanceId string
-	if len(listProcessInstanceRes.Items) != 0 {
-		// 已开启工作流
-		//	instanceId = listProcessInstanceRes.Items[0].Id
-	} else {
-		// 需要开启工作流
-		processes, err := camundamodel.QueryProcessDefinition(db, &camundamodel.ProcessDefinition{
-			Name: "ins_add",
-		})
-		if err != nil {
-			return nil, err
-		}
-		if len(processes) == 0 {
-			reply.Err = &pb.Error{
-				Code:        http.StatusBadRequest,
-				Message:     "WorkFlowError",
-				Description: "没有工作流信息",
-			}
-			return &reply, nil
-		}
-		//
-		// 开启工作流
-		res, err := camundaService.ProcessDefinition.Start(ctx, &camundapb.StartProcessDefinitionReq{
-			Id: processes[0].Id,
-			Body: &camundapb.StartProcessDefinitionReqBody{
-				BusinessKey: "ins_add:" + ins.InsIdCd,
-			},
-		})
-		if err != nil {
-			return nil, err
-		}
-		if camunda.CheckError(res) {
-			reply.Err = camunda.TransError(res)
-			return &reply, nil
-		}
-		//	instanceId = res.Item.Id
-	}
-	//// 获取编辑任务
-	//taskListResp, err := camundaService.Task.GetList(ctx, &camundapb.GetListTaskReq{
-	//	ProcessInstanceId: instanceId,
+	//camundaService := camunda.Get()
+	//listProcessInstanceRes, err := camundaService.ProcessInstance.List(ctx, &camundapb.ProcessInstanceListReq{
+	//	BusinessKey: "ins_add:" + ins.InsIdCd,
 	//})
 	//if err != nil {
-	//	logrus.Errorln(err)
 	//	return nil, err
 	//}
-	//if taskListResp.Err != nil {
-	//	logrus.Error(taskListResp.Err)
-	//	reply.Err = &pb.Error{
-	//		Code:        http.StatusBadRequest,
-	//		Message:     "WorkFlowError",
-	//		Description: "查询任务错误: " + taskListResp.Err.Message,
-	//	}
+	//if camunda.CheckError(listProcessInstanceRes) {
+	//	reply.Err = camunda.TransError(listProcessInstanceRes)
 	//	return &reply, nil
 	//}
-	//if len(taskListResp.Tasks) == 0 {
-	//	reply.Err = &pb.Error{
-	//		Code:        http.StatusBadRequest,
-	//		Message:     "WorkFlowError",
-	//		Description: "没有编辑任务",
+	////var instanceId string
+	//if len(listProcessInstanceRes.Items) != 0 {
+	//	// 已开启工作流
+	//	//	instanceId = listProcessInstanceRes.Items[0].Id
+	//	// 修改代办任务
+	//} else {
+	//	// 需要开启工作流
+	//	processes, err := camundamodel.QueryProcessDefinition(db, &camundamodel.ProcessDefinition{
+	//		Name: "ins_add",
+	//	})
+	//	if err != nil {
+	//		return nil, err
 	//	}
-	//	return &reply, nil
+	//	if len(processes) == 0 {
+	//		reply.Err = &pb.Error{
+	//			Code:        http.StatusBadRequest,
+	//			Message:     "WorkFlowError",
+	//			Description: "没有工作流信息",
+	//		}
+	//		return &reply, nil
+	//	}
+	//	//
+	//	// 开启工作流
+	//	res, err := camundaService.ProcessDefinition.Start(ctx, &camundapb.StartProcessDefinitionReq{
+	//		Id: processes[0].Id,
+	//		Body: &camundapb.StartProcessDefinitionReqBody{
+	//			BusinessKey: "ins_add:" + ins.InsIdCd,
+	//		},
+	//	})
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	if camunda.CheckError(res) {
+	//		reply.Err = camunda.TransError(res)
+	//		return &reply, nil
+	//	}
+	//	//	instanceId = res.Item.Id
+	//	// 保存代办任务
+	//	// 获取编辑任务
+	//	taskListResp, err := camundaService.Task.GetList(ctx, &camundapb.GetListTaskReq{
+	//		ProcessInstanceId: res.Item.Id,
+	//	})
+	//	if err != nil {
+	//		logrus.Errorln(err)
+	//		return nil, err
+	//	}
+	//	if camunda.CheckError(taskListResp) {
+	//		reply.Err = camunda.TransError(taskListResp)
+	//		return &reply, nil
+	//	}
+	//	if len(taskListResp.Tasks) == 0 {
+	//		reply.Err = &pb.Error{
+	//			Code:        http.StatusBadRequest,
+	//			Message:     "WorkFlowError",
+	//			Description: "没有编辑任务",
+	//		}
+	//		return &reply, nil
+	//	}
+	//	title := fmt.Sprintf("%s-%s_%s", processes[0].Workflow, ins.InsIdCd, ins.InsName)
+	//	err = camundamodel.SaveTask(db, &camundamodel.Task{
+	//		Title:         title,
+	//		UserId:        "admin",
+	//		CurrentNode:   taskListResp.Tasks[0].Name,
+	//		CamundaTaskId: taskListResp.Tasks[0].Id,
+	//	})
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	//taskListResp.Tasks[0]
 	//}
 	//taskCompleteResp, err := camundaService.Task.Complete(ctx, &camundapb.CompleteTaskReq{
 	//	Id: taskListResp.Tasks[0].Id,

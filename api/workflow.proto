@@ -11,8 +11,9 @@ service Workflow {
 }
 
 message StartWorkflowRequest {
-    string name = 1;
-    string id = 2;
+    string type = 1;
+    string name = 2;
+    string user_id = 3;
 }
 
 message StartWorkflowReply {

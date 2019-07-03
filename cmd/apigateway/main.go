@@ -35,20 +35,16 @@ func main() {
 	log := &logger{}
 
 	var (
-		tags                 = []string{}
-		passingOnly          = true
-		instancer            = consulsd.NewInstancer(client, log, "userService", tags, passingOnly)
-		staticInstancer      = consulsd.NewInstancer(client, log, "staticService", tags, passingOnly)
-		institutionInstancer = consulsd.NewInstancer(client, log, "institutionService", tags, passingOnly)
-		merchantInstancer    = consulsd.NewInstancer(client, log, "merchantService", tags, passingOnly)
-		termInstancer        = consulsd.NewInstancer(client, log, "termService", tags, passingOnly)
+		tags        = []string{}
+		passingOnly = true
+		instancer   = consulsd.NewInstancer(client, log, "userService", tags, passingOnly)
 	)
 	endpoints := new(gateway.ClientEndpoints)
 	endpoints.UserEndpoints = gateway.GetUserEndpoints(instancer, log)
-	endpoints.StaticEndpoints = gateway.GetStaticCliEndpoints(staticInstancer, log)
-	endpoints.InstitutionEndpoints = gateway.GetInstitutionCliEndpoints(institutionInstancer, log)
-	endpoints.MerchantEndpoints = gateway.GetMerchantEndpoints(merchantInstancer, log)
-	endpoints.TermEndpoints = gateway.GetTermEndpoints(termInstancer, log)
+	endpoints.StaticEndpoints = gateway.GetStaticCliEndpoints(instancer, log)
+	endpoints.InstitutionEndpoints = gateway.GetInstitutionCliEndpoints(instancer, log)
+	endpoints.MerchantEndpoints = gateway.GetMerchantEndpoints(instancer, log)
+	endpoints.TermEndpoints = gateway.GetTermEndpoints(instancer, log)
 
 	userHandler := gateway.NewHttpHandler(endpoints)
 	http.ListenAndServe(":"+port, userHandler)

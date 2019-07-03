@@ -23,3 +23,6 @@ port = 8500
 [log]
 path = "log"
 file = "userservice.log"
+
+[watcher]
+addr = "0.0.0.0:9000"

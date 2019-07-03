@@ -9,6 +9,7 @@ import (
 type ProcessDefinition struct {
 	Id        string    `gorm:"column:process_def_id;primary_key"`
 	Name      string    `gorm:"column:name;index"`
+	Workflow  string    `gorm:"column:workflow"`
 	CreatedAt time.Time `gorm:"column:created_at"`
 	UpdatedAt time.Time `gorm:"column:updated_at"`
 }

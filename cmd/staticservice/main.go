@@ -3,22 +3,11 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"net"
 	"os"
-	"path"
-	"time"
-	"userService/pkg/common"
-	"userService/pkg/model"
-	"userService/pkg/pb"
 	"userService/pkg/staticservice"
 
-	"github.com/go-kit/kit/sd/consul"
-	"github.com/hashicorp/consul/api"
-	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
-	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"google.golang.org/grpc"
 )
 
 var (
@@ -37,118 +26,18 @@ func main() {
 	}
 	logrus.SetFormatter(&logFormatter{})
 
-	chanHTTPErr := make(chan error)
-
 	conf, err := ParseConfigFile()
 	if err != nil {
 		logrus.Fatal("解析配置文件错误", err)
 	}
 
-	if logFile != "" {
-		os.MkdirAll(logPath, os.ModePerm)
-		logFilePath := path.Join(logPath, logFile)
-		writer, err := rotatelogs.New(
-			logFilePath+".%Y%m%d%H%M",
-			rotatelogs.WithLinkName(logFilePath),
-			rotatelogs.WithMaxAge(time.Duration(24)*time.Hour),
-			rotatelogs.WithRotationTime(time.Duration(30*24)*time.Hour),
-		)
-		if err != nil {
-			logrus.Errorln(err)
-		}
-		logrus.AddHook(lfshook.NewHook(
-			lfshook.WriterMap{
-				logrus.InfoLevel:  writer,
-				logrus.DebugLevel: writer,
-				logrus.FatalLevel: writer,
-				logrus.PanicLevel: writer,
-				logrus.ErrorLevel: writer,
-				logrus.WarnLevel:  writer,
-				logrus.TraceLevel: writer,
-			},
-			&logFormatter{},
-		))
-
-	}
-
 	logrus.Info("正在链接mysql...")
-	common.DB, err = model.NewDB(&model.Options{
-		User:     conf.MysqlUser,
-		Password: conf.MysqlPassword,
-		DB:       conf.MysqlDB,
-		Addr:     fmt.Sprintf("%s:%d", conf.MysqlHost, conf.MysqlPort),
-	})
-	defer common.DB.Close()
-
-	if err != nil {
-		logrus.Fatal("启动mysql错误", err)
-	}
-	if level == "debug" {
-		common.DB = common.DB.Debug()
-	}
 
 	logrus.Info("启动consul watcher ...")
-	go staticservice.StartServer(conf.WatcherAddr, chanHTTPErr)
-
-	go func() {
-		if err := runGRPCServer(fmt.Sprintf("%s:%d", conf.GrpcHost, conf.GrpcPort)); err != nil {
-			logrus.Fatal("grpc server shutdown", err)
-		}
-	}()
+	go staticservice.StartServer(conf.WatcherAddr)
 
 	//register service.
-	logrus.Info("正在链接consul...")
-	consulClient, err := newConsulClient(fmt.Sprintf("%s:%d", conf.ConsulHost, conf.ConsulPort))
-
-	if err != nil {
-		logrus.Fatal("consul链接失败： ", err)
-	}
-
-	err = registerService(consulClient, conf.ServiceName, conf.GrpcRegistHost, conf.GrpcRegistPort)
-	if err != nil {
-		logrus.Fatal("服务注册失败:", err)
-	}
-
 	logrus.Info("启动成功")
-
-	select {
-	case err := <-chanHTTPErr:
-		logrus.Fatal(err)
-	}
-}
-
-func runGRPCServer(addr string) error {
-
-	l, err := net.Listen("tcp", addr)
-	if err != nil {
-		return err
-	}
-
-	insHandle := staticservice.NewGRPCServer()
-
-	svr := grpc.NewServer()
-	pb.RegisterStaticServer(svr, insHandle)
-	return svr.Serve(l)
-}
-
-func newConsulClient(addr string) (consul.Client, error) {
-	client, err := api.NewClient(&api.Config{
-		Address: addr,
-	})
-	if err != nil {
-		return nil, err
-	}
-	common.ConsulClient = client
-
-	return consul.NewClient(client), nil
-}
-
-func registerService(client consul.Client, name, host string, port int) error {
-	return client.Register(&api.AgentServiceRegistration{
-		Address: host,
-		Port:    port,
-		Name:    name,
-	})
 }
 
 //Conf .

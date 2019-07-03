@@ -99,10 +99,10 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 //StartServer .
-func StartServer(addr string, chanErr chan error) {
+func StartServer(addr string) {
 	http.HandleFunc("/watch", indexHandler)
 	err := http.ListenAndServe(addr, nil)
 	if err != nil {
-		chanErr <- err
+		logrus.Fatalln(err)
 	}
 }
