@@ -13,7 +13,7 @@ type Task struct {
 	CurrentNode   string    `gorm:"column:current_node"`
 	CamundaTaskId string    `gorm:"column:camunda_task_id"`
 	InstanceId    string    `gorm:"column:instance_id"`
-	EndFlag       bool      `gorm:"column:end_flag"`
+	EndFlag       *bool     `gorm:"column:end_flag"`
 	CreatedAt     time.Time `gorm:"column:created_at"`
 	UpdatedAt     time.Time `gorm:"column:updated_at"`
 }

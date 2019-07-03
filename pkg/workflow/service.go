@@ -28,6 +28,7 @@ func (s *service) ListTask(ctx context.Context, in *pb.ListTaskRequest) (*pb.Lis
 		query.CurrentNode = in.Item.CurrentNode
 		query.CamundaTaskId = in.Item.CamundaTaskId
 		query.InstanceId = in.Item.InstanceId
+		query.EndFlag = &in.Item.EndFlag
 	}
 	tasks, count, err := camundamodel.QueryTask(db, query, in.Page, in.Size)
 	if err != nil {
@@ -42,6 +43,7 @@ func (s *service) ListTask(ctx context.Context, in *pb.ListTaskRequest) (*pb.Lis
 			CurrentNode:   tasks[i].CurrentNode,
 			CamundaTaskId: tasks[i].CamundaTaskId,
 			InstanceId:    tasks[i].InstanceId,
+			EndFlag:       *tasks[i].EndFlag,
 			CreatedAt:     tasks[i].CreatedAt.Format("2006-01-02 15:03:04"),
 			UpdatedAt:     tasks[i].UpdatedAt.Format("2006-01-02 15:03:04"),
 		}
@@ -128,11 +130,11 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 		}
 	} else {
 		// 修改状态为结束
+		t := new(camundamodel.Task)
+		*t.EndFlag = true
 		err = camundamodel.UpdateTask(db, &camundamodel.Task{
 			TaskId: task.TaskId,
-		}, &camundamodel.Task{
-			EndFlag: true,
-		})
+		}, t)
 	}
 	db.Commit()
 
