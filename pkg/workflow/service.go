@@ -3,7 +3,6 @@ package workflow
 import (
 	"context"
 	"net/http"
-	"time"
 	"userService/pkg/camunda"
 	camundapb "userService/pkg/camunda/pb"
 	"userService/pkg/common"
@@ -23,7 +22,7 @@ func (s *service) ListTask(ctx context.Context, in *pb.ListTaskRequest) (*pb.Lis
 	db := common.DB
 	query := new(camundamodel.Task)
 	if in.Item != nil {
-		query.Id = in.Item.Id
+		query.TaskId = in.Item.TaskId
 		query.Title = in.Item.Title
 		query.UserId = in.Item.UserId
 		query.CurrentNode = in.Item.CurrentNode
@@ -37,7 +36,7 @@ func (s *service) ListTask(ctx context.Context, in *pb.ListTaskRequest) (*pb.Lis
 	pbTasks := make([]*pb.TaskField, len(tasks))
 	for i := range tasks {
 		pbTasks[i] = &pb.TaskField{
-			Id:            tasks[i].Id,
+			TaskId:        tasks[i].TaskId,
 			Title:         tasks[i].Title,
 			UserId:        tasks[i].UserId,
 			CurrentNode:   tasks[i].CurrentNode,
@@ -58,7 +57,7 @@ func (s *service) ListTask(ctx context.Context, in *pb.ListTaskRequest) (*pb.Lis
 
 func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb.HandleTaskReply, error) {
 	reply := new(pb.HandleTaskReply)
-	if in.Id == 0 || in.Result == "" {
+	if in.TaskId == 0 || in.Result == "" {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamError",
@@ -66,8 +65,9 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 		}
 		return reply, nil
 	}
-	db := common.DB
-	task, err := camundamodel.FindTaskById(db, in.Id)
+	db := common.DB.Begin()
+	defer db.Rollback()
+	task, err := camundamodel.FindTaskById(db, in.TaskId)
 	if err != nil {
 		return nil, err
 	}
@@ -78,12 +78,16 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 		Value: in.Result,
 		Type:  "string",
 	}
-	if in.Remark != "" {
-		values["remark"] = &camundapb.Variable{
-			Value: in.Remark,
-			Type:  "string",
-		}
+
+	// 保存备注
+	err = camundamodel.SaveRemark(db, &camundamodel.Remark{
+		Comment: in.Remark,
+		TaskId:  in.TaskId,
+	})
+	if err != nil {
+		return nil, err
 	}
+	// 完成任务
 	completeTaskRes, err := client.Task.Complete(ctx, &camundapb.CompleteTaskReq{
 		Id: task.CamundaTaskId,
 		Body: &camundapb.CompleteTaskReqBody{
@@ -99,6 +103,7 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 		return reply, nil
 	}
 
+	// 查询下一个任务
 	listTaskRes, err := client.Task.GetList(ctx, &camundapb.GetListTaskReq{
 		ProcessInstanceId: task.InstanceId,
 	})
@@ -111,11 +116,9 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 	}
 
 	if len(listTaskRes.Tasks) != 0 {
-		task.UpdatedAt = time.Now()
-		task.CurrentNode = listTaskRes.Tasks[0].Name
-		task.CamundaTaskId = listTaskRes.Tasks[0].Id
+		// 有下个任务，更新任务节点
 		err = camundamodel.UpdateTask(db, &camundamodel.Task{
-			Id: task.Id,
+			TaskId: task.TaskId,
 		}, &camundamodel.Task{
 			CurrentNode:   listTaskRes.Tasks[0].Name,
 			CamundaTaskId: listTaskRes.Tasks[0].Id,
@@ -123,7 +126,15 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 		if err != nil {
 			return nil, err
 		}
+	} else {
+		// 修改状态为结束
+		err = camundamodel.UpdateTask(db, &camundamodel.Task{
+			TaskId: task.TaskId,
+		}, &camundamodel.Task{
+			EndFlag: true,
+		})
 	}
+	db.Commit()
 
 	return reply, nil
 }

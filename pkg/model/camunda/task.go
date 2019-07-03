@@ -7,12 +7,13 @@ import (
 )
 
 type Task struct {
-	Id            int64     `gorm:"column:id;primary_key"`
+	TaskId        int64     `gorm:"column:task_id;primary_key"`
 	Title         string    `gorm:"column:title"`
 	UserId        string    `gorm:"column:user_id"`
 	CurrentNode   string    `gorm:"column:current_node"`
 	CamundaTaskId string    `gorm:"column:camunda_task_id"`
 	InstanceId    string    `gorm:"column:instance_id"`
+	EndFlag       bool      `gorm:"column:end_flag"`
 	CreatedAt     time.Time `gorm:"column:created_at"`
 	UpdatedAt     time.Time `gorm:"column:updated_at"`
 }
@@ -42,7 +43,7 @@ func UpdateTask(db *gorm.DB, query *Task, task *Task) error {
 
 func FindTaskById(db *gorm.DB, id int64) (*Task, error) {
 	out := new(Task)
-	err := db.Where("id = ?", id).Take(out).Error
+	err := db.Where("task_id = ?", id).Take(out).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}

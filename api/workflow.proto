@@ -27,7 +27,7 @@ message ListTaskRequest {
 }
 
 message TaskField {
-    int64 id = 1;
+    int64 taskId = 1;
     string title = 2;
     string userId = 3;
     string currentNode = 4;
@@ -46,7 +46,7 @@ message ListTaskReply {
 }
 
 message HandleTaskRequest {
-    int64 id = 1;
+    int64 taskId = 1;
     string result = 2;
     string remark = 3;
 }
