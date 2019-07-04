@@ -215,6 +215,53 @@
           }
         }
       }
+    },
+    "/workflow/handleTask": {
+      "post": {
+        "operationId": "handleTask",
+        "summary": "处理任务",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "handleTask",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "taskId",
+                "result",
+              ],
+              "properties": {
+                "taskId": {
+                  "type": "integer",
+                  "description": "任务id"
+                },
+                "result": {
+                  "type": "string",
+                  "description": "任务结果"
+                },
+                "remark": {
+                  "type": "string",
+                  "description": "备注"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
