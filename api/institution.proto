@@ -396,8 +396,8 @@ message InstitutionCashField {
      string msgResvFld8 = 13;
      string msgResvFld9 = 14;
      string msgResvFld10 = 15;
-     string recOprid = 16;
-     string recUpdopr = 17;
+     string recOprId = 16;
+     string recUpdOpr = 17;
      string createdAt = 18;
      string updatedAt = 19;
 }

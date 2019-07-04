@@ -22,8 +22,8 @@ type Cash struct {
 	MsgResvFld8    string    `gorm:"column:MSG_RESV_FLD8"`
 	MsgResvFld9    string    `gorm:"column:MSG_RESV_FLD9"`
 	MsgResvFld10   string    `gorm:"column:MSG_RESV_FLD10"`
-	RecOprid       string    `gorm:"column:REC_OPR_ID"`
-	RecUpdopr      string    `gorm:"column:REC_UPD_OPR"`
+	RecOprId       string    `gorm:"column:REC_OPR_ID"`
+	RecUpdOpr      string    `gorm:"column:REC_UPD_OPR"`
 	CreatedAt      time.Time `gorm:"column:REC_CRT_TS"`
 	UpdatedAt      time.Time `gorm:"column:REC_UPD_TS"`
 }

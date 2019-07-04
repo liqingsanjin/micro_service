@@ -642,8 +642,8 @@ func (s *setService) SaveInstitutionCash(ctx context.Context, in *pb.SaveInstitu
 		ins.MsgResvFld8 = in.Field.MsgResvFld8
 		ins.MsgResvFld9 = in.Field.MsgResvFld9
 		ins.MsgResvFld10 = in.Field.MsgResvFld10
-		ins.RecOprid = in.Field.RecOprid
-		ins.RecUpdopr = in.Field.RecUpdopr
+		ins.RecOprId = in.Field.RecOprId
+		ins.RecUpdOpr = in.Field.RecUpdOpr
 	}
 	err := insmodel.SaveInstitutionCash(db, ins)
 	if err != nil {
