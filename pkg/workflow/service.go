@@ -209,12 +209,14 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 		return reply, nil
 	}
 	task := taskListRes.Tasks[0]
+	var endFlog = false
 	err = camundamodel.SaveTask(db, &camundamodel.Task{
 		Title:         in.Name,
 		UserId:        in.UserId,
 		CurrentNode:   task.Name,
 		CamundaTaskId: task.Id,
 		InstanceId:    startProcessInstanceRes.Item.Id,
+		EndFlag:       &endFlog,
 	})
 
 	return reply, err

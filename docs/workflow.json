@@ -1,0 +1,62 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "workflow api"
+  },
+  "host": "172.16.7.120:8080",
+  "host": "127.0.0.1:8080",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/workflow/start": {
+      "post": {
+        "operationId": "start",
+        "summary": "开启工作流",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "type",
+                "name",
+                "userId"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "工作流类型: ins_add为新增机构"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "工作流流程名称"
+                },
+                "userId": {
+                  "type": "string",
+                  "description": "用户id"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "err": null
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
