@@ -804,6 +804,102 @@
           }
         }
       }
+    },
+    "/institution/saveInstitutionControl": {
+      "post": {
+        "operationId": "saveInstitutionControl",
+        "summary": "保存机构权限信息",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "saveInstitutionControl",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "field"
+              ],
+              "properties": {
+                "field": {
+                  "type": "object",
+                  "properties": {
+                    "insIdCd": {
+                      "type": "string"
+                    },
+                    "insCompanyCd": {
+                      "type": "string"
+                    },
+                    "prodCd": {
+                      "type": "string"
+                    },
+                    "bizCd": {
+                      "type": "string"
+                    },
+                    "ctrlSta": {
+                      "type": "string"
+                    },
+                    "insBegTm": {
+                      "type": "string"
+                    },
+                    "insEndTm": {
+                      "type": "string"
+                    },
+                    "msgResvFld1": {
+                      "type": "string"
+                    },
+                    "msgResvFld2": {
+                      "type": "string"
+                    },
+                    "msgResvFld3": {
+                      "type": "string"
+                    },
+                    "msgResvFld4": {
+                      "type": "string"
+                    },
+                    "msgResvFld5": {
+                      "type": "string"
+                    },
+                    "msgResvFld6": {
+                      "type": "string"
+                    },
+                    "msgResvFld7": {
+                      "type": "string"
+                    },
+                    "msgResvFld8": {
+                      "type": "string"
+                    },
+                    "msgResvFld9": {
+                      "type": "string"
+                    },
+                    "msgResvFld10": {
+                      "type": "string"
+                    },
+                    "recOprId": {
+                      "type": "string"
+                    },
+                    "recUpdOpr": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
