@@ -900,6 +900,96 @@
           }
         }
       }
+    },
+    "/institution/saveInstitutionCash": {
+      "post": {
+        "operationId": "saveInstitutionCash",
+        "summary": "保存机构头寸信息",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "saveInstitutionCash",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "field"
+              ],
+              "properties": {
+                "field": {
+                  "type": "object",
+                  "properties": {
+                    "insIdCd": {
+                      "type": "string"
+                    },
+                    "prodCd": {
+                      "type": "string"
+                    },
+                    "insDefaultFlag": {
+                      "type": "string"
+                    },
+                    "insDefaultCash": {
+                      "type": "number"
+                    },
+                    "insCurrentCash": {
+                      "type": "number"
+                    },
+                    "msgResvFld1": {
+                      "type": "string"
+                    },
+                    "msgResvFld2": {
+                      "type": "string"
+                    },
+                    "msgResvFld3": {
+                      "type": "string"
+                    },
+                    "msgResvFld4": {
+                      "type": "string"
+                    },
+                    "msgResvFld5": {
+                      "type": "string"
+                    },
+                    "msgResvFld6": {
+                      "type": "string"
+                    },
+                    "msgResvFld7": {
+                      "type": "string"
+                    },
+                    "msgResvFld8": {
+                      "type": "string"
+                    },
+                    "msgResvFld9": {
+                      "type": "string"
+                    },
+                    "msgResvFld10": {
+                      "type": "string"
+                    },
+                    "recOprId": {
+                      "type": "string"
+                    },
+                    "recUpdOpr": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
