@@ -228,6 +228,7 @@ func newConsulClient(addr string) (consul.Client, error) {
 	if err != nil {
 		return nil, err
 	}
+	common.ConsulClient = consulClient
 	return consul.NewClient(consulClient), nil
 }
 
