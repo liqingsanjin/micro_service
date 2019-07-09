@@ -122,6 +122,14 @@ func GetDictionaryItem(db *gorm.DB) []*DictionaryItem {
 	db.Find(&dictionaryItem)
 	return dictionaryItem
 }
+func GetDictionaryItemByPk(db *gorm.DB, query *DictionaryItem) *DictionaryItem {
+	out := new(DictionaryItem)
+	err := db.Where(query).Take(out).Error
+	if err != nil {
+		return nil
+	}
+	return out
+}
 
 func GetInsProdBizFeeMapInf(db *gorm.DB) []*InsProdBizFeeMapInf {
 	insProdBizFeeMapInf := make([]*InsProdBizFeeMapInf, 0)
@@ -139,4 +147,25 @@ func GetInsInf(db *gorm.DB) []*InsInf {
 	insInf := make([]*InsInf, 0)
 	db.Find(&insInf)
 	return insInf
+}
+
+type DictionaryLayerItem struct {
+	DicType    string    `gorm:"column:DIC_TYPE"`
+	DicCode    string    `gorm:"column:DIC_CODE"`
+	DicPCode   string    `gorm:"column:DIC_PCODE"`
+	DicLevel   string    `gorm:"column:DIC_LEVEL"`
+	DisPOrder  string    `gorm:"column:DISP_ORDER"`
+	Name       string    `gorm:"column:NAME"`
+	Memo       string    `gorm:"column:MEMO"`
+	UpdateTime time.Time `gorm:"column:UPDATE_TIME"`
+}
+
+func (d DictionaryLayerItem) TableName() string {
+	return "TBL_DICTIONARYLAYERITEM"
+}
+
+func GetDictionaryLayerItem(db *gorm.DB, query *DictionaryLayerItem) []*DictionaryLayerItem {
+	out := make([]*DictionaryLayerItem, 0)
+	db.Where(query).Find(&out)
+	return out
 }

@@ -111,9 +111,9 @@ func (m *StaticSyncDataResp) GetErr() *Error {
 }
 
 type StaticGetDictionaryItemReq struct {
-	DicType              string   `protobuf:"bytes,1,opt,name=DicType,proto3" json:"DicType,omitempty"`
-	DicCode              string   `protobuf:"bytes,2,opt,name=DicCode,proto3" json:"DicCode,omitempty"`
-	DicName              string   `protobuf:"bytes,3,opt,name=DicName,proto3" json:"DicName,omitempty"`
+	DicType              string   `protobuf:"bytes,1,opt,name=dicType,proto3" json:"dicType,omitempty"`
+	DicCode              string   `protobuf:"bytes,2,opt,name=dicCode,proto3" json:"dicCode,omitempty"`
+	DicName              string   `protobuf:"bytes,3,opt,name=dicName,proto3" json:"dicName,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -166,7 +166,7 @@ func (m *StaticGetDictionaryItemReq) GetDicName() string {
 }
 
 type StaticGetDictionaryItemResp struct {
-	GetDictionaryItems   []*StaticGetDictionaryItem `protobuf:"bytes,1,rep,name=GetDictionaryItems,proto3" json:"GetDictionaryItems,omitempty"`
+	Items                []*StaticGetDictionaryItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	Err                  *Error                     `protobuf:"bytes,2,opt,name=err,proto3" json:"err,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}                   `json:"-"`
 	XXX_unrecognized     []byte                     `json:"-"`
@@ -198,9 +198,9 @@ func (m *StaticGetDictionaryItemResp) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_StaticGetDictionaryItemResp proto.InternalMessageInfo
 
-func (m *StaticGetDictionaryItemResp) GetGetDictionaryItems() []*StaticGetDictionaryItem {
+func (m *StaticGetDictionaryItemResp) GetItems() []*StaticGetDictionaryItem {
 	if m != nil {
-		return m.GetDictionaryItems
+		return m.Items
 	}
 	return nil
 }
@@ -213,9 +213,9 @@ func (m *StaticGetDictionaryItemResp) GetErr() *Error {
 }
 
 type StaticGetDictionaryItem struct {
-	DicType              string   `protobuf:"bytes,1,opt,name=DicType,proto3" json:"DicType,omitempty"`
-	DicCode              string   `protobuf:"bytes,2,opt,name=DicCode,proto3" json:"DicCode,omitempty"`
-	DicName              string   `protobuf:"bytes,3,opt,name=DicName,proto3" json:"DicName,omitempty"`
+	DicType              string   `protobuf:"bytes,1,opt,name=dicType,proto3" json:"dicType,omitempty"`
+	DicCode              string   `protobuf:"bytes,2,opt,name=dicCode,proto3" json:"dicCode,omitempty"`
+	DicName              string   `protobuf:"bytes,3,opt,name=dicName,proto3" json:"dicName,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -268,8 +268,8 @@ func (m *StaticGetDictionaryItem) GetDicName() string {
 }
 
 type StaticGetDicByProdAndBizReq struct {
-	ProdCd               string   `protobuf:"bytes,1,opt,name=ProdCd,proto3" json:"ProdCd,omitempty"`
-	BizCd                string   `protobuf:"bytes,2,opt,name=BizCd,proto3" json:"BizCd,omitempty"`
+	ProdCd               string   `protobuf:"bytes,1,opt,name=prodCd,proto3" json:"prodCd,omitempty"`
+	BizCd                string   `protobuf:"bytes,2,opt,name=bizCd,proto3" json:"bizCd,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -315,7 +315,7 @@ func (m *StaticGetDicByProdAndBizReq) GetBizCd() string {
 }
 
 type StaticGetDicByProdAndBizResp struct {
-	GetDictionaryItems   []*StaticGetDictionaryItem `protobuf:"bytes,1,rep,name=GetDictionaryItems,proto3" json:"GetDictionaryItems,omitempty"`
+	Items                []*StaticGetDictionaryItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	Err                  *Error                     `protobuf:"bytes,2,opt,name=err,proto3" json:"err,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}                   `json:"-"`
 	XXX_unrecognized     []byte                     `json:"-"`
@@ -347,9 +347,9 @@ func (m *StaticGetDicByProdAndBizResp) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_StaticGetDicByProdAndBizResp proto.InternalMessageInfo
 
-func (m *StaticGetDicByProdAndBizResp) GetGetDictionaryItems() []*StaticGetDictionaryItem {
+func (m *StaticGetDicByProdAndBizResp) GetItems() []*StaticGetDictionaryItem {
 	if m != nil {
-		return m.GetDictionaryItems
+		return m.Items
 	}
 	return nil
 }
@@ -401,7 +401,7 @@ func (m *StaticGetDicByInsCmpCdReq) GetInsCompanyCd() string {
 }
 
 type StaticGetDicByInsCmpCdResp struct {
-	GetDictionaryItems   []*StaticGetDictionaryItem `protobuf:"bytes,1,rep,name=GetDictionaryItems,proto3" json:"GetDictionaryItems,omitempty"`
+	Items                []*StaticGetDictionaryItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
 	Err                  *Error                     `protobuf:"bytes,2,opt,name=err,proto3" json:"err,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}                   `json:"-"`
 	XXX_unrecognized     []byte                     `json:"-"`
@@ -433,9 +433,9 @@ func (m *StaticGetDicByInsCmpCdResp) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_StaticGetDicByInsCmpCdResp proto.InternalMessageInfo
 
-func (m *StaticGetDicByInsCmpCdResp) GetGetDictionaryItems() []*StaticGetDictionaryItem {
+func (m *StaticGetDicByInsCmpCdResp) GetItems() []*StaticGetDictionaryItem {
 	if m != nil {
-		return m.GetDictionaryItems
+		return m.Items
 	}
 	return nil
 }
@@ -448,11 +448,11 @@ func (m *StaticGetDicByInsCmpCdResp) GetErr() *Error {
 }
 
 type StaticCheckValuesReq struct {
-	ProdCd               string   `protobuf:"bytes,1,opt,name=ProdCd,proto3" json:"ProdCd,omitempty"`
-	BizCd                string   `protobuf:"bytes,2,opt,name=BizCd,proto3" json:"BizCd,omitempty"`
-	TransCd              string   `protobuf:"bytes,3,opt,name=TransCd,proto3" json:"TransCd,omitempty"`
-	InsCompanyCd         string   `protobuf:"bytes,4,opt,name=InsCompanyCd,proto3" json:"InsCompanyCd,omitempty"`
-	FwdInsIdCd           string   `protobuf:"bytes,5,opt,name=FwdInsIdCd,proto3" json:"FwdInsIdCd,omitempty"`
+	ProdCd               string   `protobuf:"bytes,1,opt,name=prodCd,proto3" json:"prodCd,omitempty"`
+	BizCd                string   `protobuf:"bytes,2,opt,name=bizCd,proto3" json:"bizCd,omitempty"`
+	TransCd              string   `protobuf:"bytes,3,opt,name=transCd,proto3" json:"transCd,omitempty"`
+	InsCompanyCd         string   `protobuf:"bytes,4,opt,name=insCompanyCd,proto3" json:"insCompanyCd,omitempty"`
+	FwdInsIdCd           string   `protobuf:"bytes,5,opt,name=fwdInsIdCd,proto3" json:"fwdInsIdCd,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -565,6 +565,297 @@ func (m *StaticCheckValuesResp) GetErr() *Error {
 	return nil
 }
 
+type GetDictionaryLayerItemReq struct {
+	DicType              string   `protobuf:"bytes,1,opt,name=dicType,proto3" json:"dicType,omitempty"`
+	DicCode              string   `protobuf:"bytes,2,opt,name=dicCode,proto3" json:"dicCode,omitempty"`
+	DicPCode             string   `protobuf:"bytes,3,opt,name=dicPCode,proto3" json:"dicPCode,omitempty"`
+	DicLevel             string   `protobuf:"bytes,4,opt,name=dicLevel,proto3" json:"dicLevel,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetDictionaryLayerItemReq) Reset()         { *m = GetDictionaryLayerItemReq{} }
+func (m *GetDictionaryLayerItemReq) String() string { return proto.CompactTextString(m) }
+func (*GetDictionaryLayerItemReq) ProtoMessage()    {}
+func (*GetDictionaryLayerItemReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_800d8474b3bfe66d, []int{11}
+}
+
+func (m *GetDictionaryLayerItemReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDictionaryLayerItemReq.Unmarshal(m, b)
+}
+func (m *GetDictionaryLayerItemReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDictionaryLayerItemReq.Marshal(b, m, deterministic)
+}
+func (m *GetDictionaryLayerItemReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDictionaryLayerItemReq.Merge(m, src)
+}
+func (m *GetDictionaryLayerItemReq) XXX_Size() int {
+	return xxx_messageInfo_GetDictionaryLayerItemReq.Size(m)
+}
+func (m *GetDictionaryLayerItemReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDictionaryLayerItemReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDictionaryLayerItemReq proto.InternalMessageInfo
+
+func (m *GetDictionaryLayerItemReq) GetDicType() string {
+	if m != nil {
+		return m.DicType
+	}
+	return ""
+}
+
+func (m *GetDictionaryLayerItemReq) GetDicCode() string {
+	if m != nil {
+		return m.DicCode
+	}
+	return ""
+}
+
+func (m *GetDictionaryLayerItemReq) GetDicPCode() string {
+	if m != nil {
+		return m.DicPCode
+	}
+	return ""
+}
+
+func (m *GetDictionaryLayerItemReq) GetDicLevel() string {
+	if m != nil {
+		return m.DicLevel
+	}
+	return ""
+}
+
+type DictionaryLayerItem struct {
+	DicType              string   `protobuf:"bytes,1,opt,name=dicType,proto3" json:"dicType,omitempty"`
+	DicCode              string   `protobuf:"bytes,2,opt,name=dicCode,proto3" json:"dicCode,omitempty"`
+	DicPCode             string   `protobuf:"bytes,3,opt,name=dicPCode,proto3" json:"dicPCode,omitempty"`
+	DicLevel             string   `protobuf:"bytes,4,opt,name=dicLevel,proto3" json:"dicLevel,omitempty"`
+	DisPOrder            string   `protobuf:"bytes,5,opt,name=disPOrder,proto3" json:"disPOrder,omitempty"`
+	Name                 string   `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`
+	Memo                 string   `protobuf:"bytes,7,opt,name=memo,proto3" json:"memo,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DictionaryLayerItem) Reset()         { *m = DictionaryLayerItem{} }
+func (m *DictionaryLayerItem) String() string { return proto.CompactTextString(m) }
+func (*DictionaryLayerItem) ProtoMessage()    {}
+func (*DictionaryLayerItem) Descriptor() ([]byte, []int) {
+	return fileDescriptor_800d8474b3bfe66d, []int{12}
+}
+
+func (m *DictionaryLayerItem) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DictionaryLayerItem.Unmarshal(m, b)
+}
+func (m *DictionaryLayerItem) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DictionaryLayerItem.Marshal(b, m, deterministic)
+}
+func (m *DictionaryLayerItem) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DictionaryLayerItem.Merge(m, src)
+}
+func (m *DictionaryLayerItem) XXX_Size() int {
+	return xxx_messageInfo_DictionaryLayerItem.Size(m)
+}
+func (m *DictionaryLayerItem) XXX_DiscardUnknown() {
+	xxx_messageInfo_DictionaryLayerItem.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DictionaryLayerItem proto.InternalMessageInfo
+
+func (m *DictionaryLayerItem) GetDicType() string {
+	if m != nil {
+		return m.DicType
+	}
+	return ""
+}
+
+func (m *DictionaryLayerItem) GetDicCode() string {
+	if m != nil {
+		return m.DicCode
+	}
+	return ""
+}
+
+func (m *DictionaryLayerItem) GetDicPCode() string {
+	if m != nil {
+		return m.DicPCode
+	}
+	return ""
+}
+
+func (m *DictionaryLayerItem) GetDicLevel() string {
+	if m != nil {
+		return m.DicLevel
+	}
+	return ""
+}
+
+func (m *DictionaryLayerItem) GetDisPOrder() string {
+	if m != nil {
+		return m.DisPOrder
+	}
+	return ""
+}
+
+func (m *DictionaryLayerItem) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *DictionaryLayerItem) GetMemo() string {
+	if m != nil {
+		return m.Memo
+	}
+	return ""
+}
+
+type GetDictionaryLayerItemResp struct {
+	Items                []*DictionaryLayerItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Err                  *Error                 `protobuf:"bytes,2,opt,name=err,proto3" json:"err,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}               `json:"-"`
+	XXX_unrecognized     []byte                 `json:"-"`
+	XXX_sizecache        int32                  `json:"-"`
+}
+
+func (m *GetDictionaryLayerItemResp) Reset()         { *m = GetDictionaryLayerItemResp{} }
+func (m *GetDictionaryLayerItemResp) String() string { return proto.CompactTextString(m) }
+func (*GetDictionaryLayerItemResp) ProtoMessage()    {}
+func (*GetDictionaryLayerItemResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_800d8474b3bfe66d, []int{13}
+}
+
+func (m *GetDictionaryLayerItemResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDictionaryLayerItemResp.Unmarshal(m, b)
+}
+func (m *GetDictionaryLayerItemResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDictionaryLayerItemResp.Marshal(b, m, deterministic)
+}
+func (m *GetDictionaryLayerItemResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDictionaryLayerItemResp.Merge(m, src)
+}
+func (m *GetDictionaryLayerItemResp) XXX_Size() int {
+	return xxx_messageInfo_GetDictionaryLayerItemResp.Size(m)
+}
+func (m *GetDictionaryLayerItemResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDictionaryLayerItemResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDictionaryLayerItemResp proto.InternalMessageInfo
+
+func (m *GetDictionaryLayerItemResp) GetItems() []*DictionaryLayerItem {
+	if m != nil {
+		return m.Items
+	}
+	return nil
+}
+
+func (m *GetDictionaryLayerItemResp) GetErr() *Error {
+	if m != nil {
+		return m.Err
+	}
+	return nil
+}
+
+type GetDictionaryItemByPkReq struct {
+	DicType              string   `protobuf:"bytes,1,opt,name=dicType,proto3" json:"dicType,omitempty"`
+	DicCode              string   `protobuf:"bytes,2,opt,name=dicCode,proto3" json:"dicCode,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetDictionaryItemByPkReq) Reset()         { *m = GetDictionaryItemByPkReq{} }
+func (m *GetDictionaryItemByPkReq) String() string { return proto.CompactTextString(m) }
+func (*GetDictionaryItemByPkReq) ProtoMessage()    {}
+func (*GetDictionaryItemByPkReq) Descriptor() ([]byte, []int) {
+	return fileDescriptor_800d8474b3bfe66d, []int{14}
+}
+
+func (m *GetDictionaryItemByPkReq) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDictionaryItemByPkReq.Unmarshal(m, b)
+}
+func (m *GetDictionaryItemByPkReq) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDictionaryItemByPkReq.Marshal(b, m, deterministic)
+}
+func (m *GetDictionaryItemByPkReq) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDictionaryItemByPkReq.Merge(m, src)
+}
+func (m *GetDictionaryItemByPkReq) XXX_Size() int {
+	return xxx_messageInfo_GetDictionaryItemByPkReq.Size(m)
+}
+func (m *GetDictionaryItemByPkReq) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDictionaryItemByPkReq.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDictionaryItemByPkReq proto.InternalMessageInfo
+
+func (m *GetDictionaryItemByPkReq) GetDicType() string {
+	if m != nil {
+		return m.DicType
+	}
+	return ""
+}
+
+func (m *GetDictionaryItemByPkReq) GetDicCode() string {
+	if m != nil {
+		return m.DicCode
+	}
+	return ""
+}
+
+type GetDictionaryItemByPkResp struct {
+	Item                 *StaticGetDictionaryItem `protobuf:"bytes,1,opt,name=item,proto3" json:"item,omitempty"`
+	Err                  *Error                   `protobuf:"bytes,2,opt,name=err,proto3" json:"err,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
+	XXX_unrecognized     []byte                   `json:"-"`
+	XXX_sizecache        int32                    `json:"-"`
+}
+
+func (m *GetDictionaryItemByPkResp) Reset()         { *m = GetDictionaryItemByPkResp{} }
+func (m *GetDictionaryItemByPkResp) String() string { return proto.CompactTextString(m) }
+func (*GetDictionaryItemByPkResp) ProtoMessage()    {}
+func (*GetDictionaryItemByPkResp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_800d8474b3bfe66d, []int{15}
+}
+
+func (m *GetDictionaryItemByPkResp) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetDictionaryItemByPkResp.Unmarshal(m, b)
+}
+func (m *GetDictionaryItemByPkResp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetDictionaryItemByPkResp.Marshal(b, m, deterministic)
+}
+func (m *GetDictionaryItemByPkResp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetDictionaryItemByPkResp.Merge(m, src)
+}
+func (m *GetDictionaryItemByPkResp) XXX_Size() int {
+	return xxx_messageInfo_GetDictionaryItemByPkResp.Size(m)
+}
+func (m *GetDictionaryItemByPkResp) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetDictionaryItemByPkResp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetDictionaryItemByPkResp proto.InternalMessageInfo
+
+func (m *GetDictionaryItemByPkResp) GetItem() *StaticGetDictionaryItem {
+	if m != nil {
+		return m.Item
+	}
+	return nil
+}
+
+func (m *GetDictionaryItemByPkResp) GetErr() *Error {
+	if m != nil {
+		return m.Err
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*StaticSyncDataReq)(nil), "pb.StaticSyncDataReq")
 	proto.RegisterType((*StaticSyncDataResp)(nil), "pb.StaticSyncDataResp")
@@ -577,43 +868,58 @@ func init() {
 	proto.RegisterType((*StaticGetDicByInsCmpCdResp)(nil), "pb.StaticGetDicByInsCmpCdResp")
 	proto.RegisterType((*StaticCheckValuesReq)(nil), "pb.StaticCheckValuesReq")
 	proto.RegisterType((*StaticCheckValuesResp)(nil), "pb.StaticCheckValuesResp")
+	proto.RegisterType((*GetDictionaryLayerItemReq)(nil), "pb.GetDictionaryLayerItemReq")
+	proto.RegisterType((*DictionaryLayerItem)(nil), "pb.DictionaryLayerItem")
+	proto.RegisterType((*GetDictionaryLayerItemResp)(nil), "pb.GetDictionaryLayerItemResp")
+	proto.RegisterType((*GetDictionaryItemByPkReq)(nil), "pb.GetDictionaryItemByPkReq")
+	proto.RegisterType((*GetDictionaryItemByPkResp)(nil), "pb.GetDictionaryItemByPkResp")
 }
 
 func init() { proto.RegisterFile("static.proto", fileDescriptor_800d8474b3bfe66d) }
 
 var fileDescriptor_800d8474b3bfe66d = []byte{
-	// 487 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x55, 0x41, 0x6f, 0xd3, 0x30,
-	0x14, 0xc6, 0x2b, 0x2b, 0xeb, 0xeb, 0x0e, 0xcc, 0xda, 0x4a, 0x96, 0x8e, 0x52, 0xf9, 0xd4, 0x53,
-	0x25, 0xca, 0x91, 0x03, 0xa2, 0xa9, 0x40, 0xd1, 0x10, 0x42, 0x6d, 0x35, 0x89, 0xa3, 0x1b, 0x5b,
-	0x10, 0x68, 0x13, 0xcf, 0xf6, 0x84, 0xb2, 0x1f, 0x00, 0xdc, 0xf9, 0x07, 0xfc, 0x52, 0x64, 0x27,
-	0x59, 0x93, 0xa6, 0x89, 0x04, 0x42, 0x3b, 0xbe, 0xf7, 0xf9, 0x7d, 0xef, 0x7b, 0xcf, 0x9f, 0x13,
-	0x38, 0x56, 0x9a, 0xea, 0x30, 0x18, 0x0b, 0x19, 0xeb, 0x18, 0x1f, 0x88, 0x95, 0xdb, 0xe5, 0x52,
-	0xc6, 0x32, 0x4d, 0x90, 0xe7, 0x70, 0xb2, 0xb0, 0x07, 0x16, 0x49, 0x14, 0xcc, 0xa8, 0xa6, 0x73,
-	0x7e, 0x8d, 0x2f, 0xa0, 0xb3, 0xa4, 0xab, 0x35, 0x7f, 0x4f, 0x37, 0xdc, 0x41, 0x43, 0x34, 0xea,
-	0xcc, 0xb7, 0x09, 0xe2, 0x03, 0xde, 0x2d, 0x51, 0x02, 0xf7, 0xa0, 0x2d, 0xb9, 0xba, 0x59, 0x6b,
-	0x5b, 0x70, 0x34, 0xcf, 0x22, 0xdc, 0x87, 0x16, 0x97, 0xd2, 0x39, 0x18, 0xa2, 0x51, 0x77, 0xd2,
-	0x19, 0x8b, 0xd5, 0xd8, 0xb6, 0x9f, 0x9b, 0x2c, 0xf9, 0x02, 0x6e, 0x4a, 0xf5, 0x96, 0xeb, 0x59,
-	0x18, 0xe8, 0x30, 0x8e, 0xa8, 0x4c, 0x7c, 0xcd, 0x37, 0x46, 0x86, 0x03, 0x8f, 0x66, 0x61, 0xb0,
-	0x4c, 0x44, 0x2e, 0x22, 0x0f, 0x33, 0xc4, 0x8b, 0x19, 0xb7, 0xc4, 0x29, 0x62, 0xc2, 0x0c, 0xb1,
-	0xc2, 0x5b, 0x77, 0x88, 0x95, 0xfd, 0x03, 0x41, 0xbf, 0xb6, 0x99, 0x12, 0xf8, 0x12, 0x70, 0x05,
-	0x50, 0x0e, 0x1a, 0xb6, 0x46, 0xdd, 0x49, 0xdf, 0xe8, 0xae, 0x2b, 0xde, 0x53, 0xd6, 0x3c, 0xf5,
-	0x27, 0x78, 0x52, 0xc3, 0xf5, 0x9f, 0x47, 0xbe, 0x2c, 0x4f, 0x3c, 0x4d, 0x3e, 0xc8, 0x98, 0xbd,
-	0x8e, 0xd8, 0x34, 0xbc, 0x35, 0xfb, 0xed, 0x41, 0xdb, 0x24, 0x3c, 0x96, 0xf5, 0xca, 0x22, 0x7c,
-	0x0a, 0x87, 0xd3, 0xf0, 0xd6, 0x63, 0x59, 0xa3, 0x34, 0x20, 0x3f, 0x11, 0x5c, 0xd4, 0xb3, 0xdd,
-	0xeb, 0x02, 0x5f, 0xc1, 0x79, 0x59, 0x89, 0x1f, 0x29, 0x6f, 0x23, 0x3c, 0x66, 0xa6, 0x22, 0x70,
-	0x6c, 0xc2, 0x78, 0x23, 0x68, 0x94, 0xdc, 0xcd, 0x56, 0xca, 0x91, 0xef, 0xa8, 0x6c, 0xbc, 0x22,
-	0xc3, 0xbd, 0x4e, 0xf2, 0x1b, 0xc1, 0x69, 0x4a, 0xe6, 0x7d, 0xe6, 0xc1, 0xd7, 0x2b, 0xba, 0xbe,
-	0xe1, 0xea, 0xaf, 0xef, 0xc6, 0x58, 0x60, 0x29, 0x69, 0xa4, 0x3c, 0x96, 0x5b, 0x20, 0x0b, 0x2b,
-	0xdb, 0x78, 0x58, 0xdd, 0x06, 0x1e, 0x00, 0xbc, 0xf9, 0xc6, 0xfc, 0x48, 0xf9, 0xa6, 0xdf, 0xa1,
-	0x3d, 0x51, 0xc8, 0x90, 0x77, 0x70, 0xb6, 0x47, 0xe3, 0x3f, 0xbe, 0xf9, 0xc9, 0xaf, 0x16, 0xb4,
-	0x53, 0x3a, 0xfc, 0x12, 0x8e, 0xf2, 0x6f, 0x08, 0x3e, 0xdb, 0xee, 0xb5, 0xf0, 0x29, 0x72, 0x7b,
-	0xfb, 0xd2, 0x4a, 0x90, 0x07, 0xf8, 0x0a, 0x4e, 0xaa, 0xef, 0x67, 0xd0, 0x74, 0x3b, 0xfc, 0xda,
-	0x7d, 0xd6, 0x88, 0x5b, 0xde, 0x8f, 0xf9, 0xe5, 0x17, 0x0d, 0x8e, 0x2b, 0x85, 0x3b, 0x8f, 0xc9,
-	0x1d, 0x36, 0x1f, 0xb0, 0xd4, 0x0b, 0x78, 0xbc, 0xeb, 0x37, 0xfc, 0xb4, 0x5a, 0x57, 0x70, 0xb3,
-	0x3b, 0x68, 0x82, 0x2d, 0xe9, 0x0c, 0xba, 0x85, 0x7b, 0xc1, 0xce, 0xb6, 0xa0, 0x6c, 0x29, 0xf7,
-	0xbc, 0x06, 0x31, 0x2c, 0xab, 0xb6, 0xfd, 0x1d, 0xbc, 0xf8, 0x13, 0x00, 0x00, 0xff, 0xff, 0xbf,
-	0xfb, 0x2b, 0xed, 0x2f, 0x06, 0x00, 0x00,
+	// 645 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x56, 0xcd, 0x6e, 0xd3, 0x40,
+	0x10, 0xc6, 0x6d, 0x9a, 0xb6, 0x93, 0x1e, 0xe8, 0xd2, 0xa6, 0x8e, 0x93, 0x86, 0xc8, 0xa7, 0x5c,
+	0x08, 0x6a, 0x38, 0x72, 0x40, 0xc4, 0x91, 0x50, 0x44, 0x54, 0xa2, 0xa4, 0xaa, 0xc4, 0xd1, 0xf1,
+	0x2e, 0xd4, 0x34, 0xb6, 0xb7, 0xbb, 0x2e, 0xc8, 0x7d, 0x01, 0xde, 0x83, 0x87, 0x81, 0xd7, 0x42,
+	0xbb, 0xeb, 0x24, 0x76, 0xfc, 0x03, 0x14, 0xca, 0x2d, 0x33, 0xdf, 0xcc, 0xb7, 0xdf, 0xcc, 0xce,
+	0x8e, 0x03, 0x07, 0x3c, 0xb4, 0x43, 0xd7, 0xe9, 0x51, 0x16, 0x84, 0x01, 0xda, 0xa2, 0x73, 0xa3,
+	0x46, 0x18, 0x0b, 0x98, 0x72, 0x98, 0x67, 0x70, 0x38, 0x93, 0x01, 0xb3, 0xc8, 0x77, 0x86, 0x76,
+	0x68, 0x4f, 0xc9, 0x0d, 0x6a, 0xc1, 0xfe, 0x85, 0x3d, 0x5f, 0x90, 0x73, 0xdb, 0x23, 0xba, 0xd6,
+	0xd1, 0xba, 0xfb, 0xd3, 0xb5, 0xc3, 0x1c, 0x01, 0xda, 0x4c, 0xe1, 0x14, 0xd5, 0xa1, 0xca, 0x08,
+	0xbf, 0x5d, 0x84, 0x32, 0x61, 0x6f, 0x1a, 0x5b, 0xa8, 0x09, 0xdb, 0x84, 0x31, 0x7d, 0xab, 0xa3,
+	0x75, 0x6b, 0xfd, 0xfd, 0x1e, 0x9d, 0xf7, 0xe4, 0xf1, 0x53, 0xe1, 0x35, 0x3f, 0x81, 0xa1, 0xa8,
+	0xde, 0x90, 0x70, 0xe8, 0x3a, 0xa1, 0x1b, 0xf8, 0x36, 0x8b, 0x46, 0x21, 0xf1, 0x84, 0x0c, 0x1d,
+	0x76, 0xb1, 0xeb, 0x5c, 0x44, 0x74, 0x29, 0x62, 0x69, 0xc6, 0x88, 0x15, 0x60, 0x22, 0x89, 0x15,
+	0x22, 0xcc, 0x18, 0x91, 0xc2, 0xb7, 0x57, 0x88, 0x94, 0xed, 0x41, 0xb3, 0xf0, 0x2c, 0x4e, 0xd1,
+	0x19, 0xec, 0xb8, 0x21, 0xf1, 0xb8, 0xae, 0x75, 0xb6, 0xbb, 0xb5, 0x7e, 0x53, 0x28, 0x2d, 0x8a,
+	0x57, 0x91, 0xe5, 0xa5, 0x7d, 0x84, 0x93, 0x82, 0xf4, 0x7f, 0x5c, 0xd7, 0xdb, 0x74, 0x5d, 0x83,
+	0x68, 0xc2, 0x02, 0xfc, 0xda, 0xc7, 0x03, 0xf7, 0x4e, 0x34, 0xb1, 0x0e, 0x55, 0xca, 0x02, 0x6c,
+	0xe1, 0xf8, 0xac, 0xd8, 0x42, 0x47, 0xb0, 0x33, 0x77, 0xef, 0x2c, 0x1c, 0x1f, 0xa4, 0x0c, 0xd3,
+	0x87, 0x56, 0x31, 0xd9, 0x03, 0x74, 0xe9, 0x15, 0x34, 0xd2, 0xe7, 0x8d, 0x7c, 0x6e, 0x79, 0xd4,
+	0xc2, 0x42, 0xba, 0x09, 0x07, 0xc2, 0x0c, 0x3c, 0x6a, 0xfb, 0xd1, 0xaa, 0x80, 0x94, 0xcf, 0x5c,
+	0xa4, 0x27, 0x28, 0x49, 0xf0, 0x00, 0x72, 0xbf, 0x69, 0x70, 0xa4, 0xf2, 0xad, 0x2b, 0xe2, 0x5c,
+	0x5f, 0xda, 0x8b, 0x5b, 0xc2, 0xff, 0xb8, 0xcb, 0xe2, 0x32, 0x43, 0x66, 0xfb, 0xdc, 0xc2, 0xcb,
+	0xcb, 0x8c, 0x4d, 0x51, 0xb2, 0x9b, 0x2c, 0xb9, 0xa2, 0x4a, 0x4e, 0xfa, 0x50, 0x1b, 0xe0, 0xc3,
+	0x17, 0x3c, 0xf2, 0xf9, 0x48, 0x9c, 0xb7, 0x23, 0x23, 0x12, 0x1e, 0x73, 0x0c, 0xc7, 0x39, 0x1a,
+	0xef, 0xfb, 0x44, 0xbf, 0x6a, 0xd0, 0x48, 0x35, 0x6b, 0x6c, 0x47, 0x84, 0xfd, 0xcd, 0x13, 0x35,
+	0x60, 0x0f, 0xbb, 0xce, 0x44, 0x42, 0xaa, 0xfc, 0x95, 0x1d, 0x63, 0x63, 0xf2, 0x99, 0x2c, 0xe2,
+	0xda, 0x57, 0xb6, 0xf9, 0x43, 0x83, 0x27, 0x39, 0x32, 0xfe, 0xa7, 0x06, 0xb1, 0x19, 0xb1, 0xcb,
+	0x27, 0xef, 0x18, 0x26, 0x2c, 0x6e, 0xfd, 0xda, 0x81, 0x10, 0x54, 0x7c, 0xf1, 0x42, 0xab, 0x12,
+	0x90, 0xbf, 0x85, 0xcf, 0x23, 0x5e, 0xa0, 0xef, 0x2a, 0x9f, 0xf8, 0x6d, 0x5e, 0x81, 0x51, 0xd4,
+	0x52, 0x4e, 0xd1, 0xb3, 0xf4, 0xd0, 0x9e, 0x88, 0x0b, 0xc9, 0x8b, 0xfd, 0x9d, 0x81, 0x3d, 0x07,
+	0x3d, 0x33, 0xe9, 0x83, 0x68, 0x72, 0x7d, 0xcf, 0xbb, 0x33, 0xdd, 0x8d, 0x61, 0x58, 0xf3, 0x71,
+	0x8a, 0x9e, 0x43, 0x45, 0x48, 0x92, 0x6c, 0xbf, 0x78, 0x6c, 0x32, 0xb0, 0x54, 0x7a, 0xff, 0x7b,
+	0x05, 0xaa, 0x2a, 0x1d, 0xbd, 0x84, 0xbd, 0xe5, 0xb7, 0x06, 0x1d, 0xaf, 0x69, 0x13, 0x9f, 0x2c,
+	0xa3, 0x9e, 0xe7, 0xe6, 0xd4, 0x7c, 0x84, 0x2e, 0xe1, 0x30, 0xbb, 0x82, 0xdb, 0x65, 0xe2, 0xc8,
+	0x8d, 0xf1, 0xb4, 0x14, 0x97, 0xbc, 0xef, 0x01, 0x65, 0x97, 0x24, 0xca, 0x24, 0x6e, 0xec, 0x63,
+	0xa3, 0x53, 0x1e, 0x20, 0xa9, 0x67, 0xf0, 0x78, 0x73, 0x9d, 0xa1, 0xd3, 0x6c, 0x5e, 0x62, 0x57,
+	0x1a, 0xed, 0x32, 0x58, 0x92, 0x0e, 0xa1, 0x96, 0x58, 0x08, 0x48, 0x5f, 0x27, 0xa4, 0x77, 0x99,
+	0xd1, 0x28, 0x40, 0xe2, 0xaa, 0xeb, 0xf9, 0xa3, 0xab, 0x04, 0x16, 0x6e, 0x0a, 0x25, 0xb0, 0x78,
+	0xea, 0xe5, 0x45, 0x1d, 0xe7, 0xce, 0x16, 0x6a, 0x65, 0x52, 0x13, 0x63, 0x6c, 0x9c, 0x96, 0xa0,
+	0x82, 0x77, 0x5e, 0x95, 0xff, 0x74, 0x5e, 0xfc, 0x0c, 0x00, 0x00, 0xff, 0xff, 0x1c, 0x6c, 0x3e,
+	0x2d, 0x0a, 0x09, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -633,6 +939,8 @@ type StaticClient interface {
 	GetDicByProdAndBiz(ctx context.Context, in *StaticGetDicByProdAndBizReq, opts ...grpc.CallOption) (*StaticGetDicByProdAndBizResp, error)
 	GetDicByInsCmpCd(ctx context.Context, in *StaticGetDicByInsCmpCdReq, opts ...grpc.CallOption) (*StaticGetDicByInsCmpCdResp, error)
 	CheckValues(ctx context.Context, in *StaticCheckValuesReq, opts ...grpc.CallOption) (*StaticCheckValuesResp, error)
+	GetDictionaryLayerItem(ctx context.Context, in *GetDictionaryLayerItemReq, opts ...grpc.CallOption) (*GetDictionaryLayerItemResp, error)
+	GetDictionaryItemByPk(ctx context.Context, in *GetDictionaryItemByPkReq, opts ...grpc.CallOption) (*GetDictionaryItemByPkResp, error)
 }
 
 type staticClient struct {
@@ -688,6 +996,24 @@ func (c *staticClient) CheckValues(ctx context.Context, in *StaticCheckValuesReq
 	return out, nil
 }
 
+func (c *staticClient) GetDictionaryLayerItem(ctx context.Context, in *GetDictionaryLayerItemReq, opts ...grpc.CallOption) (*GetDictionaryLayerItemResp, error) {
+	out := new(GetDictionaryLayerItemResp)
+	err := c.cc.Invoke(ctx, "/pb.Static/GetDictionaryLayerItem", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *staticClient) GetDictionaryItemByPk(ctx context.Context, in *GetDictionaryItemByPkReq, opts ...grpc.CallOption) (*GetDictionaryItemByPkResp, error) {
+	out := new(GetDictionaryItemByPkResp)
+	err := c.cc.Invoke(ctx, "/pb.Static/GetDictionaryItemByPk", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // StaticServer is the server API for Static service.
 type StaticServer interface {
 	SyncData(context.Context, *StaticSyncDataReq) (*StaticSyncDataResp, error)
@@ -695,6 +1021,8 @@ type StaticServer interface {
 	GetDicByProdAndBiz(context.Context, *StaticGetDicByProdAndBizReq) (*StaticGetDicByProdAndBizResp, error)
 	GetDicByInsCmpCd(context.Context, *StaticGetDicByInsCmpCdReq) (*StaticGetDicByInsCmpCdResp, error)
 	CheckValues(context.Context, *StaticCheckValuesReq) (*StaticCheckValuesResp, error)
+	GetDictionaryLayerItem(context.Context, *GetDictionaryLayerItemReq) (*GetDictionaryLayerItemResp, error)
+	GetDictionaryItemByPk(context.Context, *GetDictionaryItemByPkReq) (*GetDictionaryItemByPkResp, error)
 }
 
 // UnimplementedStaticServer can be embedded to have forward compatible implementations.
@@ -715,6 +1043,12 @@ func (*UnimplementedStaticServer) GetDicByInsCmpCd(ctx context.Context, req *Sta
 }
 func (*UnimplementedStaticServer) CheckValues(ctx context.Context, req *StaticCheckValuesReq) (*StaticCheckValuesResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckValues not implemented")
+}
+func (*UnimplementedStaticServer) GetDictionaryLayerItem(ctx context.Context, req *GetDictionaryLayerItemReq) (*GetDictionaryLayerItemResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDictionaryLayerItem not implemented")
+}
+func (*UnimplementedStaticServer) GetDictionaryItemByPk(ctx context.Context, req *GetDictionaryItemByPkReq) (*GetDictionaryItemByPkResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDictionaryItemByPk not implemented")
 }
 
 func RegisterStaticServer(s *grpc.Server, srv StaticServer) {
@@ -811,6 +1145,42 @@ func _Static_CheckValues_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Static_GetDictionaryLayerItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDictionaryLayerItemReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StaticServer).GetDictionaryLayerItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Static/GetDictionaryLayerItem",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StaticServer).GetDictionaryLayerItem(ctx, req.(*GetDictionaryLayerItemReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Static_GetDictionaryItemByPk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDictionaryItemByPkReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StaticServer).GetDictionaryItemByPk(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Static/GetDictionaryItemByPk",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StaticServer).GetDictionaryItemByPk(ctx, req.(*GetDictionaryItemByPkReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Static_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Static",
 	HandlerType: (*StaticServer)(nil),
@@ -834,6 +1204,14 @@ var _Static_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckValues",
 			Handler:    _Static_CheckValues_Handler,
+		},
+		{
+			MethodName: "GetDictionaryLayerItem",
+			Handler:    _Static_GetDictionaryLayerItem_Handler,
+		},
+		{
+			MethodName: "GetDictionaryItemByPk",
+			Handler:    _Static_GetDictionaryItemByPk_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -95,6 +95,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			MyMap.insInf = ret
 		}
+
 	}
 }
 

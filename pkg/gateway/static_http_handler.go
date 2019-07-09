@@ -42,4 +42,18 @@ func RegisterStaticHandler(engine *gin.Engine, endpoints *StaticEndpoints) {
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
+
+	engine.POST("/static/getDictionaryLayerItem", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.GetDictionaryLayerItemEndpoint,
+		decodeHttpRequest(&pb.GetDictionaryLayerItemReq{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
+
+	engine.POST("/static/getDictionaryItemByPk", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.GetDictionaryItemByPkEndpoint,
+		decodeHttpRequest(&pb.GetDictionaryItemByPkReq{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
 }

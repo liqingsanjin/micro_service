@@ -54,3 +54,17 @@ func MakeCheckValuesEndpoint(s pb.StaticServer) endpoint.Endpoint {
 		return s.CheckValues(ctx, req)
 	}
 }
+
+func MakeGetDictionaryLayerItemEndpoint(s pb.StaticServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req := request.(*pb.GetDictionaryLayerItemReq)
+		return s.GetDictionaryLayerItem(ctx, req)
+	}
+}
+
+func MakeGetDictionaryItemByPkEndpoint(s pb.StaticServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req := request.(*pb.GetDictionaryItemByPkReq)
+		return s.GetDictionaryItemByPk(ctx, req)
+	}
+}

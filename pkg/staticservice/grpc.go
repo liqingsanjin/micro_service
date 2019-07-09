@@ -10,11 +10,29 @@ import (
 )
 
 type grpcServer struct {
-	syncData           grpc.Handler
-	getDictionaryItem  grpc.Handler
-	getDicByProdAndBiz grpc.Handler
-	getDicByInsCmpCd   grpc.Handler
-	checkValues        grpc.Handler
+	syncData               grpc.Handler
+	getDictionaryItem      grpc.Handler
+	getDicByProdAndBiz     grpc.Handler
+	getDicByInsCmpCd       grpc.Handler
+	checkValues            grpc.Handler
+	getDictionaryLayerItem grpc.Handler
+	getDictionaryItemByPk  grpc.Handler
+}
+
+func (g *grpcServer) GetDictionaryItemByPk(ctx context.Context, in *pb.GetDictionaryItemByPkReq) (*pb.GetDictionaryItemByPkResp, error) {
+	_, res, err := g.getDictionaryItemByPk.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetDictionaryItemByPkResp), nil
+}
+
+func (g *grpcServer) GetDictionaryLayerItem(ctx context.Context, in *pb.GetDictionaryLayerItemReq) (*pb.GetDictionaryLayerItemResp, error) {
+	_, res, err := g.getDictionaryLayerItem.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetDictionaryLayerItemResp), nil
 }
 
 func (g *grpcServer) SyncData(ctx context.Context, in *pb.StaticSyncDataReq) (*pb.StaticSyncDataResp, error) {
@@ -59,28 +77,46 @@ func (g *grpcServer) CheckValues(ctx context.Context, in *pb.StaticCheckValuesRe
 
 //NewGRPCServer .
 func NewGRPCServer() pb.StaticServer {
+	svr := &grpcServer{}
 
-	insSetService := NewSetService()
-	syncDataEndpoint := MakeSyncDataEndpoint(insSetService)
-	getDictionaryItemEndpoint := MakeGetDictionaryItemEndpoint(insSetService)
-	getDicByProdAndBizEndpoint := MakeGetDicByProdAndBizEndpoint(insSetService)
-	getDicByInsCmpCdEndpoint := MakeGetDicByInsCmpCdEndpoint(insSetService)
-	checkValuesEndpoint := MakeCheckValuesEndpoint(insSetService)
-	setEndpoint := SetEndpoint{
-		SyncDataEndpoint:           syncDataEndpoint,
-		GetDictionaryItemEndpoint:  getDictionaryItemEndpoint,
-		GetDicByProdAndBizEndpoint: getDicByProdAndBizEndpoint,
-		GetDicByInsCmpCdEndpoint:   getDicByInsCmpCdEndpoint,
-		CheckValuesEndpoint:        checkValuesEndpoint,
+	svc := &setService{}
+
+	{
+		e := MakeSyncDataEndpoint(svc)
+		svr.syncData = grpcNewServer(e)
 	}
 
-	return &grpcServer{
-		syncData:           grpcNewServer(setEndpoint.SyncDataEndpoint),
-		getDictionaryItem:  grpcNewServer(setEndpoint.GetDictionaryItemEndpoint),
-		getDicByProdAndBiz: grpcNewServer(setEndpoint.GetDicByProdAndBizEndpoint),
-		getDicByInsCmpCd:   grpcNewServer(setEndpoint.GetDicByInsCmpCdEndpoint),
-		checkValues:        grpcNewServer(setEndpoint.CheckValuesEndpoint),
+	{
+		e := MakeGetDictionaryItemEndpoint(svc)
+		svr.getDictionaryItem = grpcNewServer(e)
 	}
+
+	{
+		e := MakeGetDicByProdAndBizEndpoint(svc)
+		svr.getDicByProdAndBiz = grpcNewServer(e)
+	}
+
+	{
+		e := MakeGetDicByInsCmpCdEndpoint(svc)
+		svr.getDicByInsCmpCd = grpcNewServer(e)
+	}
+
+	{
+		e := MakeCheckValuesEndpoint(svc)
+		svr.checkValues = grpcNewServer(e)
+	}
+
+	{
+		e := MakeGetDictionaryLayerItemEndpoint(svc)
+		svr.getDictionaryLayerItem = grpcNewServer(e)
+	}
+
+	{
+		e := MakeGetDictionaryItemByPkEndpoint(svc)
+		svr.getDictionaryItemByPk = grpcNewServer(e)
+	}
+
+	return svr
 }
 
 func grpcNewServer(endpoint endpoint.Endpoint) *grpc.Server {

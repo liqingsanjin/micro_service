@@ -8,7 +8,6 @@ import (
 	"userService/pkg/pb"
 
 	"github.com/hashicorp/consul/api"
-
 	"golang.org/x/net/context"
 )
 
@@ -122,7 +121,7 @@ func (s *setService) GetDictionaryItem(ctx context.Context, in *pb.StaticGetDict
 			DicType: results[i].DicType,
 		})
 	}
-	return &pb.StaticGetDictionaryItemResp{GetDictionaryItems: items}, nil
+	return &pb.StaticGetDictionaryItemResp{Items: items}, nil
 
 }
 
@@ -160,7 +159,7 @@ func (s *setService) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticGetDic
 				DicType: results[i].DicType,
 			})
 		}
-		return &pb.StaticGetDicByProdAndBizResp{GetDictionaryItems: items}, nil
+		return &pb.StaticGetDicByProdAndBizResp{Items: items}, nil
 	}
 
 	transCds := getTransCdByProdAndBiz(in.ProdCd, in.BizCd)
@@ -179,7 +178,7 @@ func (s *setService) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticGetDic
 			DicType: results[i].DicType,
 		})
 	}
-	return &pb.StaticGetDicByProdAndBizResp{GetDictionaryItems: items}, nil
+	return &pb.StaticGetDicByProdAndBizResp{Items: items}, nil
 
 }
 
@@ -207,7 +206,7 @@ func (s *setService) GetDicByInsCmpCd(ctx context.Context, in *pb.StaticGetDicBy
 			DicType: results[i].DicType,
 		})
 	}
-	return &pb.StaticGetDicByInsCmpCdResp{GetDictionaryItems: items}, nil
+	return &pb.StaticGetDicByInsCmpCdResp{Items: items}, nil
 }
 
 func (s *setService) CheckValues(ctx context.Context, in *pb.StaticCheckValuesReq) (*pb.StaticCheckValuesResp, error) {
@@ -293,9 +292,9 @@ func inArr(arr []string, val string) bool {
 func getDicItemByCondition(dicTypeArr, dicNameArr, dicCodeArr []string) []*static.DictionaryItem {
 	returnDic := make([]*static.DictionaryItem, 0)
 	for i := 0; i < len(MyMap.dicItem); i++ {
-		if includes(dicTypeArr, (*MyMap.dicItem[i]).DicType) &&
-			includes(dicNameArr, (*MyMap.dicItem[i]).DicName) &&
-			includes(dicCodeArr, (*MyMap.dicItem[i]).DicCode) {
+		if includes(dicTypeArr, MyMap.dicItem[i].DicType) &&
+			includes(dicNameArr, MyMap.dicItem[i].DicName) &&
+			includes(dicCodeArr, MyMap.dicItem[i].DicCode) {
 			returnDic = append(returnDic, MyMap.dicItem[i])
 		}
 	}
@@ -343,4 +342,56 @@ func includes(arr []string, val string) bool {
 		}
 	}
 	return false
+}
+
+func (s *setService) GetDictionaryLayerItem(ctx context.Context, in *pb.GetDictionaryLayerItemReq) (*pb.GetDictionaryLayerItemResp, error) {
+	out := make([]*pb.DictionaryLayerItem, 0)
+	db := common.DB
+	items := static.GetDictionaryLayerItem(db, &static.DictionaryLayerItem{
+		DicType:  in.DicType,
+		DicPCode: in.DicPCode,
+		DicCode:  in.DicCode,
+		DicLevel: in.DicLevel,
+	})
+	for i := range items {
+		out = append(out, &pb.DictionaryLayerItem{
+			DicType:   items[i].DicType,
+			DicCode:   items[i].DicCode,
+			DicPCode:  items[i].DicPCode,
+			DicLevel:  items[i].DicLevel,
+			DisPOrder: items[i].DisPOrder,
+			Name:      items[i].Name,
+			Memo:      items[i].Memo,
+		})
+	}
+	return &pb.GetDictionaryLayerItemResp{
+		Items: out,
+	}, nil
+}
+
+func (s *setService) GetDictionaryItemByPk(ctx context.Context, in *pb.GetDictionaryItemByPkReq) (*pb.GetDictionaryItemByPkResp, error) {
+	reply := new(pb.GetDictionaryItemByPkResp)
+	if in.DicCode == "" || in.DicType == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "dicCode 和 dicType不能为空",
+		}
+		return reply, nil
+	}
+	db := common.DB
+
+	dic := static.GetDictionaryItemByPk(db, &static.DictionaryItem{
+		DicType: in.DicType,
+		DicCode: in.DicCode,
+	})
+	if dic != nil {
+		reply.Item = &pb.StaticGetDictionaryItem{
+			DicType: dic.DicType,
+			DicCode: dic.DicCode,
+			DicName: dic.DicName,
+		}
+	}
+
+	return reply, nil
 }

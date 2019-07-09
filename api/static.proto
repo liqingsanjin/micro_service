@@ -10,6 +10,8 @@ service Static {
     rpc GetDicByProdAndBiz(StaticGetDicByProdAndBizReq) returns (StaticGetDicByProdAndBizResp) {}
     rpc GetDicByInsCmpCd(StaticGetDicByInsCmpCdReq) returns (StaticGetDicByInsCmpCdResp) {}
     rpc CheckValues(StaticCheckValuesReq) returns (StaticCheckValuesResp) {}
+    rpc GetDictionaryLayerItem(GetDictionaryLayerItemReq) returns (GetDictionaryLayerItemResp) {}
+    rpc GetDictionaryItemByPk(GetDictionaryItemByPkReq) returns (GetDictionaryItemByPkResp) {}
 }
 
 message StaticSyncDataReq {
@@ -22,31 +24,31 @@ message StaticSyncDataResp {
 }
 
 message StaticGetDictionaryItemReq {
-    string DicType = 1;
-    string DicCode = 2;
-    string DicName = 3;
+    string dicType = 1;
+    string dicCode = 2;
+    string dicName = 3;
 }
 
 
 message StaticGetDictionaryItemResp {
-    repeated StaticGetDictionaryItem GetDictionaryItems = 1;
+    repeated StaticGetDictionaryItem items = 1;
     error err = 2;
 }
 
 
 message StaticGetDictionaryItem {
-    string DicType = 1;
-    string DicCode = 2;
-    string DicName = 3;
+    string dicType = 1;
+    string dicCode = 2;
+    string dicName = 3;
 }
 
 message StaticGetDicByProdAndBizReq {
-    string ProdCd = 1;
-    string BizCd = 2;
+    string prodCd = 1;
+    string bizCd = 2;
 }
 
 message StaticGetDicByProdAndBizResp {
-    repeated StaticGetDictionaryItem GetDictionaryItems = 1;
+    repeated StaticGetDictionaryItem items = 1;
     error err = 2;
 }
 
@@ -55,19 +57,51 @@ message StaticGetDicByInsCmpCdReq {
 }
 
 message StaticGetDicByInsCmpCdResp {
-    repeated StaticGetDictionaryItem GetDictionaryItems = 1;
+    repeated StaticGetDictionaryItem items = 1;
     error err = 2;
 }
 
 message StaticCheckValuesReq {
-    string ProdCd = 1;
-    string BizCd = 2;
-    string TransCd = 3;
-    string InsCompanyCd = 4;
-    string FwdInsIdCd = 5;
+    string prodCd = 1;
+    string bizCd = 2;
+    string transCd = 3;
+    string insCompanyCd = 4;
+    string fwdInsIdCd = 5;
 }
 
 message StaticCheckValuesResp {
     bool result = 1;
+    error err = 2;
+}
+
+message GetDictionaryLayerItemReq {
+    string dicType = 1;
+    string dicCode = 2;
+    string dicPCode = 3;
+    string dicLevel = 4;
+}
+
+message DictionaryLayerItem {
+    string dicType = 1;
+    string dicCode = 2;
+    string dicPCode = 3;
+    string dicLevel = 4;
+    string disPOrder = 5;
+    string name = 6;
+    string memo = 7;
+}
+
+message GetDictionaryLayerItemResp {
+    repeated DictionaryLayerItem items = 1;
+    error err = 2;
+}
+
+message GetDictionaryItemByPkReq {
+    string dicType = 1;
+    string dicCode = 2;
+}
+
+message GetDictionaryItemByPkResp {
+    StaticGetDictionaryItem item = 1;
     error err = 2;
 }

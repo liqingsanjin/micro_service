@@ -1,284 +1,403 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "version": "0.0.1",
-        "title": "static api"
-    },
-    "host": "172.16.7.120:8080",
-    "schemes": [
-        "http"
-    ],
-    "paths": {
-        "/static/syncData": {
-            "post": {
-                "operationId": "syncData",
-                "summary": "将数据库数据同步到内存",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [{
-                    "name": "tableName",
-                    "in": "body",
-                    "description": "预留字段",
-                    "schema": {
-                        "type": "string",
-                        "allOf": [{
-                            "properties": {
-                                "TableName": {
-                                    "type": "string"
-                                }
-                            }
-                        }]
+  "swagger": "2.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "static api"
+  },
+  "host": "172.16.7.120:8080",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/static/syncData": {
+      "post": {
+        "operationId": "syncData",
+        "summary": "将数据库数据同步到内存",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "tableName",
+            "in": "body",
+            "description": "预留字段",
+            "schema": {
+              "type": "string",
+              "allOf": [
+                {
+                  "properties": {
+                    "TableName": {
+                      "type": "string"
                     }
-                }],
-                "responses": {
-                    "200": {
-                        "description": "正确返回",
-                        "examples": {
-                            "application/json": {
-                                "result": true,
-                                "err": null
-                            }
-                        }
-                    }
+                  }
                 }
+              ]
             }
-        },
-        "/static/getDictionaryItem": {
-            "post": {
-                "operationId": "getDictionaryItem",
-                "summary": "通过dicType获取一级目录",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [{
-                    "name": "dicItem",
-                    "in": "body",
-                    "description": "可以只传DicType， 其余不传。 如DicType=PROD_CD 则获取全部PROD_Cd的配置",
-                    "schema": {
-                        "$ref": "#/definitions/dicItemField"
-                    }
-                }],
-                "responses": {
-                    "200": {
-                        "description": "正确返回",
-                        "examples": {
-                            "application/json": {
-                                "GetDictionaryItems": [{
-                                        "DicType": "PROD_CD",
-                                        "DicCode": "1000",
-                                        "DicName": "1000_银行卡支付T1"
-                                    },
-                                    {
-                                        "DicType": "PROD_CD",
-                                        "DicCode": "1110",
-                                        "DicName": "1110_充值"
-                                    }
-                                ],
-                                "err": null
-                            }
-                        }
-                    }
-                }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "result": true,
+                "err": null
+              }
             }
-        },
-        "/static/getDicByProdAndBiz": {
-            "post": {
-                "operationId": "getDicByProdAndBiz",
-                "summary": "根据产品码(ProdCd)跟业务码(BizCd)获取二级目录bizcd或者交易类型(transcd)",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [{
-                    "name": "ProdCd",
-                    "in": "body",
-                    "description": "如果BizCd等于空， 则找到ProdCd下的全部BizCd如果bizCd 不为空， 则查找ProdCd跟BizCd下的全部TransCd ",
-                    "schema": {
-                        "type": "object",
-                        "allOf": [{
-                            "required": [
-                                "ProdCd"
-                            ],
-                            "properties": {
-                                "ProdCd": {
-                                    "type": "string"
-                                },
-                                "BizCd": {
-                                    "type": "string"
-                                }
-                            }
-                        }]
-                    }
-                }],
-                "responses": {
-                    "200": {
-                        "description": "正确返回",
-                        "examples": {
-                            "application/json": {
-
-                                "GetDictionaryItems": [{
-                                        "DicType": "BIZ_CD",
-                                        "DicCode": "0000000",
-                                        "DicName": "0000000_消费"
-                                    },
-                                    {
-                                        "DicType": "BIZ_CD",
-                                        "DicCode": "0000007",
-                                        "DicName": "0000007_微信支付"
-                                    },
-                                    {
-                                        "DicType": "BIZ_CD",
-                                        "DicCode": "0000008",
-                                        "DicName": "0000008_支付宝支付"
-                                    }
-                                ],
-                                "err": null
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "错误返回",
-                        "examples": {
-                            "application/json": {
-                                "desc": "必须传入ProdCd",
-                                "err": "InvalidParamError"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/static/getDicByInsCmpCd": {
-            "post": {
-                "operationId": "getDicByInsCmpCd",
-                "summary": "根据所属机构(InsCompanyCd)获取收单机构代码",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [{
-                    "name": "InsComCd",
-                    "in": "body",
-                    "description": "如果InsCompanyCd为空则返回错误",
-                    "schema": {
-                        "type": "object",
-                        "allOf": [{
-                            "required": [
-                                "InsCompanyCd"
-                            ],
-                            "properties": {
-                                "InsCompanyCd": {
-                                    "type": "string"
-                                }
-                            }
-                        }]
-                    }
-                }],
-                "responses": {
-                    "200": {
-                        "description": "正确返回",
-                        "examples": {
-                            "application/json": {
-                                "GetDictionaryItems": [{
-                                        "DicType": "INS_ID_CD",
-                                        "DicCode": "12888772",
-                                        "DicName": "12888772_小小皮"
-                                    },
-                                    {
-                                        "DicType": "INS_ID_CD",
-                                        "DicCode": "17378999",
-                                        "DicName": "17378999_小皮楼上的李开复111"
-                                    }
-                                ],
-                                "err": null
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "错误返回",
-                        "examples": {
-                            "application/json": {
-                                "desc": "必须传入InsCompanyCd",
-                                "err": "InvalidParamError"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/static/checkValues": {
-            "post": {
-                "operationId": "checkValues",
-                "summary": "校验ProdCd， BizCd， TransCd, InsCompanyCd ,FwdInsIdCd 是否合法",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [{
-                    "name": "Values",
-                    "in": "body",
-                    "description": "不能全部为空",
-                    "schema": {
-                        "type": "object",
-                        "allOf": [{
-                            "properties": {
-                                "ProdCd": {
-                                    "type": "string"
-                                },
-                                "BizCd": {
-                                    "type": "string"
-                                },
-                                "TransCd": {
-                                    "type": "string"
-                                },
-                                "InsCompanyCd": {
-                                    "type": "string"
-                                },
-                                "FwdInsIdCd": {
-                                    "type": "string"
-                                }
-                            }
-                        }]
-                    }
-                }],
-                "responses": {
-                    "200": {
-                        "description": "正确返回",
-                        "examples": {
-                            "application/json": {
-                                "result": true,
-                                "err": null
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "错误返回",
-                        "examples": {
-                            "application/json": {
-                                "desc": "必须传入参数",
-                                "err": "InvalidParamError"
-                            }
-                        }
-                    }
-                }
-            }
+          }
         }
-
+      }
     },
-    "definitions": {
-        "dicItemField": {
-            "type": "object",
-            "allOf": [{
-                "properties": {
-                    "DicType": {
-                        "type": "string"
-                    },
-                    "DicCode": {
-                        "type": "string"
-                    },
-                    "DicName": {
-                        "type": "string"
-                    }
-                }
-            }]
+    "/static/getDictionaryItem": {
+      "post": {
+        "operationId": "getDictionaryItem",
+        "summary": "通过dicType获取一级目录",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "dicItem",
+            "in": "body",
+            "description": "可以只传DicType， 其余不传。 如DicType=PROD_CD 则获取全部PROD_Cd的配置",
+            "schema": {
+              "$ref": "#/definitions/dicItemField"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "dicType": "PROD_CD",
+                    "dicCode": "1000",
+                    "dicName": "1000_银行卡支付T1"
+                  },
+                  {
+                    "dicType": "PROD_CD",
+                    "dicCode": "1110",
+                    "dicName": "1110_充值"
+                  }
+                ],
+                "err": null
+              }
+            }
+          }
         }
+      }
+    },
+    "/static/getDicByProdAndBiz": {
+      "post": {
+        "operationId": "getDicByProdAndBiz",
+        "summary": "根据产品码(ProdCd)跟业务码(BizCd)获取二级目录bizcd或者交易类型(transcd)",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ProdCd",
+            "in": "body",
+            "description": "如果BizCd等于空， 则找到ProdCd下的全部BizCd如果bizCd 不为空， 则查找ProdCd跟BizCd下的全部TransCd ",
+            "schema": {
+              "type": "object",
+              "allOf": [
+                {
+                  "required": [
+                    "ProdCd"
+                  ],
+                  "properties": {
+                    "prodCd": {
+                      "type": "string"
+                    },
+                    "bizCd": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "dicType": "BIZ_CD",
+                    "dicCode": "0000000",
+                    "dicName": "0000000_消费"
+                  },
+                  {
+                    "dicType": "BIZ_CD",
+                    "dicCode": "0000007",
+                    "dicName": "0000007_微信支付"
+                  },
+                  {
+                    "dicType": "BIZ_CD",
+                    "dicCode": "0000008",
+                    "dicName": "0000008_支付宝支付"
+                  }
+                ],
+                "err": null
+              }
+            }
+          },
+          "400": {
+            "description": "错误返回",
+            "examples": {
+              "application/json": {
+                "desc": "必须传入ProdCd",
+                "err": "InvalidParamError"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/static/getDicByInsCmpCd": {
+      "post": {
+        "operationId": "getDicByInsCmpCd",
+        "summary": "根据所属机构(InsCompanyCd)获取收单机构代码",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "InsComCd",
+            "in": "body",
+            "description": "如果InsCompanyCd为空则返回错误",
+            "schema": {
+              "type": "object",
+              "allOf": [
+                {
+                  "required": [
+                    "insCompanyCd"
+                  ],
+                  "properties": {
+                    "insCompanyCd": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "dicType": "INS_ID_CD",
+                    "dicCode": "12888772",
+                    "dicName": "12888772_小小皮"
+                  },
+                  {
+                    "dicType": "INS_ID_CD",
+                    "dicCode": "17378999",
+                    "dicName": "17378999_小皮楼上的李开复111"
+                  }
+                ],
+                "err": null
+              }
+            }
+          },
+          "400": {
+            "description": "错误返回",
+            "examples": {
+              "application/json": {
+                "desc": "必须传入InsCompanyCd",
+                "err": "InvalidParamError"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/static/checkValues": {
+      "post": {
+        "operationId": "checkValues",
+        "summary": "校验ProdCd， BizCd， TransCd, InsCompanyCd ,FwdInsIdCd 是否合法",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Values",
+            "in": "body",
+            "description": "不能全部为空",
+            "schema": {
+              "type": "object",
+              "allOf": [
+                {
+                  "properties": {
+                    "prodCd": {
+                      "type": "string"
+                    },
+                    "bizCd": {
+                      "type": "string"
+                    },
+                    "transCd": {
+                      "type": "string"
+                    },
+                    "insCompanyCd": {
+                      "type": "string"
+                    },
+                    "fwdInsIdCd": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "result": true,
+                "err": null
+              }
+            }
+          },
+          "400": {
+            "description": "错误返回",
+            "examples": {
+              "application/json": {
+                "desc": "必须传入参数",
+                "err": "InvalidParamError"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/static/getDictionaryLayerItem": {
+      "post": {
+        "operationId": "getDictionaryLayerItem",
+        "summary": "查询layer",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "getDictionaryLayerItem",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "dicType": {
+                  "type": "string"
+                },
+                "dicCode": {
+                  "type": "string"
+                },
+                "dicPCode":{
+                  "type": "string"
+                },
+                "dicLevel":{
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "dicType": "GB_Area_MAP",
+                    "dicCode": "130682",
+                    "dicPCode": "130600",
+                    "dicLevel": "2",
+                    "disPOrder": "130682",
+                    "name": "82_定州市",
+                    "memo": "河北省保定市定州市"
+                  }
+                ],
+                "err": null
+              }
+            }
+          }
+        }
+      }
+    },
+    "/static/getDictionaryItemByPk": {
+      "post": {
+        "operationId": "getDictionaryItemByPk",
+        "summary": "根据dicType 和 dicItem 查询",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "getDictionaryItemByPk",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "required": [
+                "dicType",
+                "dicCode"
+              ],
+              "properties": {
+                "dicType": {
+                  "type": "string"
+                },
+                "dicCode": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "item": {
+                  "dicType": "CTRL_FEE_STA",
+                  "dicCode": "0",
+                  "dicName": "0-关闭"
+                },
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
+  },
+  "definitions": {
+    "dicItemField": {
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "dicType": {
+              "type": "string"
+            },
+            "dicCode": {
+              "type": "string"
+            },
+            "dicName": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    }
+  }
 }

@@ -80,6 +80,24 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 		endpoints.CheckValuesEndpoint = retry
 	}
 
+	{
+		factory := staticserviceFactory(staticservice.MakeGetDictionaryLayerItemEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = staticBreaker(retry)
+		endpoints.GetDictionaryLayerItemEndpoint = retry
+	}
+
+	{
+		factory := staticserviceFactory(staticservice.MakeGetDictionaryItemByPkEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = staticBreaker(retry)
+		endpoints.GetDictionaryItemByPkEndpoint = retry
+	}
+
 	return &endpoints
 }
 

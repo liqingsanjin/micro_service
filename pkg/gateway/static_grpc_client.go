@@ -12,11 +12,13 @@ import (
 )
 
 type StaticEndpoints struct {
-	SyncDataEndpoint           endpoint.Endpoint
-	GetDictionaryItemEndpoint  endpoint.Endpoint
-	GetDicByProdAndBizEndpoint endpoint.Endpoint
-	GetDicByInsCmpCdEndpoint   endpoint.Endpoint
-	CheckValuesEndpoint        endpoint.Endpoint
+	SyncDataEndpoint               endpoint.Endpoint
+	GetDictionaryItemEndpoint      endpoint.Endpoint
+	GetDicByProdAndBizEndpoint     endpoint.Endpoint
+	GetDicByInsCmpCdEndpoint       endpoint.Endpoint
+	CheckValuesEndpoint            endpoint.Endpoint
+	GetDictionaryLayerItemEndpoint endpoint.Endpoint
+	GetDictionaryItemByPkEndpoint  endpoint.Endpoint
 }
 
 func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *StaticEndpoints {
@@ -89,6 +91,33 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 		).Endpoint()
 		endpoints.CheckValuesEndpoint = endpoint
 	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Static",
+			"GetDictionaryLayerItem",
+			encodeRequest,
+			decodeResponse,
+			pb.GetDictionaryLayerItemResp{},
+			options...,
+		).Endpoint()
+		endpoints.GetDictionaryLayerItemEndpoint = endpoint
+	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Static",
+			"GetDictionaryItemByPk",
+			encodeRequest,
+			decodeResponse,
+			pb.GetDictionaryItemByPkResp{},
+			options...,
+		).Endpoint()
+		endpoints.GetDictionaryItemByPkEndpoint = endpoint
+	}
+
 	return endpoints
 }
 func (s *StaticEndpoints) SyncData(ctx context.Context, in *pb.StaticSyncDataReq) (*pb.StaticSyncDataResp, error) {
@@ -145,6 +174,30 @@ func (s *StaticEndpoints) CheckValues(ctx context.Context, in *pb.StaticCheckVal
 		return nil, err
 	}
 	reply, ok := res.(*pb.StaticCheckValuesResp)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (s *StaticEndpoints) GetDictionaryLayerItem(ctx context.Context, in *pb.GetDictionaryLayerItemReq) (*pb.GetDictionaryLayerItemResp, error) {
+	res, err := s.GetDictionaryLayerItemEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.GetDictionaryLayerItemResp)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (s *StaticEndpoints) GetDictionaryItemByPk(ctx context.Context, in *pb.GetDictionaryItemByPkReq) (*pb.GetDictionaryItemByPkResp, error) {
+	res, err := s.GetDictionaryItemByPkEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.GetDictionaryItemByPkResp)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}
