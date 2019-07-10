@@ -27,6 +27,14 @@ type Group struct {
 	JtAddr         string    `gorm:"column:JT_ADDR"`
 }
 
+type GroupMain struct {
+	Group
+}
+
+func (g GroupMain) TableName() string {
+	return "TBL_GROUP_MCHT_INF"
+}
+
 func (g Group) TableName() string {
 	return "TBL_EDIT_GROUP_MCHT_INF"
 }

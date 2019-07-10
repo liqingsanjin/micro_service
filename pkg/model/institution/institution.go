@@ -42,6 +42,14 @@ type InstitutionInfo struct {
 	UpdatedAt       time.Time `gorm:"column:REC_UPD_TS"`
 }
 
+type InstitutionInfoMain struct {
+	InstitutionInfo
+}
+
+func (i InstitutionInfoMain) TableName() string {
+	return "TBL_INS_INF"
+}
+
 func (i InstitutionInfo) TableName() string {
 	return "TBL_EDIT_INS_INF"
 }

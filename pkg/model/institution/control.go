@@ -30,29 +30,18 @@ type Control struct {
 	UpdatedAt    time.Time `gorm:"column:REC_UPD_TS"`
 }
 
-func (c *Control) TableName() string {
+type ControlMain struct {
+	Control
+}
+
+func (c ControlMain) TableName() string {
+	return "TBL_INS_CTRL_INF"
+}
+
+func (c Control) TableName() string {
 	return "TBL_EDIT_INS_CTRL_INF"
 }
 
 func SaveInstitutionControl(db *gorm.DB, control *Control) error {
 	return db.Save(control).Error
-}
-
-func FindInstitutionControlByPrimaryKey(
-	db *gorm.DB,
-	insId string,
-	proCd string,
-	bizCd string,
-) (*Control, error) {
-	out := new(Control)
-	query := &Control{
-		InsIdCd: insId,
-		ProdCd:  proCd,
-		BizCd:   bizCd,
-	}
-	err := db.Where(query).Take(out).Error
-	if err == gorm.ErrRecordNotFound {
-		return nil, nil
-	}
-	return out, err
 }

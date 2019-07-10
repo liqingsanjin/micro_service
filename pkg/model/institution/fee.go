@@ -41,26 +41,18 @@ type Fee struct {
 	UpdatedAt      time.Time `gorm:"column:REC_UPD_TS"`
 }
 
+type FeeMain struct {
+	Fee
+}
+
+func (f FeeMain) TableName() string {
+	return "TBL_INS_FEE_INF"
+}
+
 func (f Fee) TableName() string {
 	return "TBL_EDIT_INS_FEE_INF"
 }
 
 func SaveInstitutionFee(db *gorm.DB, fee *Fee) error {
 	return db.Save(fee).Error
-}
-
-func FindInstitutionFeeByPrimaryKey(db *gorm.DB, insId string, prodCd string, bizCd string, subBizCd string, insFeeCd string) (*Fee, error) {
-	fee := new(Fee)
-	query := &Fee{
-		InsIdCd:  insId,
-		ProdCd:   prodCd,
-		BizCd:    bizCd,
-		SubBizCd: subBizCd,
-		InsFeeCd: insFeeCd,
-	}
-	err := db.Where(query).Take(fee).Error
-	if err == gorm.ErrRecordNotFound {
-		return nil, nil
-	}
-	return fee, err
 }

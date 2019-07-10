@@ -28,23 +28,18 @@ type Cash struct {
 	UpdatedAt      time.Time `gorm:"column:REC_UPD_TS"`
 }
 
+type CashMain struct {
+	Cash
+}
+
+func (c CashMain) TableName() string {
+	return "TBL_INS_CASH_INF"
+}
+
 func (c Cash) TableName() string {
 	return "TBL_EDIT_INS_CASH_INF"
 }
 
 func SaveInstitutionCash(db *gorm.DB, cash *Cash) error {
 	return db.Save(cash).Error
-}
-
-func FindInstitutionCashByPrimaryKey(db *gorm.DB, insId string, prodCd string) (*Cash, error) {
-	out := new(Cash)
-	query := &Cash{
-		InsIdCd: insId,
-		ProdCd:  prodCd,
-	}
-	err := db.Where(query).Take(out).Error
-	if err == gorm.ErrRecordNotFound {
-		return nil, nil
-	}
-	return out, err
 }

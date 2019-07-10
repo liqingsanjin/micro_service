@@ -83,6 +83,14 @@ type MerchantInfo struct {
 	CertifDt              string    `gorm:"column:CERTIF_DT"`
 }
 
+type MerchantInfoMain struct {
+	MerchantInfo
+}
+
+func (m MerchantInfoMain) TableName() string {
+	return "TBL_MCHT_INF"
+}
+
 func (m MerchantInfo) TableName() string {
 	return TableMerchantInfo
 }
