@@ -242,7 +242,7 @@ func (s *setService) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (
 		}
 	}
 
-	reply.Institutions = pbIns
+	reply.Items = pbIns
 	reply.Count = count
 	reply.Size = in.Size
 	reply.Page = in.Page
@@ -256,103 +256,199 @@ func (s *setService) ListInstitutions(ctx context.Context, in *pb.ListInstitutio
 	if in.Size == 0 {
 		in.Size = 10
 	}
+	edit := true
+	if in.Type == "main" {
+		edit = false
+	}
 
 	db := common.DB
 
-	query := new(insmodel.InstitutionInfo)
-	if in.Institution != nil {
-		query.InsIdCd = in.Institution.InsIdCd
-		query.InsCompanyCd = in.Institution.InsCompanyCd
-		query.InsType = in.Institution.InsType
-		query.InsName = in.Institution.InsName
-		query.InsProvCd = in.Institution.InsProvCd
-		query.InsCityCd = in.Institution.InsCityCd
-		query.InsRegionCd = in.Institution.InsRegionCd
-		query.InsSta = in.Institution.InsSta
-		query.InsStlmTp = in.Institution.InsStlmTp
-		query.InsAloStlmCycle = in.Institution.InsAloStlmCycle
-		query.InsAloStlmMd = in.Institution.InsAloStlmMd
-		query.InsStlmCNm = in.Institution.InsStlmCNm
-		query.InsStlmCAcct = in.Institution.InsStlmCAcct
-		query.InsStlmCBkNo = in.Institution.InsStlmCBkNo
-		query.InsStlmCBkNm = in.Institution.InsStlmCBkNm
-		query.InsStlmDNm = in.Institution.InsStlmDNm
-		query.InsStlmDAcct = in.Institution.InsStlmDAcct
-		query.InsStlmDBkNo = in.Institution.InsStlmDBkNo
-		query.InsStlmDBkNm = in.Institution.InsStlmDBkNm
-		query.MsgResvFld1 = in.Institution.MsgResvFld1
-		query.MsgResvFld2 = in.Institution.MsgResvFld2
-		query.MsgResvFld3 = in.Institution.MsgResvFld3
-		query.MsgResvFld4 = in.Institution.MsgResvFld4
-		query.MsgResvFld5 = in.Institution.MsgResvFld5
-		query.MsgResvFld6 = in.Institution.MsgResvFld6
-		query.MsgResvFld7 = in.Institution.MsgResvFld7
-		query.MsgResvFld8 = in.Institution.MsgResvFld8
-		query.MsgResvFld9 = in.Institution.MsgResvFld9
-		query.MsgResvFld10 = in.Institution.MsgResvFld10
-		query.RecOprId = in.Institution.RecOprId
-	}
-	ins, count, err := insmodel.QueryInstitutionInfo(db, query, in.Page, in.Size)
-	if err != nil {
-		return nil, err
-	}
-
-	pbIns := make([]*pb.InstitutionField, len(ins))
-
-	for i := range ins {
-		pbIns[i] = &pb.InstitutionField{
-			InsIdCd:         ins[i].InsIdCd,
-			InsCompanyCd:    ins[i].InsCompanyCd,
-			InsType:         ins[i].InsType,
-			InsName:         ins[i].InsName,
-			InsProvCd:       ins[i].InsProvCd,
-			InsCityCd:       ins[i].InsCityCd,
-			InsRegionCd:     ins[i].InsRegionCd,
-			InsSta:          ins[i].InsSta,
-			InsStlmTp:       ins[i].InsStlmTp,
-			InsAloStlmCycle: ins[i].InsAloStlmCycle,
-			InsAloStlmMd:    ins[i].InsAloStlmMd,
-			InsStlmCNm:      ins[i].InsStlmCNm,
-			InsStlmCAcct:    ins[i].InsStlmCAcct,
-			InsStlmCBkNo:    ins[i].InsStlmCBkNo,
-			InsStlmCBkNm:    ins[i].InsStlmCBkNm,
-			InsStlmDNm:      ins[i].InsStlmDNm,
-			InsStlmDAcct:    ins[i].InsStlmDAcct,
-			InsStlmDBkNo:    ins[i].InsStlmDBkNo,
-			InsStlmDBkNm:    ins[i].InsStlmDBkNm,
-			MsgResvFld1:     ins[i].MsgResvFld1,
-			MsgResvFld2:     ins[i].MsgResvFld2,
-			MsgResvFld3:     ins[i].MsgResvFld3,
-			MsgResvFld4:     ins[i].MsgResvFld4,
-			MsgResvFld5:     ins[i].MsgResvFld5,
-			MsgResvFld6:     ins[i].MsgResvFld6,
-			MsgResvFld7:     ins[i].MsgResvFld7,
-			MsgResvFld8:     ins[i].MsgResvFld8,
-			MsgResvFld9:     ins[i].MsgResvFld9,
-			MsgResvFld10:    ins[i].MsgResvFld10,
-			RecOprId:        ins[i].RecOprId,
+	if edit {
+		query := new(insmodel.InstitutionInfo)
+		if in.Item != nil {
+			query.InsIdCd = in.Item.InsIdCd
+			query.InsCompanyCd = in.Item.InsCompanyCd
+			query.InsType = in.Item.InsType
+			query.InsName = in.Item.InsName
+			query.InsProvCd = in.Item.InsProvCd
+			query.InsCityCd = in.Item.InsCityCd
+			query.InsRegionCd = in.Item.InsRegionCd
+			query.InsSta = in.Item.InsSta
+			query.InsStlmTp = in.Item.InsStlmTp
+			query.InsAloStlmCycle = in.Item.InsAloStlmCycle
+			query.InsAloStlmMd = in.Item.InsAloStlmMd
+			query.InsStlmCNm = in.Item.InsStlmCNm
+			query.InsStlmCAcct = in.Item.InsStlmCAcct
+			query.InsStlmCBkNo = in.Item.InsStlmCBkNo
+			query.InsStlmCBkNm = in.Item.InsStlmCBkNm
+			query.InsStlmDNm = in.Item.InsStlmDNm
+			query.InsStlmDAcct = in.Item.InsStlmDAcct
+			query.InsStlmDBkNo = in.Item.InsStlmDBkNo
+			query.InsStlmDBkNm = in.Item.InsStlmDBkNm
+			query.MsgResvFld1 = in.Item.MsgResvFld1
+			query.MsgResvFld2 = in.Item.MsgResvFld2
+			query.MsgResvFld3 = in.Item.MsgResvFld3
+			query.MsgResvFld4 = in.Item.MsgResvFld4
+			query.MsgResvFld5 = in.Item.MsgResvFld5
+			query.MsgResvFld6 = in.Item.MsgResvFld6
+			query.MsgResvFld7 = in.Item.MsgResvFld7
+			query.MsgResvFld8 = in.Item.MsgResvFld8
+			query.MsgResvFld9 = in.Item.MsgResvFld9
+			query.MsgResvFld10 = in.Item.MsgResvFld10
+			query.RecOprId = in.Item.RecOprId
 		}
-		if !ins[i].CreatedAt.IsZero() {
-			pbIns[i].CreatedAt = ins[i].CreatedAt.Format("2006-01-02 15:04:05")
+		ins, count, err := insmodel.QueryInstitutionInfo(db, query, in.Page, in.Size)
+		if err != nil {
+			return nil, err
 		}
 
-		if !ins[i].UpdatedAt.IsZero() {
-			pbIns[i].UpdatedAt = ins[i].UpdatedAt.Format("2006-01-02 15:04:05")
+		pbIns := make([]*pb.InstitutionField, len(ins))
+
+		for i := range ins {
+			pbIns[i] = &pb.InstitutionField{
+				InsIdCd:         ins[i].InsIdCd,
+				InsCompanyCd:    ins[i].InsCompanyCd,
+				InsType:         ins[i].InsType,
+				InsName:         ins[i].InsName,
+				InsProvCd:       ins[i].InsProvCd,
+				InsCityCd:       ins[i].InsCityCd,
+				InsRegionCd:     ins[i].InsRegionCd,
+				InsSta:          ins[i].InsSta,
+				InsStlmTp:       ins[i].InsStlmTp,
+				InsAloStlmCycle: ins[i].InsAloStlmCycle,
+				InsAloStlmMd:    ins[i].InsAloStlmMd,
+				InsStlmCNm:      ins[i].InsStlmCNm,
+				InsStlmCAcct:    ins[i].InsStlmCAcct,
+				InsStlmCBkNo:    ins[i].InsStlmCBkNo,
+				InsStlmCBkNm:    ins[i].InsStlmCBkNm,
+				InsStlmDNm:      ins[i].InsStlmDNm,
+				InsStlmDAcct:    ins[i].InsStlmDAcct,
+				InsStlmDBkNo:    ins[i].InsStlmDBkNo,
+				InsStlmDBkNm:    ins[i].InsStlmDBkNm,
+				MsgResvFld1:     ins[i].MsgResvFld1,
+				MsgResvFld2:     ins[i].MsgResvFld2,
+				MsgResvFld3:     ins[i].MsgResvFld3,
+				MsgResvFld4:     ins[i].MsgResvFld4,
+				MsgResvFld5:     ins[i].MsgResvFld5,
+				MsgResvFld6:     ins[i].MsgResvFld6,
+				MsgResvFld7:     ins[i].MsgResvFld7,
+				MsgResvFld8:     ins[i].MsgResvFld8,
+				MsgResvFld9:     ins[i].MsgResvFld9,
+				MsgResvFld10:    ins[i].MsgResvFld10,
+				RecOprId:        ins[i].RecOprId,
+			}
+			if !ins[i].CreatedAt.IsZero() {
+				pbIns[i].CreatedAt = ins[i].CreatedAt.Format("2006-01-02 15:04:05")
+			}
+
+			if !ins[i].UpdatedAt.IsZero() {
+				pbIns[i].UpdatedAt = ins[i].UpdatedAt.Format("2006-01-02 15:04:05")
+			}
+
 		}
 
-	}
+		return &pb.ListInstitutionsReply{
+			Items: pbIns,
+			Count: count,
+			Page:  in.Page,
+			Size:  in.Size,
+		}, nil
+	} else {
+		query := new(insmodel.InstitutionInfoMain)
+		if in.Item != nil {
+			query.InsIdCd = in.Item.InsIdCd
+			query.InsCompanyCd = in.Item.InsCompanyCd
+			query.InsType = in.Item.InsType
+			query.InsName = in.Item.InsName
+			query.InsProvCd = in.Item.InsProvCd
+			query.InsCityCd = in.Item.InsCityCd
+			query.InsRegionCd = in.Item.InsRegionCd
+			query.InsSta = in.Item.InsSta
+			query.InsStlmTp = in.Item.InsStlmTp
+			query.InsAloStlmCycle = in.Item.InsAloStlmCycle
+			query.InsAloStlmMd = in.Item.InsAloStlmMd
+			query.InsStlmCNm = in.Item.InsStlmCNm
+			query.InsStlmCAcct = in.Item.InsStlmCAcct
+			query.InsStlmCBkNo = in.Item.InsStlmCBkNo
+			query.InsStlmCBkNm = in.Item.InsStlmCBkNm
+			query.InsStlmDNm = in.Item.InsStlmDNm
+			query.InsStlmDAcct = in.Item.InsStlmDAcct
+			query.InsStlmDBkNo = in.Item.InsStlmDBkNo
+			query.InsStlmDBkNm = in.Item.InsStlmDBkNm
+			query.MsgResvFld1 = in.Item.MsgResvFld1
+			query.MsgResvFld2 = in.Item.MsgResvFld2
+			query.MsgResvFld3 = in.Item.MsgResvFld3
+			query.MsgResvFld4 = in.Item.MsgResvFld4
+			query.MsgResvFld5 = in.Item.MsgResvFld5
+			query.MsgResvFld6 = in.Item.MsgResvFld6
+			query.MsgResvFld7 = in.Item.MsgResvFld7
+			query.MsgResvFld8 = in.Item.MsgResvFld8
+			query.MsgResvFld9 = in.Item.MsgResvFld9
+			query.MsgResvFld10 = in.Item.MsgResvFld10
+			query.RecOprId = in.Item.RecOprId
+		}
+		ins, count, err := insmodel.QueryInstitutionInfoMain(db, query, in.Page, in.Size)
+		if err != nil {
+			return nil, err
+		}
 
-	return &pb.ListInstitutionsReply{
-		Institutions: pbIns,
-		Count:        count,
-		Page:         in.Page,
-		Size:         in.Size,
-	}, nil
+		pbIns := make([]*pb.InstitutionField, len(ins))
+
+		for i := range ins {
+			pbIns[i] = &pb.InstitutionField{
+				InsIdCd:         ins[i].InsIdCd,
+				InsCompanyCd:    ins[i].InsCompanyCd,
+				InsType:         ins[i].InsType,
+				InsName:         ins[i].InsName,
+				InsProvCd:       ins[i].InsProvCd,
+				InsCityCd:       ins[i].InsCityCd,
+				InsRegionCd:     ins[i].InsRegionCd,
+				InsSta:          ins[i].InsSta,
+				InsStlmTp:       ins[i].InsStlmTp,
+				InsAloStlmCycle: ins[i].InsAloStlmCycle,
+				InsAloStlmMd:    ins[i].InsAloStlmMd,
+				InsStlmCNm:      ins[i].InsStlmCNm,
+				InsStlmCAcct:    ins[i].InsStlmCAcct,
+				InsStlmCBkNo:    ins[i].InsStlmCBkNo,
+				InsStlmCBkNm:    ins[i].InsStlmCBkNm,
+				InsStlmDNm:      ins[i].InsStlmDNm,
+				InsStlmDAcct:    ins[i].InsStlmDAcct,
+				InsStlmDBkNo:    ins[i].InsStlmDBkNo,
+				InsStlmDBkNm:    ins[i].InsStlmDBkNm,
+				MsgResvFld1:     ins[i].MsgResvFld1,
+				MsgResvFld2:     ins[i].MsgResvFld2,
+				MsgResvFld3:     ins[i].MsgResvFld3,
+				MsgResvFld4:     ins[i].MsgResvFld4,
+				MsgResvFld5:     ins[i].MsgResvFld5,
+				MsgResvFld6:     ins[i].MsgResvFld6,
+				MsgResvFld7:     ins[i].MsgResvFld7,
+				MsgResvFld8:     ins[i].MsgResvFld8,
+				MsgResvFld9:     ins[i].MsgResvFld9,
+				MsgResvFld10:    ins[i].MsgResvFld10,
+				RecOprId:        ins[i].RecOprId,
+			}
+			if !ins[i].CreatedAt.IsZero() {
+				pbIns[i].CreatedAt = ins[i].CreatedAt.Format("2006-01-02 15:04:05")
+			}
+
+			if !ins[i].UpdatedAt.IsZero() {
+				pbIns[i].UpdatedAt = ins[i].UpdatedAt.Format("2006-01-02 15:04:05")
+			}
+
+		}
+
+		return &pb.ListInstitutionsReply{
+			Items: pbIns,
+			Count: count,
+			Page:  in.Page,
+			Size:  in.Size,
+		}, nil
+	}
 }
 
 func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitutionRequest) (*pb.SaveInstitutionReply, error) {
 	var reply pb.SaveInstitutionReply
-	if in.Field == nil {
+	if in.Item == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
@@ -361,7 +457,7 @@ func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitution
 		return &reply, nil
 	}
 
-	if in.Field.InsIdCd == "" {
+	if in.Item.InsIdCd == "" {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
@@ -374,144 +470,41 @@ func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitution
 
 	ins := new(insmodel.InstitutionInfo)
 	{
-		ins.InsIdCd = in.Field.InsIdCd
-		ins.InsCompanyCd = in.Field.InsCompanyCd
-		ins.InsType = in.Field.InsType
-		ins.InsName = in.Field.InsName
-		ins.InsProvCd = in.Field.InsProvCd
-		ins.InsCityCd = in.Field.InsCityCd
-		ins.InsRegionCd = in.Field.InsRegionCd
-		ins.InsSta = in.Field.InsSta
-		ins.InsStlmTp = in.Field.InsStlmTp
-		ins.InsAloStlmCycle = in.Field.InsAloStlmCycle
-		ins.InsAloStlmMd = in.Field.InsAloStlmMd
-		ins.InsStlmCNm = in.Field.InsStlmCNm
-		ins.InsStlmCAcct = in.Field.InsStlmCAcct
-		ins.InsStlmCBkNo = in.Field.InsStlmCBkNo
-		ins.InsStlmCBkNm = in.Field.InsStlmCBkNm
-		ins.InsStlmDNm = in.Field.InsStlmDNm
-		ins.InsStlmDAcct = in.Field.InsStlmDAcct
-		ins.InsStlmDBkNo = in.Field.InsStlmDBkNo
-		ins.InsStlmDBkNm = in.Field.InsStlmDBkNm
-		ins.MsgResvFld1 = in.Field.MsgResvFld1
-		ins.MsgResvFld2 = in.Field.MsgResvFld2
-		ins.MsgResvFld3 = in.Field.MsgResvFld3
-		ins.MsgResvFld4 = in.Field.MsgResvFld4
-		ins.MsgResvFld5 = in.Field.MsgResvFld5
-		ins.MsgResvFld6 = in.Field.MsgResvFld6
-		ins.MsgResvFld7 = in.Field.MsgResvFld7
-		ins.MsgResvFld8 = in.Field.MsgResvFld8
-		ins.MsgResvFld9 = in.Field.MsgResvFld9
-		ins.MsgResvFld10 = in.Field.MsgResvFld10
-		ins.RecOprId = in.Field.RecOprId
+		ins.InsIdCd = in.Item.InsIdCd
+		ins.InsCompanyCd = in.Item.InsCompanyCd
+		ins.InsType = in.Item.InsType
+		ins.InsName = in.Item.InsName
+		ins.InsProvCd = in.Item.InsProvCd
+		ins.InsCityCd = in.Item.InsCityCd
+		ins.InsRegionCd = in.Item.InsRegionCd
+		ins.InsSta = in.Item.InsSta
+		ins.InsStlmTp = in.Item.InsStlmTp
+		ins.InsAloStlmCycle = in.Item.InsAloStlmCycle
+		ins.InsAloStlmMd = in.Item.InsAloStlmMd
+		ins.InsStlmCNm = in.Item.InsStlmCNm
+		ins.InsStlmCAcct = in.Item.InsStlmCAcct
+		ins.InsStlmCBkNo = in.Item.InsStlmCBkNo
+		ins.InsStlmCBkNm = in.Item.InsStlmCBkNm
+		ins.InsStlmDNm = in.Item.InsStlmDNm
+		ins.InsStlmDAcct = in.Item.InsStlmDAcct
+		ins.InsStlmDBkNo = in.Item.InsStlmDBkNo
+		ins.InsStlmDBkNm = in.Item.InsStlmDBkNm
+		ins.MsgResvFld1 = in.Item.MsgResvFld1
+		ins.MsgResvFld2 = in.Item.MsgResvFld2
+		ins.MsgResvFld3 = in.Item.MsgResvFld3
+		ins.MsgResvFld4 = in.Item.MsgResvFld4
+		ins.MsgResvFld5 = in.Item.MsgResvFld5
+		ins.MsgResvFld6 = in.Item.MsgResvFld6
+		ins.MsgResvFld7 = in.Item.MsgResvFld7
+		ins.MsgResvFld8 = in.Item.MsgResvFld8
+		ins.MsgResvFld9 = in.Item.MsgResvFld9
+		ins.MsgResvFld10 = in.Item.MsgResvFld10
+		ins.RecOprId = in.Item.RecOprId
 	}
 	err := insmodel.SaveInstitution(db, ins)
 	if err != nil {
 		return nil, err
 	}
-
-	// 查询是否存在工作流
-	//camundaService := camunda.Get()
-	//listProcessInstanceRes, err := camundaService.ProcessInstance.List(ctx, &camundapb.ProcessInstanceListReq{
-	//	BusinessKey: "ins_add:" + ins.InsIdCd,
-	//})
-	//if err != nil {
-	//	return nil, err
-	//}
-	//if camunda.CheckError(listProcessInstanceRes) {
-	//	reply.Err = camunda.TransError(listProcessInstanceRes)
-	//	return &reply, nil
-	//}
-	////var instanceId string
-	//if len(listProcessInstanceRes.Items) != 0 {
-	//	// 已开启工作流
-	//	//	instanceId = listProcessInstanceRes.Items[0].Id
-	//	// 修改代办任务
-	//} else {
-	//	// 需要开启工作流
-	//	processes, err := camundamodel.QueryProcessDefinition(db, &camundamodel.ProcessDefinition{
-	//		Name: "ins_add",
-	//	})
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//	if len(processes) == 0 {
-	//		reply.Err = &pb.Error{
-	//			Code:        http.StatusBadRequest,
-	//			Message:     "WorkFlowError",
-	//			Description: "没有工作流信息",
-	//		}
-	//		return &reply, nil
-	//	}
-	//	//
-	//	// 开启工作流
-	//	res, err := camundaService.ProcessDefinition.Start(ctx, &camundapb.StartProcessDefinitionReq{
-	//		Id: processes[0].Id,
-	//		Body: &camundapb.StartProcessDefinitionReqBody{
-	//			BusinessKey: "ins_add:" + ins.InsIdCd,
-	//		},
-	//	})
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//	if camunda.CheckError(res) {
-	//		reply.Err = camunda.TransError(res)
-	//		return &reply, nil
-	//	}
-	//	//	instanceId = res.Item.Id
-	//	// 保存代办任务
-	//	// 获取编辑任务
-	//	taskListResp, err := camundaService.Task.GetList(ctx, &camundapb.GetListTaskReq{
-	//		ProcessInstanceId: res.Item.Id,
-	//	})
-	//	if err != nil {
-	//		logrus.Errorln(err)
-	//		return nil, err
-	//	}
-	//	if camunda.CheckError(taskListResp) {
-	//		reply.Err = camunda.TransError(taskListResp)
-	//		return &reply, nil
-	//	}
-	//	if len(taskListResp.Tasks) == 0 {
-	//		reply.Err = &pb.Error{
-	//			Code:        http.StatusBadRequest,
-	//			Message:     "WorkFlowError",
-	//			Description: "没有编辑任务",
-	//		}
-	//		return &reply, nil
-	//	}
-	//	title := fmt.Sprintf("%s-%s_%s", processes[0].Workflow, ins.InsIdCd, ins.InsName)
-	//	err = camundamodel.SaveTask(db, &camundamodel.Task{
-	//		Title:         title,
-	//		UserId:        "admin",
-	//		CurrentNode:   taskListResp.Tasks[0].Name,
-	//		CamundaTaskId: taskListResp.Tasks[0].Id,
-	//	})
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//	//taskListResp.Tasks[0]
-	//}
-	//taskCompleteResp, err := camundaService.Task.Complete(ctx, &camundapb.CompleteTaskReq{
-	//	Id: taskListResp.Tasks[0].Id,
-	//	Body: &camundapb.CompleteTaskReqBody{
-	//		Variables: map[string]*camundapb.Variable{},
-	//	},
-	//})
-	//if err != nil {
-	//	logrus.Errorln(err)
-	//	return nil, err
-	//}
-	//if taskCompleteResp.Err != nil {
-	//	logrus.Error(taskCompleteResp.Err)
-	//	reply.Err = &pb.Error{
-	//		Code:        http.StatusBadRequest,
-	//		Message:     "WorkFlowError",
-	//		Description: "完成任务错误: " + taskCompleteResp.Err.Message,
-	//	}
-	//	return &reply, nil
-	//}
-	//logrus.Infoln("完成编辑任务", "ins_add1:"+ins.InsIdCd)
 
 	db.Commit()
 
@@ -520,7 +513,7 @@ func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitution
 
 func (s *setService) SaveInstitutionFee(ctx context.Context, in *pb.SaveInstitutionFeeRequest) (*pb.SaveInstitutionFeeReply, error) {
 	var reply pb.SaveInstitutionFeeReply
-	if in.Field == nil {
+	if in.Item == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
@@ -532,36 +525,36 @@ func (s *setService) SaveInstitutionFee(ctx context.Context, in *pb.SaveInstitut
 
 	ins := new(insmodel.Fee)
 	{
-		ins.InsIdCd = in.Field.InsIdCd
-		ins.ProdCd = in.Field.ProdCd
-		ins.BizCd = in.Field.BizCd
-		ins.SubBizCd = in.Field.SubBizCd
-		ins.InsFeeBizCd = in.Field.InsFeeBizCd
-		ins.InsFeeCd = in.Field.InsFeeCd
-		ins.InsFeeTp = in.Field.InsFeeTp
-		ins.InsFeeParam = in.Field.InsFeeParam
-		ins.InsFeePercent = in.Field.InsFeePercent
-		ins.InsFeePct = in.Field.InsFeePct
-		ins.InsFeePctMin = in.Field.InsFeePctMin
-		ins.InsFeePctMax = in.Field.InsFeePctMax
-		ins.InsAFeeSame = in.Field.InsAFeeSame
-		ins.InsAFeeParam = in.Field.InsAFeeParam
-		ins.InsAFeePercent = in.Field.InsAFeePercent
-		ins.InsAFeePct = in.Field.InsAFeePct
-		ins.InsAFeePctMin = in.Field.InsAFeePctMin
-		ins.InsAFeePctMax = in.Field.InsAFeePctMax
-		ins.MsgResvFld1 = in.Field.MsgResvFld1
-		ins.MsgResvFld2 = in.Field.MsgResvFld2
-		ins.MsgResvFld3 = in.Field.MsgResvFld3
-		ins.MsgResvFld4 = in.Field.MsgResvFld4
-		ins.MsgResvFld5 = in.Field.MsgResvFld5
-		ins.MsgResvFld6 = in.Field.MsgResvFld6
-		ins.MsgResvFld7 = in.Field.MsgResvFld7
-		ins.MsgResvFld8 = in.Field.MsgResvFld8
-		ins.MsgResvFld9 = in.Field.MsgResvFld9
-		ins.MsgResvFld10 = in.Field.MsgResvFld10
-		ins.RecOprId = in.Field.RecOprId
-		ins.RecUpdOpr = in.Field.RecUpdOpr
+		ins.InsIdCd = in.Item.InsIdCd
+		ins.ProdCd = in.Item.ProdCd
+		ins.BizCd = in.Item.BizCd
+		ins.SubBizCd = in.Item.SubBizCd
+		ins.InsFeeBizCd = in.Item.InsFeeBizCd
+		ins.InsFeeCd = in.Item.InsFeeCd
+		ins.InsFeeTp = in.Item.InsFeeTp
+		ins.InsFeeParam = in.Item.InsFeeParam
+		ins.InsFeePercent = in.Item.InsFeePercent
+		ins.InsFeePct = in.Item.InsFeePct
+		ins.InsFeePctMin = in.Item.InsFeePctMin
+		ins.InsFeePctMax = in.Item.InsFeePctMax
+		ins.InsAFeeSame = in.Item.InsAFeeSame
+		ins.InsAFeeParam = in.Item.InsAFeeParam
+		ins.InsAFeePercent = in.Item.InsAFeePercent
+		ins.InsAFeePct = in.Item.InsAFeePct
+		ins.InsAFeePctMin = in.Item.InsAFeePctMin
+		ins.InsAFeePctMax = in.Item.InsAFeePctMax
+		ins.MsgResvFld1 = in.Item.MsgResvFld1
+		ins.MsgResvFld2 = in.Item.MsgResvFld2
+		ins.MsgResvFld3 = in.Item.MsgResvFld3
+		ins.MsgResvFld4 = in.Item.MsgResvFld4
+		ins.MsgResvFld5 = in.Item.MsgResvFld5
+		ins.MsgResvFld6 = in.Item.MsgResvFld6
+		ins.MsgResvFld7 = in.Item.MsgResvFld7
+		ins.MsgResvFld8 = in.Item.MsgResvFld8
+		ins.MsgResvFld9 = in.Item.MsgResvFld9
+		ins.MsgResvFld10 = in.Item.MsgResvFld10
+		ins.RecOprId = in.Item.RecOprId
+		ins.RecUpdOpr = in.Item.RecUpdOpr
 	}
 	err := insmodel.SaveInstitutionFee(db, ins)
 	if err != nil {
@@ -573,7 +566,7 @@ func (s *setService) SaveInstitutionFee(ctx context.Context, in *pb.SaveInstitut
 
 func (s *setService) SaveInstitutionControl(ctx context.Context, in *pb.SaveInstitutionControlRequest) (*pb.SaveInstitutionControlReply, error) {
 	var reply pb.SaveInstitutionControlReply
-	if in.Field == nil {
+	if in.Item == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
@@ -585,25 +578,25 @@ func (s *setService) SaveInstitutionControl(ctx context.Context, in *pb.SaveInst
 
 	ins := new(insmodel.Control)
 	{
-		ins.InsIdCd = in.Field.InsIdCd
-		ins.InsCompanyCd = in.Field.InsCompanyCd
-		ins.ProdCd = in.Field.ProdCd
-		ins.BizCd = in.Field.BizCd
-		ins.CtrlSta = in.Field.CtrlSta
-		ins.InsBegTm = in.Field.InsBegTm
-		ins.InsEndTm = in.Field.InsEndTm
-		ins.MsgResvFld1 = in.Field.MsgResvFld1
-		ins.MsgResvFld2 = in.Field.MsgResvFld2
-		ins.MsgResvFld3 = in.Field.MsgResvFld3
-		ins.MsgResvFld4 = in.Field.MsgResvFld4
-		ins.MsgResvFld5 = in.Field.MsgResvFld5
-		ins.MsgResvFld6 = in.Field.MsgResvFld6
-		ins.MsgResvFld7 = in.Field.MsgResvFld7
-		ins.MsgResvFld8 = in.Field.MsgResvFld8
-		ins.MsgResvFld9 = in.Field.MsgResvFld9
-		ins.MsgResvFld10 = in.Field.MsgResvFld10
-		ins.RecOprId = in.Field.RecOprId
-		ins.RecUpdOpr = in.Field.RecUpdOpr
+		ins.InsIdCd = in.Item.InsIdCd
+		ins.InsCompanyCd = in.Item.InsCompanyCd
+		ins.ProdCd = in.Item.ProdCd
+		ins.BizCd = in.Item.BizCd
+		ins.CtrlSta = in.Item.CtrlSta
+		ins.InsBegTm = in.Item.InsBegTm
+		ins.InsEndTm = in.Item.InsEndTm
+		ins.MsgResvFld1 = in.Item.MsgResvFld1
+		ins.MsgResvFld2 = in.Item.MsgResvFld2
+		ins.MsgResvFld3 = in.Item.MsgResvFld3
+		ins.MsgResvFld4 = in.Item.MsgResvFld4
+		ins.MsgResvFld5 = in.Item.MsgResvFld5
+		ins.MsgResvFld6 = in.Item.MsgResvFld6
+		ins.MsgResvFld7 = in.Item.MsgResvFld7
+		ins.MsgResvFld8 = in.Item.MsgResvFld8
+		ins.MsgResvFld9 = in.Item.MsgResvFld9
+		ins.MsgResvFld10 = in.Item.MsgResvFld10
+		ins.RecOprId = in.Item.RecOprId
+		ins.RecUpdOpr = in.Item.RecUpdOpr
 	}
 	err := insmodel.SaveInstitutionControl(db, ins)
 	if err != nil {
@@ -615,7 +608,7 @@ func (s *setService) SaveInstitutionControl(ctx context.Context, in *pb.SaveInst
 
 func (s *setService) SaveInstitutionCash(ctx context.Context, in *pb.SaveInstitutionCashRequest) (*pb.SaveInstitutionCashReply, error) {
 	var reply pb.SaveInstitutionCashReply
-	if in.Field == nil {
+	if in.Item == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
@@ -627,23 +620,23 @@ func (s *setService) SaveInstitutionCash(ctx context.Context, in *pb.SaveInstitu
 
 	ins := new(insmodel.Cash)
 	{
-		ins.InsIdCd = in.Field.InsIdCd
-		ins.ProdCd = in.Field.ProdCd
-		ins.InsDefaultFlag = in.Field.InsDefaultFlag
-		ins.InsDefaultCash = in.Field.InsDefaultCash
-		ins.InsCurrentCash = in.Field.InsCurrentCash
-		ins.MsgResvFld1 = in.Field.MsgResvFld1
-		ins.MsgResvFld2 = in.Field.MsgResvFld2
-		ins.MsgResvFld3 = in.Field.MsgResvFld3
-		ins.MsgResvFld4 = in.Field.MsgResvFld4
-		ins.MsgResvFld5 = in.Field.MsgResvFld5
-		ins.MsgResvFld6 = in.Field.MsgResvFld6
-		ins.MsgResvFld7 = in.Field.MsgResvFld7
-		ins.MsgResvFld8 = in.Field.MsgResvFld8
-		ins.MsgResvFld9 = in.Field.MsgResvFld9
-		ins.MsgResvFld10 = in.Field.MsgResvFld10
-		ins.RecOprId = in.Field.RecOprId
-		ins.RecUpdOpr = in.Field.RecUpdOpr
+		ins.InsIdCd = in.Item.InsIdCd
+		ins.ProdCd = in.Item.ProdCd
+		ins.InsDefaultFlag = in.Item.InsDefaultFlag
+		ins.InsDefaultCash = in.Item.InsDefaultCash
+		ins.InsCurrentCash = in.Item.InsCurrentCash
+		ins.MsgResvFld1 = in.Item.MsgResvFld1
+		ins.MsgResvFld2 = in.Item.MsgResvFld2
+		ins.MsgResvFld3 = in.Item.MsgResvFld3
+		ins.MsgResvFld4 = in.Item.MsgResvFld4
+		ins.MsgResvFld5 = in.Item.MsgResvFld5
+		ins.MsgResvFld6 = in.Item.MsgResvFld6
+		ins.MsgResvFld7 = in.Item.MsgResvFld7
+		ins.MsgResvFld8 = in.Item.MsgResvFld8
+		ins.MsgResvFld9 = in.Item.MsgResvFld9
+		ins.MsgResvFld10 = in.Item.MsgResvFld10
+		ins.RecOprId = in.Item.RecOprId
+		ins.RecUpdOpr = in.Item.RecUpdOpr
 	}
 	err := insmodel.SaveInstitutionCash(db, ins)
 	if err != nil {

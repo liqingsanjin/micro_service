@@ -241,7 +241,7 @@ message ListGroupsRequest {
 }
 
 message ListInstitutionsReply {
-    repeated InstitutionField institutions = 1;
+    repeated InstitutionField items = 1;
     int32 count = 2;
     int32 size = 3;
     int32 page = 4;
@@ -251,7 +251,8 @@ message ListInstitutionsReply {
 message ListInstitutionsRequest {
     int32 page = 1;
     int32 size = 2;
-    InstitutionField institution = 3;
+    string type = 3;
+    InstitutionField item = 5;
 }
 
 message InstitutionField {
@@ -290,7 +291,7 @@ message InstitutionField {
 }
 
 message SaveInstitutionRequest {
-    InstitutionField field = 1;
+    InstitutionField item = 1;
 }
 
 message SaveInstitutionReply {
@@ -298,7 +299,7 @@ message SaveInstitutionReply {
 }
 
 message SaveInstitutionFeeRequest {
-    InstitutionFeeField field = 1;
+    InstitutionFeeField item = 1;
 }
 
 message SaveInstitutionFeeReply {
@@ -341,7 +342,7 @@ message InstitutionFeeField {
 }
 
 message SaveInstitutionControlRequest {
-    InstitutionControlField field = 1;
+    InstitutionControlField item = 1;
 }
 
 message SaveInstitutionControlReply {
@@ -373,7 +374,7 @@ message InstitutionControlField {
 }
 
 message SaveInstitutionCashRequest {
-    InstitutionCashField field = 1;
+    InstitutionCashField item = 1;
 }
 
 message SaveInstitutionCashReply {

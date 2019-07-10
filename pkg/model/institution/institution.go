@@ -59,9 +59,14 @@ func QueryInstitutionInfo(db *gorm.DB, query *InstitutionInfo, page int32, size 
 	var count int32
 	db.Model(&InstitutionInfo{}).Where(query).Count(&count)
 	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
-	if err == gorm.ErrRecordNotFound {
-		return out, count, nil
-	}
+	return out, count, err
+}
+
+func QueryInstitutionInfoMain(db *gorm.DB, query *InstitutionInfoMain, page int32, size int32) ([]*InstitutionInfoMain, int32, error) {
+	out := make([]*InstitutionInfoMain, 0)
+	var count int32
+	db.Model(&InstitutionInfoMain{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
 	return out, count, err
 }
 
@@ -77,9 +82,6 @@ func FindInstitutionInfoById(db *gorm.DB, id string) (*InstitutionInfo, error) {
 func FindInstitutionInfosByIdList(db *gorm.DB, ids []string) ([]*InstitutionInfo, error) {
 	out := make([]*InstitutionInfo, 0)
 	err := db.Where("INS_ID_CD in (?)", ids).Find(&out).Error
-	if err == gorm.ErrRecordNotFound {
-		return out, nil
-	}
 	return out, err
 }
 
