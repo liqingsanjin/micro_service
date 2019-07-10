@@ -12,11 +12,12 @@ service Merchant {
 message ListMerchantRequest {
     int32 page = 1;
     int32 size = 2;
-    MerchantField merchant = 3;
+    MerchantField item = 3;
+    string type = 4;
 }
 
 message ListMerchantReply {
-    repeated MerchantField merchants = 1;
+    repeated MerchantField items = 1;
     int32 count = 2;
     int32 size = 3;
     int32 page = 4;
@@ -119,11 +120,12 @@ message MerchantGroupField {
 message ListGroupMerchantRequest {
     int32 page = 1;
     int32 size = 2;
-    MerchantGroupField group = 3;
+    MerchantGroupField item = 3;
+    string type = 4;
 }
 
 message ListGroupMerchantReply {
-    repeated MerchantGroupField groups = 1;
+    repeated MerchantGroupField items = 1;
     int32 count = 2;
     int32 size = 3;
     int32 page = 4;

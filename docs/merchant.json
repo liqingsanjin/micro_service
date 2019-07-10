@@ -36,7 +36,11 @@
                   "type": "integer",
                   "description": "单页大小"
                 },
-                "merchant": {
+                "type": {
+                  "type": "string",
+                  "description": "主表为main，默认为编辑表"
+                },
+                "item": {
                   "type": "object",
                   "description": "商户具体查询字段",
                   "properties": {
@@ -51,7 +55,7 @@
             "description": "正确返回",
             "examples": {
               "application/json": {
-                "merchants": [
+                "items": [
                   {
                     "mchtCd": "0001000F0507465",
                     "sn": "7465",
@@ -161,7 +165,11 @@
                   "type": "integer",
                   "description": "单页大小"
                 },
-                "merchant": {
+                "type": {
+                  "type": "string",
+                  "description": "主表为main，默认为编辑表"
+                },
+                "item": {
                   "type": "object",
                   "description": "集团商户查询字段",
                   "properties": {
@@ -176,7 +184,7 @@
             "description": "正确返回",
             "examples": {
               "application/json": {
-                "groups": [
+                "items": [
                   {
                     "jtMchtCd": "100101230001",
                     "jtMchtNm": "123",

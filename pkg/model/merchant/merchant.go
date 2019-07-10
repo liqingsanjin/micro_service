@@ -140,8 +140,13 @@ func QueryMerchantInfos(db *gorm.DB, query *MerchantInfo, page int32, size int32
 	var count int32
 	db.Model(&MerchantInfo{}).Where(query).Count(&count)
 	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
-	if err == gorm.ErrRecordNotFound {
-		return out, count, nil
-	}
+	return out, count, err
+}
+
+func QueryMerchantInfosMain(db *gorm.DB, query *MerchantInfoMain, page int32, size int32) ([]*MerchantInfoMain, int32, error) {
+	out := make([]*MerchantInfoMain, 0)
+	var count int32
+	db.Model(&MerchantInfoMain{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
 	return out, count, err
 }

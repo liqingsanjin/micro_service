@@ -44,8 +44,13 @@ func QueryMerchantGroups(db *gorm.DB, query *Group, page int32, size int32) ([]*
 	var count int32
 	db.Model(&Group{}).Where(query).Count(&count)
 	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
-	if err == gorm.ErrRecordNotFound {
-		return out, count, nil
-	}
+	return out, count, err
+}
+
+func QueryMerchantGroupsMain(db *gorm.DB, query *GroupMain, page int32, size int32) ([]*GroupMain, int32, error) {
+	out := make([]*GroupMain, 0)
+	var count int32
+	db.Model(&GroupMain{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
 	return out, count, err
 }
