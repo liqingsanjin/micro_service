@@ -7,11 +7,12 @@ import (
 )
 
 type Remark struct {
-	RemarkId  int64     `gorm:"column:remark_id;primary_key"`
-	Comment   string    `gorm:"column:comment"`
-	TaskId    int64     `gorm:"column:task_id"`
-	CreatedAt time.Time `gorm:"column:created_at"`
-	UpdatedAt time.Time `gorm:"column:updated_at"`
+	RemarkId   int64     `gorm:"column:remark_id;primary_key"`
+	Comment    string    `gorm:"column:comment"`
+	TaskId     int64     `gorm:"column:task_id"`
+	InstanceId string    `gorm:"column:instance_id"`
+	CreatedAt  time.Time `gorm:"column:created_at"`
+	UpdatedAt  time.Time `gorm:"column:updated_at"`
 }
 
 func (Remark) TableName() string {
@@ -26,7 +27,7 @@ func QueryRemark(db *gorm.DB, query *Remark, page int32, size int32) ([]*Remark,
 	out := make([]*Remark, 0)
 	var count int32
 	db.Model(query).Where(query).Count(&count)
-	err := db.Where(query).Find(&out).Error
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
 	if err == gorm.ErrRecordNotFound {
 		return out, count, nil
 	}

@@ -5,6 +5,7 @@
     "title": "workflow api"
   },
   "host": "172.16.7.120:8080",
+  "host": "127.0.0.1:8080",
   "schemes": [
     "http"
   ],
@@ -66,6 +67,13 @@
         ],
         "parameters": [
           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization",
+            "type": "string",
+            "required": true,
+          },
+          {
             "name": "start",
             "in": "body",
             "required": true,
@@ -73,8 +81,7 @@
               "type": "object",
               "required": [
                 "page",
-                "size",
-                "item"
+                "size"
               ],
               "properties": {
                 "page": {
@@ -84,38 +91,6 @@
                 "size": {
                   "type": "integer",
                   "description": "页面大小"
-                },
-                "item": {
-                  "type": "object",
-                  "description": "用户id",
-                  "properties": {
-                    "taskId": {
-                      "type": "integer",
-                      "description": "任务id"
-                    },
-                    "title": {
-                      "type": "string",
-                      "description": "任务名称"
-                    },
-                    "userId": {
-                      "type": "string",
-                      "description": "用户id"
-                    },
-                    "currentNode": {
-                      "type": "string",
-                      "description": "当前节点"
-                    },
-                    "camundaTaskId": {
-                      "type": "string"
-                    },
-                    "instanceId": {
-                      "type": "string"
-                    },
-                    "endFlag": {
-                      "type": "boolean",
-                      "description": "流程结束标识"
-                    }
-                  }
                 }
               }
             }

@@ -10,6 +10,7 @@ type Task struct {
 	TaskId        int64     `gorm:"column:task_id;primary_key"`
 	Title         string    `gorm:"column:title"`
 	UserId        string    `gorm:"column:user_id"`
+	Role          int64     `gorm:"column:role"`
 	CurrentNode   string    `gorm:"column:current_node"`
 	CamundaTaskId string    `gorm:"column:camunda_task_id"`
 	InstanceId    string    `gorm:"column:instance_id"`
@@ -26,7 +27,7 @@ func QueryTask(db *gorm.DB, query *Task, page int32, size int32) ([]*Task, int32
 	out := make([]*Task, 0)
 	var count int32
 	db.Model(&Task{}).Where(query).Count(&count)
-	err := db.Where(query).Find(&out).Error
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
 	if err == gorm.ErrRecordNotFound {
 		return out, count, nil
 	}
@@ -48,4 +49,12 @@ func FindTaskById(db *gorm.DB, id int64) (*Task, error) {
 		return nil, nil
 	}
 	return out, err
+}
+
+func FindTaskByRoles(db *gorm.DB, roles []int64, page int32, size int32) ([]*Task, int32, error) {
+	out := make([]*Task, 0)
+	var count int32
+	db.Model(&Task{}).Where("role in (?) and end_flag = false", roles).Count(&count)
+	err := db.Where("role in (?) and end_flag = false", roles).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
 }
