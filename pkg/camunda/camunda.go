@@ -12,6 +12,7 @@ type Service struct {
 	ProcessDefinition pb.ProcessDefinitionServer
 	ProcessInstance   pb.ProcessInstanceServer
 	Task              pb.TaskServer
+	ExternalTask      pb.ExternalTaskServer
 }
 
 var defaultService *Service
@@ -26,6 +27,7 @@ func Load(client consul.Client, log log.Logger) {
 	defaultService.ProcessDefinition = GetProcessDefinitionConsulEndpoints(instancer, log)
 	defaultService.ProcessInstance = GetProcessInstanceConsulEndpoints(instancer, log)
 	defaultService.Task = GetTaskConsulEndpoints(instancer, log)
+	defaultService.ExternalTask = GetExternalTaskConsulEndpoints(instancer, log)
 }
 
 func Get() *Service {

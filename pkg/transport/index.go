@@ -63,3 +63,27 @@ func MakeTaskCompleteEndpoint(service pb.TaskServer) endpoint.Endpoint {
 		return service.Complete(ctx, req)
 	}
 }
+
+func MakeExternalTaskGetEndpoint(service pb.ExternalTaskServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.Get(ctx, request.(*pb.GetExternalTaskReq))
+	}
+}
+
+func MakeExternalTaskGetListEndpoint(service pb.ExternalTaskServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.GetList(ctx, request.(*pb.GetQuery))
+	}
+}
+
+func MakeExternalTaskFetchAndLockEndpoint(service pb.ExternalTaskServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.FetchAndLock(ctx, request.(*pb.FetchAndLockExternalTaskReq))
+	}
+}
+
+func MakeExternalTaskCompleteEndpoint(service pb.ExternalTaskServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.Complete(ctx, request.(*pb.CompleteExternalTaskReq))
+	}
+}
