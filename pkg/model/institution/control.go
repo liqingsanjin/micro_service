@@ -55,3 +55,7 @@ func FindInstitutionControl(db *gorm.DB, query *Control) ([]*Control, error) {
 func SaveInstitutionControlMain(db *gorm.DB, control *ControlMain) error {
 	return db.Save(control).Error
 }
+
+func DeleteInstitutionControl(db *gorm.DB, query *Control) error {
+	return db.Where(query).Delete(&Control{}).Error
+}

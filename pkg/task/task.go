@@ -74,7 +74,7 @@ func finishRegister(ctx context.Context, workerId int, ch <-chan int) {
 					// 商户注册
 					err = merchantRegister(db, resp.Item[0])
 				case "del_ins":
-					// todo 删除机构
+					err = deleteInstitution(db, resp.Item[0])
 				case "del_mtch":
 					// todo 删除商户
 
@@ -190,5 +190,42 @@ func institutionRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) e
 }
 
 func merchantRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
+	return nil
+}
+
+func deleteInstitution(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
+	// 查询机构id
+	instance, err := camundamodel.FindProcessInstanceById(db, in.ProcessInstanceId)
+	if err != nil {
+		return err
+	}
+	if instance == nil {
+		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
+	}
+	// todo 删除 institution fee cash control
+	err = institution.DeleteInstitution(db, &institution.InstitutionInfo{
+		InsIdCd: instance.DataId,
+	})
+	if err != nil {
+		return err
+	}
+	err = institution.DeleteInstitutionFee(db, &institution.Fee{
+		InsIdCd: instance.DataId,
+	})
+	if err != nil {
+		return err
+	}
+	err = institution.DeleteInstitutionCash(db, &institution.Cash{
+		InsIdCd: instance.DataId,
+	})
+	if err != nil {
+		return err
+	}
+	err = institution.DeleteInstitutionControl(db, &institution.Control{
+		InsIdCd: instance.DataId,
+	})
+	if err != nil {
+		return err
+	}
 	return nil
 }

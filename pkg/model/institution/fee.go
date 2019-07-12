@@ -66,3 +66,7 @@ func FindInstitutionFee(db *gorm.DB, query *Fee) ([]*Fee, error) {
 func SaveInstitutionFeeMain(db *gorm.DB, fee *FeeMain) error {
 	return db.Save(fee).Error
 }
+
+func DeleteInstitutionFee(db *gorm.DB, query *Fee) error {
+	return db.Where(query).Delete(&Fee{}).Error
+}

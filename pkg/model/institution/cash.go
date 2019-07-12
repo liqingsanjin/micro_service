@@ -53,3 +53,7 @@ func FindInstitutionCash(db *gorm.DB, query *Cash) ([]*Cash, error) {
 func SaveInstitutionCashMain(db *gorm.DB, cash *CashMain) error {
 	return db.Save(cash).Error
 }
+
+func DeleteInstitutionCash(db *gorm.DB, query *Cash) error {
+	return db.Where(query).Delete(&Cash{}).Error
+}

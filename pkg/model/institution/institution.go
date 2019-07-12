@@ -96,3 +96,7 @@ func UpdateInstitution(db *gorm.DB, query *InstitutionInfo, info *InstitutionInf
 func SaveInstitutionMain(db *gorm.DB, ins *InstitutionInfoMain) error {
 	return db.Save(ins).Error
 }
+
+func DeleteInstitution(db *gorm.DB, query *InstitutionInfo) error {
+	return db.Where(query).Delete(&InstitutionInfo{}).Error
+}
