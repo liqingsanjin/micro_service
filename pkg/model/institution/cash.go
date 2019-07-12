@@ -43,3 +43,13 @@ func (c Cash) TableName() string {
 func SaveInstitutionCash(db *gorm.DB, cash *Cash) error {
 	return db.Save(cash).Error
 }
+
+func FindInstitutionCash(db *gorm.DB, query *Cash) ([]*Cash, error) {
+	out := make([]*Cash, 0)
+	err := db.Where(query).Find(&out).Error
+	return out, err
+}
+
+func SaveInstitutionCashMain(db *gorm.DB, cash *CashMain) error {
+	return db.Save(cash).Error
+}

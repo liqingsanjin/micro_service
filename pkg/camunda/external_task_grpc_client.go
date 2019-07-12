@@ -110,7 +110,7 @@ func NewExternalTaskClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *
 			pb.FetchAndLockExternalTaskResp{},
 			options...,
 		).Endpoint()
-		endpoints.GetEndpoint = e
+		endpoints.FetchAndLockEndpoint = e
 	}
 
 	{
@@ -123,7 +123,7 @@ func NewExternalTaskClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *
 			pb.CompleteExternalTaskResp{},
 			options...,
 		).Endpoint()
-		endpoints.GetEndpoint = e
+		endpoints.CompleteEndpoint = e
 	}
 
 	return endpoints

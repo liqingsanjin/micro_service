@@ -45,3 +45,13 @@ func (c Control) TableName() string {
 func SaveInstitutionControl(db *gorm.DB, control *Control) error {
 	return db.Save(control).Error
 }
+
+func FindInstitutionControl(db *gorm.DB, query *Control) ([]*Control, error) {
+	out := make([]*Control, 0)
+	err := db.Where(query).Find(&out).Error
+	return out, err
+}
+
+func SaveInstitutionControlMain(db *gorm.DB, control *ControlMain) error {
+	return db.Save(control).Error
+}

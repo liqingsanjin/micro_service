@@ -56,3 +56,13 @@ func (f Fee) TableName() string {
 func SaveInstitutionFee(db *gorm.DB, fee *Fee) error {
 	return db.Save(fee).Error
 }
+
+func FindInstitutionFee(db *gorm.DB, query *Fee) ([]*Fee, error) {
+	out := make([]*Fee, 0)
+	err := db.Where(query).Find(&out).Error
+	return out, err
+}
+
+func SaveInstitutionFeeMain(db *gorm.DB, fee *FeeMain) error {
+	return db.Save(fee).Error
+}

@@ -88,3 +88,11 @@ func FindInstitutionInfosByIdList(db *gorm.DB, ids []string) ([]*InstitutionInfo
 func SaveInstitution(db *gorm.DB, ins *InstitutionInfo) error {
 	return db.Save(ins).Error
 }
+
+func UpdateInstitution(db *gorm.DB, query *InstitutionInfo, info *InstitutionInfo) error {
+	return db.Model(info).Where(query).Updates(info).Error
+}
+
+func SaveInstitutionMain(db *gorm.DB, ins *InstitutionInfoMain) error {
+	return db.Save(ins).Error
+}

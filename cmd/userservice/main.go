@@ -11,6 +11,7 @@ import (
 	"userService/pkg/institutionservice"
 	merchantservice "userService/pkg/mechantservice"
 	"userService/pkg/staticservice"
+	"userService/pkg/task"
 	"userService/pkg/termservice"
 	"userService/pkg/workflow"
 
@@ -57,6 +58,7 @@ var (
 	logFile = ""
 
 	watcherAddr = ""
+	taskCron    = ""
 )
 
 func main() {
@@ -168,6 +170,9 @@ func main() {
 	}
 	logrus.Infoln("启动成功")
 
+	// 启动定时任务
+	task.RunServiceTask(taskCron, 4)
+
 	runtime.Goexit()
 }
 
@@ -213,6 +218,8 @@ func parseConfigFile() error {
 	logFile = viper.GetString("log.file")
 
 	watcherAddr = viper.GetString("watcher.addr")
+
+	taskCron = viper.GetString("task.cron")
 
 	signKey := os.Getenv("SIGN_KEY")
 	if signKey != "" {
