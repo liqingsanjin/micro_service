@@ -119,7 +119,7 @@ func (p InsInf) TableName() string {
 
 func GetDictionaryItem(db *gorm.DB) []*DictionaryItem {
 	dictionaryItem := make([]*DictionaryItem, 0)
-	db.Find(&dictionaryItem)
+	db.Order("DISP_ORDER").Find(&dictionaryItem)
 	return dictionaryItem
 }
 func GetDictionaryItemByPk(db *gorm.DB, query *DictionaryItem) *DictionaryItem {
@@ -166,6 +166,6 @@ func (d DictionaryLayerItem) TableName() string {
 
 func GetDictionaryLayerItem(db *gorm.DB, query *DictionaryLayerItem) []*DictionaryLayerItem {
 	out := make([]*DictionaryLayerItem, 0)
-	db.Where(query).Find(&out)
+	db.Where(query).Order("DISP_ORDER").Find(&out)
 	return out
 }
