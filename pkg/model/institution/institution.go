@@ -58,7 +58,7 @@ func QueryInstitutionInfo(db *gorm.DB, query *InstitutionInfo, page int32, size 
 	out := make([]*InstitutionInfo, 0)
 	var count int32
 	db.Model(&InstitutionInfo{}).Where(query).Count(&count)
-	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Order("REC_UPD_TS desc, REC_CRT_TS desc").Find(&out).Error
 	return out, count, err
 }
 
@@ -66,7 +66,7 @@ func QueryInstitutionInfoMain(db *gorm.DB, query *InstitutionInfoMain, page int3
 	out := make([]*InstitutionInfoMain, 0)
 	var count int32
 	db.Model(&InstitutionInfoMain{}).Where(query).Count(&count)
-	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Order("REC_UPD_TS desc, REC_CRT_TS desc").Find(&out).Error
 	return out, count, err
 }
 

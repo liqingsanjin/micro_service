@@ -244,6 +244,15 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 		return reply, nil
 	}
 
+	err = camundamodel.SaveProcessInstance(db, &camundamodel.ProcessInstance{
+		Id:     startProcessInstanceRes.Item.Id,
+		Title:  in.Name,
+		DataId: in.DataId,
+	})
+	if err != nil {
+		return nil, err
+	}
+
 	// 获取任务
 	taskListRes, err := client.Task.GetList(ctx, &camundapb.GetListTaskReq{
 		ProcessInstanceId: startProcessInstanceRes.Item.Id,

@@ -5,6 +5,7 @@
     "title": "workflow api"
   },
   "host": "172.16.7.120:8080",
+  "host": "127.0.0.1:8080",
   "schemes": [
     "http"
   ],
@@ -26,7 +27,8 @@
               "required": [
                 "type",
                 "name",
-                "userId"
+                "userId",
+                "dataId"
               ],
               "properties": {
                 "type": {
@@ -40,6 +42,10 @@
                 "userId": {
                   "type": "string",
                   "description": "用户id"
+                },
+                "dataId": {
+                  "type": "string",
+                  "description": "数据id，机构注册为机构id，商户注册为商户id"
                 }
               }
             }
