@@ -202,7 +202,7 @@ func deleteInstitution(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) err
 	if instance == nil {
 		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
 	}
-	// todo 删除 institution fee cash control
+	// 删除 institution fee cash control
 	err = institution.DeleteInstitution(db, &institution.InstitutionInfo{
 		InsIdCd: instance.DataId,
 	})
