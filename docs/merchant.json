@@ -215,6 +215,269 @@
           }
         }
       }
+    },
+    "/merchant/saveMerchant": {
+      "post": {
+        "operationId": "saveMerchant",
+        "summary": "保存商户信息",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "saveMerchant",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "description": "集团商户查询字段",
+                  "properties": {
+                    "MchtCd": {
+                      "type": "string"
+                    },
+                    "Sn": {
+                      "type": "string"
+                    },
+                    "AipBranCd": {
+                      "type": "string"
+                    },
+                    "GroupCd": {
+                      "type": "string"
+                    },
+                    "OriChnl": {
+                      "type": "string"
+                    },
+                    "OriChnlDesc": {
+                      "type": "string"
+                    },
+                    "BankBelongCd": {
+                      "type": "string"
+                    },
+                    "DvpBy": {
+                      "type": "string"
+                    },
+                    "MccCd18": {
+                      "type": "string"
+                    },
+                    "ApplDate": {
+                      "type": "string"
+                    },
+                    "UpBcCd": {
+                      "type": "string"
+                    },
+                    "UpAcCd": {
+                      "type": "string"
+                    },
+                    "UpMccCd": {
+                      "type": "string"
+                    },
+                    "Name": {
+                      "type": "string"
+                    },
+                    "NameBusi": {
+                      "type": "string"
+                    },
+                    "BusiLiceNo": {
+                      "type": "string"
+                    },
+                    "BusiRang": {
+                      "type": "string"
+                    },
+                    "BusiMain": {
+                      "type": "string"
+                    },
+                    "Certif": {
+                      "type": "string"
+                    },
+                    "CertifType": {
+                      "type": "string"
+                    },
+                    "CertifNo": {
+                      "type": "string"
+                    },
+                    "CityCd": {
+                      "type": "string"
+                    },
+                    "AreaCd": {
+                      "type": "string"
+                    },
+                    "RegAddr": {
+                      "type": "string"
+                    },
+                    "ContactName": {
+                      "type": "string"
+                    },
+                    "ContactPhoneNo": {
+                      "type": "string"
+                    },
+                    "IsGroup": {
+                      "type": "string"
+                    },
+                    "MoneyToGroup": {
+                      "type": "string"
+                    },
+                    "StlmWay": {
+                      "type": "string"
+                    },
+                    "StlmWayDesc": {
+                      "type": "string"
+                    },
+                    "StlmInsCircle": {
+                      "type": "string"
+                    },
+                    "ApprDate": {
+                      "type": "string"
+                    },
+                    "Status": {
+                      "type": "string"
+                    },
+                    "DeleteDate": {
+                      "type": "string"
+                    },
+                    "UcBcCd32": {
+                      "type": "string"
+                    },
+                    "K2WorkflowId": {
+                      "type": "string"
+                    },
+                    "SystemFlag": {
+                      "type": "string"
+                    },
+                    "ApprovalUsername": {
+                      "type": "string"
+                    },
+                    "FinalApprovalUsername": {
+                      "type": "string"
+                    },
+                    "IsUpStandard": {
+                      "type": "string"
+                    },
+                    "BillingType": {
+                      "type": "string"
+                    },
+                    "BillingLevel": {
+                      "type": "string"
+                    },
+                    "Slogan": {
+                      "type": "string"
+                    },
+                    "Ext1": {
+                      "type": "string"
+                    },
+                    "Ext2": {
+                      "type": "string"
+                    },
+                    "Ext3": {
+                      "type": "string"
+                    },
+                    "Ext4": {
+                      "type": "string"
+                    },
+                    "AreaStandard": {
+                      "type": "string"
+                    },
+                    "MchtCdAreaCd": {
+                      "type": "string"
+                    },
+                    "UcBcCdArea": {
+                      "type": "string"
+                    },
+                    "RecOprId": {
+                      "type": "string"
+                    },
+                    "RecUpdOpr": {
+                      "type": "string"
+                    },
+                    "OperIn": {
+                      "type": "string"
+                    },
+                    "RecApllyTs": {
+                      "type": "string"
+                    },
+                    "OemOrgCode": {
+                      "type": "string"
+                    },
+                    "IsEleInvoice": {
+                      "type": "string"
+                    },
+                    "DutyParagraph": {
+                      "type": "string"
+                    },
+                    "TaxMachineBrand": {
+                      "type": "string"
+                    },
+                    "Ext5": {
+                      "type": "string"
+                    },
+                    "Ext6": {
+                      "type": "string"
+                    },
+                    "Ext7": {
+                      "type": "string"
+                    },
+                    "Ext8": {
+                      "type": "string"
+                    },
+                    "Ext9": {
+                      "type": "string"
+                    },
+                    "BusiLiceSt": {
+                      "type": "string"
+                    },
+                    "BusiLiceDt": {
+                      "type": "string"
+                    },
+                    "CertifSt": {
+                      "type": "string"
+                    },
+                    "CertifDt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "jtMchtCd": "100101230001",
+                    "jtMchtNm": "123",
+                    "jtArea": "110101",
+                    "mchtStlmCNm": "123",
+                    "mchtStlmCAcct": "123",
+                    "chtStlmInsIdCd": "001",
+                    "mchtStlmInsNm": "中国人民银行新乡市中心支行",
+                    "mchtPaySysAcct": "001498062691",
+                    "provCd": "110000",
+                    "cityCd": "110100",
+                    "aipBranCd": "10010123",
+                    "systemFlag": "00",
+                    "status": "00",
+                    "updatedAt": "2018-02-05 16:49:04",
+                    "createdAt": "2018-02-05 16:48:55",
+                    "recOprId": "I",
+                    "recUpdOpr": "94258",
+                    "jtAddr": "123"
+                  }
+                ],
+                "count": 47,
+                "size": 1,
+                "page": 1,
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

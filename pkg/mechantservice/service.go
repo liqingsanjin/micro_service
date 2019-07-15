@@ -100,13 +100,16 @@ func (m *merchantService) SaveMerchant(ctx context.Context, in *pb.SaveMerchantR
 		mtch.CertifDt = in.Item.CertifDt
 		mtch.OemOrgCode = in.Item.OemOrgCode
 		if in.Item.ApprDate != "" {
-			mtch.ApprDate, _ = time.Parse("2006-01-02 15:04:05", in.Item.ApprDate)
+			t, _ := time.Parse("2006-01-02 15:04:05", in.Item.ApprDate)
+			mtch.ApprDate = &t
 		}
 		if in.Item.DeleteDate != "" {
-			mtch.DeleteDate, _ = time.Parse("2006-01-02 15:04:05", in.Item.DeleteDate)
+			t, _ := time.Parse("2006-01-02 15:04:05", in.Item.DeleteDate)
+			mtch.DeleteDate = &t
 		}
 		if in.Item.RecApllyTs != "" {
-			mtch.RecApllyTs, _ = time.Parse("2006-01-02 15:04:05", in.Item.RecApllyTs)
+			t, _ := time.Parse("2006-01-02 15:04:05", in.Item.RecApllyTs)
+			mtch.RecApllyTs = &t
 		}
 	}
 	err := merchantmodel.SaveMerchant(db, mtch)
@@ -271,19 +274,19 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 				CertifSt:              merchants[i].CertifSt,
 				CertifDt:              merchants[i].CertifDt,
 			}
-			if !merchants[i].ApprDate.IsZero() {
+			if merchants[i] != nil {
 				pbMerchants[i].ApprDate = merchants[i].ApprDate.Format("2006-01-02 15:04:05")
 			}
-			if !merchants[i].DeleteDate.IsZero() {
+			if merchants[i] != nil {
 				pbMerchants[i].DeleteDate = merchants[i].DeleteDate.Format("2006-01-02 15:04:05")
 			}
 			if !merchants[i].CreatedAt.IsZero() {
 				pbMerchants[i].RecCrtTs = merchants[i].CreatedAt.Format("2006-01-02 15:04:05")
 			}
-			if !merchants[i].UpdatedAt.IsZero() {
+			if merchants[i].UpdatedAt.IsZero() {
 				pbMerchants[i].RecUpdTs = merchants[i].UpdatedAt.Format("2006-01-02 15:04:05")
 			}
-			if !merchants[i].RecApllyTs.IsZero() {
+			if merchants[i] != nil {
 				pbMerchants[i].RecApllyTs = merchants[i].RecApllyTs.Format("2006-01-02 15:04:05")
 			}
 		}
@@ -436,10 +439,10 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 				CertifSt:              merchants[i].CertifSt,
 				CertifDt:              merchants[i].CertifDt,
 			}
-			if !merchants[i].ApprDate.IsZero() {
+			if merchants[i].ApprDate != nil {
 				pbMerchants[i].ApprDate = merchants[i].ApprDate.Format("2006-01-02 15:04:05")
 			}
-			if !merchants[i].DeleteDate.IsZero() {
+			if merchants[i].DeleteDate != nil {
 				pbMerchants[i].DeleteDate = merchants[i].DeleteDate.Format("2006-01-02 15:04:05")
 			}
 			if !merchants[i].CreatedAt.IsZero() {
@@ -448,7 +451,7 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 			if !merchants[i].UpdatedAt.IsZero() {
 				pbMerchants[i].RecUpdTs = merchants[i].UpdatedAt.Format("2006-01-02 15:04:05")
 			}
-			if !merchants[i].RecApllyTs.IsZero() {
+			if merchants[i].RecApllyTs != nil {
 				pbMerchants[i].RecApllyTs = merchants[i].RecApllyTs.Format("2006-01-02 15:04:05")
 			}
 		}

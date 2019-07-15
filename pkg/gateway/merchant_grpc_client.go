@@ -50,6 +50,19 @@ func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption
 		endpoints.ListGroupMerchantEndpoint = endpoint
 	}
 
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Merchant",
+			"SaveMerchant",
+			encodeRequest,
+			decodeResponse,
+			pb.SaveMerchantReply{},
+			options...,
+		).Endpoint()
+		endpoints.SaveMerchantEndpoint = endpoint
+	}
+
 	return endpoints
 }
 
