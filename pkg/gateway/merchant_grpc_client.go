@@ -14,6 +14,7 @@ import (
 type MerchantEndpoints struct {
 	ListMerchantEndpoint      endpoint.Endpoint
 	ListGroupMerchantEndpoint endpoint.Endpoint
+	SaveMerchantEndpoint      endpoint.Endpoint
 }
 
 func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *MerchantEndpoints {
@@ -74,4 +75,12 @@ func (m *MerchantEndpoints) ListGroupMerchant(ctx context.Context, in *pb.ListGr
 		return nil, kit.ErrReplyTypeInvalid
 	}
 	return reply, nil
+}
+
+func (m *MerchantEndpoints) SaveMerchant(ctx context.Context, in *pb.SaveMerchantRequest) (*pb.SaveMerchantReply, error) {
+	res, err := m.SaveMerchantEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveMerchantReply), nil
 }

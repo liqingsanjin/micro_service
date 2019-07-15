@@ -23,4 +23,11 @@ func RegisterMerchantHandler(engine *gin.Engine, endpoints *MerchantEndpoints) {
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
+
+	group.POST("/saveMerchant", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.SaveMerchantEndpoint,
+		decodeHttpRequest(&pb.SaveMerchantRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
 }

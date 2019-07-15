@@ -7,7 +7,7 @@ import (
 )
 
 type InstitutionInfo struct {
-	InsIdCd         string    `gorm:"column:INS_ID_CD"`
+	InsIdCd         string    `gorm:"column:INS_ID_CD;primary_key"`
 	InsCompanyCd    string    `gorm:"column:INS_COMPANY_CD"`
 	InsType         string    `gorm:"column:INS_TYPE"`
 	InsName         string    `gorm:"column:INS_NAME"`

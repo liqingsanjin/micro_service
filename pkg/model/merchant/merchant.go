@@ -64,8 +64,8 @@ type MerchantInfo struct {
 	UcBcCdArea            string    `gorm:"column:UC_BC_CD_AREA"`
 	RecOprId              string    `gorm:"column:REC_OPR_ID"`
 	RecUpdOpr             string    `gorm:"column:REC_UPD_OPR"`
-	RecCrtTs              time.Time `gorm:"column:REC_CRT_TS"`
-	RecUpdTs              time.Time `gorm:"column:REC_UPD_TS"`
+	CreatedAt             time.Time `gorm:"column:REC_CRT_TS"`
+	UpdatedAt             time.Time `gorm:"column:REC_UPD_TS"`
 	OperIn                string    `gorm:"column:OPER_IN"`
 	RecApllyTs            time.Time `gorm:"column:REC_APLLY_TS"`
 	OemOrgCode            string    `gorm:"column:OEM_ORG_CODE"`
@@ -149,4 +149,8 @@ func QueryMerchantInfosMain(db *gorm.DB, query *MerchantInfoMain, page int32, si
 	db.Model(&MerchantInfoMain{}).Where(query).Count(&count)
 	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
 	return out, count, err
+}
+
+func SaveMerchant(db *gorm.DB, info *MerchantInfo) error {
+	return db.Create(info).Error
 }

@@ -465,8 +465,7 @@ func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitution
 		}
 		return &reply, nil
 	}
-	db := common.DB.Begin()
-	defer db.Rollback()
+	db := common.DB
 
 	ins := new(insmodel.InstitutionInfo)
 	{
@@ -505,8 +504,6 @@ func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitution
 	if err != nil {
 		return nil, err
 	}
-
-	db.Commit()
 
 	return &reply, nil
 }

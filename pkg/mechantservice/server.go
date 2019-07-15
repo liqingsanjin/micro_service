@@ -11,6 +11,7 @@ import (
 type merchantServer struct {
 	ListMerchantHandler      grpctransport.Handler
 	ListGroupMerchantHandler grpctransport.Handler
+	SaveMerchantHandler      grpctransport.Handler
 }
 
 func New(tracer grpctransport.ServerOption) pb.MerchantServer {
@@ -30,10 +31,22 @@ func New(tracer grpctransport.ServerOption) pb.MerchantServer {
 			options...,
 		)
 	}
+
 	{
 		endpoint := MakeListGroupMerchantEndpoint(service)
 		endpoint = kit.LogginMiddleware(endpoint)
 		svr.ListGroupMerchantHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+
+	{
+		endpoint := MakeSaveMerchantEndpoint(service)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.SaveMerchantHandler = grpctransport.NewServer(
 			endpoint,
 			kit.DecodeRequest,
 			kit.EncodeResponse,
@@ -65,4 +78,11 @@ func (m *merchantServer) ListGroupMerchant(ctx context.Context, in *pb.ListGroup
 		return nil, kit.ErrReplyTypeInvalid
 	}
 	return reply, nil
+}
+func (m *merchantServer) SaveMerchant(ctx context.Context, in *pb.SaveMerchantRequest) (*pb.SaveMerchantReply, error) {
+	_, res, err := m.SaveMerchantHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveMerchantReply), nil
 }

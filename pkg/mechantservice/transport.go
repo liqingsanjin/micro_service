@@ -28,3 +28,9 @@ func MakeListGroupMerchantEndpoint(service pb.MerchantServer) endpoint.Endpoint 
 		return service.ListGroupMerchant(ctx, req)
 	}
 }
+
+func MakeSaveMerchantEndpoint(service pb.MerchantServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.SaveMerchant(ctx, request.(*pb.SaveMerchantRequest))
+	}
+}

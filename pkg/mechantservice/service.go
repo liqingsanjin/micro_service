@@ -2,6 +2,8 @@ package merchantservice
 
 import (
 	"context"
+	"net/http"
+	"time"
 	"userService/pkg/common"
 	"userService/pkg/pb"
 
@@ -9,6 +11,108 @@ import (
 )
 
 type merchantService struct{}
+
+func (m *merchantService) SaveMerchant(ctx context.Context, in *pb.SaveMerchantRequest) (*pb.SaveMerchantReply, error) {
+	var reply pb.SaveMerchantReply
+	if in.Item == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "机构信息为空",
+		}
+		return &reply, nil
+	}
+
+	if in.Item.MchtCd == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "id不能为空",
+		}
+		return &reply, nil
+	}
+	db := common.DB
+
+	mtch := new(merchantmodel.MerchantInfo)
+	{
+		mtch.MchtCd = in.Item.MchtCd
+		mtch.Sn = in.Item.Sn
+		mtch.AipBranCd = in.Item.AipBranCd
+		mtch.GroupCd = in.Item.GroupCd
+		mtch.OriChnl = in.Item.OriChnl
+		mtch.OriChnlDesc = in.Item.OriChnlDesc
+		mtch.BankBelongCd = in.Item.BankBelongCd
+		mtch.DvpBy = in.Item.DvpBy
+		mtch.MccCd18 = in.Item.MccCd18
+		mtch.ApplDate = in.Item.ApplDate
+		mtch.UpBcCd = in.Item.UpBcCd
+		mtch.UpAcCd = in.Item.UpAcCd
+		mtch.UpMccCd = in.Item.UpMccCd
+		mtch.Name = in.Item.Name
+		mtch.NameBusi = in.Item.NameBusi
+		mtch.BusiLiceNo = in.Item.BusiLiceNo
+		mtch.BusiRang = in.Item.BusiRang
+		mtch.BusiMain = in.Item.BusiMain
+		mtch.Certif = in.Item.Certif
+		mtch.CertifType = in.Item.CertifType
+		mtch.CertifNo = in.Item.CertifNo
+		mtch.CityCd = in.Item.CityCd
+		mtch.AreaCd = in.Item.AreaCd
+		mtch.RegAddr = in.Item.RegAddr
+		mtch.ContactName = in.Item.ContactName
+		mtch.ContactPhoneNo = in.Item.ContactPhoneNo
+		mtch.IsGroup = in.Item.IsGroup
+		mtch.MoneyToGroup = in.Item.MoneyToGroup
+		mtch.StlmWay = in.Item.StlmWay
+		mtch.StlmWayDesc = in.Item.StlmWayDesc
+		mtch.StlmInsCircle = in.Item.StlmInsCircle
+		mtch.Status = in.Item.Status
+		mtch.UcBcCd32 = in.Item.UcBcCd32
+		mtch.K2WorkflowId = in.Item.K2WorkflowId
+		mtch.SystemFlag = in.Item.SystemFlag
+		mtch.ApprovalUsername = in.Item.ApprovalUsername
+		mtch.FinalApprovalUsername = in.Item.FinalApprovalUsername
+		mtch.IsUpStandard = in.Item.IsUpStandard
+		mtch.BillingType = in.Item.BillingType
+		mtch.BillingLevel = in.Item.BillingLevel
+		mtch.Slogan = in.Item.Slogan
+		mtch.Ext1 = in.Item.Ext1
+		mtch.Ext2 = in.Item.Ext2
+		mtch.Ext3 = in.Item.Ext3
+		mtch.Ext4 = in.Item.Ext4
+		mtch.AreaStandard = in.Item.AreaStandard
+		mtch.MchtCdAreaCd = in.Item.MchtCdAreaCd
+		mtch.UcBcCdArea = in.Item.UcBcCdArea
+		mtch.RecOprId = in.Item.RecOprId
+		mtch.RecUpdOpr = in.Item.RecUpdOpr
+		mtch.OperIn = in.Item.OperIn
+		mtch.IsEleInvoice = in.Item.IsEleInvoice
+		mtch.DutyParagraph = in.Item.DutyParagraph
+		mtch.TaxMachineBrand = in.Item.TaxMachineBrand
+		mtch.Ext5 = in.Item.Ext5
+		mtch.Ext6 = in.Item.Ext6
+		mtch.Ext7 = in.Item.Ext7
+		mtch.Ext8 = in.Item.Ext8
+		mtch.Ext9 = in.Item.Ext9
+		mtch.BusiLiceSt = in.Item.BusiLiceSt
+		mtch.BusiLiceDt = in.Item.BusiLiceDt
+		mtch.CertifSt = in.Item.CertifSt
+		mtch.CertifDt = in.Item.CertifDt
+		mtch.OemOrgCode = in.Item.OemOrgCode
+		if in.Item.ApprDate != "" {
+			mtch.ApprDate, _ = time.Parse("2006-01-02 15:04:05", in.Item.ApprDate)
+		}
+		if in.Item.DeleteDate != "" {
+			mtch.DeleteDate, _ = time.Parse("2006-01-02 15:04:05", in.Item.DeleteDate)
+		}
+		if in.Item.RecApllyTs != "" {
+			mtch.RecApllyTs, _ = time.Parse("2006-01-02 15:04:05", in.Item.RecApllyTs)
+		}
+	}
+	err := merchantmodel.SaveMerchant(db, mtch)
+
+	return &reply, err
+}
 
 func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantRequest) (*pb.ListMerchantReply, error) {
 	if in.Size == 0 {
@@ -173,11 +277,11 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 			if !merchants[i].DeleteDate.IsZero() {
 				pbMerchants[i].DeleteDate = merchants[i].DeleteDate.Format("2006-01-02 15:04:05")
 			}
-			if !merchants[i].RecCrtTs.IsZero() {
-				pbMerchants[i].RecCrtTs = merchants[i].RecCrtTs.Format("2006-01-02 15:04:05")
+			if !merchants[i].CreatedAt.IsZero() {
+				pbMerchants[i].RecCrtTs = merchants[i].CreatedAt.Format("2006-01-02 15:04:05")
 			}
-			if !merchants[i].RecUpdTs.IsZero() {
-				pbMerchants[i].RecUpdTs = merchants[i].RecUpdTs.Format("2006-01-02 15:04:05")
+			if !merchants[i].UpdatedAt.IsZero() {
+				pbMerchants[i].RecUpdTs = merchants[i].UpdatedAt.Format("2006-01-02 15:04:05")
 			}
 			if !merchants[i].RecApllyTs.IsZero() {
 				pbMerchants[i].RecApllyTs = merchants[i].RecApllyTs.Format("2006-01-02 15:04:05")
@@ -338,11 +442,11 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 			if !merchants[i].DeleteDate.IsZero() {
 				pbMerchants[i].DeleteDate = merchants[i].DeleteDate.Format("2006-01-02 15:04:05")
 			}
-			if !merchants[i].RecCrtTs.IsZero() {
-				pbMerchants[i].RecCrtTs = merchants[i].RecCrtTs.Format("2006-01-02 15:04:05")
+			if !merchants[i].CreatedAt.IsZero() {
+				pbMerchants[i].RecCrtTs = merchants[i].CreatedAt.Format("2006-01-02 15:04:05")
 			}
-			if !merchants[i].RecUpdTs.IsZero() {
-				pbMerchants[i].RecUpdTs = merchants[i].RecUpdTs.Format("2006-01-02 15:04:05")
+			if !merchants[i].UpdatedAt.IsZero() {
+				pbMerchants[i].RecUpdTs = merchants[i].UpdatedAt.Format("2006-01-02 15:04:05")
 			}
 			if !merchants[i].RecApllyTs.IsZero() {
 				pbMerchants[i].RecApllyTs = merchants[i].RecApllyTs.Format("2006-01-02 15:04:05")

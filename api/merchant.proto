@@ -7,6 +7,7 @@ import "error.proto";
 service Merchant {
     rpc ListMerchant(ListMerchantRequest) returns (ListMerchantReply) {}
     rpc ListGroupMerchant(ListGroupMerchantRequest) returns (ListGroupMerchantReply) {}
+    rpc SaveMerchant(SaveMerchantRequest) returns (SaveMerchantReply) {}
 }
 
 message ListMerchantRequest {
@@ -130,4 +131,12 @@ message ListGroupMerchantReply {
     int32 size = 3;
     int32 page = 4;
     error err = 5;
+}
+
+message SaveMerchantRequest {
+    MerchantField item = 1;
+}
+
+message SaveMerchantReply {
+    error err = 1;
 }
