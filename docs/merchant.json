@@ -610,6 +610,95 @@
           }
         }
       }
+    },
+    "/merchant/saveMerchantBizFee": {
+      "post": {
+        "operationId": "saveMerchantBizFee",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "saveMerchantBizFee",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "properties": {
+                    "MchtCd": {
+                      "type": "string"
+                    },
+                    "ProdCd": {
+                      "type": "string"
+                    },
+                    "BizCd": {
+                      "type": "string"
+                    },
+                    "SubBizCd": {
+                      "type": "string"
+                    },
+                    "MchtFeeMd": {
+                      "type": "string"
+                    },
+                    "MchtFeePercent": {
+                      "type": "number"
+                    },
+                    "MchtFeePctMin": {
+                      "type": "number"
+                    },
+                    "MchtFeePctMax": {
+                      "type": "number"
+                    },
+                    "MchtFeeSingle": {
+                      "type": "number"
+                    },
+                    "MchtAFeeSame": {
+                      "type": "string"
+                    },
+                    "MchtAFeeMd": {
+                      "type": "string"
+                    },
+                    "MchtAFeePercent": {
+                      "type": "number"
+                    },
+                    "MchtAFeePctMin": {
+                      "type": "number"
+                    },
+                    "MchtAFeePctMax": {
+                      "type": "number"
+                    },
+                    "MchtAFeeSingle": {
+                      "type": "number"
+                    },
+                    "OperIn": {
+                      "type": "string"
+                    },
+                    "RecOprId": {
+                      "type": "string"
+                    },
+                    "RecUpdOpr": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

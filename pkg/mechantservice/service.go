@@ -669,3 +669,40 @@ func (m *merchantService) SaveMerchantBizDeal(ctx context.Context, in *pb.SaveMe
 	err := merchantmodel.SaveBizDeal(db, data)
 	return &reply, err
 }
+
+func (m *merchantService) SaveMerchantBizFee(ctx context.Context, in *pb.SaveMerchantBizFeeRequest) (*pb.SaveMerchantBizFeeReply, error) {
+	var reply pb.SaveMerchantBizFeeReply
+	if in.Item == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "机构信息为空",
+		}
+		return &reply, nil
+	}
+	db := common.DB
+
+	data := new(merchantmodel.BizFee)
+	{
+		data.MchtCd = in.Item.MchtCd
+		data.ProdCd = in.Item.ProdCd
+		data.BizCd = in.Item.BizCd
+		data.SubBizCd = in.Item.SubBizCd
+		data.MchtFeeMd = in.Item.MchtFeeMd
+		data.MchtFeePercent = in.Item.MchtFeePercent
+		data.MchtFeePctMin = in.Item.MchtFeePctMin
+		data.MchtFeePctMax = in.Item.MchtFeePctMax
+		data.MchtFeeSingle = in.Item.MchtFeeSingle
+		data.MchtAFeeSame = in.Item.MchtAFeeSame
+		data.MchtAFeeMd = in.Item.MchtAFeeMd
+		data.MchtAFeePercent = in.Item.MchtAFeePercent
+		data.MchtAFeePctMin = in.Item.MchtAFeePctMin
+		data.MchtAFeePctMax = in.Item.MchtAFeePctMax
+		data.MchtAFeeSingle = in.Item.MchtAFeeSingle
+		data.OperIn = in.Item.OperIn
+		data.RecOprId = in.Item.RecOprId
+		data.RecUpdOpr = in.Item.RecUpdOpr
+	}
+	err := merchantmodel.SaveBizFee(db, data)
+	return &reply, err
+}
