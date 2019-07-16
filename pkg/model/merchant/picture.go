@@ -1,8 +1,26 @@
 package merchant
 
-import "github.com/jinzhu/gorm"
+import (
+	"time"
+
+	"github.com/jinzhu/gorm"
+)
 
 type Picture struct {
+	FileId     string    `gorm:"column:FILE_ID"`
+	MchtCd     string    `gorm:"column:MCHT_CD"`
+	DocType    string    `gorm:"column:DOC_TYPE"`
+	FileType   string    `gorm:"column:FILE_TYPE"`
+	FileName   string    `gorm:"column:FILE_NAME"`
+	PIndex     int64     `gorm:"column:PINDEX"`
+	PCode      string    `gorm:"column:PCODE"`
+	Url        string    `gorm:"column:URL"`
+	SystemFlag string    `gorm:"column:SYSTEMFLAG"`
+	Status     string    `gorm:"column:STATUS"`
+	RecOprId   string    `gorm:"column:REC_OPR_ID"`
+	RecUpdOpr  string    `gorm:"column:REC_UPD_OPR"`
+	CreatedAt  time.Time `gorm:"column:REC_CRT_TS"`
+	UpdatedAt  time.Time `gorm:"column:REC_UPD_TS"`
 }
 
 type PictureMain struct {
