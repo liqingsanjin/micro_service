@@ -233,7 +233,6 @@
               "properties": {
                 "item": {
                   "type": "object",
-                  "description": "集团商户查询字段",
                   "properties": {
                     "MchtCd": {
                       "type": "string"
@@ -447,31 +446,109 @@
             "description": "正确返回",
             "examples": {
               "application/json": {
-                "items": [
-                  {
-                    "jtMchtCd": "100101230001",
-                    "jtMchtNm": "123",
-                    "jtArea": "110101",
-                    "mchtStlmCNm": "123",
-                    "mchtStlmCAcct": "123",
-                    "chtStlmInsIdCd": "001",
-                    "mchtStlmInsNm": "中国人民银行新乡市中心支行",
-                    "mchtPaySysAcct": "001498062691",
-                    "provCd": "110000",
-                    "cityCd": "110100",
-                    "aipBranCd": "10010123",
-                    "systemFlag": "00",
-                    "status": "00",
-                    "updatedAt": "2018-02-05 16:49:04",
-                    "createdAt": "2018-02-05 16:48:55",
-                    "recOprId": "I",
-                    "recUpdOpr": "94258",
-                    "jtAddr": "123"
+                "err": null
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/saveBankAccount": {
+      "post": {
+        "operationId": "saveBankAccount",
+        "summary": "保存商户银行账户信息",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "saveBankAccount",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "description": "集团商户查询字段",
+                  "properties": {
+                    "ownerCd": {
+                      "type": "string"
+                    },
+                    "accountType": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "account": {
+                      "type": "string"
+                    },
+                    "ucBcCd": {
+                      "type": "string"
+                    },
+                    "province": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "bankCode": {
+                      "type": "string"
+                    },
+                    "bankName": {
+                      "type": "string"
+                    },
+                    "operIn": {
+                      "type": "string"
+                    },
+                    "recOprId": {
+                      "type": "string"
+                    },
+                    "recUpdOpr": {
+                      "type": "string"
+                    },
+                    "msgResvFld1": {
+                      "type": "string"
+                    },
+                    "msgResvFld2": {
+                      "type": "string"
+                    },
+                    "msgResvFld3": {
+                      "type": "string"
+                    },
+                    "msgResvFld4": {
+                      "type": "string"
+                    },
+                    "msgResvFld5": {
+                      "type": "string"
+                    },
+                    "msgResvFld6": {
+                      "type": "string"
+                    },
+                    "msgResvFld7": {
+                      "type": "string"
+                    },
+                    "msgResvFld8": {
+                      "type": "string"
+                    },
+                    "msgResvFld9": {
+                      "type": "string"
+                    },
+                    "msgResvFld10": {
+                      "type": "string"
+                    }
                   }
-                ],
-                "count": 47,
-                "size": 1,
-                "page": 1,
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
                 "err": null
               }
             }

@@ -8,6 +8,7 @@ service Merchant {
     rpc ListMerchant(ListMerchantRequest) returns (ListMerchantReply) {}
     rpc ListGroupMerchant(ListGroupMerchantRequest) returns (ListGroupMerchantReply) {}
     rpc SaveMerchant(SaveMerchantRequest) returns (SaveMerchantReply) {}
+    rpc SaveMerchantBankAccount(SaveMerchantBankAccountRequest) returns (SaveMerchantBankAccountReply) {}
 }
 
 message ListMerchantRequest {
@@ -138,5 +139,40 @@ message SaveMerchantRequest {
 }
 
 message SaveMerchantReply {
+    error err = 1;
+}
+
+message MerchantBankAccount {
+    string ownerCd      = 1;
+    string accountType  = 2;
+    string name         = 3;
+    string account      = 4;
+    string ucBcCd       = 5;
+    string province     = 6;
+    string city         = 7;
+    string bankCode     = 8;
+    string bankName     = 9;
+    string operIn       = 10;
+    string recOprId     = 11;
+    string recUpdOpr    = 12;
+    string msgResvFld1  = 13;
+    string msgResvFld2  = 14;
+    string msgResvFld3  = 15;
+    string msgResvFld4  = 16;
+    string msgResvFld5  = 17;
+    string msgResvFld6  = 18;
+    string msgResvFld7  = 19;
+    string msgResvFld8  = 20;
+    string msgResvFld9  = 21;
+    string msgResvFld10 = 22;
+    string createdAt    = 23;
+    string updatedAt    = 24;
+}
+
+message SaveMerchantBankAccountRequest {
+    MerchantBankAccount item = 1;
+}
+
+message SaveMerchantBankAccountReply {
     error err = 1;
 }

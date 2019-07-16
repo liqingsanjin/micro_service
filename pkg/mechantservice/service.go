@@ -602,3 +602,44 @@ func (m *merchantService) ListGroupMerchant(ctx context.Context, in *pb.ListGrou
 		}, nil
 	}
 }
+
+func (m *merchantService) SaveMerchantBankAccount(ctx context.Context, in *pb.SaveMerchantBankAccountRequest) (*pb.SaveMerchantBankAccountReply, error) {
+	var reply pb.SaveMerchantBankAccountReply
+	if in.Item == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "机构信息为空",
+		}
+		return &reply, nil
+	}
+	db := common.DB
+
+	data := new(merchantmodel.BankAccount)
+	{
+		data.OwnerCd = in.Item.OwnerCd
+		data.AccountType = in.Item.AccountType
+		data.Name = in.Item.Name
+		data.Account = in.Item.Account
+		data.UcBcCd = in.Item.UcBcCd
+		data.Province = in.Item.Province
+		data.City = in.Item.City
+		data.BankCode = in.Item.BankCode
+		data.BankName = in.Item.BankName
+		data.OperIn = in.Item.OperIn
+		data.RecOprId = in.Item.RecOprId
+		data.RecUpdOpr = in.Item.RecUpdOpr
+		data.MsgResvFld1 = in.Item.MsgResvFld1
+		data.MsgResvFld2 = in.Item.MsgResvFld2
+		data.MsgResvFld3 = in.Item.MsgResvFld3
+		data.MsgResvFld4 = in.Item.MsgResvFld4
+		data.MsgResvFld5 = in.Item.MsgResvFld5
+		data.MsgResvFld6 = in.Item.MsgResvFld6
+		data.MsgResvFld7 = in.Item.MsgResvFld7
+		data.MsgResvFld8 = in.Item.MsgResvFld8
+		data.MsgResvFld9 = in.Item.MsgResvFld9
+		data.MsgResvFld10 = in.Item.MsgResvFld10
+	}
+	err := merchantmodel.SaveBankAccount(db, data)
+	return &reply, err
+}

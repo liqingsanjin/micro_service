@@ -9,9 +9,10 @@ import (
 )
 
 type merchantServer struct {
-	ListMerchantHandler      grpctransport.Handler
-	ListGroupMerchantHandler grpctransport.Handler
-	SaveMerchantHandler      grpctransport.Handler
+	ListMerchantHandler            grpctransport.Handler
+	ListGroupMerchantHandler       grpctransport.Handler
+	SaveMerchantHandler            grpctransport.Handler
+	SaveMerchantBankAccountHandler grpctransport.Handler
 }
 
 func New(tracer grpctransport.ServerOption) pb.MerchantServer {
@@ -54,6 +55,17 @@ func New(tracer grpctransport.ServerOption) pb.MerchantServer {
 		)
 	}
 
+	{
+		endpoint := MakeSaveMerchantBankAccountEndpoint(service)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.SaveMerchantBankAccountHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+
 	return svr
 }
 
@@ -85,4 +97,11 @@ func (m *merchantServer) SaveMerchant(ctx context.Context, in *pb.SaveMerchantRe
 		return nil, err
 	}
 	return res.(*pb.SaveMerchantReply), nil
+}
+func (m *merchantServer) SaveMerchantBankAccount(ctx context.Context, in *pb.SaveMerchantBankAccountRequest) (*pb.SaveMerchantBankAccountReply, error) {
+	_, res, err := m.SaveMerchantBankAccountHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveMerchantBankAccountReply), nil
 }
