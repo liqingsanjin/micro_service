@@ -11,6 +11,7 @@ service Merchant {
     rpc SaveMerchantBankAccount(SaveMerchantBankAccountRequest) returns (SaveMerchantBankAccountReply) {}
     rpc SaveMerchantBizDeal(SaveMerchantBizDealRequest) returns (SaveMerchantBizDealReply) {}
     rpc SaveMerchantBizFee(SaveMerchantBizFeeRequest) returns (SaveMerchantBizFeeReply) {}
+    rpc SaveMerchantBusiness(SaveMerchantBusinessRequest) returns (SaveMerchantBusinessReply) {}
 }
 
 message ListMerchantRequest {
@@ -256,6 +257,15 @@ message MerchantBusinessField {
     string recUpdOpr = 27;
     string operIn = 28;
 }
+
+message SaveMerchantBusinessRequest {
+    MerchantBusinessField item = 1;
+}
+
+message SaveMerchantBusinessReply {
+    error err = 1;
+}
+
 message MerchantPictureField {
     string FileId = 1;
     string MchtCd = 2;

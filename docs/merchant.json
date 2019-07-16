@@ -699,6 +699,125 @@
           }
         }
       }
+    },
+    "/merchant/saveMerchantBusiness": {
+      "post": {
+        "operationId": "saveMerchantBusiness",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "saveMerchantBusiness",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "properties": {
+                    "mchtCd": {
+                      "type": "string"
+                    },
+                    "prodCd": {
+                      "type": "string"
+                    },
+                    "prodCdText": {
+                      "type": "string"
+                    },
+                    "feeMoneyCd": {
+                      "type": "string"
+                    },
+                    "feeModeType": {
+                      "type": "string"
+                    },
+                    "feeSettlementType": {
+                      "type": "string"
+                    },
+                    "feeHoliday": {
+                      "type": "string"
+                    },
+                    "serviceFeeType": {
+                      "type": "string"
+                    },
+                    "serviceFeeStaticAmount": {
+                      "type": "number"
+                    },
+                    "serviceFeeLevelCount": {
+                      "type": "integer"
+                    },
+                    "serviceFeeMode": {
+                      "type": "string"
+                    },
+                    "serviceFeeUnit": {
+                      "type": "string"
+                    },
+                    "serviceFeeTerm": {
+                      "type": "string"
+                    },
+                    "serviceFeeSumto": {
+                      "type": "string"
+                    },
+                    "serviceFeeCircle": {
+                      "type": "string"
+                    },
+                    "serviceFeeOthers": {
+                      "type": "string"
+                    },
+                    "serviceFeeStart": {
+                      "type": "string"
+                    },
+                    "serviceFeeClct": {
+                      "type": "string"
+                    },
+                    "serviceFeeClctOthers": {
+                      "type": "string"
+                    },
+                    "systemFlag": {
+                      "type": "string"
+                    },
+                    "ext1": {
+                      "type": "string"
+                    },
+                    "ext2": {
+                      "type": "string"
+                    },
+                    "ext3": {
+                      "type": "string"
+                    },
+                    "ext4": {
+                      "type": "string"
+                    },
+                    "serviceFeeYesNo": {
+                      "type": "string"
+                    },
+                    "recOprId": {
+                      "type": "string"
+                    },
+                    "recUpdOpr": {
+                      "type": "string"
+                    },
+                    "operIn": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

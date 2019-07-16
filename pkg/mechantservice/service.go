@@ -18,7 +18,7 @@ func (m *merchantService) SaveMerchant(ctx context.Context, in *pb.SaveMerchantR
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
-			Description: "机构信息为空",
+			Description: "保存信息为空",
 		}
 		return &reply, nil
 	}
@@ -609,7 +609,7 @@ func (m *merchantService) SaveMerchantBankAccount(ctx context.Context, in *pb.Sa
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
-			Description: "机构信息为空",
+			Description: "保存信息为空",
 		}
 		return &reply, nil
 	}
@@ -650,7 +650,7 @@ func (m *merchantService) SaveMerchantBizDeal(ctx context.Context, in *pb.SaveMe
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
-			Description: "机构信息为空",
+			Description: "保存信息为空",
 		}
 		return &reply, nil
 	}
@@ -676,7 +676,7 @@ func (m *merchantService) SaveMerchantBizFee(ctx context.Context, in *pb.SaveMer
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
-			Description: "机构信息为空",
+			Description: "保存信息为空",
 		}
 		return &reply, nil
 	}
@@ -704,5 +704,52 @@ func (m *merchantService) SaveMerchantBizFee(ctx context.Context, in *pb.SaveMer
 		data.RecUpdOpr = in.Item.RecUpdOpr
 	}
 	err := merchantmodel.SaveBizFee(db, data)
+	return &reply, err
+}
+
+func (m *merchantService) SaveMerchantBusiness(ctx context.Context, in *pb.SaveMerchantBusinessRequest) (*pb.SaveMerchantBusinessReply, error) {
+	var reply pb.SaveMerchantBusinessReply
+	if in.Item == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "保存信息为空",
+		}
+		return &reply, nil
+	}
+	db := common.DB
+
+	data := new(merchantmodel.Business)
+	{
+		data.MchtCd = in.Item.MchtCd
+		data.ProdCd = in.Item.ProdCd
+		data.ProdCdText = in.Item.ProdCdText
+		data.FeeMoneyCd = in.Item.FeeMoneyCd
+		data.FeeModeType = in.Item.FeeModeType
+		data.FeeSettlementType = in.Item.FeeSettlementType
+		data.FeeHoliday = in.Item.FeeHoliday
+		data.ServiceFeeType = in.Item.ServiceFeeType
+		data.ServiceFeeStaticAmount = in.Item.ServiceFeeStaticAmount
+		data.ServiceFeeLevelCount = in.Item.ServiceFeeLevelCount
+		data.ServiceFeeMode = in.Item.ServiceFeeMode
+		data.ServiceFeeUnit = in.Item.ServiceFeeUnit
+		data.ServiceFeeTerm = in.Item.ServiceFeeTerm
+		data.ServiceFeeSumto = in.Item.ServiceFeeSumto
+		data.ServiceFeeCircle = in.Item.ServiceFeeCircle
+		data.ServiceFeeOthers = in.Item.ServiceFeeOthers
+		data.ServiceFeeStart = in.Item.ServiceFeeStart
+		data.ServiceFeeClct = in.Item.ServiceFeeClct
+		data.ServiceFeeClctOthers = in.Item.ServiceFeeClctOthers
+		data.SystemFlag = in.Item.SystemFlag
+		data.Ext1 = in.Item.Ext1
+		data.Ext2 = in.Item.Ext2
+		data.Ext3 = in.Item.Ext3
+		data.Ext4 = in.Item.Ext4
+		data.ServiceFeeYesNo = in.Item.ServiceFeeYesNo
+		data.RecOprId = in.Item.RecOprId
+		data.RecUpdOpr = in.Item.RecUpdOpr
+		data.OperIn = in.Item.OperIn
+	}
+	err := merchantmodel.SaveBusiness(db, data)
 	return &reply, err
 }
