@@ -753,3 +753,34 @@ func (m *merchantService) SaveMerchantBusiness(ctx context.Context, in *pb.SaveM
 	err := merchantmodel.SaveBusiness(db, data)
 	return &reply, err
 }
+
+func (m *merchantService) SaveMerchantPicture(ctx context.Context, in *pb.SaveMerchantPictureRequest) (*pb.SaveMerchantPictureReply, error) {
+	var reply pb.SaveMerchantPictureReply
+	if in.Item == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "保存信息为空",
+		}
+		return &reply, nil
+	}
+	db := common.DB
+
+	data := new(merchantmodel.Picture)
+	{
+		data.FileId = in.Item.FileId
+		data.MchtCd = in.Item.MchtCd
+		data.DocType = in.Item.DocType
+		data.FileType = in.Item.FileType
+		data.FileName = in.Item.FileName
+		data.PIndex = in.Item.PIndex
+		data.PCode = in.Item.PCode
+		data.Url = in.Item.Url
+		data.SystemFlag = in.Item.SystemFlag
+		data.Status = in.Item.Status
+		data.RecOprId = in.Item.RecOprId
+		data.RecUpdOpr = in.Item.RecUpdOpr
+	}
+	err := merchantmodel.SavePicture(db, data)
+	return &reply, err
+}

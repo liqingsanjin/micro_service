@@ -58,3 +58,9 @@ func MakeSaveMerchantBusinessEndpoint(service pb.MerchantServer) endpoint.Endpoi
 		return service.SaveMerchantBusiness(ctx, request.(*pb.SaveMerchantBusinessRequest))
 	}
 }
+
+func MakeSaveMerchantPictureEndpoint(service pb.MerchantServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.SaveMerchantPicture(ctx, request.(*pb.SaveMerchantPictureRequest))
+	}
+}

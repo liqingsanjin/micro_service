@@ -12,6 +12,7 @@ service Merchant {
     rpc SaveMerchantBizDeal(SaveMerchantBizDealRequest) returns (SaveMerchantBizDealReply) {}
     rpc SaveMerchantBizFee(SaveMerchantBizFeeRequest) returns (SaveMerchantBizFeeReply) {}
     rpc SaveMerchantBusiness(SaveMerchantBusinessRequest) returns (SaveMerchantBusinessReply) {}
+    rpc SaveMerchantPicture(SaveMerchantPictureRequest) returns (SaveMerchantPictureReply) {}
 }
 
 message ListMerchantRequest {
@@ -188,6 +189,8 @@ message MerchantBizDealField {
     string operIn    = 5;
     string recOprId  = 6;
     string recUpdOpr = 7;
+    string createdAt = 8;
+    string updatedAt = 9;
 }
 
 message SaveMerchantBizDealRequest {
@@ -217,6 +220,8 @@ message MerchantBizFeeField {
     string  operIn          = 16;
     string  recOprId        = 17;
     string  recUpdOpr       = 18;
+    string createdAt = 19;
+    string updatedAt = 20;
 }
 
 message SaveMerchantBizFeeRequest {
@@ -256,6 +261,8 @@ message MerchantBusinessField {
     string recOprId = 26;
     string recUpdOpr = 27;
     string operIn = 28;
+    string createdAt = 29;
+    string updatedAt = 30;
 }
 
 message SaveMerchantBusinessRequest {
@@ -279,4 +286,14 @@ message MerchantPictureField {
     string Status = 10;
     string RecOprId = 11;
     string RecUpdOpr = 12;
+    string createdAt = 13;
+    string updatedAt = 14;
+}
+
+message SaveMerchantPictureRequest {
+    MerchantPictureField item = 1;
+}
+
+message SaveMerchantPictureReply {
+    error err = 1;
 }
