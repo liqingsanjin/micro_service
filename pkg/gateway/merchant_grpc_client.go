@@ -16,6 +16,7 @@ type MerchantEndpoints struct {
 	ListGroupMerchantEndpoint       endpoint.Endpoint
 	SaveMerchantEndpoint            endpoint.Endpoint
 	SaveMerchantBankAccountEndpoint endpoint.Endpoint
+	SaveMerchantBizDealEndpoint     endpoint.Endpoint
 }
 
 func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *MerchantEndpoints {
@@ -77,6 +78,19 @@ func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption
 		endpoints.SaveMerchantBankAccountEndpoint = endpoint
 	}
 
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Merchant",
+			"SaveMerchantBizDeal",
+			encodeRequest,
+			decodeResponse,
+			pb.SaveMerchantBizDealReply{},
+			options...,
+		).Endpoint()
+		endpoints.SaveMerchantBizDealEndpoint = endpoint
+	}
+
 	return endpoints
 }
 
@@ -118,4 +132,12 @@ func (m *MerchantEndpoints) SaveMerchantBankAccount(ctx context.Context, in *pb.
 		return nil, err
 	}
 	return res.(*pb.SaveMerchantBankAccountReply), nil
+}
+
+func (m *MerchantEndpoints) SaveMerchantBizDeal(ctx context.Context, in *pb.SaveMerchantBizDealRequest) (*pb.SaveMerchantBizDealReply, error) {
+	res, err := m.SaveMerchantBizDealEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveMerchantBizDealReply), nil
 }

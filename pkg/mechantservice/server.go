@@ -13,6 +13,7 @@ type merchantServer struct {
 	ListGroupMerchantHandler       grpctransport.Handler
 	SaveMerchantHandler            grpctransport.Handler
 	SaveMerchantBankAccountHandler grpctransport.Handler
+	SaveMerchantBizDealHandler     grpctransport.Handler
 }
 
 func New(tracer grpctransport.ServerOption) pb.MerchantServer {
@@ -66,6 +67,17 @@ func New(tracer grpctransport.ServerOption) pb.MerchantServer {
 		)
 	}
 
+	{
+		endpoint := MakeSaveMerchantBizDealEndpoint(service)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.SaveMerchantBizDealHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+
 	return svr
 }
 
@@ -104,4 +116,12 @@ func (m *merchantServer) SaveMerchantBankAccount(ctx context.Context, in *pb.Sav
 		return nil, err
 	}
 	return res.(*pb.SaveMerchantBankAccountReply), nil
+}
+
+func (m *merchantServer) SaveMerchantBizDeal(ctx context.Context, in *pb.SaveMerchantBizDealRequest) (*pb.SaveMerchantBizDealReply, error) {
+	_, res, err := m.SaveMerchantBizDealHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveMerchantBizDealReply), nil
 }

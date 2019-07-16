@@ -643,3 +643,29 @@ func (m *merchantService) SaveMerchantBankAccount(ctx context.Context, in *pb.Sa
 	err := merchantmodel.SaveBankAccount(db, data)
 	return &reply, err
 }
+
+func (m *merchantService) SaveMerchantBizDeal(ctx context.Context, in *pb.SaveMerchantBizDealRequest) (*pb.SaveMerchantBizDealReply, error) {
+	var reply pb.SaveMerchantBizDealReply
+	if in.Item == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "机构信息为空",
+		}
+		return &reply, nil
+	}
+	db := common.DB
+
+	data := new(merchantmodel.BizDeal)
+	{
+		data.MchtCd = in.Item.MchtCd
+		data.ProdCd = in.Item.ProdCd
+		data.BizCd = in.Item.BizCd
+		data.TransCd = in.Item.TransCd
+		data.OperIn = in.Item.OperIn
+		data.RecOprId = in.Item.RecOprId
+		data.RecUpdOpr = in.Item.RecUpdOpr
+	}
+	err := merchantmodel.SaveBizDeal(db, data)
+	return &reply, err
+}

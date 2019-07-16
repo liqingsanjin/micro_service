@@ -9,6 +9,7 @@ service Merchant {
     rpc ListGroupMerchant(ListGroupMerchantRequest) returns (ListGroupMerchantReply) {}
     rpc SaveMerchant(SaveMerchantRequest) returns (SaveMerchantReply) {}
     rpc SaveMerchantBankAccount(SaveMerchantBankAccountRequest) returns (SaveMerchantBankAccountReply) {}
+    rpc SaveMerchantBizDeal(SaveMerchantBizDealRequest) returns (SaveMerchantBizDealReply) {}
 }
 
 message ListMerchantRequest {
@@ -142,7 +143,7 @@ message SaveMerchantReply {
     error err = 1;
 }
 
-message MerchantBankAccount {
+message MerchantBankAccountField {
     string ownerCd      = 1;
     string accountType  = 2;
     string name         = 3;
@@ -170,9 +171,92 @@ message MerchantBankAccount {
 }
 
 message SaveMerchantBankAccountRequest {
-    MerchantBankAccount item = 1;
+    MerchantBankAccountField item = 1;
 }
 
 message SaveMerchantBankAccountReply {
     error err = 1;
+}
+
+message MerchantBizDealField {
+    string mchtCd    = 1;
+    string prodCd    = 2;
+    string bizCd     = 3;
+    string transCd   = 4;
+    string operIn    = 5;
+    string recOprId  = 6;
+    string recUpdOpr = 7;
+}
+
+message SaveMerchantBizDealRequest {
+    MerchantBizDealField item = 1;
+}
+
+message SaveMerchantBizDealReply {
+    error err = 1;
+}
+
+message MerchantBizFeeField {
+    string  mchtCd          = 1;
+    string  prodCd          = 2;
+    string  bizCd           = 3;
+    string  subBizCd        = 4;
+    string  mchtFeeMd       = 5;
+    double  mchtFeePercent  = 6;
+    double  mchtFeePctMin   = 7;
+    double  mchtFeePctMax   = 8;
+    double  mchtFeeSingle   = 9;
+    string  mchtAFeeSame    = 10;
+    string  mchtAFeeMd      = 11;
+    double  mchtAFeePercent = 12;
+    double  mchtAFeePctMin  = 13;
+    double  mchtAFeePctMax  = 14;
+    double  mchtAFeeSingle  = 15;
+    string  operIn          = 16;
+    string  recOprId        = 17;
+    string  recUpdOpr       = 18;
+}
+message MerchantBusinessField {
+    string mchtCd = 1;
+    string prodCd = 2;
+    string prodCdText = 3;
+    string feeMoneyCd = 4;
+    string feeModeType = 5;
+    string feeSettlementType = 6;
+    string feeHoliday = 7;
+    string serviceFeeType = 8;
+    double serviceFeeStaticAmount = 9;
+    int64  serviceFeeLevelCount = 10;
+    string serviceFeeMode = 11;
+    string serviceFeeUnit = 12;
+    string serviceFeeTerm = 13;
+    string serviceFeeSumto = 14;
+    string serviceFeeCircle = 15;
+    string serviceFeeOthers = 16;
+    string serviceFeeStart = 17;
+    string serviceFeeClct = 18;
+    string serviceFeeClctOthers = 19;
+    string systemFlag = 20;
+    string ext1 = 21;
+    string ext2 = 22;
+    string ext3 = 23;
+    string ext4 = 24;
+    string serviceFeeYesNo = 25;
+    string recOprId = 26;
+    string recUpdOpr = 27;
+    string operIn = 28;
+}
+message MerchantPictureField {
+    string FileId = 1;
+    string MchtCd = 2;
+    string DocType = 3;
+    string FileType = 4;
+    string FileName = 5;
+    int64  PIndex = 6;
+    string PCode = 7;
+    string Url = 8;
+    string SystemFlag = 9;
+    string Status = 10;
+    string RecOprId = 11;
+    string RecUpdOpr = 12;
 }
