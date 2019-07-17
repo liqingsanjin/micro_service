@@ -98,6 +98,138 @@
           }
         }
       }
+    },
+    "/term/saveTerm": {
+      "post": {
+        "operationId": "saveTerm",
+        "description": "保存终端",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "saveTerm",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "properties": {
+                    "MchtCd": {
+                      "type": "string"
+                    },
+                    "TermId": {
+                      "type": "string"
+                    },
+                    "TermTp": {
+                      "type": "string"
+                    },
+                    "Belong": {
+                      "type": "string"
+                    },
+                    "BelongSub": {
+                      "type": "string"
+                    },
+                    "TmnlMoneyIntype": {
+                      "type": "string"
+                    },
+                    "TmnlMoney": {
+                      "type": "number"
+                    },
+                    "TmnlBrand": {
+                      "type": "string"
+                    },
+                    "TmnlModelNo": {
+                      "type": "string"
+                    },
+                    "TmnlBarcode": {
+                      "type": "string"
+                    },
+                    "DeviceCd": {
+                      "type": "string"
+                    },
+                    "InstallLocation": {
+                      "type": "string"
+                    },
+                    "TmnlIntype": {
+                      "type": "string"
+                    },
+                    "DialOut": {
+                      "type": "string"
+                    },
+                    "DealTypes": {
+                      "type": "string"
+                    },
+                    "RecOprId": {
+                      "type": "string"
+                    },
+                    "RecUpdOpr": {
+                      "type": "string"
+                    },
+                    "AppCd": {
+                      "type": "string"
+                    },
+                    "SystemFlag": {
+                      "type": "string"
+                    },
+                    "Status": {
+                      "type": "string"
+                    },
+                    "ActiveCode": {
+                      "type": "string"
+                    },
+                    "NoFlag": {
+                      "type": "string"
+                    },
+                    "MsgResvFld1": {
+                      "type": "string"
+                    },
+                    "MsgResvFld2": {
+                      "type": "string"
+                    },
+                    "MsgResvFld3": {
+                      "type": "string"
+                    },
+                    "MsgResvFld4": {
+                      "type": "string"
+                    },
+                    "MsgResvFld5": {
+                      "type": "string"
+                    },
+                    "MsgResvFld6": {
+                      "type": "string"
+                    },
+                    "MsgResvFld7": {
+                      "type": "string"
+                    },
+                    "MsgResvFld8": {
+                      "type": "string"
+                    },
+                    "MsgResvFld9": {
+                      "type": "string"
+                    },
+                    "MsgResvFld10": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

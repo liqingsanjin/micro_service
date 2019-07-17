@@ -10,6 +10,7 @@ import (
 
 type server struct {
 	ListTermInfoHandler grpctransport.Handler
+	SaveTermHandler     grpctransport.Handler
 }
 
 func New(tracer grpctransport.ServerOption) pb.TermServer {
@@ -19,10 +20,22 @@ func New(tracer grpctransport.ServerOption) pb.TermServer {
 	if tracer != nil {
 		options = append(options, tracer)
 	}
+
 	{
 		endpoint := MakeListTermInfoEndpoint(svc)
 		endpoint = kit.LogginMiddleware(endpoint)
 		svr.ListTermInfoHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+
+	{
+		endpoint := MakeSaveTermEndpoint(svc)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.SaveTermHandler = grpctransport.NewServer(
 			endpoint,
 			kit.DecodeRequest,
 			kit.EncodeResponse,
@@ -43,4 +56,12 @@ func (s *server) ListTermInfo(ctx context.Context, in *pb.ListTermInfoRequest) (
 		return nil, kit.ErrReplyTypeInvalid
 	}
 	return reply, nil
+}
+
+func (s *server) SaveTerm(ctx context.Context, in *pb.SaveTermRequest) (*pb.SaveTermReply, error) {
+	_, res, err := s.SaveTermHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveTermReply), nil
 }

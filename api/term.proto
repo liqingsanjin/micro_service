@@ -6,19 +6,20 @@ import "error.proto";
 
 service Term {
     rpc ListTermInfo(ListTermInfoRequest) returns (ListTermInfoReply) {}
+    rpc SaveTerm(SaveTermRequest) returns (SaveTermReply) {}
 }
 
 message ListTermInfoRequest {
     int32 page = 1;
     int32 size = 2;
-    TermInfoField term = 3;
+    TermInfoField item = 3;
 }
 
 message ListTermInfoReply {
     int32 page = 1;
     int32 size = 2;
     int32 count = 3;
-    repeated TermInfoField terms = 4;
+    repeated TermInfoField items = 4;
     error err = 5;
 }
 
@@ -57,4 +58,12 @@ message TermInfoField {
     string msgResvFld8 = 32;
     string msgResvFld9 = 33;
     string msgResvFld10 = 34;
+}
+
+message SaveTermRequest {
+    TermInfoField item = 1;
+}
+
+message SaveTermReply {
+    error err = 1;
 }

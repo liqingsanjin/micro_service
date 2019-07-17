@@ -24,8 +24,6 @@ type Info struct {
 	DealTypes       string    `gorm:"column:DEAL_TYPES"`
 	RecOprId        string    `gorm:"column:REC_OPR_ID"`
 	RecUpdOpr       string    `gorm:"column:REC_UPD_OPR"`
-	CreatedAt       time.Time `gorm:"column:REC_CRT_TS"`
-	UpdatedAt       time.Time `gorm:"column:REC_UPD_TS"`
 	AppCd           string    `gorm:"column:APP_CD"`
 	SystemFlag      string    `gorm:"column:SYSTEMFLAG"`
 	Status          string    `gorm:"column:STATUS"`
@@ -41,10 +39,20 @@ type Info struct {
 	MsgResvFld8     string    `gorm:"column:MSG_RESV_FLD8"`
 	MsgResvFld9     string    `gorm:"column:MSG_RESV_FLD9"`
 	MsgResvFld10    string    `gorm:"column:MSG_RESV_FLD10"`
+	CreatedAt       time.Time `gorm:"column:REC_CRT_TS"`
+	UpdatedAt       time.Time `gorm:"column:REC_UPD_TS"`
 }
 
-func (i *Info) TableName() string {
+func (Info) TableName() string {
 	return "TBL_EDIT_TERM_INF"
+}
+
+type InfoMain struct {
+	Info
+}
+
+func (InfoMain) TableName() string {
+	return "TBL_TERM_INF"
 }
 
 func QueryTermInfo(db *gorm.DB, query *Info, page int32, size int32) ([]*Info, int32, error) {
@@ -57,4 +65,8 @@ func QueryTermInfo(db *gorm.DB, query *Info, page int32, size int32) ([]*Info, i
 		return out, count, nil
 	}
 	return out, count, err
+}
+
+func SaveTermInfo(db *gorm.DB, data *Info) error {
+	return db.Create(data).Error
 }

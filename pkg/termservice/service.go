@@ -2,6 +2,7 @@ package termservice
 
 import (
 	"context"
+	"net/http"
 	"userService/pkg/common"
 	termmodel "userService/pkg/model/term"
 	"userService/pkg/pb"
@@ -20,39 +21,39 @@ func (s *service) ListTermInfo(ctx context.Context, in *pb.ListTermInfoRequest) 
 	db := common.DB
 
 	query := new(termmodel.Info)
-	if in.Term != nil {
-		query.MchtCd = in.Term.MchtCd
-		query.TermId = in.Term.TermId
-		query.TermTp = in.Term.TermTp
-		query.Belong = in.Term.Belong
-		query.BelongSub = in.Term.BelongSub
-		query.TmnlMoneyIntype = in.Term.TmnlMoneyIntype
-		query.TmnlMoney = in.Term.TmnlMoney
-		query.TmnlBrand = in.Term.TmnlBrand
-		query.TmnlModelNo = in.Term.TmnlModelNo
-		query.TmnlBarcode = in.Term.TmnlBarcode
-		query.DeviceCd = in.Term.DeviceCd
-		query.InstallLocation = in.Term.InstallLocation
-		query.TmnlIntype = in.Term.TmnlIntype
-		query.DialOut = in.Term.DialOut
-		query.DealTypes = in.Term.DealTypes
-		query.RecOprId = in.Term.RecOprId
-		query.RecUpdOpr = in.Term.RecUpdOpr
-		query.AppCd = in.Term.AppCd
-		query.SystemFlag = in.Term.SystemFlag
-		query.Status = in.Term.Status
-		query.ActiveCode = in.Term.ActiveCode
-		query.NoFlag = in.Term.NoFlag
-		query.MsgResvFld1 = in.Term.MsgResvFld1
-		query.MsgResvFld2 = in.Term.MsgResvFld2
-		query.MsgResvFld3 = in.Term.MsgResvFld3
-		query.MsgResvFld4 = in.Term.MsgResvFld4
-		query.MsgResvFld5 = in.Term.MsgResvFld5
-		query.MsgResvFld6 = in.Term.MsgResvFld6
-		query.MsgResvFld7 = in.Term.MsgResvFld7
-		query.MsgResvFld8 = in.Term.MsgResvFld8
-		query.MsgResvFld9 = in.Term.MsgResvFld9
-		query.MsgResvFld10 = in.Term.MsgResvFld10
+	if in.Item != nil {
+		query.MchtCd = in.Item.MchtCd
+		query.TermId = in.Item.TermId
+		query.TermTp = in.Item.TermTp
+		query.Belong = in.Item.Belong
+		query.BelongSub = in.Item.BelongSub
+		query.TmnlMoneyIntype = in.Item.TmnlMoneyIntype
+		query.TmnlMoney = in.Item.TmnlMoney
+		query.TmnlBrand = in.Item.TmnlBrand
+		query.TmnlModelNo = in.Item.TmnlModelNo
+		query.TmnlBarcode = in.Item.TmnlBarcode
+		query.DeviceCd = in.Item.DeviceCd
+		query.InstallLocation = in.Item.InstallLocation
+		query.TmnlIntype = in.Item.TmnlIntype
+		query.DialOut = in.Item.DialOut
+		query.DealTypes = in.Item.DealTypes
+		query.RecOprId = in.Item.RecOprId
+		query.RecUpdOpr = in.Item.RecUpdOpr
+		query.AppCd = in.Item.AppCd
+		query.SystemFlag = in.Item.SystemFlag
+		query.Status = in.Item.Status
+		query.ActiveCode = in.Item.ActiveCode
+		query.NoFlag = in.Item.NoFlag
+		query.MsgResvFld1 = in.Item.MsgResvFld1
+		query.MsgResvFld2 = in.Item.MsgResvFld2
+		query.MsgResvFld3 = in.Item.MsgResvFld3
+		query.MsgResvFld4 = in.Item.MsgResvFld4
+		query.MsgResvFld5 = in.Item.MsgResvFld5
+		query.MsgResvFld6 = in.Item.MsgResvFld6
+		query.MsgResvFld7 = in.Item.MsgResvFld7
+		query.MsgResvFld8 = in.Item.MsgResvFld8
+		query.MsgResvFld9 = in.Item.MsgResvFld9
+		query.MsgResvFld10 = in.Item.MsgResvFld10
 	}
 	infos, count, err := termmodel.QueryTermInfo(db, query, in.Page, in.Size)
 	if err != nil {
@@ -106,6 +107,57 @@ func (s *service) ListTermInfo(ctx context.Context, in *pb.ListTermInfoRequest) 
 		Page:  in.Page,
 		Size:  in.Size,
 		Count: count,
-		Terms: pbInfos,
+		Items: pbInfos,
 	}, nil
+}
+
+func (s *service) SaveTerm(ctx context.Context, in *pb.SaveTermRequest) (*pb.SaveTermReply, error) {
+	var reply pb.SaveTermReply
+	if in.Item == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "保存信息为空",
+		}
+		return &reply, nil
+	}
+	db := common.DB
+
+	data := new(termmodel.Info)
+	{
+		data.MchtCd = in.Item.MchtCd
+		data.TermId = in.Item.TermId
+		data.TermTp = in.Item.TermTp
+		data.Belong = in.Item.Belong
+		data.BelongSub = in.Item.BelongSub
+		data.TmnlMoneyIntype = in.Item.TmnlMoneyIntype
+		data.TmnlMoney = in.Item.TmnlMoney
+		data.TmnlBrand = in.Item.TmnlBrand
+		data.TmnlModelNo = in.Item.TmnlModelNo
+		data.TmnlBarcode = in.Item.TmnlBarcode
+		data.DeviceCd = in.Item.DeviceCd
+		data.InstallLocation = in.Item.InstallLocation
+		data.TmnlIntype = in.Item.TmnlIntype
+		data.DialOut = in.Item.DialOut
+		data.DealTypes = in.Item.DealTypes
+		data.RecOprId = in.Item.RecOprId
+		data.RecUpdOpr = in.Item.RecUpdOpr
+		data.AppCd = in.Item.AppCd
+		data.SystemFlag = in.Item.SystemFlag
+		data.Status = in.Item.Status
+		data.ActiveCode = in.Item.ActiveCode
+		data.NoFlag = in.Item.NoFlag
+		data.MsgResvFld1 = in.Item.MsgResvFld1
+		data.MsgResvFld2 = in.Item.MsgResvFld2
+		data.MsgResvFld3 = in.Item.MsgResvFld3
+		data.MsgResvFld4 = in.Item.MsgResvFld4
+		data.MsgResvFld5 = in.Item.MsgResvFld5
+		data.MsgResvFld6 = in.Item.MsgResvFld6
+		data.MsgResvFld7 = in.Item.MsgResvFld7
+		data.MsgResvFld8 = in.Item.MsgResvFld8
+		data.MsgResvFld9 = in.Item.MsgResvFld9
+		data.MsgResvFld10 = in.Item.MsgResvFld10
+	}
+	err := termmodel.SaveTermInfo(db, data)
+	return &reply, err
 }

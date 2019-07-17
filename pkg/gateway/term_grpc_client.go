@@ -13,6 +13,27 @@ import (
 
 type TermEndpoints struct {
 	ListTermInfoEndpoint endpoint.Endpoint
+	SaveTermEndpoint     endpoint.Endpoint
+}
+
+func (t *TermEndpoints) SaveTerm(ctx context.Context, in *pb.SaveTermRequest) (*pb.SaveTermReply, error) {
+	res, err := t.SaveTermEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveTermReply), nil
+}
+
+func (t *TermEndpoints) ListTermInfo(ctx context.Context, in *pb.ListTermInfoRequest) (*pb.ListTermInfoReply, error) {
+	res, err := t.ListTermInfoEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.ListTermInfoReply)
+	if !ok {
+		return nil, kit.ErrReplyTypeInvalid
+	}
+	return reply, nil
 }
 
 func NewTermServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *TermEndpoints {
@@ -35,17 +56,18 @@ func NewTermServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *T
 		endpoints.ListTermInfoEndpoint = endpoint
 	}
 
-	return endpoints
-}
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Term",
+			"SaveTerm",
+			encodeRequest,
+			decodeResponse,
+			pb.SaveTermReply{},
+			options...,
+		).Endpoint()
+		endpoints.SaveTermEndpoint = endpoint
+	}
 
-func (t *TermEndpoints) ListTermInfo(ctx context.Context, in *pb.ListTermInfoRequest) (*pb.ListTermInfoReply, error) {
-	res, err := t.ListTermInfoEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.ListTermInfoReply)
-	if !ok {
-		return nil, kit.ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return endpoints
 }

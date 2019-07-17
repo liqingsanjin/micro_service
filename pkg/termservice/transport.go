@@ -17,3 +17,9 @@ func MakeListTermInfoEndpoint(service pb.TermServer) endpoint.Endpoint {
 		return service.ListTermInfo(ctx, req)
 	}
 }
+
+func MakeSaveTermEndpoint(service pb.TermServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.SaveTerm(ctx, request.(*pb.SaveTermRequest))
+	}
+}
