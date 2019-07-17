@@ -7,6 +7,7 @@ import "error.proto";
 service Term {
     rpc ListTermInfo(ListTermInfoRequest) returns (ListTermInfoReply) {}
     rpc SaveTerm(SaveTermRequest) returns (SaveTermReply) {}
+    rpc SaveTermRisk(SaveTermRiskRequest) returns (SaveTermRiskReply) {}
 }
 
 message ListTermInfoRequest {
@@ -65,5 +66,31 @@ message SaveTermRequest {
 }
 
 message SaveTermReply {
+    error err = 1;
+}
+
+message TermRiskField {
+    string MchtCd           = 1;
+    string TermId           = 2;
+    string CardType         = 3;
+    double TotalLimitMoney  = 4;
+    string AccpetStartTime  = 5;
+    string AccpetStartDate  = 6;
+    string AccpetEndTime    = 7;
+    string AccpetEndDate    = 8;
+    double SingleLimitMoney = 9;
+    string ControlWay       = 10;
+    double SingleMinMoney   = 11;
+    string TotalPeriod      = 12;
+    string RecOprId         = 13;
+    string RecUpdOpr        = 14;
+    string OperIn           = 15;
+}
+
+message SaveTermRiskRequest {
+    TermRiskField item = 1;
+}
+
+message SaveTermRiskReply {
     error err = 1;
 }

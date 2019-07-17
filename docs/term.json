@@ -117,100 +117,181 @@
                 "item": {
                   "type": "object",
                   "properties": {
-                    "MchtCd": {
+                    "mchtCd": {
                       "type": "string"
                     },
-                    "TermId": {
+                    "termId": {
                       "type": "string"
                     },
-                    "TermTp": {
+                    "termTp": {
                       "type": "string"
                     },
-                    "Belong": {
+                    "belong": {
                       "type": "string"
                     },
-                    "BelongSub": {
+                    "belongSub": {
                       "type": "string"
                     },
-                    "TmnlMoneyIntype": {
+                    "tmnlMoneyIntype": {
                       "type": "string"
                     },
-                    "TmnlMoney": {
+                    "tmnlMoney": {
                       "type": "number"
                     },
-                    "TmnlBrand": {
+                    "tmnlBrand": {
                       "type": "string"
                     },
-                    "TmnlModelNo": {
+                    "tmnlModelNo": {
                       "type": "string"
                     },
-                    "TmnlBarcode": {
+                    "tmnlBarcode": {
                       "type": "string"
                     },
-                    "DeviceCd": {
+                    "deviceCd": {
                       "type": "string"
                     },
-                    "InstallLocation": {
+                    "installLocation": {
                       "type": "string"
                     },
-                    "TmnlIntype": {
+                    "tmnlIntype": {
                       "type": "string"
                     },
-                    "DialOut": {
+                    "dialOut": {
                       "type": "string"
                     },
-                    "DealTypes": {
+                    "dealTypes": {
                       "type": "string"
                     },
-                    "RecOprId": {
+                    "recOprId": {
                       "type": "string"
                     },
-                    "RecUpdOpr": {
+                    "recUpdOpr": {
                       "type": "string"
                     },
-                    "AppCd": {
+                    "appCd": {
                       "type": "string"
                     },
-                    "SystemFlag": {
+                    "systemFlag": {
                       "type": "string"
                     },
-                    "Status": {
+                    "status": {
                       "type": "string"
                     },
-                    "ActiveCode": {
+                    "activeCode": {
                       "type": "string"
                     },
-                    "NoFlag": {
+                    "noFlag": {
                       "type": "string"
                     },
-                    "MsgResvFld1": {
+                    "msgResvFld1": {
                       "type": "string"
                     },
-                    "MsgResvFld2": {
+                    "msgResvFld2": {
                       "type": "string"
                     },
-                    "MsgResvFld3": {
+                    "msgResvFld3": {
                       "type": "string"
                     },
-                    "MsgResvFld4": {
+                    "msgResvFld4": {
                       "type": "string"
                     },
-                    "MsgResvFld5": {
+                    "msgResvFld5": {
                       "type": "string"
                     },
-                    "MsgResvFld6": {
+                    "msgResvFld6": {
                       "type": "string"
                     },
-                    "MsgResvFld7": {
+                    "msgResvFld7": {
                       "type": "string"
                     },
-                    "MsgResvFld8": {
+                    "msgResvFld8": {
                       "type": "string"
                     },
-                    "MsgResvFld9": {
+                    "msgResvFld9": {
                       "type": "string"
                     },
-                    "MsgResvFld10": {
+                    "msgResvFld10": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "err": null
+              }
+            }
+          }
+        }
+      }
+    },
+    "/term/saveTermRisk": {
+      "post": {
+        "operationId": "saveTermRisk",
+        "description": "保存终端风控",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "saveTermRisk",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "properties": {
+                    "mchtCd": {
+                      "type": "string"
+                    },
+                    "termId": {
+                      "type": "string"
+                    },
+                    "cardType": {
+                      "type": "string"
+                    },
+                    "totalLimitMoney": {
+                      "type": "number"
+                    },
+                    "accpetStartTime": {
+                      "type": "string"
+                    },
+                    "accpetStartDate": {
+                      "type": "string"
+                    },
+                    "accpetEndTime": {
+                      "type": "string"
+                    },
+                    "accpetEndDate": {
+                      "type": "string"
+                    },
+                    "singleLimitMoney": {
+                      "type": "number"
+                    },
+                    "controlWay": {
+                      "type": "string"
+                    },
+                    "singleMinMoney": {
+                      "type": "number"
+                    },
+                    "totalPeriod": {
+                      "type": "string"
+                    },
+                    "recOprId": {
+                      "type": "string"
+                    },
+                    "recUpdOpr": {
+                      "type": "string"
+                    },
+                    "operIn": {
                       "type": "string"
                     }
                   }

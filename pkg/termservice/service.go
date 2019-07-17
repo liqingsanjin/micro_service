@@ -10,6 +10,40 @@ import (
 
 type service struct{}
 
+func (s *service) SaveTermRisk(ctx context.Context, in *pb.SaveTermRiskRequest) (*pb.SaveTermRiskReply, error) {
+	var reply pb.SaveTermRiskReply
+	if in.Item == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "保存信息为空",
+		}
+		return &reply, nil
+	}
+	db := common.DB
+
+	data := new(termmodel.Risk)
+	{
+		data.MchtCd = in.Item.MchtCd
+		data.TermId = in.Item.TermId
+		data.CardType = in.Item.CardType
+		data.TotalLimitMoney = in.Item.TotalLimitMoney
+		data.AccpetStartTime = in.Item.AccpetStartTime
+		data.AccpetStartDate = in.Item.AccpetStartDate
+		data.AccpetEndTime = in.Item.AccpetEndTime
+		data.AccpetEndDate = in.Item.AccpetEndDate
+		data.SingleLimitMoney = in.Item.SingleLimitMoney
+		data.ControlWay = in.Item.ControlWay
+		data.SingleMinMoney = in.Item.SingleMinMoney
+		data.TotalPeriod = in.Item.TotalPeriod
+		data.RecOprId = in.Item.RecOprId
+		data.RecUpdOpr = in.Item.RecUpdOpr
+		data.OperIn = in.Item.OperIn
+	}
+	err := termmodel.SaveRisk(db, data)
+	return &reply, err
+}
+
 func (s *service) ListTermInfo(ctx context.Context, in *pb.ListTermInfoRequest) (*pb.ListTermInfoReply, error) {
 	if in.Page == 0 {
 		in.Page = 1

@@ -11,6 +11,7 @@ import (
 type server struct {
 	ListTermInfoHandler grpctransport.Handler
 	SaveTermHandler     grpctransport.Handler
+	SaveTermRiskHandler grpctransport.Handler
 }
 
 func New(tracer grpctransport.ServerOption) pb.TermServer {
@@ -43,6 +44,17 @@ func New(tracer grpctransport.ServerOption) pb.TermServer {
 		)
 	}
 
+	{
+		endpoint := MakeSaveTermRiskEndpoint(svc)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.SaveTermRiskHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+
 	return svr
 }
 
@@ -64,4 +76,12 @@ func (s *server) SaveTerm(ctx context.Context, in *pb.SaveTermRequest) (*pb.Save
 		return nil, err
 	}
 	return res.(*pb.SaveTermReply), nil
+}
+
+func (s *server) SaveTermRisk(ctx context.Context, in *pb.SaveTermRiskRequest) (*pb.SaveTermRiskReply, error) {
+	_, res, err := s.SaveTermRiskHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveTermRiskReply), nil
 }

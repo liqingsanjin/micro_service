@@ -14,6 +14,15 @@ import (
 type TermEndpoints struct {
 	ListTermInfoEndpoint endpoint.Endpoint
 	SaveTermEndpoint     endpoint.Endpoint
+	SaveTermRiskEndpoint endpoint.Endpoint
+}
+
+func (t *TermEndpoints) SaveTermRisk(ctx context.Context, in *pb.SaveTermRiskRequest) (*pb.SaveTermRiskReply, error) {
+	res, err := t.SaveTermRiskEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveTermRiskReply), nil
 }
 
 func (t *TermEndpoints) SaveTerm(ctx context.Context, in *pb.SaveTermRequest) (*pb.SaveTermReply, error) {
@@ -67,6 +76,19 @@ func NewTermServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *T
 			options...,
 		).Endpoint()
 		endpoints.SaveTermEndpoint = endpoint
+	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Term",
+			"SaveTermRisk",
+			encodeRequest,
+			decodeResponse,
+			pb.SaveTermRiskReply{},
+			options...,
+		).Endpoint()
+		endpoints.SaveTermRiskEndpoint = endpoint
 	}
 
 	return endpoints

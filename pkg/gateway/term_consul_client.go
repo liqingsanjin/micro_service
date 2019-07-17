@@ -49,6 +49,15 @@ func GetTermEndpoints(instancer sd.Instancer, log log.Logger) *TermEndpoints {
 		endpoints.SaveTermEndpoint = retry
 	}
 
+	{
+		factory := termServiceFactory(termservice.MakeSaveTermRiskEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = userBreaker(retry)
+		endpoints.SaveTermRiskEndpoint = retry
+	}
+
 	return &endpoints
 }
 
