@@ -38,3 +38,15 @@ func (PictureMain) TableName() string {
 func SavePicture(db *gorm.DB, data *Picture) error {
 	return db.Create(data).Error
 }
+
+func QueryPicture(db *gorm.DB, query *Picture) ([]*Picture, error) {
+	out := make([]*Picture, 0)
+	err := db.Where(query).Find(&out).Error
+	return out, err
+}
+
+func QueryPicTureMain(db *gorm.DB, query *PictureMain) ([]*PictureMain, error) {
+	out := make([]*PictureMain, 0)
+	err := db.Where(query).Find(&out).Error
+	return out, err
+}

@@ -54,3 +54,15 @@ func (BusinessMain) TableName() string {
 func SaveBusiness(db *gorm.DB, data *Business) error {
 	return db.Create(data).Error
 }
+
+func QueryBusiness(db *gorm.DB, query *Business) ([]*Business, error) {
+	out := make([]*Business, 0)
+	err := db.Where(query).Find(&out).Error
+	return out, err
+}
+
+func QueryBusinessMain(db *gorm.DB, query *BusinessMain) ([]*BusinessMain, error) {
+	out := make([]*BusinessMain, 0)
+	err := db.Where(query).Find(&out).Error
+	return out, err
+}

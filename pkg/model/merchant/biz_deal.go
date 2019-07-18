@@ -33,3 +33,15 @@ func (BizDealMain) TableName() string {
 func SaveBizDeal(db *gorm.DB, data *BizDeal) error {
 	return db.Create(data).Error
 }
+
+func QueryBizDeal(db *gorm.DB, query *BizDeal) ([]*BizDeal, error) {
+	out := make([]*BizDeal, 0)
+	err := db.Where(query).Find(&out).Error
+	return out, err
+}
+
+func QueryBizDealMain(db *gorm.DB, query *BizDealMain) ([]*BizDealMain, error) {
+	out := make([]*BizDealMain, 0)
+	err := db.Where(query).Find(&out).Error
+	return out, err
+}

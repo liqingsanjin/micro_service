@@ -44,3 +44,15 @@ func (BizFeeMain) TableName() string {
 func SaveBizFee(db *gorm.DB, data *BizFee) error {
 	return db.Create(data).Error
 }
+
+func QueryBizFee(db *gorm.DB, query *BizFee) ([]*BizFee, error) {
+	out := make([]*BizFee, 0)
+	err := db.Where(query).Find(&out).Error
+	return out, err
+}
+
+func QueryBizFeeMain(db *gorm.DB, query *BizFeeMain) ([]*BizFeeMain, error) {
+	out := make([]*BizFeeMain, 0)
+	err := db.Where(query).Find(&out).Error
+	return out, err
+}
