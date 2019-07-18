@@ -107,7 +107,7 @@ func finishRegister(ctx context.Context, workerId int, ch <-chan int) {
 
 func institutionRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
 	// 查询机构id
-	instance, err := camundamodel.FindProcessInstanceById(db, in.ProcessInstanceId)
+	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
 	if err != nil {
 		return err
 	}
@@ -195,7 +195,7 @@ func merchantRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) erro
 
 func deleteInstitution(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
 	// 查询机构id
-	instance, err := camundamodel.FindProcessInstanceById(db, in.ProcessInstanceId)
+	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
 	if err != nil {
 		return err
 	}

@@ -12,12 +12,15 @@ import (
 func RegisterWorkflowHandler(engine *gin.Engine, endpoints *WorkflowEndpoints) {
 	group := engine.Group("/workflow")
 
-	group.POST("/start", convertHttpHandlerToGinHandler(httptransport.NewServer(
-		endpoints.StartEndpoint,
-		decodeHttpRequest(&pb.StartWorkflowRequest{}),
-		encodeHttpResponse,
-		httptransport.ServerErrorEncoder(errorEncoder),
-	)))
+	group.POST("/start",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.StartEndpoint,
+			decodeHttpRequest(&pb.StartWorkflowRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+			httptransport.ServerBefore(setUserInfoContext),
+		)))
 
 	group.POST("/listTask",
 		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
@@ -29,17 +32,21 @@ func RegisterWorkflowHandler(engine *gin.Engine, endpoints *WorkflowEndpoints) {
 			httptransport.ServerBefore(setUserInfoContext),
 		)))
 
-	group.POST("/handleTask", convertHttpHandlerToGinHandler(httptransport.NewServer(
-		endpoints.HandleTaskEndpoint,
-		decodeHttpRequest(&pb.HandleTaskRequest{}),
-		encodeHttpResponse,
-		httptransport.ServerErrorEncoder(errorEncoder),
-	)))
+	group.POST("/handleTask",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.HandleTaskEndpoint,
+			decodeHttpRequest(&pb.HandleTaskRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+			httptransport.ServerBefore(setUserInfoContext),
+		)))
 
-	group.POST("/listRemark", convertHttpHandlerToGinHandler(httptransport.NewServer(
-		endpoints.ListRemarkEndpoint,
-		decodeHttpRequest(&pb.ListRemarkRequest{}),
-		encodeHttpResponse,
-		httptransport.ServerErrorEncoder(errorEncoder),
-	)))
+	group.POST("/listRemark",
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.ListRemarkEndpoint,
+			decodeHttpRequest(&pb.ListRemarkRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
 }

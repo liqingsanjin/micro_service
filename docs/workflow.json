@@ -5,6 +5,7 @@
     "title": "workflow api"
   },
   "host": "172.16.7.120:8080",
+  "host": "localhost:8080",
   "schemes": [
     "http"
   ],
@@ -18,6 +19,13 @@
         ],
         "parameters": [
           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization",
+            "type": "string",
+            "required": true
+          },
+          {
             "name": "start",
             "in": "body",
             "required": true,
@@ -26,7 +34,6 @@
               "required": [
                 "type",
                 "name",
-                "userId",
                 "dataId"
               ],
               "properties": {
@@ -37,10 +44,6 @@
                 "name": {
                   "type": "string",
                   "description": "工作流流程名称"
-                },
-                "userId": {
-                  "type": "string",
-                  "description": "用户id"
                 },
                 "dataId": {
                   "type": "string",
@@ -202,6 +205,13 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authorization",
+            "type": "string",
+            "required": true
+          },
           {
             "name": "handleTask",
             "in": "body",

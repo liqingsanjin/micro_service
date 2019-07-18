@@ -10,7 +10,9 @@ type Remark struct {
 	RemarkId   int64     `gorm:"column:remark_id;primary_key"`
 	Comment    string    `gorm:"column:comment"`
 	TaskId     int64     `gorm:"column:task_id"`
-	InstanceId string    `gorm:"column:instance_id"`
+	InstanceId int64     `gorm:"column:instance_id"`
+	UserId     int64     `gorm:"column:user_id"`
+	RoleId     int64     `gorm:"column:role_id"`
 	CreatedAt  time.Time `gorm:"column:created_at"`
 	UpdatedAt  time.Time `gorm:"column:updated_at"`
 }

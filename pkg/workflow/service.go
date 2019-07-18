@@ -34,8 +34,8 @@ func (s *service) ListTask(ctx context.Context, in *pb.ListTaskRequest) (*pb.Lis
 		in.Page = 1
 	}
 	reply := new(pb.ListTaskReply)
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
+	id := getUserIdFromContext(ctx)
+	if id < 0 {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     InvalidParam,
@@ -43,16 +43,7 @@ func (s *service) ListTask(ctx context.Context, in *pb.ListTaskRequest) (*pb.Lis
 		}
 		return reply, nil
 	}
-	ids := md.Get("userid")
-	if !ok || len(ids) == 0 {
-		reply.Err = &pb.Error{
-			Code:        http.StatusBadRequest,
-			Message:     InvalidParam,
-			Description: "找不到用户信息",
-		}
-		return reply, nil
-	}
-	all := common.Enforcer.GetImplicitRolesForUser(fmt.Sprintf("user:%s", ids[0]))
+	all := common.Enforcer.GetImplicitRolesForUser(fmt.Sprintf("user:%d", id))
 	roleIds := make([]int64, 0)
 	for _, a := range all {
 		if strings.HasPrefix(a, "role") {
@@ -73,7 +64,6 @@ func (s *service) ListTask(ctx context.Context, in *pb.ListTaskRequest) (*pb.Lis
 		pbTasks[i] = &pb.TaskField{
 			TaskId:        tasks[i].TaskId,
 			Title:         tasks[i].Title,
-			UserId:        tasks[i].UserId,
 			CurrentNode:   tasks[i].CurrentNode,
 			CamundaTaskId: tasks[i].CamundaTaskId,
 			InstanceId:    tasks[i].InstanceId,
@@ -101,6 +91,15 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 		}
 		return reply, nil
 	}
+	id := getUserIdFromContext(ctx)
+	if id < 0 {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "找不到用户信息",
+		}
+		return reply, nil
+	}
 	db := common.DB.Begin()
 	defer db.Rollback()
 	task, err := camundamodel.FindTaskById(db, in.TaskId)
@@ -120,6 +119,8 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 		Comment:    in.Remark,
 		TaskId:     in.TaskId,
 		InstanceId: task.InstanceId,
+		UserId:     id,
+		RoleId:     task.RoleId,
 	})
 	if err != nil {
 		return nil, err
@@ -150,9 +151,23 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 		return nil, err
 	}
 
+	// 查询 camunda instance id
+	instance, err := camundamodel.FindProcessInstanceById(db, task.InstanceId)
+	if err != nil {
+		return nil, err
+	}
+	if instance == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusInternalServerError,
+			Message:     INTERNAL,
+			Description: "找不到任务流程流程",
+		}
+		return reply, nil
+	}
+
 	// 查询下一个任务
 	listTaskRes, err := client.Task.GetList(ctx, &camundapb.GetListTaskReq{
-		ProcessInstanceId: task.InstanceId,
+		ProcessInstanceId: instance.CamundaInstanceId,
 	})
 	if err != nil {
 		return nil, err
@@ -181,11 +196,10 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 
 			err = camundamodel.SaveTask(db, &camundamodel.Task{
 				Title:         task.Title,
-				UserId:        task.UserId,
-				Role:          role.ID,
+				RoleId:        role.ID,
 				CurrentNode:   t.Name,
 				CamundaTaskId: t.Id,
-				InstanceId:    t.ProcessInstanceId,
+				InstanceId:    instance.InstanceId,
 				EndFlag:       &endFlag,
 			})
 			if err != nil {
@@ -201,7 +215,7 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.StartWorkflowReply, error) {
 	reply := new(pb.StartWorkflowReply)
 
-	if in.Name == "" || in.Type == "" || in.UserId == "" {
+	if in.Name == "" || in.Type == "" {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     InvalidParam,
@@ -209,6 +223,17 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 		}
 		return reply, nil
 	}
+
+	id := getUserIdFromContext(ctx)
+	if id < 0 {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "找不到用户信息",
+		}
+		return reply, nil
+	}
+
 	db := common.DB.Begin()
 	defer db.Rollback()
 
@@ -245,9 +270,10 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 	}
 
 	err = camundamodel.SaveProcessInstance(db, &camundamodel.ProcessInstance{
-		Id:     startProcessInstanceRes.Item.Id,
-		Title:  in.Name,
-		DataId: in.DataId,
+		CamundaInstanceId: startProcessInstanceRes.Item.Id,
+		Title:             in.Name,
+		DataId:            in.DataId,
+		UserId:            id,
 	})
 	if err != nil {
 		return nil, err
@@ -275,6 +301,18 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 		}
 		return reply, nil
 	}
+	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, startProcessInstanceRes.Item.Id)
+	if err != nil {
+		return nil, err
+	}
+	if instance == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusInternalServerError,
+			Message:     INTERNAL,
+			Description: "找不到任务流程流程",
+		}
+		return reply, nil
+	}
 
 	for _, task := range taskListRes.Tasks {
 		var endFlag = false
@@ -292,11 +330,10 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 		}
 		err = camundamodel.SaveTask(db, &camundamodel.Task{
 			Title:         in.Name,
-			UserId:        in.UserId,
-			Role:          role.ID,
+			RoleId:        role.ID,
 			CurrentNode:   task.Name,
 			CamundaTaskId: task.Id,
-			InstanceId:    startProcessInstanceRes.Item.Id,
+			InstanceId:    instance.InstanceId,
 			EndFlag:       &endFlag,
 		})
 		if err != nil {
@@ -345,4 +382,19 @@ func (s *service) ListRemark(ctx context.Context, in *pb.ListRemarkRequest) (*pb
 		Page:  in.Page,
 		Size:  in.Size,
 	}, nil
+}
+
+func getUserIdFromContext(ctx context.Context) int64 {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return -1
+	}
+	ids := md.Get("userid")
+	if !ok || len(ids) == 0 {
+		return -1
+	}
+
+	str := ids[0]
+	id, _ := strconv.ParseInt(str, 10, 64)
+	return id
 }

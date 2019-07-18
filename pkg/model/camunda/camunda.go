@@ -25,20 +25,31 @@ func QueryProcessDefinition(db *gorm.DB, query *ProcessDefinition) ([]*ProcessDe
 }
 
 type ProcessInstance struct {
-	Id        string    `gorm:"column:instance_id;primary_key"`
-	Title     string    `gorm:"column:title"`
-	DataId    string    `gorm:"column:data_id"`
-	CreatedAt time.Time `gorm:"column:created_at"`
-	UpdatedAt time.Time `gorm:"column:updated_at"`
+	InstanceId        int64  `gorm:"column:instance_id;primary_key"`
+	CamundaInstanceId string `gorm:"column:camunda_instance_id;unique"`
+	Title             string `gorm:"column:title"`
+	DataId            string `gorm:"column:data_id"`
+	UserId            int64
+	CreatedAt         time.Time `gorm:"column:created_at"`
+	UpdatedAt         time.Time `gorm:"column:updated_at"`
 }
 
 func (p ProcessInstance) TableName() string {
 	return "TBL_CAMUNDA_PROCESS_INSTANCE"
 }
 
-func FindProcessInstanceById(db *gorm.DB, id string) (*ProcessInstance, error) {
+func FindProcessInstanceById(db *gorm.DB, id int64) (*ProcessInstance, error) {
 	out := new(ProcessInstance)
-	err := db.Take(out, &ProcessInstance{Id: id}).Error
+	err := db.Take(out, &ProcessInstance{InstanceId: id}).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return out, err
+}
+
+func FindProcessInstanceByCamundaInstanceId(db *gorm.DB, id string) (*ProcessInstance, error) {
+	out := new(ProcessInstance)
+	err := db.Take(out, &ProcessInstance{CamundaInstanceId: id}).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}

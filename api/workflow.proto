@@ -14,8 +14,7 @@ service Workflow {
 message StartWorkflowRequest {
     string type = 1;
     string name = 2;
-    string userId = 3;
-    string dataId = 4;
+    string dataId = 3;
 }
 
 message StartWorkflowReply {
@@ -34,7 +33,7 @@ message TaskField {
     string userId = 3;
     string currentNode = 4;
     string camundaTaskId = 5;
-    string instanceId = 6;
+    int64 instanceId = 6;
     bool endFlag = 7;
     string createdAt = 8;
     string updatedAt = 9;

@@ -77,7 +77,7 @@ func NewWorkflowGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *
 			encodeRequest,
 			decodeResponse,
 			pb.HandleTaskReply{},
-			options...,
+			append(options, grpctransport.ClientBefore(setUserInfoMD))...,
 		).Endpoint()
 		endpoints.HandleTaskEndpoint = e
 	}
@@ -90,7 +90,7 @@ func NewWorkflowGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *
 			encodeRequest,
 			decodeResponse,
 			pb.StartWorkflowReply{},
-			options...,
+			append(options, grpctransport.ClientBefore(setUserInfoMD))...,
 		).Endpoint()
 		endpoints.StartEndpoint = e
 	}
