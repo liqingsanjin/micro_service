@@ -13,17 +13,12 @@ import (
 	"golang.org/x/net/context"
 )
 
-//setService .
-type setService struct {
-}
-
-//NewSetService return institution service with grpc registry type.
-func NewSetService() pb.InstitutionServer {
-	return &setService{}
+//service .
+type service struct {
 }
 
 //Download .
-func (s *setService) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHisDownloadReq) (*pb.InstitutionTnxHisDownloadResp, error) {
+func (s *service) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHisDownloadReq) (*pb.InstitutionTnxHisDownloadResp, error) {
 	if in.Name == "" {
 		return nil, ErrDownloadFileNameEmpty
 	}
@@ -48,7 +43,7 @@ func (s *setService) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHi
 }
 
 //GetTfrTrnLogs .
-func (s *setService) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq) (*pb.GetTfrTrnLogsResp, error) {
+func (s *service) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq) (*pb.GetTfrTrnLogsResp, error) {
 	var cond cleartxnM.TfrTrnLog
 
 	cond.MchntCd = in.MchntCd
@@ -108,7 +103,7 @@ func (s *setService) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq)
 }
 
 //GetTfrTrnLog .
-func (s *setService) GetTfrTrnLog(ctx context.Context, in *pb.GetTfrTrnLogReq) (*pb.GetTfrTrnLogResp, error) {
+func (s *service) GetTfrTrnLog(ctx context.Context, in *pb.GetTfrTrnLogReq) (*pb.GetTfrTrnLogResp, error) {
 	trfTrnLogsEnty := cleartxnM.TfrTrnLog{}
 	resp := new(pb.GetTfrTrnLogResp)
 	trfTrnLog, err := trfTrnLogsEnty.GetByKeyRsp(common.DB, in.KeyRsp)
@@ -127,7 +122,7 @@ func (s *setService) GetTfrTrnLog(ctx context.Context, in *pb.GetTfrTrnLogReq) (
 	return resp, nil
 }
 
-func (s *setService) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrTrnLogsReq) (*pb.DownloadTfrTrnLogsResp, error) {
+func (s *service) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrTrnLogsReq) (*pb.DownloadTfrTrnLogsResp, error) {
 	if in.Name == "" {
 		return nil, ErrDownloadFileNameEmpty
 	}
@@ -175,7 +170,7 @@ func (s *setService) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrT
 	return &pb.DownloadTfrTrnLogsResp{Code: true}, nil
 }
 
-func (s *setService) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListInstitutionsReply, error) {
+func (s *service) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListInstitutionsReply, error) {
 	reply := new(pb.ListInstitutionsReply)
 	db := common.DB
 	if in.Page == 0 {
@@ -249,7 +244,7 @@ func (s *setService) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (
 	return reply, nil
 }
 
-func (s *setService) ListInstitutions(ctx context.Context, in *pb.ListInstitutionsRequest) (*pb.ListInstitutionsReply, error) {
+func (s *service) ListInstitutions(ctx context.Context, in *pb.ListInstitutionsRequest) (*pb.ListInstitutionsReply, error) {
 	if in.Page == 0 {
 		in.Page = 1
 	}
@@ -446,7 +441,7 @@ func (s *setService) ListInstitutions(ctx context.Context, in *pb.ListInstitutio
 	}
 }
 
-func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitutionRequest) (*pb.SaveInstitutionReply, error) {
+func (s *service) SaveInstitution(ctx context.Context, in *pb.SaveInstitutionRequest) (*pb.SaveInstitutionReply, error) {
 	var reply pb.SaveInstitutionReply
 	if in.Item == nil {
 		reply.Err = &pb.Error{
@@ -508,7 +503,7 @@ func (s *setService) SaveInstitution(ctx context.Context, in *pb.SaveInstitution
 	return &reply, nil
 }
 
-func (s *setService) SaveInstitutionFee(ctx context.Context, in *pb.SaveInstitutionFeeRequest) (*pb.SaveInstitutionFeeReply, error) {
+func (s *service) SaveInstitutionFee(ctx context.Context, in *pb.SaveInstitutionFeeRequest) (*pb.SaveInstitutionFeeReply, error) {
 	var reply pb.SaveInstitutionFeeReply
 	if in.Item == nil {
 		reply.Err = &pb.Error{
@@ -561,7 +556,7 @@ func (s *setService) SaveInstitutionFee(ctx context.Context, in *pb.SaveInstitut
 	return &reply, nil
 }
 
-func (s *setService) SaveInstitutionControl(ctx context.Context, in *pb.SaveInstitutionControlRequest) (*pb.SaveInstitutionControlReply, error) {
+func (s *service) SaveInstitutionControl(ctx context.Context, in *pb.SaveInstitutionControlRequest) (*pb.SaveInstitutionControlReply, error) {
 	var reply pb.SaveInstitutionControlReply
 	if in.Item == nil {
 		reply.Err = &pb.Error{
@@ -603,7 +598,7 @@ func (s *setService) SaveInstitutionControl(ctx context.Context, in *pb.SaveInst
 	return &reply, nil
 }
 
-func (s *setService) SaveInstitutionCash(ctx context.Context, in *pb.SaveInstitutionCashRequest) (*pb.SaveInstitutionCashReply, error) {
+func (s *service) SaveInstitutionCash(ctx context.Context, in *pb.SaveInstitutionCashRequest) (*pb.SaveInstitutionCashReply, error) {
 	var reply pb.SaveInstitutionCashReply
 	if in.Item == nil {
 		reply.Err = &pb.Error{

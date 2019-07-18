@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package pb;
+
+import "error.proto";
+
+service Product {
+    rpc ListTransMap(ListTransMapRequest) returns (ListTransMapReply) {}
+}
+
+message ProductBizTransMapField {
+    string ProdCd      = 1;
+    string BizCd       = 2;
+    string TransCd     = 3;
+    string UpdateDate  = 4;
+    string Description = 5;
+    string ResvFld1    = 6;
+    string ResvFld2    = 7;
+    string ResvFld3    = 8;
+}
+
+message ProductBizFeeMapField {
+    string ProdCd      = 1;
+    string BizCd       = 2;
+    string SubBizCd    = 3;
+    string UpdateDate  = 4;
+    string Description = 5;
+    string ResvFld1    = 6;
+    string ResvFld2    = 7;
+    string ResvFld3    = 8;
+}
+
+message ListTransMapRequest {
+    ProductBizTransMapField item = 1;
+}
+
+message ListTransMapReply {
+    repeated ProductBizTransMapField items = 1;
+    error err = 2;
+}

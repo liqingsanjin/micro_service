@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 	"time"
-	merchantservice "userService/pkg/mechantservice"
+	merchantservice "userService/pkg/merchantservice"
 	"userService/pkg/pb"
 
 	"github.com/afex/hystrix-go/hystrix"

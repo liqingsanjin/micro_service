@@ -5,7 +5,7 @@ import (
 	"net"
 	"os"
 	"runtime"
-	merchantservice "userService/pkg/mechantservice"
+	merchantservice "userService/pkg/merchantservice"
 
 	"github.com/go-kit/kit/sd/consul"
 	"github.com/go-kit/kit/tracing/zipkin"

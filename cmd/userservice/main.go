@@ -9,7 +9,8 @@ import (
 	"time"
 	"userService/pkg/camunda"
 	"userService/pkg/institutionservice"
-	merchantservice "userService/pkg/mechantservice"
+	"userService/pkg/merchantservice"
+	"userService/pkg/productservice"
 	"userService/pkg/staticservice"
 	"userService/pkg/task"
 	"userService/pkg/termservice"
@@ -255,9 +256,10 @@ func runGRPCServer(addr string, tracer grpctransport.ServerOption) error {
 	svr := grpc.NewServer()
 	pb.RegisterUserServer(svr, userservice.New(tracer))
 	pb.RegisterWorkflowServer(svr, workflow.New(tracer))
-	pb.RegisterInstitutionServer(svr, institutionservice.NewGRPCServer())
+	pb.RegisterInstitutionServer(svr, institutionservice.New(tracer))
 	pb.RegisterMerchantServer(svr, merchantservice.New(tracer))
 	pb.RegisterTermServer(svr, termservice.New(tracer))
-	pb.RegisterStaticServer(svr, staticservice.NewGRPCServer())
+	pb.RegisterStaticServer(svr, staticservice.New(tracer))
+	pb.RegisterProductServer(svr, productservice.New(tracer))
 	return svr.Serve(l)
 }

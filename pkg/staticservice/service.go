@@ -32,17 +32,17 @@ var MyMap = StaticMapData{
 	insInf:              make([]*static.InsInf, 0),
 }
 
-//setService .
-type setService struct {
+//service .
+type service struct {
 }
 
-//NewSetService return institution service with grpc registry type.
-func NewSetService() pb.StaticServer {
-	return &setService{}
+//Newservice return institution service with grpc registry type.
+func Newservice() pb.StaticServer {
+	return &service{}
 }
 
 //Download .
-func (s *setService) SyncData(ctx context.Context, in *pb.StaticSyncDataReq) (*pb.StaticSyncDataResp, error) {
+func (s *service) SyncData(ctx context.Context, in *pb.StaticSyncDataReq) (*pb.StaticSyncDataResp, error) {
 	dicItems := static.GetDictionaryItem(common.DB)
 	insProdBizFeeMapInfs := static.GetInsProdBizFeeMapInf(common.DB)
 	prodBizTransMaps := static.GetProdBizTransMap(common.DB)
@@ -96,7 +96,7 @@ func (s *setService) SyncData(ctx context.Context, in *pb.StaticSyncDataReq) (*p
 	return &pb.StaticSyncDataResp{Result: true}, nil
 }
 
-func (s *setService) GetDictionaryItem(ctx context.Context, in *pb.StaticGetDictionaryItemReq) (*pb.StaticGetDictionaryItemResp, error) {
+func (s *service) GetDictionaryItem(ctx context.Context, in *pb.StaticGetDictionaryItemReq) (*pb.StaticGetDictionaryItemResp, error) {
 
 	dicTypeCondition := make([]string, 0)
 	dicNameCondition := make([]string, 0)
@@ -125,7 +125,7 @@ func (s *setService) GetDictionaryItem(ctx context.Context, in *pb.StaticGetDict
 
 }
 
-func (s *setService) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticGetDicByProdAndBizReq) (*pb.StaticGetDicByProdAndBizResp, error) {
+func (s *service) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticGetDicByProdAndBizReq) (*pb.StaticGetDicByProdAndBizResp, error) {
 	if in.ProdCd == "" {
 		return &pb.StaticGetDicByProdAndBizResp{Err: &pb.Error{
 			Code:        http.StatusBadRequest,
@@ -182,7 +182,7 @@ func (s *setService) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticGetDic
 
 }
 
-func (s *setService) GetDicByInsCmpCd(ctx context.Context, in *pb.StaticGetDicByInsCmpCdReq) (*pb.StaticGetDicByInsCmpCdResp, error) {
+func (s *service) GetDicByInsCmpCd(ctx context.Context, in *pb.StaticGetDicByInsCmpCdReq) (*pb.StaticGetDicByInsCmpCdResp, error) {
 	if in.InsCompanyCd == "" {
 		return &pb.StaticGetDicByInsCmpCdResp{Err: &pb.Error{
 			Code:        http.StatusBadRequest,
@@ -209,7 +209,7 @@ func (s *setService) GetDicByInsCmpCd(ctx context.Context, in *pb.StaticGetDicBy
 	return &pb.StaticGetDicByInsCmpCdResp{Items: items}, nil
 }
 
-func (s *setService) CheckValues(ctx context.Context, in *pb.StaticCheckValuesReq) (*pb.StaticCheckValuesResp, error) {
+func (s *service) CheckValues(ctx context.Context, in *pb.StaticCheckValuesReq) (*pb.StaticCheckValuesResp, error) {
 	if in.ProdCd == "" && in.BizCd == "" && in.TransCd == "" && in.InsCompanyCd == "" && in.FwdInsIdCd == "" {
 		return &pb.StaticCheckValuesResp{Err: &pb.Error{
 			Code:        http.StatusBadRequest,
@@ -344,7 +344,7 @@ func includes(arr []string, val string) bool {
 	return false
 }
 
-func (s *setService) GetDictionaryLayerItem(ctx context.Context, in *pb.GetDictionaryLayerItemReq) (*pb.GetDictionaryLayerItemResp, error) {
+func (s *service) GetDictionaryLayerItem(ctx context.Context, in *pb.GetDictionaryLayerItemReq) (*pb.GetDictionaryLayerItemResp, error) {
 	out := make([]*pb.DictionaryLayerItem, 0)
 	db := common.DB
 	items := static.GetDictionaryLayerItem(db, &static.DictionaryLayerItem{
@@ -369,7 +369,7 @@ func (s *setService) GetDictionaryLayerItem(ctx context.Context, in *pb.GetDicti
 	}, nil
 }
 
-func (s *setService) GetDictionaryItemByPk(ctx context.Context, in *pb.GetDictionaryItemByPkReq) (*pb.GetDictionaryItemByPkResp, error) {
+func (s *service) GetDictionaryItemByPk(ctx context.Context, in *pb.GetDictionaryItemByPkReq) (*pb.GetDictionaryItemByPkResp, error) {
 	reply := new(pb.GetDictionaryItemByPkResp)
 	if in.DicCode == "" || in.DicType == "" {
 		reply.Err = &pb.Error{
