@@ -1,5 +1,7 @@
 package product
 
+import "github.com/jinzhu/gorm"
+
 type Fee struct {
 	ProdCd      string `gorm:"column:PROD_CD"`
 	BizCd       string `gorm:"column:BIZ_CD"`
@@ -13,4 +15,9 @@ type Fee struct {
 
 func (Fee) TableName() string {
 	return "TBL_PROD_BIZ_FEE_MAP"
+}
+func ListFee(db *gorm.DB, query *Fee) ([]*Fee, error) {
+	out := make([]*Fee, 0)
+	err := db.Where(query).Find(&out).Error
+	return out, err
 }

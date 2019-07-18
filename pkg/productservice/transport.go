@@ -12,3 +12,9 @@ func MakeListTransMapEndpoint(service pb.ProductServer) endpoint.Endpoint {
 		return service.ListTransMap(ctx, request.(*pb.ListTransMapRequest))
 	}
 }
+
+func MakeListFeeMapEndpoint(service pb.ProductServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.ListFeeMap(ctx, request.(*pb.ListFeeMapRequest))
+	}
+}

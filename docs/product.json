@@ -5,7 +5,6 @@
     "title": "product api"
   },
   "host": "172.16.7.120:8080",
-  "host": "localhost:8080",
   "schemes": [
     "http"
   ],
@@ -29,28 +28,28 @@
                   "type": "object",
                   "description": "查询条件",
                   "properties": {
-                    "ProdCd": {
+                    "prodCd": {
                       "type": "string"
                     },
-                    "BizCd": {
+                    "bizCd": {
                       "type": "string"
                     },
-                    "TransCd": {
+                    "transCd": {
                       "type": "string"
                     },
-                    "UpdateDate": {
+                    "updateDate": {
                       "type": "string"
                     },
-                    "Description": {
+                    "description": {
                       "type": "string"
                     },
-                    "ResvFld1": {
+                    "resvFld1": {
                       "type": "string"
                     },
-                    "ResvFld2": {
+                    "resvFld2": {
                       "type": "string"
                     },
-                    "ResvFld3": {
+                    "resvFld3": {
                       "type": "string"
                     }
                   }
@@ -66,84 +65,87 @@
               "application/json": {
                 "items": [
                   {
-                    "ProdCd": "1000",
-                    "BizCd": "0000000",
-                    "TransCd": "1001",
-                    "UpdateDate": "2016-04-13 13:58:34",
-                    "Description": "",
-                    "ResvFld1": "",
-                    "ResvFld2": "",
-                    "ResvFld3": ""
-                  },
+                    "prodCd": "1000",
+                    "bizCd": "0000000",
+                    "transCd": "1001",
+                    "updateDate": "2016-04-13 13:58:34",
+                    "description": "",
+                    "resvFld1": "",
+                    "resvFld2": "",
+                    "resvFld3": ""
+                  }
+                ],
+                "err": null
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product/listFeeMap": {
+      "post": {
+        "operationId": "listFeeMap",
+        "summary": "prod_biz_fee_map列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "listFeeMap",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "description": "查询条件",
+                  "properties": {
+                    "prodCd": {
+                      "type": "string"
+                    },
+                    "bizCd": {
+                      "type": "string"
+                    },
+                    "subBizCd": {
+                      "type": "string"
+                    },
+                    "updateDate": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "resvFld1": {
+                      "type": "string"
+                    },
+                    "resvFld2": {
+                      "type": "string"
+                    },
+                    "resvFld3": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
                   {
-                    "ProdCd": "1000",
-                    "BizCd": "0000000",
-                    "TransCd": "1011",
-                    "UpdateDate": "2016-04-13 13:58:34",
-                    "Description": "",
-                    "ResvFld1": "",
-                    "ResvFld2": "",
-                    "ResvFld3": ""
-                  },
-                  {
-                    "ProdCd": "1000",
-                    "BizCd": "0000000",
-                    "TransCd": "1021",
-                    "UpdateDate": "2016-04-13 13:58:34",
-                    "Description": "",
-                    "ResvFld1": "",
-                    "ResvFld2": "",
-                    "ResvFld3": ""
-                  },
-                  {
-                    "ProdCd": "1000",
-                    "BizCd": "0000000",
-                    "TransCd": "1031",
-                    "UpdateDate": "2016-04-13 13:58:34",
-                    "Description": "",
-                    "ResvFld1": "",
-                    "ResvFld2": "",
-                    "ResvFld3": ""
-                  },
-                  {
-                    "ProdCd": "1000",
-                    "BizCd": "0000000",
-                    "TransCd": "2011",
-                    "UpdateDate": "2016-04-13 13:58:34",
-                    "Description": "",
-                    "ResvFld1": "",
-                    "ResvFld2": "",
-                    "ResvFld3": ""
-                  },
-                  {
-                    "ProdCd": "1000",
-                    "BizCd": "0000000",
-                    "TransCd": "2021",
-                    "UpdateDate": "2016-04-13 13:58:34",
-                    "Description": "",
-                    "ResvFld1": "",
-                    "ResvFld2": "",
-                    "ResvFld3": ""
-                  },
-                  {
-                    "ProdCd": "1000",
-                    "BizCd": "0000000",
-                    "TransCd": "2031",
-                    "UpdateDate": "2016-04-13 13:58:34",
-                    "Description": "",
-                    "ResvFld1": "",
-                    "ResvFld2": "",
-                    "ResvFld3": ""
-                  },
-                  {
-                    "ProdCd": "1000",
-                    "BizCd": "0000000",
-                    "TransCd": "3011",
-                    "UpdateDate": "2016-04-13 13:58:34",
-                    "Description": "",
-                    "ResvFld1": "",
-                    "ResvFld2": "",
-                    "ResvFld3": ""
+                    "prodCd": "1000",
+                    "bizCd": "0000000",
+                    "subBizCd": "0001000",
+                    "updateDate": "2016-04-13 14:19:20",
+                    "description": "",
+                    "resvFld1": "",
+                    "resvFld2": "",
+                    "resvFld3": ""
                   }
                 ],
                 "err": null

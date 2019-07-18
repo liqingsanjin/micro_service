@@ -6,6 +6,7 @@ import "error.proto";
 
 service Product {
     rpc ListTransMap(ListTransMapRequest) returns (ListTransMapReply) {}
+    rpc ListFeeMap(ListFeeMapRequest) returns (ListFeeMapReply) {}
 }
 
 message ProductBizTransMapField {
@@ -36,5 +37,14 @@ message ListTransMapRequest {
 
 message ListTransMapReply {
     repeated ProductBizTransMapField items = 1;
+    error err = 2;
+}
+
+message ListFeeMapRequest {
+    ProductBizFeeMapField item = 1;
+}
+
+message ListFeeMapReply {
+    repeated ProductBizFeeMapField items = 1;
     error err = 2;
 }

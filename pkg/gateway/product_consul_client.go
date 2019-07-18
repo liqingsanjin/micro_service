@@ -31,6 +31,7 @@ func GetProductEndpoints(instancer sd.Instancer, log log.Logger) *ProductEndpoin
 		SleepWindow:           10000,
 	})
 	breaker := circuitbreaker.Hystrix(productBreaker)
+
 	{
 		factory := productServiceFactory(productservice.MakeListTransMapEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
@@ -38,6 +39,15 @@ func GetProductEndpoints(instancer sd.Instancer, log log.Logger) *ProductEndpoin
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
 		retry = breaker(retry)
 		endpoints.ListTransMapEndpoint = retry
+	}
+
+	{
+		factory := productServiceFactory(productservice.MakeListFeeMapEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = breaker(retry)
+		endpoints.ListFeeMapEndpoint = retry
 	}
 
 	return endpoints

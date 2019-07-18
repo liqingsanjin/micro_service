@@ -16,4 +16,11 @@ func RegisterProductHandler(engine *gin.Engine, endpoints *ProductEndpoints) {
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
+
+	group.POST("/listFeeMap", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.ListFeeMapEndpoint,
+		decodeHttpRequest(&pb.ListFeeMapRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
 }

@@ -12,6 +12,15 @@ import (
 
 type ProductEndpoints struct {
 	ListTransMapEndpoint endpoint.Endpoint
+	ListFeeMapEndpoint   endpoint.Endpoint
+}
+
+func (p *ProductEndpoints) ListFeeMap(ctx context.Context, in *pb.ListFeeMapRequest) (*pb.ListFeeMapReply, error) {
+	res, err := p.ListFeeMapEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.ListFeeMapReply), nil
 }
 
 func (p *ProductEndpoints) ListTransMap(ctx context.Context, in *pb.ListTransMapRequest) (*pb.ListTransMapReply, error) {
@@ -28,6 +37,7 @@ func NewProductServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption)
 	if tracer != nil {
 		options = append(options, tracer)
 	}
+
 	{
 		e := grpctransport.NewClient(
 			conn,
@@ -39,6 +49,19 @@ func NewProductServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption)
 			options...,
 		).Endpoint()
 		endpoints.ListTransMapEndpoint = e
+	}
+
+	{
+		e := grpctransport.NewClient(
+			conn,
+			"pb.Product",
+			"ListFeeMap",
+			encodeRequest,
+			decodeResponse,
+			pb.ListFeeMapReply{},
+			options...,
+		).Endpoint()
+		endpoints.ListFeeMapEndpoint = e
 	}
 
 	return endpoints

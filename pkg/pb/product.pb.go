@@ -25,14 +25,14 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 type ProductBizTransMapField struct {
-	ProdCd               string   `protobuf:"bytes,1,opt,name=ProdCd,proto3" json:"ProdCd,omitempty"`
-	BizCd                string   `protobuf:"bytes,2,opt,name=BizCd,proto3" json:"BizCd,omitempty"`
-	TransCd              string   `protobuf:"bytes,3,opt,name=TransCd,proto3" json:"TransCd,omitempty"`
-	UpdateDate           string   `protobuf:"bytes,4,opt,name=UpdateDate,proto3" json:"UpdateDate,omitempty"`
-	Description          string   `protobuf:"bytes,5,opt,name=Description,proto3" json:"Description,omitempty"`
-	ResvFld1             string   `protobuf:"bytes,6,opt,name=ResvFld1,proto3" json:"ResvFld1,omitempty"`
-	ResvFld2             string   `protobuf:"bytes,7,opt,name=ResvFld2,proto3" json:"ResvFld2,omitempty"`
-	ResvFld3             string   `protobuf:"bytes,8,opt,name=ResvFld3,proto3" json:"ResvFld3,omitempty"`
+	ProdCd               string   `protobuf:"bytes,1,opt,name=prodCd,proto3" json:"prodCd,omitempty"`
+	BizCd                string   `protobuf:"bytes,2,opt,name=bizCd,proto3" json:"bizCd,omitempty"`
+	TransCd              string   `protobuf:"bytes,3,opt,name=transCd,proto3" json:"transCd,omitempty"`
+	UpdateDate           string   `protobuf:"bytes,4,opt,name=updateDate,proto3" json:"updateDate,omitempty"`
+	Description          string   `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	ResvFld1             string   `protobuf:"bytes,6,opt,name=resvFld1,proto3" json:"resvFld1,omitempty"`
+	ResvFld2             string   `protobuf:"bytes,7,opt,name=resvFld2,proto3" json:"resvFld2,omitempty"`
+	ResvFld3             string   `protobuf:"bytes,8,opt,name=resvFld3,proto3" json:"resvFld3,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -120,14 +120,14 @@ func (m *ProductBizTransMapField) GetResvFld3() string {
 }
 
 type ProductBizFeeMapField struct {
-	ProdCd               string   `protobuf:"bytes,1,opt,name=ProdCd,proto3" json:"ProdCd,omitempty"`
-	BizCd                string   `protobuf:"bytes,2,opt,name=BizCd,proto3" json:"BizCd,omitempty"`
-	SubBizCd             string   `protobuf:"bytes,3,opt,name=SubBizCd,proto3" json:"SubBizCd,omitempty"`
-	UpdateDate           string   `protobuf:"bytes,4,opt,name=UpdateDate,proto3" json:"UpdateDate,omitempty"`
-	Description          string   `protobuf:"bytes,5,opt,name=Description,proto3" json:"Description,omitempty"`
-	ResvFld1             string   `protobuf:"bytes,6,opt,name=ResvFld1,proto3" json:"ResvFld1,omitempty"`
-	ResvFld2             string   `protobuf:"bytes,7,opt,name=ResvFld2,proto3" json:"ResvFld2,omitempty"`
-	ResvFld3             string   `protobuf:"bytes,8,opt,name=ResvFld3,proto3" json:"ResvFld3,omitempty"`
+	ProdCd               string   `protobuf:"bytes,1,opt,name=prodCd,proto3" json:"prodCd,omitempty"`
+	BizCd                string   `protobuf:"bytes,2,opt,name=bizCd,proto3" json:"bizCd,omitempty"`
+	SubBizCd             string   `protobuf:"bytes,3,opt,name=subBizCd,proto3" json:"subBizCd,omitempty"`
+	UpdateDate           string   `protobuf:"bytes,4,opt,name=updateDate,proto3" json:"updateDate,omitempty"`
+	Description          string   `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	ResvFld1             string   `protobuf:"bytes,6,opt,name=resvFld1,proto3" json:"resvFld1,omitempty"`
+	ResvFld2             string   `protobuf:"bytes,7,opt,name=resvFld2,proto3" json:"resvFld2,omitempty"`
+	ResvFld3             string   `protobuf:"bytes,8,opt,name=resvFld3,proto3" json:"resvFld3,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -300,38 +300,129 @@ func (m *ListTransMapReply) GetErr() *Error {
 	return nil
 }
 
+type ListFeeMapRequest struct {
+	Item                 *ProductBizFeeMapField `protobuf:"bytes,1,opt,name=item,proto3" json:"item,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}               `json:"-"`
+	XXX_unrecognized     []byte                 `json:"-"`
+	XXX_sizecache        int32                  `json:"-"`
+}
+
+func (m *ListFeeMapRequest) Reset()         { *m = ListFeeMapRequest{} }
+func (m *ListFeeMapRequest) String() string { return proto.CompactTextString(m) }
+func (*ListFeeMapRequest) ProtoMessage()    {}
+func (*ListFeeMapRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f0fd8b59378f44a5, []int{4}
+}
+
+func (m *ListFeeMapRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListFeeMapRequest.Unmarshal(m, b)
+}
+func (m *ListFeeMapRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListFeeMapRequest.Marshal(b, m, deterministic)
+}
+func (m *ListFeeMapRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListFeeMapRequest.Merge(m, src)
+}
+func (m *ListFeeMapRequest) XXX_Size() int {
+	return xxx_messageInfo_ListFeeMapRequest.Size(m)
+}
+func (m *ListFeeMapRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListFeeMapRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListFeeMapRequest proto.InternalMessageInfo
+
+func (m *ListFeeMapRequest) GetItem() *ProductBizFeeMapField {
+	if m != nil {
+		return m.Item
+	}
+	return nil
+}
+
+type ListFeeMapReply struct {
+	Items                []*ProductBizFeeMapField `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Err                  *Error                   `protobuf:"bytes,2,opt,name=err,proto3" json:"err,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
+	XXX_unrecognized     []byte                   `json:"-"`
+	XXX_sizecache        int32                    `json:"-"`
+}
+
+func (m *ListFeeMapReply) Reset()         { *m = ListFeeMapReply{} }
+func (m *ListFeeMapReply) String() string { return proto.CompactTextString(m) }
+func (*ListFeeMapReply) ProtoMessage()    {}
+func (*ListFeeMapReply) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f0fd8b59378f44a5, []int{5}
+}
+
+func (m *ListFeeMapReply) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListFeeMapReply.Unmarshal(m, b)
+}
+func (m *ListFeeMapReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListFeeMapReply.Marshal(b, m, deterministic)
+}
+func (m *ListFeeMapReply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListFeeMapReply.Merge(m, src)
+}
+func (m *ListFeeMapReply) XXX_Size() int {
+	return xxx_messageInfo_ListFeeMapReply.Size(m)
+}
+func (m *ListFeeMapReply) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListFeeMapReply.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListFeeMapReply proto.InternalMessageInfo
+
+func (m *ListFeeMapReply) GetItems() []*ProductBizFeeMapField {
+	if m != nil {
+		return m.Items
+	}
+	return nil
+}
+
+func (m *ListFeeMapReply) GetErr() *Error {
+	if m != nil {
+		return m.Err
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*ProductBizTransMapField)(nil), "pb.ProductBizTransMapField")
 	proto.RegisterType((*ProductBizFeeMapField)(nil), "pb.ProductBizFeeMapField")
 	proto.RegisterType((*ListTransMapRequest)(nil), "pb.ListTransMapRequest")
 	proto.RegisterType((*ListTransMapReply)(nil), "pb.ListTransMapReply")
+	proto.RegisterType((*ListFeeMapRequest)(nil), "pb.ListFeeMapRequest")
+	proto.RegisterType((*ListFeeMapReply)(nil), "pb.ListFeeMapReply")
 }
 
 func init() { proto.RegisterFile("product.proto", fileDescriptor_f0fd8b59378f44a5) }
 
 var fileDescriptor_f0fd8b59378f44a5 = []byte{
-	// 321 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x92, 0x4f, 0x4f, 0xc2, 0x40,
-	0x10, 0xc5, 0x2d, 0xff, 0x99, 0xea, 0xc1, 0x51, 0x64, 0x53, 0x12, 0x43, 0x38, 0x79, 0xc2, 0x50,
-	0xbe, 0x80, 0x01, 0xd2, 0x8b, 0x9a, 0x98, 0xaa, 0x1f, 0xa0, 0x65, 0xe7, 0xb0, 0x49, 0xa5, 0xeb,
-	0x76, 0x31, 0x81, 0x2f, 0xee, 0xd5, 0xec, 0x2e, 0x60, 0x1b, 0x35, 0x26, 0x9e, 0x3c, 0xbe, 0xf7,
-	0x7b, 0x33, 0xcd, 0xeb, 0x0e, 0x9c, 0x48, 0x95, 0xf3, 0xf5, 0x52, 0x8f, 0xa5, 0xca, 0x75, 0x8e,
-	0x35, 0x99, 0x06, 0x3e, 0x29, 0x95, 0x2b, 0x67, 0x8c, 0xde, 0x3d, 0xe8, 0x3f, 0xb8, 0xc8, 0x4c,
-	0x6c, 0x9f, 0x54, 0xb2, 0x2a, 0xee, 0x13, 0x19, 0x09, 0xca, 0x38, 0x5e, 0x40, 0xcb, 0xa0, 0x39,
-	0x67, 0xde, 0xd0, 0xbb, 0xea, 0xc6, 0x3b, 0x85, 0xe7, 0xd0, 0x9c, 0x89, 0xed, 0x9c, 0xb3, 0x9a,
-	0xb5, 0x9d, 0x40, 0x06, 0x6d, 0x3b, 0x3e, 0xe7, 0xac, 0x6e, 0xfd, 0xbd, 0xc4, 0x4b, 0x80, 0x67,
-	0xc9, 0x13, 0x4d, 0x8b, 0x44, 0x13, 0x6b, 0x58, 0x58, 0x72, 0x70, 0x08, 0xfe, 0x82, 0x8a, 0xa5,
-	0x12, 0x52, 0x8b, 0x7c, 0xc5, 0x9a, 0x36, 0x50, 0xb6, 0x30, 0x80, 0x4e, 0x4c, 0xc5, 0x5b, 0x94,
-	0xf1, 0x09, 0x6b, 0x59, 0x7c, 0xd0, 0x25, 0x16, 0xb2, 0x76, 0x85, 0x85, 0x25, 0x36, 0x65, 0x9d,
-	0x0a, 0x9b, 0x9a, 0xe6, 0xbd, 0xcf, 0xe6, 0x11, 0xd1, 0x1f, 0x7b, 0x07, 0xd0, 0x79, 0x5c, 0xa7,
-	0x0e, 0xb8, 0xe2, 0x07, 0xfd, 0x4f, 0x9b, 0x47, 0x70, 0x76, 0x27, 0x0a, 0xbd, 0x7f, 0xec, 0x98,
-	0x5e, 0xd7, 0x54, 0x68, 0xbc, 0x86, 0x86, 0xd0, 0xf4, 0x62, 0x4b, 0xfb, 0xe1, 0x60, 0x2c, 0xd3,
-	0xf1, 0x0f, 0x97, 0x11, 0xdb, 0xe0, 0x68, 0x09, 0xa7, 0xd5, 0x3d, 0x32, 0xdb, 0xe0, 0x04, 0x9a,
-	0x06, 0x16, 0xcc, 0x1b, 0xd6, 0x7f, 0x5b, 0xe3, 0x92, 0x38, 0x80, 0x3a, 0x29, 0x65, 0xff, 0xaa,
-	0x1f, 0x76, 0xcd, 0x80, 0xbd, 0xd0, 0xd8, 0xb8, 0xe1, 0x2d, 0xb4, 0x77, 0xe3, 0x78, 0x03, 0xc7,
-	0xe5, 0xef, 0x61, 0xdf, 0x44, 0xbf, 0x69, 0x12, 0xf4, 0xbe, 0x02, 0x99, 0x6d, 0x46, 0x47, 0x69,
-	0xcb, 0x1e, 0xfd, 0xf4, 0x23, 0x00, 0x00, 0xff, 0xff, 0xa7, 0xce, 0xd5, 0x2a, 0x16, 0x03, 0x00,
-	0x00,
+	// 374 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x53, 0x4d, 0x4b, 0xc3, 0x40,
+	0x10, 0x35, 0xfd, 0xee, 0x44, 0x11, 0xa7, 0xd6, 0xae, 0x29, 0x48, 0xc9, 0xc9, 0x8b, 0x2d, 0x4d,
+	0x6f, 0x9e, 0xa4, 0x95, 0x9c, 0x14, 0x24, 0x78, 0x97, 0xa4, 0xbb, 0x87, 0x40, 0x6c, 0xd6, 0xcd,
+	0x46, 0x68, 0xff, 0x80, 0x3f, 0xd9, 0xab, 0xec, 0xa6, 0x1f, 0x59, 0xbf, 0xf1, 0xe4, 0x71, 0xde,
+	0x7b, 0x33, 0x79, 0x6f, 0x66, 0x03, 0x07, 0x5c, 0xa4, 0x34, 0x9f, 0xcb, 0x21, 0x17, 0xa9, 0x4c,
+	0xb1, 0xc2, 0x23, 0xc7, 0x66, 0x42, 0xa4, 0xa2, 0x00, 0xdc, 0x57, 0x0b, 0x7a, 0x77, 0x85, 0x64,
+	0x1a, 0xaf, 0xee, 0x45, 0xb8, 0xc8, 0x6e, 0x43, 0xee, 0xc7, 0x2c, 0xa1, 0x78, 0x02, 0x0d, 0xd5,
+	0x3d, 0xa3, 0xc4, 0x1a, 0x58, 0xe7, 0xed, 0x60, 0x5d, 0xe1, 0x31, 0xd4, 0xa3, 0x78, 0x35, 0xa3,
+	0xa4, 0xa2, 0xe1, 0xa2, 0x40, 0x02, 0x4d, 0xa9, 0xda, 0x67, 0x94, 0x54, 0x35, 0xbe, 0x29, 0xf1,
+	0x0c, 0x20, 0xe7, 0x34, 0x94, 0xec, 0x3a, 0x94, 0x8c, 0xd4, 0x34, 0x59, 0x42, 0x70, 0x00, 0x36,
+	0x65, 0xd9, 0x5c, 0xc4, 0x5c, 0xc6, 0xe9, 0x82, 0xd4, 0xb5, 0xa0, 0x0c, 0xa1, 0x03, 0x2d, 0xc1,
+	0xb2, 0x67, 0x3f, 0xa1, 0x63, 0xd2, 0xd0, 0xf4, 0xb6, 0x2e, 0x71, 0x1e, 0x69, 0x1a, 0x9c, 0x57,
+	0xe2, 0x26, 0xa4, 0x65, 0x70, 0x13, 0x95, 0xbc, 0xbb, 0x4b, 0xee, 0x33, 0xf6, 0xc7, 0xdc, 0x0e,
+	0xb4, 0xb2, 0x3c, 0x9a, 0x6a, 0xa2, 0x08, 0xbe, 0xad, 0xff, 0x69, 0x72, 0x1f, 0x3a, 0x37, 0x71,
+	0x26, 0x37, 0xc7, 0x0e, 0xd8, 0x53, 0xce, 0x32, 0x89, 0x23, 0xa8, 0xc5, 0x92, 0x3d, 0xea, 0xd0,
+	0xb6, 0xd7, 0x1f, 0xf2, 0x68, 0xf8, 0xc5, 0xcb, 0x08, 0xb4, 0xd0, 0x9d, 0xc3, 0x91, 0x39, 0x87,
+	0x27, 0x4b, 0x1c, 0x43, 0x5d, 0x91, 0x19, 0xb1, 0x06, 0xd5, 0x9f, 0xc6, 0x14, 0x4a, 0xec, 0x43,
+	0x95, 0x09, 0xa1, 0xb7, 0x6a, 0x7b, 0x6d, 0xd5, 0xa0, 0x5f, 0x68, 0xa0, 0x50, 0x77, 0x5a, 0x7c,
+	0xa4, 0xb8, 0xcf, 0xc6, 0xea, 0x85, 0x61, 0xf5, 0xd4, 0xfc, 0x46, 0xe9, 0x94, 0x6b, 0xa3, 0x0f,
+	0x70, 0x58, 0x9e, 0xa1, 0x6c, 0x8e, 0x4c, 0x9b, 0xdf, 0x8c, 0xf8, 0x85, 0x49, 0xef, 0xc5, 0x82,
+	0xe6, 0xba, 0x1b, 0xaf, 0x60, 0xbf, 0xbc, 0x15, 0xec, 0x29, 0xed, 0x27, 0xfb, 0x76, 0xba, 0x1f,
+	0x09, 0x9e, 0x2c, 0xdd, 0x3d, 0xbc, 0x04, 0xd8, 0xd9, 0xc5, 0xad, 0xcc, 0x58, 0x81, 0xd3, 0x79,
+	0x0f, 0xeb, 0xde, 0xa8, 0xa1, 0x7f, 0xeb, 0xc9, 0x5b, 0x00, 0x00, 0x00, 0xff, 0xff, 0x08, 0xbb,
+	0x1b, 0x2a, 0xf8, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -347,6 +438,7 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ProductClient interface {
 	ListTransMap(ctx context.Context, in *ListTransMapRequest, opts ...grpc.CallOption) (*ListTransMapReply, error)
+	ListFeeMap(ctx context.Context, in *ListFeeMapRequest, opts ...grpc.CallOption) (*ListFeeMapReply, error)
 }
 
 type productClient struct {
@@ -366,9 +458,19 @@ func (c *productClient) ListTransMap(ctx context.Context, in *ListTransMapReques
 	return out, nil
 }
 
+func (c *productClient) ListFeeMap(ctx context.Context, in *ListFeeMapRequest, opts ...grpc.CallOption) (*ListFeeMapReply, error) {
+	out := new(ListFeeMapReply)
+	err := c.cc.Invoke(ctx, "/pb.Product/ListFeeMap", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProductServer is the server API for Product service.
 type ProductServer interface {
 	ListTransMap(context.Context, *ListTransMapRequest) (*ListTransMapReply, error)
+	ListFeeMap(context.Context, *ListFeeMapRequest) (*ListFeeMapReply, error)
 }
 
 // UnimplementedProductServer can be embedded to have forward compatible implementations.
@@ -377,6 +479,9 @@ type UnimplementedProductServer struct {
 
 func (*UnimplementedProductServer) ListTransMap(ctx context.Context, req *ListTransMapRequest) (*ListTransMapReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListTransMap not implemented")
+}
+func (*UnimplementedProductServer) ListFeeMap(ctx context.Context, req *ListFeeMapRequest) (*ListFeeMapReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListFeeMap not implemented")
 }
 
 func RegisterProductServer(s *grpc.Server, srv ProductServer) {
@@ -401,6 +506,24 @@ func _Product_ListTransMap_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Product_ListFeeMap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFeeMapRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServer).ListFeeMap(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.Product/ListFeeMap",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServer).ListFeeMap(ctx, req.(*ListFeeMapRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Product_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.Product",
 	HandlerType: (*ProductServer)(nil),
@@ -408,6 +531,10 @@ var _Product_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListTransMap",
 			Handler:    _Product_ListTransMap_Handler,
+		},
+		{
+			MethodName: "ListFeeMap",
+			Handler:    _Product_ListFeeMap_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
