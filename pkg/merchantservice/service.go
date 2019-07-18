@@ -6,11 +6,125 @@ import (
 	"time"
 	"userService/pkg/common"
 	"userService/pkg/pb"
+	"userService/pkg/util"
 
 	merchantmodel "userService/pkg/model/merchant"
 )
 
 type merchantService struct{}
+
+func (m *merchantService) GetMerchantBankAccount(ctx context.Context, in *pb.GetMerchantBankAccountRequest) (*pb.GetMerchantBankAccountReply, error) {
+	reply := new(pb.GetMerchantBankAccountReply)
+	if in.Item == nil || in.Item.OwnerCd == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "ownerCd不能为空",
+		}
+		return reply, nil
+	}
+
+	edit := true
+	if in.Type == "main" {
+		edit = false
+	}
+	db := common.DB
+
+	if edit {
+		query := new(merchantmodel.BankAccount)
+		{
+			query.OwnerCd = in.Item.OwnerCd
+		}
+		items, err := merchantmodel.QueryBankAccount(db, query)
+		if err != nil {
+			return nil, err
+		}
+		pbItems := make([]*pb.MerchantBankAccountField, len(items))
+
+		for i := range items {
+			pbItems[i] = &pb.MerchantBankAccountField{
+				OwnerCd:      items[i].OwnerCd,
+				AccountType:  items[i].AccountType,
+				Name:         items[i].Name,
+				Account:      items[i].Account,
+				UcBcCd:       items[i].UcBcCd,
+				Province:     items[i].Province,
+				City:         items[i].City,
+				BankCode:     items[i].BankCode,
+				BankName:     items[i].BankName,
+				OperIn:       items[i].OperIn,
+				RecOprId:     items[i].RecOprId,
+				RecUpdOpr:    items[i].RecUpdOpr,
+				MsgResvFld1:  items[i].MsgResvFld1,
+				MsgResvFld2:  items[i].MsgResvFld2,
+				MsgResvFld3:  items[i].MsgResvFld3,
+				MsgResvFld4:  items[i].MsgResvFld4,
+				MsgResvFld5:  items[i].MsgResvFld5,
+				MsgResvFld6:  items[i].MsgResvFld6,
+				MsgResvFld7:  items[i].MsgResvFld7,
+				MsgResvFld8:  items[i].MsgResvFld8,
+				MsgResvFld9:  items[i].MsgResvFld9,
+				MsgResvFld10: items[i].MsgResvFld10,
+			}
+			if !items[i].CreatedAt.IsZero() {
+				pbItems[i].CreatedAt = items[i].CreatedAt.Format(util.TimePattern)
+			}
+			if !items[i].UpdatedAt.IsZero() {
+				pbItems[i].UpdatedAt = items[i].UpdatedAt.Format(util.TimePattern)
+			}
+		}
+
+		reply.Items = pbItems
+
+	} else {
+		query := new(merchantmodel.BankAccountMain)
+		{
+			query.OwnerCd = in.Item.OwnerCd
+		}
+		items, err := merchantmodel.QueryBankAccountMain(db, query)
+		if err != nil {
+			return nil, err
+		}
+		pbItems := make([]*pb.MerchantBankAccountField, len(items))
+
+		for i := range items {
+			pbItems[i] = &pb.MerchantBankAccountField{
+				OwnerCd:      items[i].OwnerCd,
+				AccountType:  items[i].AccountType,
+				Name:         items[i].Name,
+				Account:      items[i].Account,
+				UcBcCd:       items[i].UcBcCd,
+				Province:     items[i].Province,
+				City:         items[i].City,
+				BankCode:     items[i].BankCode,
+				BankName:     items[i].BankName,
+				OperIn:       items[i].OperIn,
+				RecOprId:     items[i].RecOprId,
+				RecUpdOpr:    items[i].RecUpdOpr,
+				MsgResvFld1:  items[i].MsgResvFld1,
+				MsgResvFld2:  items[i].MsgResvFld2,
+				MsgResvFld3:  items[i].MsgResvFld3,
+				MsgResvFld4:  items[i].MsgResvFld4,
+				MsgResvFld5:  items[i].MsgResvFld5,
+				MsgResvFld6:  items[i].MsgResvFld6,
+				MsgResvFld7:  items[i].MsgResvFld7,
+				MsgResvFld8:  items[i].MsgResvFld8,
+				MsgResvFld9:  items[i].MsgResvFld9,
+				MsgResvFld10: items[i].MsgResvFld10,
+			}
+			if !items[i].CreatedAt.IsZero() {
+				pbItems[i].CreatedAt = items[i].CreatedAt.Format(util.TimePattern)
+			}
+			if !items[i].UpdatedAt.IsZero() {
+				pbItems[i].UpdatedAt = items[i].UpdatedAt.Format(util.TimePattern)
+			}
+		}
+
+		reply.Items = pbItems
+	}
+
+	return reply, nil
+}
 
 func (m *merchantService) SaveMerchant(ctx context.Context, in *pb.SaveMerchantRequest) (*pb.SaveMerchantReply, error) {
 	var reply pb.SaveMerchantReply

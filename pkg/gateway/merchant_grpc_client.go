@@ -20,6 +20,7 @@ type MerchantEndpoints struct {
 	SaveMerchantBizFeeEndpoint      endpoint.Endpoint
 	SaveMerchantBusinessEndpoint    endpoint.Endpoint
 	SaveMerchantPictureEndpoint     endpoint.Endpoint
+	GetMerchantBankAccountEndpoint  endpoint.Endpoint
 }
 
 func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *MerchantEndpoints {
@@ -118,19 +119,32 @@ func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption
 			options...,
 		).Endpoint()
 		endpoints.SaveMerchantBusinessEndpoint = endpoint
+	}
 
-		{
-			endpoint := grpctransport.NewClient(
-				conn,
-				"pb.Merchant",
-				"SaveMerchantPicture",
-				encodeRequest,
-				decodeResponse,
-				pb.SaveMerchantPictureReply{},
-				options...,
-			).Endpoint()
-			endpoints.SaveMerchantPictureEndpoint = endpoint
-		}
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Merchant",
+			"SaveMerchantPicture",
+			encodeRequest,
+			decodeResponse,
+			pb.SaveMerchantPictureReply{},
+			options...,
+		).Endpoint()
+		endpoints.SaveMerchantPictureEndpoint = endpoint
+	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Merchant",
+			"GetMerchantBankAccount",
+			encodeRequest,
+			decodeResponse,
+			pb.GetMerchantBankAccountReply{},
+			options...,
+		).Endpoint()
+		endpoints.GetMerchantBankAccountEndpoint = endpoint
 	}
 
 	return endpoints
@@ -206,4 +220,12 @@ func (m *MerchantEndpoints) SaveMerchantPicture(ctx context.Context, in *pb.Save
 		return nil, err
 	}
 	return res.(*pb.SaveMerchantPictureReply), nil
+}
+
+func (m *MerchantEndpoints) GetMerchantBankAccount(ctx context.Context, in *pb.GetMerchantBankAccountRequest) (*pb.GetMerchantBankAccountReply, error) {
+	res, err := m.GetMerchantBankAccountEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetMerchantBankAccountReply), nil
 }

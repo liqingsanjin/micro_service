@@ -13,6 +13,7 @@ service Merchant {
     rpc SaveMerchantBizFee(SaveMerchantBizFeeRequest) returns (SaveMerchantBizFeeReply) {}
     rpc SaveMerchantBusiness(SaveMerchantBusinessRequest) returns (SaveMerchantBusinessReply) {}
     rpc SaveMerchantPicture(SaveMerchantPictureRequest) returns (SaveMerchantPictureReply) {}
+    rpc GetMerchantBankAccount(GetMerchantBankAccountRequest) returns (GetMerchantBankAccountReply) {}
 }
 
 message ListMerchantRequest {
@@ -296,4 +297,14 @@ message SaveMerchantPictureRequest {
 
 message SaveMerchantPictureReply {
     error err = 1;
+}
+
+message GetMerchantBankAccountRequest {
+    MerchantBankAccountField item = 1;
+    string type = 2;
+}
+
+message GetMerchantBankAccountReply {
+    repeated MerchantBankAccountField items = 1;
+    error err = 2;
 }

@@ -65,4 +65,11 @@ func RegisterMerchantHandler(engine *gin.Engine, endpoints *MerchantEndpoints) {
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
+
+	group.POST("/getMerchantBankAccount", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.GetMerchantBankAccountEndpoint,
+		decodeHttpRequest(&pb.GetMerchantBankAccountRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
 }
