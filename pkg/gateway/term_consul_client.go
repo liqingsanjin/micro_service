@@ -72,7 +72,7 @@ func termServiceFactory(makeEndpoint func(server pb.TermServer) endpoint.Endpoin
 			addr = "127.0.0.1:9411"
 		}
 
-		localEndpoint, _ := stdzipkin.NewEndpoint("merchant", "localhost:9411")
+		localEndpoint, _ := stdzipkin.NewEndpoint("term", "localhost:9411")
 		reporter := zipkinhttp.NewReporter("http://" + addr + "/api/v2/spans")
 		stdTracer, err := stdzipkin.NewTracer(
 			reporter,

@@ -9,25 +9,25 @@ service Product {
 }
 
 message ProductBizTransMapField {
-    string ProdCd      = 1;
-    string BizCd       = 2;
-    string TransCd     = 3;
-    string UpdateDate  = 4;
-    string Description = 5;
-    string ResvFld1    = 6;
-    string ResvFld2    = 7;
-    string ResvFld3    = 8;
+    string prodCd      = 1;
+    string bizCd       = 2;
+    string transCd     = 3;
+    string updateDate  = 4;
+    string description = 5;
+    string resvFld1    = 6;
+    string resvFld2    = 7;
+    string resvFld3    = 8;
 }
 
 message ProductBizFeeMapField {
-    string ProdCd      = 1;
-    string BizCd       = 2;
-    string SubBizCd    = 3;
-    string UpdateDate  = 4;
-    string Description = 5;
-    string ResvFld1    = 6;
-    string ResvFld2    = 7;
-    string ResvFld3    = 8;
+    string prodCd      = 1;
+    string bizCd       = 2;
+    string subBizCd    = 3;
+    string updateDate  = 4;
+    string description = 5;
+    string resvFld1    = 6;
+    string resvFld2    = 7;
+    string resvFld3    = 8;
 }
 
 message ListTransMapRequest {
