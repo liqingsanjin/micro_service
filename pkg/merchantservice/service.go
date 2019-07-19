@@ -13,6 +13,130 @@ import (
 
 type merchantService struct{}
 
+func (m *merchantService) GetMerchantBusiness(ctx context.Context, in *pb.GetMerchantBusinessRequest) (*pb.GetMerchantBusinessReply, error) {
+	reply := new(pb.GetMerchantBusinessReply)
+	if in.Item == nil || in.Item.MchtCd == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "mchtCd不能为空",
+		}
+		return reply, nil
+	}
+
+	edit := true
+	if in.Type == "main" {
+		edit = false
+	}
+	db := common.DB
+
+	if edit {
+		query := new(merchantmodel.Business)
+		{
+			query.MchtCd = in.Item.MchtCd
+		}
+		items, err := merchantmodel.QueryBusiness(db, query)
+		if err != nil {
+			return nil, err
+		}
+		pbItems := make([]*pb.MerchantBusinessField, len(items))
+
+		for i := range items {
+			pbItems[i] = &pb.MerchantBusinessField{
+				MchtCd:                 items[i].MchtCd,
+				ProdCd:                 items[i].ProdCd,
+				ProdCdText:             items[i].ProdCdText,
+				FeeMoneyCd:             items[i].FeeMoneyCd,
+				FeeModeType:            items[i].FeeModeType,
+				FeeSettlementType:      items[i].FeeSettlementType,
+				FeeHoliday:             items[i].FeeHoliday,
+				ServiceFeeType:         items[i].ServiceFeeType,
+				ServiceFeeStaticAmount: items[i].ServiceFeeStaticAmount,
+				ServiceFeeLevelCount:   items[i].ServiceFeeLevelCount,
+				ServiceFeeMode:         items[i].ServiceFeeMode,
+				ServiceFeeUnit:         items[i].ServiceFeeUnit,
+				ServiceFeeTerm:         items[i].ServiceFeeTerm,
+				ServiceFeeSumto:        items[i].ServiceFeeSumto,
+				ServiceFeeCircle:       items[i].ServiceFeeCircle,
+				ServiceFeeOthers:       items[i].ServiceFeeOthers,
+				ServiceFeeStart:        items[i].ServiceFeeStart,
+				ServiceFeeClct:         items[i].ServiceFeeClct,
+				ServiceFeeClctOthers:   items[i].ServiceFeeClctOthers,
+				SystemFlag:             items[i].SystemFlag,
+				Ext1:                   items[i].Ext1,
+				Ext2:                   items[i].Ext2,
+				Ext3:                   items[i].Ext3,
+				Ext4:                   items[i].Ext4,
+				ServiceFeeYesNo:        items[i].ServiceFeeYesNo,
+				RecOprId:               items[i].RecOprId,
+				RecUpdOpr:              items[i].RecUpdOpr,
+				OperIn:                 items[i].OperIn,
+			}
+			if !items[i].CreatedAt.IsZero() {
+				pbItems[i].CreatedAt = items[i].CreatedAt.Format(util.TimePattern)
+			}
+			if !items[i].UpdatedAt.IsZero() {
+				pbItems[i].UpdatedAt = items[i].UpdatedAt.Format(util.TimePattern)
+			}
+		}
+
+		reply.Items = pbItems
+	} else {
+		query := new(merchantmodel.BusinessMain)
+		{
+			query.MchtCd = in.Item.MchtCd
+		}
+		items, err := merchantmodel.QueryBusinessMain(db, query)
+		if err != nil {
+			return nil, err
+		}
+		pbItems := make([]*pb.MerchantBusinessField, len(items))
+
+		for i := range items {
+			pbItems[i] = &pb.MerchantBusinessField{
+				MchtCd:                 items[i].MchtCd,
+				ProdCd:                 items[i].ProdCd,
+				ProdCdText:             items[i].ProdCdText,
+				FeeMoneyCd:             items[i].FeeMoneyCd,
+				FeeModeType:            items[i].FeeModeType,
+				FeeSettlementType:      items[i].FeeSettlementType,
+				FeeHoliday:             items[i].FeeHoliday,
+				ServiceFeeType:         items[i].ServiceFeeType,
+				ServiceFeeStaticAmount: items[i].ServiceFeeStaticAmount,
+				ServiceFeeLevelCount:   items[i].ServiceFeeLevelCount,
+				ServiceFeeMode:         items[i].ServiceFeeMode,
+				ServiceFeeUnit:         items[i].ServiceFeeUnit,
+				ServiceFeeTerm:         items[i].ServiceFeeTerm,
+				ServiceFeeSumto:        items[i].ServiceFeeSumto,
+				ServiceFeeCircle:       items[i].ServiceFeeCircle,
+				ServiceFeeOthers:       items[i].ServiceFeeOthers,
+				ServiceFeeStart:        items[i].ServiceFeeStart,
+				ServiceFeeClct:         items[i].ServiceFeeClct,
+				ServiceFeeClctOthers:   items[i].ServiceFeeClctOthers,
+				SystemFlag:             items[i].SystemFlag,
+				Ext1:                   items[i].Ext1,
+				Ext2:                   items[i].Ext2,
+				Ext3:                   items[i].Ext3,
+				Ext4:                   items[i].Ext4,
+				ServiceFeeYesNo:        items[i].ServiceFeeYesNo,
+				RecOprId:               items[i].RecOprId,
+				RecUpdOpr:              items[i].RecUpdOpr,
+				OperIn:                 items[i].OperIn,
+			}
+			if !items[i].CreatedAt.IsZero() {
+				pbItems[i].CreatedAt = items[i].CreatedAt.Format(util.TimePattern)
+			}
+			if !items[i].UpdatedAt.IsZero() {
+				pbItems[i].UpdatedAt = items[i].UpdatedAt.Format(util.TimePattern)
+			}
+		}
+
+		reply.Items = pbItems
+	}
+
+	return reply, nil
+}
+
 func (m *merchantService) GetMerchantBizFee(ctx context.Context, in *pb.GetMerchantBizFeeRequest) (*pb.GetMerchantBizFeeReply, error) {
 	reply := new(pb.GetMerchantBizFeeReply)
 	if in.Item == nil || in.Item.MchtCd == "" {

@@ -23,6 +23,7 @@ type MerchantEndpoints struct {
 	GetMerchantBankAccountEndpoint  endpoint.Endpoint
 	GetMerchantBizDealEndpoint      endpoint.Endpoint
 	GetMerchantBizFeeEndpoint       endpoint.Endpoint
+	GetMerchantBusinessEndpoint     endpoint.Endpoint
 }
 
 func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *MerchantEndpoints {
@@ -175,6 +176,19 @@ func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption
 		endpoints.GetMerchantBizFeeEndpoint = endpoint
 	}
 
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Merchant",
+			"GetMerchantBusiness",
+			encodeRequest,
+			decodeResponse,
+			pb.GetMerchantBusinessReply{},
+			options...,
+		).Endpoint()
+		endpoints.GetMerchantBusinessEndpoint = endpoint
+	}
+
 	return endpoints
 }
 
@@ -272,4 +286,11 @@ func (m *MerchantEndpoints) GetMerchantBizFee(ctx context.Context, in *pb.GetMer
 		return nil, err
 	}
 	return res.(*pb.GetMerchantBizFeeReply), nil
+}
+func (m *MerchantEndpoints) GetMerchantBusiness(ctx context.Context, in *pb.GetMerchantBusinessRequest) (*pb.GetMerchantBusinessReply, error) {
+	res, err := m.GetMerchantBusinessEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetMerchantBusinessReply), nil
 }

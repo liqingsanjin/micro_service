@@ -130,6 +130,15 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		endpoints.GetMerchantBizFeeEndpoint = retry
 	}
 
+	{
+		factory := merchantServiceFactory(merchantservice.MakeGetMerchantBusinessEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = userBreaker(retry)
+		endpoints.GetMerchantBusinessEndpoint = retry
+	}
+
 	return &endpoints
 }
 

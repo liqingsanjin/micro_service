@@ -16,6 +16,7 @@ service Merchant {
     rpc GetMerchantBankAccount(GetMerchantBankAccountRequest) returns (GetMerchantBankAccountReply) {}
     rpc GetMerchantBizDeal(GetMerchantBizDealRequest) returns (GetMerchantBizDealReply) {}
     rpc GetMerchantBizFee(GetMerchantBizFeeRequest) returns (GetMerchantBizFeeReply) {}
+    rpc GetMerchantBusiness(GetMerchantBusinessRequest) returns (GetMerchantBusinessReply) {}
 }
 
 message ListMerchantRequest {
@@ -328,5 +329,15 @@ message GetMerchantBizFeeRequest {
 
 message GetMerchantBizFeeReply {
     repeated MerchantBizFeeField items = 1;
+    error err = 2;
+}
+
+message GetMerchantBusinessRequest {
+    MerchantBusinessField item = 1;
+    string type = 2;
+}
+
+message GetMerchantBusinessReply {
+    repeated MerchantBusinessField items = 1;
     error err = 2;
 }

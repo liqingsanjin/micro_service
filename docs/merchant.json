@@ -1144,6 +1144,87 @@
           }
         }
       }
+    },
+    "/merchant/getMerchantBusiness": {
+      "post": {
+        "operationId": "getMerchantBusiness",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "getMerchantBusiness",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "item"
+              ],
+              "properties": {
+                "item": {
+                  "required": [
+                    "mchtCd"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "mchtCd": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "mchtCd": "0001000F0507465",
+                    "prodCd": "",
+                    "prodCdText": "",
+                    "feeMoneyCd": "RMB",
+                    "feeModeType": "0",
+                    "feeSettlementType": "",
+                    "feeHoliday": "0",
+                    "serviceFeeType": "",
+                    "serviceFeeStaticAmount": 0,
+                    "serviceFeeLevelCount": "0",
+                    "serviceFeeMode": "",
+                    "serviceFeeUnit": "",
+                    "serviceFeeTerm": "",
+                    "serviceFeeSumto": "",
+                    "serviceFeeCircle": "",
+                    "serviceFeeOthers": "",
+                    "serviceFeeStart": "",
+                    "serviceFeeClct": "",
+                    "serviceFeeClctOthers": "",
+                    "systemFlag": "",
+                    "ext1": "25056174",
+                    "ext2": "",
+                    "ext3": "",
+                    "ext4": "",
+                    "serviceFeeYesNo": "0",
+                    "recOprId": "",
+                    "recUpdOpr": "",
+                    "operIn": "I",
+                    "createdAt": "2017-12-14 16:50:34",
+                    "updatedAt": "2017-12-14 16:50:34"
+                  }
+                ],
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
