@@ -13,6 +13,108 @@ import (
 
 type merchantService struct{}
 
+func (m *merchantService) GetMerchantBizFee(ctx context.Context, in *pb.GetMerchantBizFeeRequest) (*pb.GetMerchantBizFeeReply, error) {
+	reply := new(pb.GetMerchantBizFeeReply)
+	if in.Item == nil || in.Item.MchtCd == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "mchtCd不能为空",
+		}
+		return reply, nil
+	}
+
+	edit := true
+	if in.Type == "main" {
+		edit = false
+	}
+	db := common.DB
+	if edit {
+		query := new(merchantmodel.BizFee)
+		{
+			query.MchtCd = in.Item.MchtCd
+		}
+		items, err := merchantmodel.QueryBizFee(db, query)
+		if err != nil {
+			return nil, err
+		}
+		pbItems := make([]*pb.MerchantBizFeeField, len(items))
+
+		for i := range items {
+			pbItems[i] = &pb.MerchantBizFeeField{
+				MchtCd:          items[i].MchtCd,
+				ProdCd:          items[i].ProdCd,
+				BizCd:           items[i].BizCd,
+				SubBizCd:        items[i].SubBizCd,
+				MchtFeeMd:       items[i].MchtFeeMd,
+				MchtFeePercent:  items[i].MchtFeePercent,
+				MchtFeePctMin:   items[i].MchtFeePctMin,
+				MchtFeePctMax:   items[i].MchtFeePctMax,
+				MchtFeeSingle:   items[i].MchtFeeSingle,
+				MchtAFeeSame:    items[i].MchtAFeeSame,
+				MchtAFeeMd:      items[i].MchtAFeeMd,
+				MchtAFeePercent: items[i].MchtAFeePercent,
+				MchtAFeePctMin:  items[i].MchtAFeePctMin,
+				MchtAFeePctMax:  items[i].MchtAFeePctMax,
+				MchtAFeeSingle:  items[i].MchtAFeeSingle,
+				OperIn:          items[i].OperIn,
+				RecOprId:        items[i].RecOprId,
+				RecUpdOpr:       items[i].RecUpdOpr,
+			}
+			if !items[i].CreatedAt.IsZero() {
+				pbItems[i].CreatedAt = items[i].CreatedAt.Format(util.TimePattern)
+			}
+			if !items[i].UpdatedAt.IsZero() {
+				pbItems[i].UpdatedAt = items[i].UpdatedAt.Format(util.TimePattern)
+			}
+		}
+
+		reply.Items = pbItems
+	} else {
+		query := new(merchantmodel.BizFeeMain)
+		{
+			query.MchtCd = in.Item.MchtCd
+		}
+		items, err := merchantmodel.QueryBizFeeMain(db, query)
+		if err != nil {
+			return nil, err
+		}
+		pbItems := make([]*pb.MerchantBizFeeField, len(items))
+
+		for i := range items {
+			pbItems[i] = &pb.MerchantBizFeeField{
+				MchtCd:          items[i].MchtCd,
+				ProdCd:          items[i].ProdCd,
+				BizCd:           items[i].BizCd,
+				SubBizCd:        items[i].SubBizCd,
+				MchtFeeMd:       items[i].MchtFeeMd,
+				MchtFeePercent:  items[i].MchtFeePercent,
+				MchtFeePctMin:   items[i].MchtFeePctMin,
+				MchtFeePctMax:   items[i].MchtFeePctMax,
+				MchtFeeSingle:   items[i].MchtFeeSingle,
+				MchtAFeeSame:    items[i].MchtAFeeSame,
+				MchtAFeeMd:      items[i].MchtAFeeMd,
+				MchtAFeePercent: items[i].MchtAFeePercent,
+				MchtAFeePctMin:  items[i].MchtAFeePctMin,
+				MchtAFeePctMax:  items[i].MchtAFeePctMax,
+				MchtAFeeSingle:  items[i].MchtAFeeSingle,
+				OperIn:          items[i].OperIn,
+				RecOprId:        items[i].RecOprId,
+				RecUpdOpr:       items[i].RecUpdOpr,
+			}
+			if !items[i].CreatedAt.IsZero() {
+				pbItems[i].CreatedAt = items[i].CreatedAt.Format(util.TimePattern)
+			}
+			if !items[i].UpdatedAt.IsZero() {
+				pbItems[i].UpdatedAt = items[i].UpdatedAt.Format(util.TimePattern)
+			}
+		}
+
+		reply.Items = pbItems
+	}
+	return reply, nil
+}
+
 func (m *merchantService) GetMerchantBizDeal(ctx context.Context, in *pb.GetMerchantBizDealRequest) (*pb.GetMerchantBizDealReply, error) {
 	reply := new(pb.GetMerchantBizDealReply)
 	if in.Item == nil || in.Item.MchtCd == "" {

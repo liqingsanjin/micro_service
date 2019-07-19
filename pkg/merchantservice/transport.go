@@ -76,3 +76,9 @@ func MakeGetMerchantBizDealEndpoint(service pb.MerchantServer) endpoint.Endpoint
 		return service.GetMerchantBizDeal(ctx, request.(*pb.GetMerchantBizDealRequest))
 	}
 }
+
+func MakeGetMerchantBizFeeEndpoint(service pb.MerchantServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.GetMerchantBizFee(ctx, request.(*pb.GetMerchantBizFeeRequest))
+	}
+}

@@ -977,6 +977,167 @@
             "description": "正确返回",
             "examples": {
               "application/json": {
+                "items": [
+                  {
+                    "mchtCd": "0001000F0507465",
+                    "prodCd": "1151",
+                    "bizCd": "0000007",
+                    "transCd": "1131",
+                    "operIn": "I",
+                    "recOprId": "",
+                    "recUpdOpr": "1",
+                    "createdAt": "2017-12-14 16:50:34",
+                    "updatedAt": "2017-12-14 16:50:34"
+                  },
+                  {
+                    "mchtCd": "0001000F0507465",
+                    "prodCd": "1151",
+                    "bizCd": "0000007",
+                    "transCd": "1191",
+                    "operIn": "I",
+                    "recOprId": "",
+                    "recUpdOpr": "1",
+                    "createdAt": "2017-12-14 16:50:34",
+                    "updatedAt": "2017-12-14 16:50:34"
+                  },
+                  {
+                    "mchtCd": "0001000F0507465",
+                    "prodCd": "1151",
+                    "bizCd": "0000007",
+                    "transCd": "7131",
+                    "operIn": "I",
+                    "recOprId": "",
+                    "recUpdOpr": "1",
+                    "createdAt": "2017-12-14 16:50:34",
+                    "updatedAt": "2017-12-14 16:50:34"
+                  },
+                  {
+                    "mchtCd": "0001000F0507465",
+                    "prodCd": "1151",
+                    "bizCd": "0000008",
+                    "transCd": "1131",
+                    "operIn": "I",
+                    "recOprId": "",
+                    "recUpdOpr": "1",
+                    "createdAt": "2017-12-14 16:50:34",
+                    "updatedAt": "2017-12-14 16:50:34"
+                  },
+                  {
+                    "mchtCd": "0001000F0507465",
+                    "prodCd": "1151",
+                    "bizCd": "0000008",
+                    "transCd": "1191",
+                    "operIn": "I",
+                    "recOprId": "",
+                    "recUpdOpr": "1",
+                    "createdAt": "2017-12-14 16:50:34",
+                    "updatedAt": "2017-12-14 16:50:34"
+                  },
+                  {
+                    "mchtCd": "0001000F0507465",
+                    "prodCd": "1151",
+                    "bizCd": "0000008",
+                    "transCd": "7131",
+                    "operIn": "I",
+                    "recOprId": "",
+                    "recUpdOpr": "1",
+                    "createdAt": "2017-12-14 16:50:34",
+                    "updatedAt": "2017-12-14 16:50:34"
+                  }
+                ],
+                "err": null
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/getMerchantBizFee": {
+      "post": {
+        "operationId": "getMerchantBizFee",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "getMerchantBizFee",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "item"
+              ],
+              "properties": {
+                "item": {
+                  "required": [
+                    "mchtCd"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "mchtCd": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "mchtCd": "0001000F0507465",
+                    "prodCd": "1151",
+                    "bizCd": "0000007",
+                    "subBizCd": "0003001",
+                    "mchtFeeMd": "0",
+                    "mchtFeePercent": 0.6,
+                    "mchtFeePctMin": 0,
+                    "mchtFeePctMax": 0,
+                    "mchtFeeSingle": 0,
+                    "mchtAFeeSame": "0",
+                    "mchtAFeeMd": "",
+                    "mchtAFeePercent": 0,
+                    "mchtAFeePctMin": 0,
+                    "mchtAFeePctMax": 0,
+                    "mchtAFeeSingle": 0,
+                    "operIn": "I",
+                    "recOprId": "",
+                    "recUpdOpr": "",
+                    "createdAt": "2017-12-14 16:50:34",
+                    "updatedAt": "2017-12-14 16:50:34"
+                  },
+                  {
+                    "mchtCd": "0001000F0507465",
+                    "prodCd": "1151",
+                    "bizCd": "0000008",
+                    "subBizCd": "0003002",
+                    "mchtFeeMd": "0",
+                    "mchtFeePercent": 0.6,
+                    "mchtFeePctMin": 0,
+                    "mchtFeePctMax": 0,
+                    "mchtFeeSingle": 0,
+                    "mchtAFeeSame": "0",
+                    "mchtAFeeMd": "",
+                    "mchtAFeePercent": 0,
+                    "mchtAFeePctMin": 0,
+                    "mchtAFeePctMax": 0,
+                    "mchtAFeeSingle": 0,
+                    "operIn": "I",
+                    "recOprId": "",
+                    "recUpdOpr": "",
+                    "createdAt": "2017-12-14 16:50:34",
+                    "updatedAt": "2017-12-14 16:50:34"
+                  }
+                ],
                 "err": null
               }
             }
