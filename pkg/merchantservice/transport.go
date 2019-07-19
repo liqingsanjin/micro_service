@@ -88,3 +88,9 @@ func MakeGetMerchantBusinessEndpoint(service pb.MerchantServer) endpoint.Endpoin
 		return service.GetMerchantBusiness(ctx, request.(*pb.GetMerchantBusinessRequest))
 	}
 }
+
+func MakeGetMerchantPictureEndpoint(service pb.MerchantServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.GetMerchantPicture(ctx, request.(*pb.GetMerchantPictureRequest))
+	}
+}

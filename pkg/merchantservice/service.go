@@ -13,6 +13,99 @@ import (
 
 type merchantService struct{}
 
+func (m *merchantService) GetMerchantPicture(ctx context.Context, in *pb.GetMerchantPictureRequest) (*pb.GetMerchantPictureReply, error) {
+	reply := new(pb.GetMerchantPictureReply)
+	if in.Item == nil || in.Item.MchtCd == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "mchtCd不能为空",
+		}
+		return reply, nil
+	}
+
+	edit := true
+	if in.Type == "main" {
+		edit = false
+	}
+	db := common.DB
+
+	if edit {
+		query := new(merchantmodel.Picture)
+		{
+			query.MchtCd = in.Item.MchtCd
+		}
+		items, err := merchantmodel.QueryPicture(db, query)
+		if err != nil {
+			return nil, err
+		}
+		pbItems := make([]*pb.MerchantPictureField, len(items))
+
+		for i := range items {
+			pbItems[i] = &pb.MerchantPictureField{
+				FileId:     items[i].FileId,
+				MchtCd:     items[i].MchtCd,
+				DocType:    items[i].DocType,
+				FileType:   items[i].FileType,
+				FileName:   items[i].FileName,
+				PIndex:     items[i].PIndex,
+				PCode:      items[i].PCode,
+				Url:        items[i].Url,
+				SystemFlag: items[i].SystemFlag,
+				Status:     items[i].Status,
+				RecOprId:   items[i].RecOprId,
+				RecUpdOpr:  items[i].RecUpdOpr,
+			}
+			if !items[i].CreatedAt.IsZero() {
+				pbItems[i].CreatedAt = items[i].CreatedAt.Format(util.TimePattern)
+			}
+			if !items[i].UpdatedAt.IsZero() {
+				pbItems[i].UpdatedAt = items[i].UpdatedAt.Format(util.TimePattern)
+			}
+		}
+
+		reply.Items = pbItems
+
+	} else {
+		query := new(merchantmodel.PictureMain)
+		{
+			query.MchtCd = in.Item.MchtCd
+		}
+		items, err := merchantmodel.QueryPicTureMain(db, query)
+		if err != nil {
+			return nil, err
+		}
+		pbItems := make([]*pb.MerchantPictureField, len(items))
+
+		for i := range items {
+			pbItems[i] = &pb.MerchantPictureField{
+				FileId:     items[i].FileId,
+				MchtCd:     items[i].MchtCd,
+				DocType:    items[i].DocType,
+				FileType:   items[i].FileType,
+				FileName:   items[i].FileName,
+				PIndex:     items[i].PIndex,
+				PCode:      items[i].PCode,
+				Url:        items[i].Url,
+				SystemFlag: items[i].SystemFlag,
+				Status:     items[i].Status,
+				RecOprId:   items[i].RecOprId,
+				RecUpdOpr:  items[i].RecUpdOpr,
+			}
+			if !items[i].CreatedAt.IsZero() {
+				pbItems[i].CreatedAt = items[i].CreatedAt.Format(util.TimePattern)
+			}
+			if !items[i].UpdatedAt.IsZero() {
+				pbItems[i].UpdatedAt = items[i].UpdatedAt.Format(util.TimePattern)
+			}
+		}
+
+		reply.Items = pbItems
+
+	}
+	return reply, nil
+}
+
 func (m *merchantService) GetMerchantBusiness(ctx context.Context, in *pb.GetMerchantBusinessRequest) (*pb.GetMerchantBusinessReply, error) {
 	reply := new(pb.GetMerchantBusinessReply)
 	if in.Item == nil || in.Item.MchtCd == "" {

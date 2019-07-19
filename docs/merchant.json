@@ -1225,6 +1225,135 @@
           }
         }
       }
+    },
+    "/merchant/getMerchantPicture": {
+      "post": {
+        "operationId": "getMerchantPicture",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "getMerchantPicture",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "item"
+              ],
+              "properties": {
+                "item": {
+                  "required": [
+                    "mchtCd"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "mchtCd": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "FileId": "FILE_ID_57b16bf486c205.16207617",
+                    "MchtCd": "679110158120000",
+                    "DocType": "00",
+                    "FileType": "",
+                    "FileName": "6791101581200000001.jpg",
+                    "PIndex": "1",
+                    "PCode": "6791101581200000001",
+                    "Url": "/upload/62500000/679110158120000/6791101581200000001.jpg",
+                    "SystemFlag": "00",
+                    "Status": "0",
+                    "RecOprId": "I",
+                    "RecUpdOpr": "5",
+                    "createdAt": "2016-08-15 15:15:01",
+                    "updatedAt": "2016-08-15 15:15:01"
+                  },
+                  {
+                    "FileId": "FILE_ID_57b16bfbafa5b4.45749394",
+                    "MchtCd": "679110158120000",
+                    "DocType": "01",
+                    "FileType": "",
+                    "FileName": "6791101581200000101.jpg",
+                    "PIndex": "1",
+                    "PCode": "6791101581200000101",
+                    "Url": "/upload/62500000/679110158120000/6791101581200000101.jpg",
+                    "SystemFlag": "00",
+                    "Status": "0",
+                    "RecOprId": "I",
+                    "RecUpdOpr": "5",
+                    "createdAt": "2016-08-15 15:15:08",
+                    "updatedAt": "2016-08-15 15:15:08"
+                  },
+                  {
+                    "FileId": "FILE_ID_57b16c00c69a85.10811540",
+                    "MchtCd": "679110158120000",
+                    "DocType": "02",
+                    "FileType": "",
+                    "FileName": "6791101581200000201.jpg",
+                    "PIndex": "1",
+                    "PCode": "6791101581200000201",
+                    "Url": "/upload/62500000/679110158120000/6791101581200000201.jpg",
+                    "SystemFlag": "00",
+                    "Status": "0",
+                    "RecOprId": "I",
+                    "RecUpdOpr": "5",
+                    "createdAt": "2016-08-15 15:15:13",
+                    "updatedAt": "2016-08-15 15:15:13"
+                  },
+                  {
+                    "FileId": "FILE_ID_57b16c0693d286.11094445",
+                    "MchtCd": "679110158120000",
+                    "DocType": "03",
+                    "FileType": "",
+                    "FileName": "6791101581200000301.jpg",
+                    "PIndex": "1",
+                    "PCode": "6791101581200000301",
+                    "Url": "/upload/62500000/679110158120000/6791101581200000301.jpg",
+                    "SystemFlag": "00",
+                    "Status": "0",
+                    "RecOprId": "I",
+                    "RecUpdOpr": "5",
+                    "createdAt": "2016-08-15 15:15:19",
+                    "updatedAt": "2016-08-15 15:15:19"
+                  },
+                  {
+                    "FileId": "FILE_ID_57b16c0b605ea4.08493974",
+                    "MchtCd": "679110158120000",
+                    "DocType": "05",
+                    "FileType": "",
+                    "FileName": "6791101581200000501.jpg",
+                    "PIndex": "1",
+                    "PCode": "6791101581200000501",
+                    "Url": "/upload/62500000/679110158120000/6791101581200000501.jpg",
+                    "SystemFlag": "00",
+                    "Status": "0",
+                    "RecOprId": "I",
+                    "RecUpdOpr": "5",
+                    "createdAt": "2016-08-15 15:15:23",
+                    "updatedAt": "2016-08-15 15:15:23"
+                  }
+                ],
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
