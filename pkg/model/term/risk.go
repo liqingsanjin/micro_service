@@ -41,3 +41,19 @@ func (RiskMain) TableName() string {
 func SaveRisk(db *gorm.DB, data *Risk) error {
 	return db.Create(data).Error
 }
+
+func QueryTermRisk(db *gorm.DB, query *Risk, page int32, size int32) ([]*Risk, int32, error) {
+	out := make([]*Risk, 0)
+	var count int32
+	db.Model(&Risk{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
+}
+
+func QueryTermRiskMain(db *gorm.DB, query *RiskMain, page int32, size int32) ([]*RiskMain, int32, error) {
+	out := make([]*RiskMain, 0)
+	var count int32
+	db.Model(&RiskMain{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
+}

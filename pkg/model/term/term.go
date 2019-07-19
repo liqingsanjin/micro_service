@@ -61,12 +61,17 @@ func QueryTermInfo(db *gorm.DB, query *Info, page int32, size int32) ([]*Info, i
 	db.Model(&Info{}).Where(query).Count(&count)
 
 	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
-	if err == gorm.ErrRecordNotFound {
-		return out, count, nil
-	}
 	return out, count, err
 }
 
 func SaveTermInfo(db *gorm.DB, data *Info) error {
 	return db.Create(data).Error
+}
+
+func QueryTermInfoMain(db *gorm.DB, query *InfoMain, page int32, size int32) ([]*InfoMain, int32, error) {
+	out := make([]*InfoMain, 0)
+	var count int32
+	db.Model(&InfoMain{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
 }

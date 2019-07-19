@@ -29,3 +29,9 @@ func MakeSaveTermRiskEndpoint(service pb.TermServer) endpoint.Endpoint {
 		return service.SaveTermRisk(ctx, request.(*pb.SaveTermRiskRequest))
 	}
 }
+
+func MakeListTermRiskEndpoint(service pb.TermServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.ListTermRisk(ctx, request.(*pb.ListTermRiskRequest))
+	}
+}

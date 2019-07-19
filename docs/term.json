@@ -311,6 +311,120 @@
           }
         }
       }
+    },
+    "/term/listTermRisk": {
+      "post": {
+        "operationId": "listTermRisk",
+        "description": "保存终端风控",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "listTermRisk",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "properties": {
+                    "mchtCd": {
+                      "type": "string"
+                    },
+                    "termId": {
+                      "type": "string"
+                    },
+                    "cardType": {
+                      "type": "string"
+                    },
+                    "totalLimitMoney": {
+                      "type": "number"
+                    },
+                    "accpetStartTime": {
+                      "type": "string"
+                    },
+                    "accpetStartDate": {
+                      "type": "string"
+                    },
+                    "accpetEndTime": {
+                      "type": "string"
+                    },
+                    "accpetEndDate": {
+                      "type": "string"
+                    },
+                    "singleLimitMoney": {
+                      "type": "number"
+                    },
+                    "controlWay": {
+                      "type": "string"
+                    },
+                    "singleMinMoney": {
+                      "type": "number"
+                    },
+                    "totalPeriod": {
+                      "type": "string"
+                    },
+                    "recOprId": {
+                      "type": "string"
+                    },
+                    "recUpdOpr": {
+                      "type": "string"
+                    },
+                    "operIn": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "size": {
+                  "type": "integer"
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "page": 1,
+                "size": 10,
+                "count": 1,
+                "items": [
+                  {
+                    "mchtCd": "005140444110000",
+                    "termId": "00000001",
+                    "cardType": "00",
+                    "totalLimitMoney": 0,
+                    "accpetStartTime": "1400",
+                    "accpetStartDate": "",
+                    "accpetEndTime": "1600",
+                    "accpetEndDate": "",
+                    "singleLimitMoney": 0.89,
+                    "controlWay": "1",
+                    "singleMinMoney": 0.2,
+                    "totalPeriod": "",
+                    "recOprId": "U",
+                    "recUpdOpr": "46392",
+                    "operIn": "U",
+                    "createdAt": "2016-10-28 15:40:06",
+                    "updatedAt": "2016-10-28 16:06:45"
+                  }
+                ],
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

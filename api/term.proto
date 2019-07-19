@@ -8,12 +8,14 @@ service Term {
     rpc ListTermInfo(ListTermInfoRequest) returns (ListTermInfoReply) {}
     rpc SaveTerm(SaveTermRequest) returns (SaveTermReply) {}
     rpc SaveTermRisk(SaveTermRiskRequest) returns (SaveTermRiskReply) {}
+    rpc ListTermRisk(ListTermRiskRequest) returns (ListTermRiskReply) {}
 }
 
 message ListTermInfoRequest {
     int32 page = 1;
     int32 size = 2;
     TermInfoField item = 3;
+    string type = 4;
 }
 
 message ListTermInfoReply {
@@ -70,21 +72,23 @@ message SaveTermReply {
 }
 
 message TermRiskField {
-    string MchtCd           = 1;
-    string TermId           = 2;
-    string CardType         = 3;
-    double TotalLimitMoney  = 4;
-    string AccpetStartTime  = 5;
-    string AccpetStartDate  = 6;
-    string AccpetEndTime    = 7;
-    string AccpetEndDate    = 8;
-    double SingleLimitMoney = 9;
-    string ControlWay       = 10;
-    double SingleMinMoney   = 11;
-    string TotalPeriod      = 12;
-    string RecOprId         = 13;
-    string RecUpdOpr        = 14;
-    string OperIn           = 15;
+    string mchtCd           = 1;
+    string termId           = 2;
+    string cardType         = 3;
+    double totalLimitMoney  = 4;
+    string accpetStartTime  = 5;
+    string accpetStartDate  = 6;
+    string accpetEndTime    = 7;
+    string accpetEndDate    = 8;
+    double singleLimitMoney = 9;
+    string controlWay       = 10;
+    double singleMinMoney   = 11;
+    string totalPeriod      = 12;
+    string recOprId         = 13;
+    string recUpdOpr        = 14;
+    string operIn           = 15;
+    string createdAt        = 16;
+    string updatedAt        = 17;
 }
 
 message SaveTermRiskRequest {
@@ -93,4 +97,19 @@ message SaveTermRiskRequest {
 
 message SaveTermRiskReply {
     error err = 1;
+}
+
+message ListTermRiskRequest {
+    int32 page = 1;
+    int32 size = 2;
+    TermRiskField item = 3;
+    string type = 4;
+}
+
+message ListTermRiskReply {
+    int32 page = 1;
+    int32 size = 2;
+    int32 count = 3;
+    repeated TermRiskField items = 4;
+    error err = 5;
 }

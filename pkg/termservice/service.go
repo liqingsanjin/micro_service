@@ -10,6 +10,136 @@ import (
 
 type service struct{}
 
+func (s *service) ListTermRisk(ctx context.Context, in *pb.ListTermRiskRequest) (*pb.ListTermRiskReply, error) {
+	reply := new(pb.ListTermRiskReply)
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	if in.Size == 0 {
+		in.Size = 10
+	}
+
+	edit := true
+	if in.Type == "main" {
+		edit = false
+	}
+
+	db := common.DB
+	if edit {
+		query := new(termmodel.Risk)
+		if in.Item != nil {
+			query.MchtCd = in.Item.MchtCd
+			query.TermId = in.Item.TermId
+			query.CardType = in.Item.CardType
+			query.TotalLimitMoney = in.Item.TotalLimitMoney
+			query.AccpetStartTime = in.Item.AccpetStartTime
+			query.AccpetStartDate = in.Item.AccpetStartDate
+			query.AccpetEndTime = in.Item.AccpetEndTime
+			query.AccpetEndDate = in.Item.AccpetEndDate
+			query.SingleLimitMoney = in.Item.SingleLimitMoney
+			query.ControlWay = in.Item.ControlWay
+			query.SingleMinMoney = in.Item.SingleMinMoney
+			query.TotalPeriod = in.Item.TotalPeriod
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+			query.OperIn = in.Item.OperIn
+		}
+		infos, count, err := termmodel.QueryTermRisk(db, query, in.Page, in.Size)
+		if err != nil {
+			return nil, err
+		}
+
+		pbInfos := make([]*pb.TermRiskField, len(infos))
+		for i := range infos {
+			pbInfos[i] = &pb.TermRiskField{
+				MchtCd:           infos[i].MchtCd,
+				TermId:           infos[i].TermId,
+				CardType:         infos[i].CardType,
+				TotalLimitMoney:  infos[i].TotalLimitMoney,
+				AccpetStartTime:  infos[i].AccpetStartTime,
+				AccpetStartDate:  infos[i].AccpetStartDate,
+				AccpetEndTime:    infos[i].AccpetEndTime,
+				AccpetEndDate:    infos[i].AccpetEndDate,
+				SingleLimitMoney: infos[i].SingleLimitMoney,
+				ControlWay:       infos[i].ControlWay,
+				SingleMinMoney:   infos[i].SingleMinMoney,
+				TotalPeriod:      infos[i].TotalPeriod,
+				RecOprId:         infos[i].RecOprId,
+				RecUpdOpr:        infos[i].RecUpdOpr,
+				OperIn:           infos[i].OperIn,
+			}
+			if !infos[i].CreatedAt.IsZero() {
+				pbInfos[i].CreatedAt = infos[i].CreatedAt.Format("2006-01-02 15:04:05")
+			}
+			if !infos[i].UpdatedAt.IsZero() {
+				pbInfos[i].UpdatedAt = infos[i].UpdatedAt.Format("2006-01-02 15:04:05")
+			}
+		}
+
+		reply.Count = count
+		reply.Items = pbInfos
+
+	} else {
+
+		query := new(termmodel.RiskMain)
+		if in.Item != nil {
+			query.MchtCd = in.Item.MchtCd
+			query.TermId = in.Item.TermId
+			query.CardType = in.Item.CardType
+			query.TotalLimitMoney = in.Item.TotalLimitMoney
+			query.AccpetStartTime = in.Item.AccpetStartTime
+			query.AccpetStartDate = in.Item.AccpetStartDate
+			query.AccpetEndTime = in.Item.AccpetEndTime
+			query.AccpetEndDate = in.Item.AccpetEndDate
+			query.SingleLimitMoney = in.Item.SingleLimitMoney
+			query.ControlWay = in.Item.ControlWay
+			query.SingleMinMoney = in.Item.SingleMinMoney
+			query.TotalPeriod = in.Item.TotalPeriod
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+			query.OperIn = in.Item.OperIn
+		}
+		infos, count, err := termmodel.QueryTermRiskMain(db, query, in.Page, in.Size)
+		if err != nil {
+			return nil, err
+		}
+
+		pbInfos := make([]*pb.TermRiskField, len(infos))
+		for i := range infos {
+			pbInfos[i] = &pb.TermRiskField{
+				MchtCd:           infos[i].MchtCd,
+				TermId:           infos[i].TermId,
+				CardType:         infos[i].CardType,
+				TotalLimitMoney:  infos[i].TotalLimitMoney,
+				AccpetStartTime:  infos[i].AccpetStartTime,
+				AccpetStartDate:  infos[i].AccpetStartDate,
+				AccpetEndTime:    infos[i].AccpetEndTime,
+				AccpetEndDate:    infos[i].AccpetEndDate,
+				SingleLimitMoney: infos[i].SingleLimitMoney,
+				ControlWay:       infos[i].ControlWay,
+				SingleMinMoney:   infos[i].SingleMinMoney,
+				TotalPeriod:      infos[i].TotalPeriod,
+				RecOprId:         infos[i].RecOprId,
+				RecUpdOpr:        infos[i].RecUpdOpr,
+				OperIn:           infos[i].OperIn,
+			}
+			if !infos[i].CreatedAt.IsZero() {
+				pbInfos[i].CreatedAt = infos[i].CreatedAt.Format("2006-01-02 15:04:05")
+			}
+			if !infos[i].UpdatedAt.IsZero() {
+				pbInfos[i].UpdatedAt = infos[i].UpdatedAt.Format("2006-01-02 15:04:05")
+			}
+		}
+
+		reply.Count = count
+		reply.Items = pbInfos
+	}
+
+	reply.Size = in.Size
+	reply.Page = in.Page
+	return reply, nil
+}
+
 func (s *service) SaveTermRisk(ctx context.Context, in *pb.SaveTermRiskRequest) (*pb.SaveTermRiskReply, error) {
 	var reply pb.SaveTermRiskReply
 	if in.Item == nil {
@@ -45,6 +175,7 @@ func (s *service) SaveTermRisk(ctx context.Context, in *pb.SaveTermRiskRequest) 
 }
 
 func (s *service) ListTermInfo(ctx context.Context, in *pb.ListTermInfoRequest) (*pb.ListTermInfoReply, error) {
+	reply := new(pb.ListTermInfoReply)
 	if in.Page == 0 {
 		in.Page = 1
 	}
@@ -52,97 +183,191 @@ func (s *service) ListTermInfo(ctx context.Context, in *pb.ListTermInfoRequest) 
 		in.Size = 10
 	}
 
+	edit := true
+	if in.Type == "main" {
+		edit = false
+	}
+
 	db := common.DB
+	if edit {
+		query := new(termmodel.Info)
+		if in.Item != nil {
+			query.MchtCd = in.Item.MchtCd
+			query.TermId = in.Item.TermId
+			query.TermTp = in.Item.TermTp
+			query.Belong = in.Item.Belong
+			query.BelongSub = in.Item.BelongSub
+			query.TmnlMoneyIntype = in.Item.TmnlMoneyIntype
+			query.TmnlMoney = in.Item.TmnlMoney
+			query.TmnlBrand = in.Item.TmnlBrand
+			query.TmnlModelNo = in.Item.TmnlModelNo
+			query.TmnlBarcode = in.Item.TmnlBarcode
+			query.DeviceCd = in.Item.DeviceCd
+			query.InstallLocation = in.Item.InstallLocation
+			query.TmnlIntype = in.Item.TmnlIntype
+			query.DialOut = in.Item.DialOut
+			query.DealTypes = in.Item.DealTypes
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+			query.AppCd = in.Item.AppCd
+			query.SystemFlag = in.Item.SystemFlag
+			query.Status = in.Item.Status
+			query.ActiveCode = in.Item.ActiveCode
+			query.NoFlag = in.Item.NoFlag
+			query.MsgResvFld1 = in.Item.MsgResvFld1
+			query.MsgResvFld2 = in.Item.MsgResvFld2
+			query.MsgResvFld3 = in.Item.MsgResvFld3
+			query.MsgResvFld4 = in.Item.MsgResvFld4
+			query.MsgResvFld5 = in.Item.MsgResvFld5
+			query.MsgResvFld6 = in.Item.MsgResvFld6
+			query.MsgResvFld7 = in.Item.MsgResvFld7
+			query.MsgResvFld8 = in.Item.MsgResvFld8
+			query.MsgResvFld9 = in.Item.MsgResvFld9
+			query.MsgResvFld10 = in.Item.MsgResvFld10
+		}
+		infos, count, err := termmodel.QueryTermInfo(db, query, in.Page, in.Size)
+		if err != nil {
+			return nil, err
+		}
 
-	query := new(termmodel.Info)
-	if in.Item != nil {
-		query.MchtCd = in.Item.MchtCd
-		query.TermId = in.Item.TermId
-		query.TermTp = in.Item.TermTp
-		query.Belong = in.Item.Belong
-		query.BelongSub = in.Item.BelongSub
-		query.TmnlMoneyIntype = in.Item.TmnlMoneyIntype
-		query.TmnlMoney = in.Item.TmnlMoney
-		query.TmnlBrand = in.Item.TmnlBrand
-		query.TmnlModelNo = in.Item.TmnlModelNo
-		query.TmnlBarcode = in.Item.TmnlBarcode
-		query.DeviceCd = in.Item.DeviceCd
-		query.InstallLocation = in.Item.InstallLocation
-		query.TmnlIntype = in.Item.TmnlIntype
-		query.DialOut = in.Item.DialOut
-		query.DealTypes = in.Item.DealTypes
-		query.RecOprId = in.Item.RecOprId
-		query.RecUpdOpr = in.Item.RecUpdOpr
-		query.AppCd = in.Item.AppCd
-		query.SystemFlag = in.Item.SystemFlag
-		query.Status = in.Item.Status
-		query.ActiveCode = in.Item.ActiveCode
-		query.NoFlag = in.Item.NoFlag
-		query.MsgResvFld1 = in.Item.MsgResvFld1
-		query.MsgResvFld2 = in.Item.MsgResvFld2
-		query.MsgResvFld3 = in.Item.MsgResvFld3
-		query.MsgResvFld4 = in.Item.MsgResvFld4
-		query.MsgResvFld5 = in.Item.MsgResvFld5
-		query.MsgResvFld6 = in.Item.MsgResvFld6
-		query.MsgResvFld7 = in.Item.MsgResvFld7
-		query.MsgResvFld8 = in.Item.MsgResvFld8
-		query.MsgResvFld9 = in.Item.MsgResvFld9
-		query.MsgResvFld10 = in.Item.MsgResvFld10
-	}
-	infos, count, err := termmodel.QueryTermInfo(db, query, in.Page, in.Size)
-	if err != nil {
-		return nil, err
-	}
+		pbInfos := make([]*pb.TermInfoField, len(infos))
+		for i := range infos {
+			pbInfos[i] = &pb.TermInfoField{
+				MchtCd:          infos[i].MchtCd,
+				TermId:          infos[i].TermId,
+				TermTp:          infos[i].TermTp,
+				Belong:          infos[i].Belong,
+				BelongSub:       infos[i].BelongSub,
+				TmnlMoneyIntype: infos[i].TmnlMoneyIntype,
+				TmnlMoney:       infos[i].TmnlMoney,
+				TmnlBrand:       infos[i].TmnlBrand,
+				TmnlModelNo:     infos[i].TmnlModelNo,
+				TmnlBarcode:     infos[i].TmnlBarcode,
+				DeviceCd:        infos[i].DeviceCd,
+				InstallLocation: infos[i].InstallLocation,
+				TmnlIntype:      infos[i].TmnlIntype,
+				DialOut:         infos[i].DialOut,
+				DealTypes:       infos[i].DealTypes,
+				RecOprId:        infos[i].RecOprId,
+				RecUpdOpr:       infos[i].RecUpdOpr,
+				AppCd:           infos[i].AppCd,
+				SystemFlag:      infos[i].SystemFlag,
+				Status:          infos[i].Status,
+				ActiveCode:      infos[i].ActiveCode,
+				NoFlag:          infos[i].NoFlag,
+				MsgResvFld1:     infos[i].MsgResvFld1,
+				MsgResvFld2:     infos[i].MsgResvFld2,
+				MsgResvFld3:     infos[i].MsgResvFld3,
+				MsgResvFld4:     infos[i].MsgResvFld4,
+				MsgResvFld5:     infos[i].MsgResvFld5,
+				MsgResvFld6:     infos[i].MsgResvFld6,
+				MsgResvFld7:     infos[i].MsgResvFld7,
+				MsgResvFld8:     infos[i].MsgResvFld8,
+				MsgResvFld9:     infos[i].MsgResvFld9,
+				MsgResvFld10:    infos[i].MsgResvFld10,
+			}
+			if !infos[i].CreatedAt.IsZero() {
+				pbInfos[i].CreatedAt = infos[i].CreatedAt.Format("2006-01-02 15:04:05")
+			}
+			if !infos[i].UpdatedAt.IsZero() {
+				pbInfos[i].UpdatedAt = infos[i].UpdatedAt.Format("2006-01-02 15:04:05")
+			}
+		}
 
-	pbInfos := make([]*pb.TermInfoField, len(infos))
-	for i := range infos {
-		pbInfos[i] = &pb.TermInfoField{
-			MchtCd:          infos[i].MchtCd,
-			TermId:          infos[i].TermId,
-			TermTp:          infos[i].TermTp,
-			Belong:          infos[i].Belong,
-			BelongSub:       infos[i].BelongSub,
-			TmnlMoneyIntype: infos[i].TmnlMoneyIntype,
-			TmnlMoney:       infos[i].TmnlMoney,
-			TmnlBrand:       infos[i].TmnlBrand,
-			TmnlModelNo:     infos[i].TmnlModelNo,
-			TmnlBarcode:     infos[i].TmnlBarcode,
-			DeviceCd:        infos[i].DeviceCd,
-			InstallLocation: infos[i].InstallLocation,
-			TmnlIntype:      infos[i].TmnlIntype,
-			DialOut:         infos[i].DialOut,
-			DealTypes:       infos[i].DealTypes,
-			RecOprId:        infos[i].RecOprId,
-			RecUpdOpr:       infos[i].RecUpdOpr,
-			AppCd:           infos[i].AppCd,
-			SystemFlag:      infos[i].SystemFlag,
-			Status:          infos[i].Status,
-			ActiveCode:      infos[i].ActiveCode,
-			NoFlag:          infos[i].NoFlag,
-			MsgResvFld1:     infos[i].MsgResvFld1,
-			MsgResvFld2:     infos[i].MsgResvFld2,
-			MsgResvFld3:     infos[i].MsgResvFld3,
-			MsgResvFld4:     infos[i].MsgResvFld4,
-			MsgResvFld5:     infos[i].MsgResvFld5,
-			MsgResvFld6:     infos[i].MsgResvFld6,
-			MsgResvFld7:     infos[i].MsgResvFld7,
-			MsgResvFld8:     infos[i].MsgResvFld8,
-			MsgResvFld9:     infos[i].MsgResvFld9,
-			MsgResvFld10:    infos[i].MsgResvFld10,
+		reply.Count = count
+		reply.Items = pbInfos
+	} else {
+		query := new(termmodel.InfoMain)
+		if in.Item != nil {
+			query.MchtCd = in.Item.MchtCd
+			query.TermId = in.Item.TermId
+			query.TermTp = in.Item.TermTp
+			query.Belong = in.Item.Belong
+			query.BelongSub = in.Item.BelongSub
+			query.TmnlMoneyIntype = in.Item.TmnlMoneyIntype
+			query.TmnlMoney = in.Item.TmnlMoney
+			query.TmnlBrand = in.Item.TmnlBrand
+			query.TmnlModelNo = in.Item.TmnlModelNo
+			query.TmnlBarcode = in.Item.TmnlBarcode
+			query.DeviceCd = in.Item.DeviceCd
+			query.InstallLocation = in.Item.InstallLocation
+			query.TmnlIntype = in.Item.TmnlIntype
+			query.DialOut = in.Item.DialOut
+			query.DealTypes = in.Item.DealTypes
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+			query.AppCd = in.Item.AppCd
+			query.SystemFlag = in.Item.SystemFlag
+			query.Status = in.Item.Status
+			query.ActiveCode = in.Item.ActiveCode
+			query.NoFlag = in.Item.NoFlag
+			query.MsgResvFld1 = in.Item.MsgResvFld1
+			query.MsgResvFld2 = in.Item.MsgResvFld2
+			query.MsgResvFld3 = in.Item.MsgResvFld3
+			query.MsgResvFld4 = in.Item.MsgResvFld4
+			query.MsgResvFld5 = in.Item.MsgResvFld5
+			query.MsgResvFld6 = in.Item.MsgResvFld6
+			query.MsgResvFld7 = in.Item.MsgResvFld7
+			query.MsgResvFld8 = in.Item.MsgResvFld8
+			query.MsgResvFld9 = in.Item.MsgResvFld9
+			query.MsgResvFld10 = in.Item.MsgResvFld10
 		}
-		if !infos[i].CreatedAt.IsZero() {
-			pbInfos[i].CreatedAt = infos[i].CreatedAt.Format("2006-01-02 15:04:05")
+		infos, count, err := termmodel.QueryTermInfoMain(db, query, in.Page, in.Size)
+		if err != nil {
+			return nil, err
 		}
-		if !infos[i].UpdatedAt.IsZero() {
-			pbInfos[i].UpdatedAt = infos[i].UpdatedAt.Format("2006-01-02 15:04:05")
+
+		pbInfos := make([]*pb.TermInfoField, len(infos))
+		for i := range infos {
+			pbInfos[i] = &pb.TermInfoField{
+				MchtCd:          infos[i].MchtCd,
+				TermId:          infos[i].TermId,
+				TermTp:          infos[i].TermTp,
+				Belong:          infos[i].Belong,
+				BelongSub:       infos[i].BelongSub,
+				TmnlMoneyIntype: infos[i].TmnlMoneyIntype,
+				TmnlMoney:       infos[i].TmnlMoney,
+				TmnlBrand:       infos[i].TmnlBrand,
+				TmnlModelNo:     infos[i].TmnlModelNo,
+				TmnlBarcode:     infos[i].TmnlBarcode,
+				DeviceCd:        infos[i].DeviceCd,
+				InstallLocation: infos[i].InstallLocation,
+				TmnlIntype:      infos[i].TmnlIntype,
+				DialOut:         infos[i].DialOut,
+				DealTypes:       infos[i].DealTypes,
+				RecOprId:        infos[i].RecOprId,
+				RecUpdOpr:       infos[i].RecUpdOpr,
+				AppCd:           infos[i].AppCd,
+				SystemFlag:      infos[i].SystemFlag,
+				Status:          infos[i].Status,
+				ActiveCode:      infos[i].ActiveCode,
+				NoFlag:          infos[i].NoFlag,
+				MsgResvFld1:     infos[i].MsgResvFld1,
+				MsgResvFld2:     infos[i].MsgResvFld2,
+				MsgResvFld3:     infos[i].MsgResvFld3,
+				MsgResvFld4:     infos[i].MsgResvFld4,
+				MsgResvFld5:     infos[i].MsgResvFld5,
+				MsgResvFld6:     infos[i].MsgResvFld6,
+				MsgResvFld7:     infos[i].MsgResvFld7,
+				MsgResvFld8:     infos[i].MsgResvFld8,
+				MsgResvFld9:     infos[i].MsgResvFld9,
+				MsgResvFld10:    infos[i].MsgResvFld10,
+			}
+			if !infos[i].CreatedAt.IsZero() {
+				pbInfos[i].CreatedAt = infos[i].CreatedAt.Format("2006-01-02 15:04:05")
+			}
+			if !infos[i].UpdatedAt.IsZero() {
+				pbInfos[i].UpdatedAt = infos[i].UpdatedAt.Format("2006-01-02 15:04:05")
+			}
 		}
+
+		reply.Count = count
+		reply.Items = pbInfos
 	}
-	return &pb.ListTermInfoReply{
-		Page:  in.Page,
-		Size:  in.Size,
-		Count: count,
-		Items: pbInfos,
-	}, nil
+	reply.Size = in.Size
+	reply.Page = in.Page
+
+	return reply, nil
 }
 
 func (s *service) SaveTerm(ctx context.Context, in *pb.SaveTermRequest) (*pb.SaveTermReply, error) {
