@@ -36,10 +36,109 @@
                   "type": "integer",
                   "description": "单页大小"
                 },
-                "term": {
+                "type": {
+                  "type": "string"
+                },
+                "item": {
                   "type": "object",
-                  "description": "商户具体查询字段",
+                  "description": "终端具体查询字段",
                   "properties": {
+                    "mchtCd": {
+                      "type": "string"
+                    },
+                    "termId": {
+                      "type": "string"
+                    },
+                    "termTp": {
+                      "type": "string"
+                    },
+                    "belong": {
+                      "type": "string"
+                    },
+                    "belongSub": {
+                      "type": "string"
+                    },
+                    "tmnlMoneyIntype": {
+                      "type": "string"
+                    },
+                    "tmnlMoney": {
+                      "type": "number"
+                    },
+                    "tmnlBrand": {
+                      "type": "string"
+                    },
+                    "tmnlModelNo": {
+                      "type": "string"
+                    },
+                    "tmnlBarcode": {
+                      "type": "string"
+                    },
+                    "deviceCd": {
+                      "type": "string"
+                    },
+                    "installLocation": {
+                      "type": "string"
+                    },
+                    "tmnlIntype": {
+                      "type": "string"
+                    },
+                    "dialOut": {
+                      "type": "string"
+                    },
+                    "dealTypes": {
+                      "type": "string"
+                    },
+                    "recOprId": {
+                      "type": "string"
+                    },
+                    "recUpdOpr": {
+                      "type": "string"
+                    },
+                    "appCd": {
+                      "type": "string"
+                    },
+                    "systemFlag": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "activeCode": {
+                      "type": "string"
+                    },
+                    "noFlag": {
+                      "type": "string"
+                    },
+                    "msgResvFld1": {
+                      "type": "string"
+                    },
+                    "msgResvFld2": {
+                      "type": "string"
+                    },
+                    "msgResvFld3": {
+                      "type": "string"
+                    },
+                    "msgResvFld4": {
+                      "type": "string"
+                    },
+                    "msgResvFld5": {
+                      "type": "string"
+                    },
+                    "msgResvFld6": {
+                      "type": "string"
+                    },
+                    "msgResvFld7": {
+                      "type": "string"
+                    },
+                    "msgResvFld8": {
+                      "type": "string"
+                    },
+                    "msgResvFld9": {
+                      "type": "string"
+                    },
+                    "msgResvFld10": {
+                      "type": "string"
+                    }
                   }
                 }
               }
@@ -54,7 +153,7 @@
                 "page": 1,
                 "size": 2,
                 "count": 1,
-                "terms": [
+                "items": [
                   {
                     "mchtCd": "002130307630000",
                     "termId": "00000001",
