@@ -13,6 +13,89 @@ import (
 
 type merchantService struct{}
 
+func (m *merchantService) GetMerchantBizDeal(ctx context.Context, in *pb.GetMerchantBizDealRequest) (*pb.GetMerchantBizDealReply, error) {
+	reply := new(pb.GetMerchantBizDealReply)
+	if in.Item == nil || in.Item.MchtCd == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "mchtCd不能为空",
+		}
+		return reply, nil
+	}
+
+	edit := true
+	if in.Type == "main" {
+		edit = false
+	}
+	db := common.DB
+
+	if edit {
+		query := new(merchantmodel.BizDeal)
+		{
+			query.MchtCd = in.Item.MchtCd
+		}
+		items, err := merchantmodel.QueryBizDeal(db, query)
+		if err != nil {
+			return nil, err
+		}
+		pbItems := make([]*pb.MerchantBizDealField, len(items))
+
+		for i := range items {
+			pbItems[i] = &pb.MerchantBizDealField{
+				MchtCd:    items[i].MchtCd,
+				ProdCd:    items[i].ProdCd,
+				BizCd:     items[i].BizCd,
+				TransCd:   items[i].TransCd,
+				OperIn:    items[i].OperIn,
+				RecOprId:  items[i].RecOprId,
+				RecUpdOpr: items[i].RecUpdOpr,
+			}
+			if !items[i].CreatedAt.IsZero() {
+				pbItems[i].CreatedAt = items[i].CreatedAt.Format(util.TimePattern)
+			}
+			if !items[i].UpdatedAt.IsZero() {
+				pbItems[i].UpdatedAt = items[i].UpdatedAt.Format(util.TimePattern)
+			}
+		}
+
+		reply.Items = pbItems
+
+	} else {
+		query := new(merchantmodel.BizDealMain)
+		{
+			query.MchtCd = in.Item.MchtCd
+		}
+		items, err := merchantmodel.QueryBizDealMain(db, query)
+		if err != nil {
+			return nil, err
+		}
+		pbItems := make([]*pb.MerchantBizDealField, len(items))
+
+		for i := range items {
+			pbItems[i] = &pb.MerchantBizDealField{
+				MchtCd:    items[i].MchtCd,
+				ProdCd:    items[i].ProdCd,
+				BizCd:     items[i].BizCd,
+				TransCd:   items[i].TransCd,
+				OperIn:    items[i].OperIn,
+				RecOprId:  items[i].RecOprId,
+				RecUpdOpr: items[i].RecUpdOpr,
+			}
+			if !items[i].CreatedAt.IsZero() {
+				pbItems[i].CreatedAt = items[i].CreatedAt.Format(util.TimePattern)
+			}
+			if !items[i].UpdatedAt.IsZero() {
+				pbItems[i].UpdatedAt = items[i].UpdatedAt.Format(util.TimePattern)
+			}
+		}
+
+		reply.Items = pbItems
+	}
+
+	return reply, nil
+}
+
 func (m *merchantService) GetMerchantBankAccount(ctx context.Context, in *pb.GetMerchantBankAccountRequest) (*pb.GetMerchantBankAccountReply, error) {
 	reply := new(pb.GetMerchantBankAccountReply)
 	if in.Item == nil || in.Item.OwnerCd == "" {

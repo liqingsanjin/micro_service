@@ -70,3 +70,9 @@ func MakeGetMerchantBankAccountEndpoint(service pb.MerchantServer) endpoint.Endp
 		return service.GetMerchantBankAccount(ctx, request.(*pb.GetMerchantBankAccountRequest))
 	}
 }
+
+func MakeGetMerchantBizDealEndpoint(service pb.MerchantServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.GetMerchantBizDeal(ctx, request.(*pb.GetMerchantBizDealRequest))
+	}
+}
