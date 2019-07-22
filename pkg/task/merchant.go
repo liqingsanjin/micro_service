@@ -143,5 +143,5 @@ func merchantRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) erro
 }
 
 func deleteMerchant(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-
+	return nil
 }

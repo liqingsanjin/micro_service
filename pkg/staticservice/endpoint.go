@@ -68,3 +68,9 @@ func MakeGetDictionaryItemByPkEndpoint(s pb.StaticServer) endpoint.Endpoint {
 		return s.GetDictionaryItemByPk(ctx, req)
 	}
 }
+
+func MakeGetUnionPayBankListByCodeEndpoint(s pb.StaticServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return s.GetUnionPayBankListByCode(ctx, request.(*pb.GetUnionPayBankListByCodeRequest))
+	}
+}

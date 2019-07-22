@@ -98,6 +98,15 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 		endpoints.GetDictionaryItemByPkEndpoint = retry
 	}
 
+	{
+		factory := staticserviceFactory(staticservice.MakeGetUnionPayBankListByCodeEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = staticBreaker(retry)
+		endpoints.GetUnionPayBankListByCodeEndpoint = retry
+	}
+
 	return &endpoints
 }
 

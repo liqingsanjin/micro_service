@@ -1,20 +1,29 @@
 package staticservice
 
 import (
+	"context"
 	"userService/pkg/pb"
 
 	grpctransport "github.com/go-kit/kit/transport/grpc"
-	"golang.org/x/net/context"
 )
 
 type server struct {
-	syncData               grpctransport.Handler
-	getDictionaryItem      grpctransport.Handler
-	getDicByProdAndBiz     grpctransport.Handler
-	getDicByInsCmpCd       grpctransport.Handler
-	checkValues            grpctransport.Handler
-	getDictionaryLayerItem grpctransport.Handler
-	getDictionaryItemByPk  grpctransport.Handler
+	syncData                         grpctransport.Handler
+	getDictionaryItem                grpctransport.Handler
+	getDicByProdAndBiz               grpctransport.Handler
+	getDicByInsCmpCd                 grpctransport.Handler
+	checkValues                      grpctransport.Handler
+	getDictionaryLayerItem           grpctransport.Handler
+	getDictionaryItemByPk            grpctransport.Handler
+	GetUnionPayBankListByCodeHandler grpctransport.Handler
+}
+
+func (g *server) GetUnionPayBankListByCode(ctx context.Context, in *pb.GetUnionPayBankListByCodeRequest) (*pb.GetUnionPayBankListByCodeReply, error) {
+	_, res, err := g.GetUnionPayBankListByCodeHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetUnionPayBankListByCodeReply), nil
 }
 
 func (g *server) GetDictionaryItemByPk(ctx context.Context, in *pb.GetDictionaryItemByPkReq) (*pb.GetDictionaryItemByPkResp, error) {
@@ -145,6 +154,16 @@ func New(tracer grpctransport.ServerOption) pb.StaticServer {
 	{
 		e := MakeGetDictionaryItemByPkEndpoint(svc)
 		svr.getDictionaryItemByPk = grpctransport.NewServer(
+			e,
+			grpcDecode,
+			grpcEncode,
+			options...,
+		)
+	}
+
+	{
+		e := MakeGetUnionPayBankListByCodeEndpoint(svc)
+		svr.GetUnionPayBankListByCodeHandler = grpctransport.NewServer(
 			e,
 			grpcDecode,
 			grpcEncode,

@@ -12,6 +12,7 @@ service Static {
     rpc CheckValues(StaticCheckValuesReq) returns (StaticCheckValuesResp) {}
     rpc GetDictionaryLayerItem(GetDictionaryLayerItemReq) returns (GetDictionaryLayerItemResp) {}
     rpc GetDictionaryItemByPk(GetDictionaryItemByPkReq) returns (GetDictionaryItemByPkResp) {}
+    rpc GetUnionPayBankListByCode(GetUnionPayBankListByCodeRequest) returns (GetUnionPayBankListByCodeReply) {}
 }
 
 message StaticSyncDataReq {
@@ -104,4 +105,25 @@ message GetDictionaryItemByPkReq {
 message GetDictionaryItemByPkResp {
     StaticGetDictionaryItem item = 1;
     error err = 2;
+}
+
+message UnionPayBankListField {
+    int64 id = 1;
+    string code = 2;
+    string name = 3;
+    string updatedAt = 4;
+}
+
+message GetUnionPayBankListByCodeRequest {
+    UnionPayBankListField item = 1;
+    int32 page = 2;
+    int32 size = 3;
+}
+
+message GetUnionPayBankListByCodeReply {
+    repeated UnionPayBankListField items = 1;
+    int32 page = 2;
+    int32 size = 3;
+    int32 count = 4;
+    error err = 5;
 }

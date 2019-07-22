@@ -1,14 +1,15 @@
 package staticservice
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"userService/pkg/common"
 	"userService/pkg/model/static"
 	"userService/pkg/pb"
+	"userService/pkg/util"
 
 	"github.com/hashicorp/consul/api"
-	"golang.org/x/net/context"
 )
 
 var (
@@ -36,9 +37,46 @@ var MyMap = StaticMapData{
 type service struct {
 }
 
-//Newservice return institution service with grpc registry type.
-func Newservice() pb.StaticServer {
-	return &service{}
+func (s *service) GetUnionPayBankListByCode(ctx context.Context, in *pb.GetUnionPayBankListByCodeRequest) (*pb.GetUnionPayBankListByCodeReply, error) {
+	reply := new(pb.GetUnionPayBankListByCodeReply)
+	if in.Item == nil || in.Item.Code == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "code不能为空",
+		}
+		return reply, nil
+	}
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	if in.Size == 0 {
+		in.Size = 10
+	}
+	db := common.DB
+
+	items, count, err := static.FindBankListByCode(db, in.Item.Code, in.Page, in.Size)
+	if err != nil {
+		return nil, err
+	}
+
+	pbItems := make([]*pb.UnionPayBankListField, len(items))
+	for i := range items {
+		pbItems[i] = &pb.UnionPayBankListField{
+			Id:   items[i].Id,
+			Code: items[i].Code,
+			Name: items[i].Name,
+		}
+		if !items[i].UpdatedAt.IsZero() {
+			pbItems[i].UpdatedAt = items[i].UpdatedAt.Format(util.TimePattern)
+		}
+	}
+	reply.Size = in.Size
+	reply.Page = in.Page
+	reply.Items = pbItems
+	reply.Count = count
+	return reply, nil
+
 }
 
 //Download .

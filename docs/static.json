@@ -378,6 +378,62 @@
           }
         }
       }
+    },
+    "/static/getUnionPayBankListByCode": {
+      "post": {
+        "operationId": "getUnionPayBankListByCode",
+        "summary": "union pay bank list",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "getDictionaryItemByPk",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "required": [
+                "item",
+                "page",
+                "size"
+              ],
+              "properties": {
+                "page": {
+                  "type": "integer"
+                },
+                "size": {
+                  "type": "integer"
+                },
+                "item": {
+                  "required": [
+                    "code"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "item": {
+                  "dicType": "CTRL_FEE_STA",
+                  "dicCode": "0",
+                  "dicName": "0-关闭"
+                },
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
