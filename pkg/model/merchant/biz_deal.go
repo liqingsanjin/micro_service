@@ -34,6 +34,10 @@ func SaveBizDeal(db *gorm.DB, data *BizDeal) error {
 	return db.Create(data).Error
 }
 
+func SaveBizDealMain(db *gorm.DB, data *BizDealMain) error {
+	return db.Create(data).Error
+}
+
 func QueryBizDeal(db *gorm.DB, query *BizDeal) ([]*BizDeal, error) {
 	out := make([]*BizDeal, 0)
 	err := db.Where(query).Find(&out).Error
@@ -44,4 +48,8 @@ func QueryBizDealMain(db *gorm.DB, query *BizDealMain) ([]*BizDealMain, error) {
 	out := make([]*BizDealMain, 0)
 	err := db.Where(query).Find(&out).Error
 	return out, err
+}
+
+func DeleteBizDeal(db *gorm.DB, query *BizDeal) error {
+	return db.Where(query).Delete(&BizDeal{}).Error
 }

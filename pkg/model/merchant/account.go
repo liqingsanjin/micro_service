@@ -49,6 +49,10 @@ func SaveBankAccount(db *gorm.DB, data *BankAccount) error {
 	return db.Create(data).Error
 }
 
+func SaveBankAccountMain(db *gorm.DB, data *BankAccountMain) error {
+	return db.Create(data).Error
+}
+
 func QueryBankAccount(db *gorm.DB, query *BankAccount) ([]*BankAccount, error) {
 	out := make([]*BankAccount, 0)
 	err := db.Where(query).Find(&out).Error
@@ -59,4 +63,8 @@ func QueryBankAccountMain(db *gorm.DB, query *BankAccountMain) ([]*BankAccountMa
 	out := make([]*BankAccountMain, 0)
 	err := db.Where(query).Find(&out).Error
 	return out, err
+}
+
+func DeleteBankAccount(db *gorm.DB, query *BankAccount) error {
+	return db.Where(query).Delete(&BankAccount{}).Error
 }

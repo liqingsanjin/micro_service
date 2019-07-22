@@ -42,6 +42,10 @@ func SaveRisk(db *gorm.DB, data *Risk) error {
 	return db.Create(data).Error
 }
 
+func SaveRiskMain(db *gorm.DB, data *RiskMain) error {
+	return db.Create(data).Error
+}
+
 func QueryTermRisk(db *gorm.DB, query *Risk, page int32, size int32) ([]*Risk, int32, error) {
 	out := make([]*Risk, 0)
 	var count int32

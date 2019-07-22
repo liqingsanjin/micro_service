@@ -154,3 +154,11 @@ func QueryMerchantInfosMain(db *gorm.DB, query *MerchantInfoMain, page int32, si
 func SaveMerchant(db *gorm.DB, info *MerchantInfo) error {
 	return db.Create(info).Error
 }
+
+func SaveMerchantMain(db *gorm.DB, info *MerchantInfoMain) error {
+	return db.Create(info).Error
+}
+
+func DeleteMerchant(db *gorm.DB, query *MerchantInfo) error {
+	return db.Where(query).Delete(&MerchantInfo{}).Error
+}

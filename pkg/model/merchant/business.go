@@ -55,6 +55,10 @@ func SaveBusiness(db *gorm.DB, data *Business) error {
 	return db.Create(data).Error
 }
 
+func SaveBusinessMain(db *gorm.DB, data *BusinessMain) error {
+	return db.Create(data).Error
+}
+
 func QueryBusiness(db *gorm.DB, query *Business) ([]*Business, error) {
 	out := make([]*Business, 0)
 	err := db.Where(query).Find(&out).Error
@@ -65,4 +69,8 @@ func QueryBusinessMain(db *gorm.DB, query *BusinessMain) ([]*BusinessMain, error
 	out := make([]*BusinessMain, 0)
 	err := db.Where(query).Find(&out).Error
 	return out, err
+}
+
+func DeleteBusiness(db *gorm.DB, query *Business) error {
+	return db.Where(query).Delete(&Business{}).Error
 }

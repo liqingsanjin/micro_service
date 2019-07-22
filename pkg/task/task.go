@@ -1,15 +1,11 @@
 package task
 
 import (
-	"fmt"
 	"strconv"
 	"userService/pkg/camunda"
 	"userService/pkg/camunda/pb"
 	"userService/pkg/common"
-	camundamodel "userService/pkg/model/camunda"
-	"userService/pkg/model/institution"
 
-	"github.com/jinzhu/gorm"
 	"github.com/robfig/cron"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
@@ -17,9 +13,9 @@ import (
 
 var topics = []string{
 	"add_ins",
-	"add_mtch",
+	"add_mcht",
 	"del_ins",
-	"del_mtch",
+	"del_mcht",
 }
 
 func RunServiceTask(format string, workerNum int) {
@@ -70,12 +66,12 @@ func finishRegister(ctx context.Context, workerId int, ch <-chan int) {
 				case "add_ins":
 					// 机构注册
 					err = institutionRegister(db, resp.Item[0])
-				case "add_mtch":
+				case "add_mcht":
 					// 商户注册
 					err = merchantRegister(db, resp.Item[0])
 				case "del_ins":
 					err = deleteInstitution(db, resp.Item[0])
-				case "del_mtch":
+				case "del_mcht":
 					// todo 删除商户
 
 				}
@@ -103,129 +99,4 @@ func finishRegister(ctx context.Context, workerId int, ch <-chan int) {
 			}(t)
 		}
 	}
-}
-
-func institutionRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询机构id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
-	// 查询机构信息
-	info, err := institution.FindInstitutionInfoById(db, instance.DataId)
-	if err != nil {
-		return err
-	}
-	if info == nil {
-		return fmt.Errorf("institution %s not found", instance.DataId)
-	}
-	// 查询fee，cash，control
-	fees, err := institution.FindInstitutionFee(db, &institution.Fee{
-		InsIdCd: info.InsIdCd,
-	})
-	if err != nil {
-		return err
-	}
-	cashes, err := institution.FindInstitutionCash(db, &institution.Cash{
-		InsIdCd: info.InsIdCd,
-	})
-	if err != nil {
-		return err
-	}
-	controls, err := institution.FindInstitutionControl(db, &institution.Control{
-		InsIdCd: info.InsIdCd,
-	})
-	if err != nil {
-		return err
-	}
-
-	// 修改机构状态
-	err = institution.UpdateInstitution(db, &institution.InstitutionInfo{
-		InsIdCd: info.InsIdCd,
-	}, &institution.InstitutionInfo{
-		InsSta: "1",
-	})
-	if err != nil {
-		return err
-	}
-
-	// 入正式表 institution fee cash control
-	info.InsSta = "1"
-
-	err = institution.SaveInstitutionMain(db, &institution.InstitutionInfoMain{
-		InstitutionInfo: *info,
-	})
-	if err != nil {
-		return err
-	}
-	for _, fee := range fees {
-		err = institution.SaveInstitutionFeeMain(db, &institution.FeeMain{
-			Fee: *fee,
-		})
-		if err != nil {
-			return err
-		}
-	}
-	for _, cash := range cashes {
-		err = institution.SaveInstitutionCashMain(db, &institution.CashMain{
-			Cash: *cash,
-		})
-		if err != nil {
-			return err
-		}
-	}
-	for _, control := range controls {
-		err = institution.SaveInstitutionControlMain(db, &institution.ControlMain{
-			Control: *control,
-		})
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func merchantRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	return nil
-}
-
-func deleteInstitution(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询机构id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-	// 删除 institution fee cash control
-	err = institution.DeleteInstitution(db, &institution.InstitutionInfo{
-		InsIdCd: instance.DataId,
-	})
-	if err != nil {
-		return err
-	}
-	err = institution.DeleteInstitutionFee(db, &institution.Fee{
-		InsIdCd: instance.DataId,
-	})
-	if err != nil {
-		return err
-	}
-	err = institution.DeleteInstitutionCash(db, &institution.Cash{
-		InsIdCd: instance.DataId,
-	})
-	if err != nil {
-		return err
-	}
-	err = institution.DeleteInstitutionControl(db, &institution.Control{
-		InsIdCd: instance.DataId,
-	})
-	if err != nil {
-		return err
-	}
-	return nil
 }

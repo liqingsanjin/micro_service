@@ -39,6 +39,10 @@ func SavePicture(db *gorm.DB, data *Picture) error {
 	return db.Create(data).Error
 }
 
+func SavePictureMain(db *gorm.DB, data *PictureMain) error {
+	return db.Create(data).Error
+}
+
 func QueryPicture(db *gorm.DB, query *Picture) ([]*Picture, error) {
 	out := make([]*Picture, 0)
 	err := db.Where(query).Find(&out).Error
