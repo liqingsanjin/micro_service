@@ -78,3 +78,7 @@ func QueryTermInfoMain(db *gorm.DB, query *InfoMain, page int32, size int32) ([]
 	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
 	return out, count, err
 }
+
+func DeleteTerm(db *gorm.DB, query *Info) error {
+	return db.Where(query).Delete(&Info{}).Error
+}

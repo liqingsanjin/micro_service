@@ -73,7 +73,7 @@ func merchantRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) erro
 		return err
 	}
 
-	// todo 入库
+	// 入库
 	info.Status = "01"
 	err = merchant.SaveMerchantMain(db, &merchant.MerchantInfoMain{
 		MerchantInfo: *info,
@@ -143,5 +143,71 @@ func merchantRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) erro
 }
 
 func deleteMerchant(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
+	// 查询商户id
+	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
+	if err != nil {
+		return err
+	}
+	if instance == nil {
+		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
+	}
+
+	// 删除商户相关信息
+	err = merchant.DeleteMerchant(db, &merchant.MerchantInfo{
+		MchtCd: instance.DataId,
+	})
+	if err != nil {
+		return err
+	}
+
+	err = merchant.DeleteBankAccount(db, &merchant.BankAccount{
+		OwnerCd: instance.DataId,
+	})
+	if err != nil {
+		return err
+	}
+
+	err = merchant.DeleteBizDeal(db, &merchant.BizDeal{
+		MchtCd: instance.DataId,
+	})
+	if err != nil {
+		return err
+	}
+
+	err = merchant.DeleteBizFee(db, &merchant.BizFee{
+		MchtCd: instance.DataId,
+	})
+	if err != nil {
+		return err
+	}
+
+	err = merchant.DeleteBusiness(db, &merchant.Business{
+		MchtCd: instance.DataId,
+	})
+	if err != nil {
+		return err
+	}
+
+	err = merchant.DeletePicture(db, &merchant.Picture{
+		MchtCd: instance.DataId,
+	})
+	if err != nil {
+		return err
+	}
+
+	err = term.DeleteTerm(db, &term.Info{
+		MchtCd: instance.DataId,
+	})
+	if err != nil {
+		return err
+	}
+
+	err = term.DeleteRisk(db, &term.Risk{
+		MchtCd: instance.DataId,
+	})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

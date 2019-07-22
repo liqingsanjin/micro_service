@@ -54,3 +54,7 @@ func QueryPicTureMain(db *gorm.DB, query *PictureMain) ([]*PictureMain, error) {
 	err := db.Where(query).Find(&out).Error
 	return out, err
 }
+
+func DeletePicture(db *gorm.DB, query *Picture) error {
+	return db.Where(query).Delete(&Picture{}).Error
+}

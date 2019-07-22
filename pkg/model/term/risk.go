@@ -61,3 +61,7 @@ func QueryTermRiskMain(db *gorm.DB, query *RiskMain, page int32, size int32) ([]
 	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
 	return out, count, err
 }
+
+func DeleteRisk(db *gorm.DB, query *Risk) error {
+	return db.Where(query).Delete(&Risk{}).Error
+}
