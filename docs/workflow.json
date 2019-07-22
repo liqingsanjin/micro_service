@@ -38,7 +38,7 @@
               "properties": {
                 "type": {
                   "type": "string",
-                  "description": "工作流类型: ins_add为新增机构"
+                  "description": "工作流类型: ins_add为新增机构, mcht_add为商户注册"
                 },
                 "name": {
                   "type": "string",
