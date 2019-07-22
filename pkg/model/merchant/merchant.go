@@ -155,6 +155,10 @@ func SaveMerchant(db *gorm.DB, info *MerchantInfo) error {
 	return db.Create(info).Error
 }
 
+func UpdateMerchant(db *gorm.DB, query *MerchantInfo, data *MerchantInfo) error {
+	return db.Model(&MerchantInfo{}).Where(query).Updates(data).Error
+}
+
 func SaveMerchantMain(db *gorm.DB, info *MerchantInfoMain) error {
 	return db.Create(info).Error
 }

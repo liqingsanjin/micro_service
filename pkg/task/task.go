@@ -72,7 +72,7 @@ func finishRegister(ctx context.Context, workerId int, ch <-chan int) {
 				case "del_ins":
 					err = deleteInstitution(db, resp.Item[0])
 				case "del_mcht":
-					// todo 删除商户
+					// 删除商户
 					err = deleteMerchant(db, resp.Item[0])
 				}
 				if err != nil {

@@ -74,6 +74,15 @@ func merchantRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) erro
 	}
 
 	// 入库
+	err = merchant.UpdateMerchant(db, &merchant.MerchantInfo{
+		MchtCd: info.MchtCd,
+	}, &merchant.MerchantInfo{
+		Status: "01",
+	})
+	if err != nil {
+		return err
+	}
+
 	info.Status = "01"
 	err = merchant.SaveMerchantMain(db, &merchant.MerchantInfoMain{
 		MerchantInfo: *info,
