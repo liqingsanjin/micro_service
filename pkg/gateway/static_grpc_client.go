@@ -19,6 +19,15 @@ type StaticEndpoints struct {
 	GetDictionaryLayerItemEndpoint    endpoint.Endpoint
 	GetDictionaryItemByPkEndpoint     endpoint.Endpoint
 	GetUnionPayBankListByCodeEndpoint endpoint.Endpoint
+	FindUnionPayMccListEndpoint       endpoint.Endpoint
+}
+
+func (s *StaticEndpoints) FindUnionPayMccList(ctx context.Context, in *pb.FindUnionPayMccListRequest) (*pb.FindUnionPayMccListReply, error) {
+	res, err := s.FindUnionPayMccListEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.FindUnionPayMccListReply), nil
 }
 
 func (s *StaticEndpoints) GetUnionPayBankListByCode(ctx context.Context, in *pb.GetUnionPayBankListByCodeRequest) (*pb.GetUnionPayBankListByCodeReply, error) {
@@ -217,6 +226,19 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			options...,
 		).Endpoint()
 		endpoints.GetUnionPayBankListByCodeEndpoint = endpoint
+	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Static",
+			"FindUnionPayMccList",
+			encodeRequest,
+			decodeResponse,
+			pb.FindUnionPayMccListReply{},
+			options...,
+		).Endpoint()
+		endpoints.FindUnionPayMccListEndpoint = endpoint
 	}
 
 	return endpoints

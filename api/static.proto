@@ -13,6 +13,7 @@ service Static {
     rpc GetDictionaryLayerItem(GetDictionaryLayerItemReq) returns (GetDictionaryLayerItemResp) {}
     rpc GetDictionaryItemByPk(GetDictionaryItemByPkReq) returns (GetDictionaryItemByPkResp) {}
     rpc GetUnionPayBankListByCode(GetUnionPayBankListByCodeRequest) returns (GetUnionPayBankListByCodeReply) {}
+    rpc FindUnionPayMccList(FindUnionPayMccListRequest) returns (FindUnionPayMccListReply) {}
 }
 
 message StaticSyncDataReq {
@@ -122,6 +123,31 @@ message GetUnionPayBankListByCodeRequest {
 
 message GetUnionPayBankListByCodeReply {
     repeated UnionPayBankListField items = 1;
+    int32 page = 2;
+    int32 size = 3;
+    int32 count = 4;
+    error err = 5;
+}
+
+message UnionPayMccField {
+    int64 id = 1;
+    string code = 2;
+    string name = 3;
+    string category = 4;
+    string categoryType = 5;
+    string industry = 6;
+    string status = 7;
+    string updatedAt = 8;
+}
+
+message FindUnionPayMccListRequest {
+    UnionPayMccField item = 1;
+    int32 page = 2;
+    int32 size = 3;
+}
+
+message FindUnionPayMccListReply {
+    repeated UnionPayMccField items = 1;
     int32 page = 2;
     int32 size = 3;
     int32 count = 4;

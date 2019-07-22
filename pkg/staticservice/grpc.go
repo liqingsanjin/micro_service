@@ -16,6 +16,15 @@ type server struct {
 	getDictionaryLayerItem           grpctransport.Handler
 	getDictionaryItemByPk            grpctransport.Handler
 	GetUnionPayBankListByCodeHandler grpctransport.Handler
+	FindUnionPayMccListHandler       grpctransport.Handler
+}
+
+func (g *server) FindUnionPayMccList(ctx context.Context, in *pb.FindUnionPayMccListRequest) (*pb.FindUnionPayMccListReply, error) {
+	_, res, err := g.FindUnionPayMccListHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.FindUnionPayMccListReply), nil
 }
 
 func (g *server) GetUnionPayBankListByCode(ctx context.Context, in *pb.GetUnionPayBankListByCodeRequest) (*pb.GetUnionPayBankListByCodeReply, error) {
@@ -164,6 +173,16 @@ func New(tracer grpctransport.ServerOption) pb.StaticServer {
 	{
 		e := MakeGetUnionPayBankListByCodeEndpoint(svc)
 		svr.GetUnionPayBankListByCodeHandler = grpctransport.NewServer(
+			e,
+			grpcDecode,
+			grpcEncode,
+			options...,
+		)
+	}
+
+	{
+		e := MakeFindUnionPayMccListEndpoint(svc)
+		svr.FindUnionPayMccListHandler = grpctransport.NewServer(
 			e,
 			grpcDecode,
 			grpcEncode,

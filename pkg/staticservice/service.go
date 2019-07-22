@@ -37,6 +37,53 @@ var MyMap = StaticMapData{
 type service struct {
 }
 
+func (s *service) FindUnionPayMccList(ctx context.Context, in *pb.FindUnionPayMccListRequest) (*pb.FindUnionPayMccListReply, error) {
+	reply := new(pb.FindUnionPayMccListReply)
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	if in.Size == 0 {
+		in.Size = 10
+	}
+	db := common.DB
+	query := new(static.Mcc)
+	if in.Item != nil {
+		query.Id = in.Item.Id
+		query.Code = in.Item.Code
+		query.Name = in.Item.Name
+		query.Category = in.Item.Category
+		query.CategoryType = in.Item.CategoryType
+		query.Industry = in.Item.Industry
+		query.Status = in.Item.Status
+	}
+
+	items, count, err := static.QueryMcc(db, query, in.Page, in.Size)
+	if err != nil {
+		return nil, err
+	}
+
+	pbItems := make([]*pb.UnionPayMccField, len(items))
+	for i := range items {
+		pbItems[i] = &pb.UnionPayMccField{
+			Id:           items[i].Id,
+			Code:         items[i].Code,
+			Name:         items[i].Name,
+			Category:     items[i].Category,
+			CategoryType: items[i].CategoryType,
+			Industry:     items[i].Industry,
+			Status:       items[i].Status,
+		}
+		if !items[i].UpdatedAt.IsZero() {
+			pbItems[i].UpdatedAt = items[i].UpdatedAt.Format(util.TimePattern)
+		}
+	}
+	reply.Size = in.Size
+	reply.Page = in.Page
+	reply.Items = pbItems
+	reply.Count = count
+	return reply, nil
+}
+
 func (s *service) GetUnionPayBankListByCode(ctx context.Context, in *pb.GetUnionPayBankListByCodeRequest) (*pb.GetUnionPayBankListByCodeReply, error) {
 	reply := new(pb.GetUnionPayBankListByCodeReply)
 	if in.Item == nil || in.Item.Code == "" {
