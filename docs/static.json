@@ -410,7 +410,8 @@
                   ],
                   "properties": {
                     "code": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "为前缀，模糊查询"
                     }
                   }
                 }
@@ -423,11 +424,17 @@
             "description": "正确返回",
             "examples": {
               "application/json": {
-                "item": {
-                  "dicType": "CTRL_FEE_STA",
-                  "dicCode": "0",
-                  "dicName": "0-关闭"
-                },
+                "items": [
+                  {
+                    "id": "148909",
+                    "code": "313100000013",
+                    "name": "北京银行",
+                    "updatedAt": "2013-08-08 17:11:59"
+                  }
+                ],
+                "page": 1,
+                "size": 10,
+                "count": 15977,
                 "err": null
               }
             }
@@ -494,11 +501,21 @@
             "description": "正确返回",
             "examples": {
               "application/json": {
-                "item": {
-                  "dicType": "CTRL_FEE_STA",
-                  "dicCode": "0",
-                  "dicName": "0-关闭"
-                },
+                "items": [
+                  {
+                    "id": "1",
+                    "code": "7011",
+                    "name": "7011_住宿服务",
+                    "category": "一类",
+                    "categoryType": "宾馆",
+                    "industry": "宾馆",
+                    "status": "0",
+                    "updatedAt": ""
+                  }
+                ],
+                "page": 1,
+                "size": 10,
+                "count": 1,
                 "err": null
               }
             }
