@@ -523,6 +523,57 @@
           }
         }
       }
+    },
+    "/static/getInsProdBizFeeMapInfo": {
+      "post": {
+        "operationId": "getInsProdBizFeeMapInfo",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "getInsProdBizFeeMapInfo",
+            "in": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "ProdCd": "1000",
+                    "BizCd": "0000000",
+                    "MccMTp": "1",
+                    "MccSTp": "0",
+                    "InsFeeBizCd": "1000000000010",
+                    "InsFeeBizNm": "标准类费率",
+                    "MsgResvFld1": "",
+                    "MsgResvFld2": "",
+                    "MsgResvFld3": "",
+                    "MsgResvFld4": "",
+                    "MsgResvFld5": "",
+                    "MsgResvFld6": "",
+                    "MsgResvFld7": "",
+                    "MsgResvFld8": "",
+                    "MsgResvFld9": "",
+                    "MsgResvFld10": "",
+                    "RecOprID": "I",
+                    "RecUpdOpr": "",
+                    "CreateAt": "2016-10-16 15:40:44",
+                    "UpdatedAt": "2016-10-16 15:40:44"
+                  }
+                ],
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {

@@ -34,7 +34,6 @@ func (d DictionaryItem) TableName() string {
 }
 
 type InsProdBizFeeMapInf struct {
-	CommonModel
 	ProdCd       string    `gorm:"column:PROD_CD"`
 	BizCd        string    `gorm:"column:BIZ_CD"`
 	MccMTp       string    `gorm:"column:MCC_M_TP"`
@@ -53,11 +52,11 @@ type InsProdBizFeeMapInf struct {
 	MsgResvFld10 string    `gorm:"column:MSG_RESV_FLD10"`
 	RecOprID     string    `gorm:"column:REC_OPR_ID"`
 	RecUpdOpr    string    `gorm:"column:REC_UPD_OPR"`
-	RecCrtTs     time.Time `gorm:"column:REC_CRT_TS"`
-	RecUpdTs     time.Time `gorm:"column:REC_UPD_TS"`
+	CreateAt     time.Time `gorm:"column:REC_CRT_TS"`
+	UpdatedAt    time.Time `gorm:"column:REC_UPD_TS"`
 }
 
-func (i InsProdBizFeeMapInf) TableName() string {
+func (InsProdBizFeeMapInf) TableName() string {
 	return tableInsProdBizFeeMapInf
 }
 

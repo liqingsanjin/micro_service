@@ -8,15 +8,24 @@ import (
 )
 
 type server struct {
-	syncData                   grpctransport.Handler
-	getDictionaryItem          grpctransport.Handler
-	getDicByProdAndBiz         grpctransport.Handler
-	getDicByInsCmpCd           grpctransport.Handler
-	checkValues                grpctransport.Handler
-	getDictionaryLayerItem     grpctransport.Handler
-	getDictionaryItemByPk      grpctransport.Handler
-	GetUnionPayBankListHandler grpctransport.Handler
-	FindUnionPayMccListHandler grpctransport.Handler
+	syncData                       grpctransport.Handler
+	getDictionaryItem              grpctransport.Handler
+	getDicByProdAndBiz             grpctransport.Handler
+	getDicByInsCmpCd               grpctransport.Handler
+	checkValues                    grpctransport.Handler
+	getDictionaryLayerItem         grpctransport.Handler
+	getDictionaryItemByPk          grpctransport.Handler
+	GetUnionPayBankListHandler     grpctransport.Handler
+	FindUnionPayMccListHandler     grpctransport.Handler
+	GetInsProdBizFeeMapInfoHandler grpctransport.Handler
+}
+
+func (g *server) GetInsProdBizFeeMapInfo(ctx context.Context, in *pb.GetInsProdBizFeeMapInfoRequest) (*pb.GetInsProdBizFeeMapInfoReply, error) {
+	_, res, err := g.GetInsProdBizFeeMapInfoHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetInsProdBizFeeMapInfoReply), nil
 }
 
 func (g *server) FindUnionPayMccList(ctx context.Context, in *pb.FindUnionPayMccListRequest) (*pb.FindUnionPayMccListReply, error) {
@@ -190,13 +199,15 @@ func New(tracer grpctransport.ServerOption) pb.StaticServer {
 		)
 	}
 
+	{
+		e := MakeGetInsProdBizFeeMapInfoEndpoint(svc)
+		svr.GetInsProdBizFeeMapInfoHandler = grpctransport.NewServer(
+			e,
+			grpcDecode,
+			grpcEncode,
+			options...,
+		)
+	}
+
 	return svr
-}
-
-func grpcDecode(_ context.Context, req interface{}) (interface{}, error) {
-	return req, nil
-}
-
-func grpcEncode(_ context.Context, res interface{}) (interface{}, error) {
-	return res, nil
 }

@@ -14,6 +14,38 @@ service Static {
     rpc GetDictionaryItemByPk(GetDictionaryItemByPkReq) returns (GetDictionaryItemByPkResp) {}
     rpc GetUnionPayBankList(GetUnionPayBankListRequest) returns (GetUnionPayBankListReply) {}
     rpc FindUnionPayMccList(FindUnionPayMccListRequest) returns (FindUnionPayMccListReply) {}
+    rpc GetInsProdBizFeeMapInfo(GetInsProdBizFeeMapInfoRequest) returns (GetInsProdBizFeeMapInfoReply) {}
+}
+
+message InsProdBizFeeMapInfoField {
+    string ProdCd       = 1;
+    string BizCd        = 2;
+    string MccMTp       = 3;
+    string MccSTp       = 4;
+    string InsFeeBizCd  = 5;
+    string InsFeeBizNm  = 6;
+    string MsgResvFld1  = 7;
+    string MsgResvFld2  = 8;
+    string MsgResvFld3  = 9;
+    string MsgResvFld4  = 10;
+    string MsgResvFld5  = 11;
+    string MsgResvFld6  = 12;
+    string MsgResvFld7  = 13;
+    string MsgResvFld8  = 14;
+    string MsgResvFld9  = 15;
+    string MsgResvFld10 = 16;
+    string RecOprID     = 17;
+    string RecUpdOpr    = 18;
+    string CreateAt     = 19;
+    string UpdatedAt    = 20;
+}
+
+message GetInsProdBizFeeMapInfoReply {
+    repeated InsProdBizFeeMapInfoField items = 1;
+    error err = 2;
+}
+
+message GetInsProdBizFeeMapInfoRequest {
 }
 
 message StaticSyncDataReq {

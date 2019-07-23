@@ -7,13 +7,12 @@ import (
 	"golang.org/x/net/context"
 )
 
-//SetEndpoint .
-type SetEndpoint struct {
-	SyncDataEndpoint           endpoint.Endpoint
-	GetDictionaryItemEndpoint  endpoint.Endpoint
-	GetDicByProdAndBizEndpoint endpoint.Endpoint
-	GetDicByInsCmpCdEndpoint   endpoint.Endpoint
-	CheckValuesEndpoint        endpoint.Endpoint
+func grpcDecode(_ context.Context, req interface{}) (interface{}, error) {
+	return req, nil
+}
+
+func grpcEncode(_ context.Context, res interface{}) (interface{}, error) {
+	return res, nil
 }
 
 //MakeSyncDataEndpoint .
@@ -78,5 +77,11 @@ func MakeGetUnionPayBankListEndpoint(s pb.StaticServer) endpoint.Endpoint {
 func MakeFindUnionPayMccListEndpoint(s pb.StaticServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		return s.FindUnionPayMccList(ctx, request.(*pb.FindUnionPayMccListRequest))
+	}
+}
+
+func MakeGetInsProdBizFeeMapInfoEndpoint(s pb.StaticServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return s.GetInsProdBizFeeMapInfo(ctx, request.(*pb.GetInsProdBizFeeMapInfoRequest))
 	}
 }

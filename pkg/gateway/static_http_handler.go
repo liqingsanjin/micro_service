@@ -70,4 +70,11 @@ func RegisterStaticHandler(engine *gin.Engine, endpoints *StaticEndpoints) {
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
+
+	engine.POST("/static/getInsProdBizFeeMapInfo", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.GetInsProdBizFeeMapInfoEndpoint,
+		decodeHttpRequest(&pb.GetInsProdBizFeeMapInfoRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
 }

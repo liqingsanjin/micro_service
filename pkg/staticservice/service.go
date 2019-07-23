@@ -37,6 +37,42 @@ var MyMap = StaticMapData{
 type service struct {
 }
 
+func (s *service) GetInsProdBizFeeMapInfo(ctx context.Context, in *pb.GetInsProdBizFeeMapInfoRequest) (*pb.GetInsProdBizFeeMapInfoReply, error) {
+	reply := new(pb.GetInsProdBizFeeMapInfoReply)
+	infos := static.GetInsProdBizFeeMapInf(common.DB)
+	items := make([]*pb.InsProdBizFeeMapInfoField, len(infos))
+	for i := range infos {
+		items[i] = &pb.InsProdBizFeeMapInfoField{
+			ProdCd:       infos[i].ProdCd,
+			BizCd:        infos[i].BizCd,
+			MccMTp:       infos[i].MccMTp,
+			MccSTp:       infos[i].MccSTp,
+			InsFeeBizCd:  infos[i].InsFeeBizCd,
+			InsFeeBizNm:  infos[i].InsFeeBizNm,
+			MsgResvFld1:  infos[i].MsgResvFld1,
+			MsgResvFld2:  infos[i].MsgResvFld2,
+			MsgResvFld3:  infos[i].MsgResvFld3,
+			MsgResvFld4:  infos[i].MsgResvFld4,
+			MsgResvFld5:  infos[i].MsgResvFld5,
+			MsgResvFld6:  infos[i].MsgResvFld6,
+			MsgResvFld7:  infos[i].MsgResvFld7,
+			MsgResvFld8:  infos[i].MsgResvFld8,
+			MsgResvFld9:  infos[i].MsgResvFld9,
+			MsgResvFld10: infos[i].MsgResvFld10,
+			RecOprID:     infos[i].RecOprID,
+			RecUpdOpr:    infos[i].RecUpdOpr,
+		}
+		if !infos[i].CreateAt.IsZero() {
+			items[i].CreateAt = infos[i].CreateAt.Format(util.TimePattern)
+		}
+		if !infos[i].UpdatedAt.IsZero() {
+			items[i].UpdatedAt = infos[i].UpdatedAt.Format(util.TimePattern)
+		}
+	}
+	reply.Items = items
+	return reply, nil
+}
+
 func (s *service) FindUnionPayMccList(ctx context.Context, in *pb.FindUnionPayMccListRequest) (*pb.FindUnionPayMccListReply, error) {
 	reply := new(pb.FindUnionPayMccListReply)
 	if in.Page == 0 {

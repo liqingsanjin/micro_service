@@ -11,15 +11,24 @@ import (
 )
 
 type StaticEndpoints struct {
-	SyncDataEndpoint               endpoint.Endpoint
-	GetDictionaryItemEndpoint      endpoint.Endpoint
-	GetDicByProdAndBizEndpoint     endpoint.Endpoint
-	GetDicByInsCmpCdEndpoint       endpoint.Endpoint
-	CheckValuesEndpoint            endpoint.Endpoint
-	GetDictionaryLayerItemEndpoint endpoint.Endpoint
-	GetDictionaryItemByPkEndpoint  endpoint.Endpoint
-	GetUnionPayBankListEndpoint    endpoint.Endpoint
-	FindUnionPayMccListEndpoint    endpoint.Endpoint
+	SyncDataEndpoint                endpoint.Endpoint
+	GetDictionaryItemEndpoint       endpoint.Endpoint
+	GetDicByProdAndBizEndpoint      endpoint.Endpoint
+	GetDicByInsCmpCdEndpoint        endpoint.Endpoint
+	CheckValuesEndpoint             endpoint.Endpoint
+	GetDictionaryLayerItemEndpoint  endpoint.Endpoint
+	GetDictionaryItemByPkEndpoint   endpoint.Endpoint
+	GetUnionPayBankListEndpoint     endpoint.Endpoint
+	FindUnionPayMccListEndpoint     endpoint.Endpoint
+	GetInsProdBizFeeMapInfoEndpoint endpoint.Endpoint
+}
+
+func (s *StaticEndpoints) GetInsProdBizFeeMapInfo(ctx context.Context, in *pb.GetInsProdBizFeeMapInfoRequest) (*pb.GetInsProdBizFeeMapInfoReply, error) {
+	res, err := s.GetInsProdBizFeeMapInfoEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetInsProdBizFeeMapInfoReply), nil
 }
 
 func (s *StaticEndpoints) FindUnionPayMccList(ctx context.Context, in *pb.FindUnionPayMccListRequest) (*pb.FindUnionPayMccListReply, error) {
@@ -239,6 +248,19 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			options...,
 		).Endpoint()
 		endpoints.FindUnionPayMccListEndpoint = endpoint
+	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Static",
+			"GetInsProdBizFeeMapInfo",
+			encodeRequest,
+			decodeResponse,
+			pb.GetInsProdBizFeeMapInfoReply{},
+			options...,
+		).Endpoint()
+		endpoints.GetInsProdBizFeeMapInfoEndpoint = endpoint
 	}
 
 	return endpoints

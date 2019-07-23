@@ -116,6 +116,15 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 		endpoints.FindUnionPayMccListEndpoint = retry
 	}
 
+	{
+		factory := staticserviceFactory(staticservice.MakeGetInsProdBizFeeMapInfoEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = staticBreaker(retry)
+		endpoints.GetInsProdBizFeeMapInfoEndpoint = retry
+	}
+
 	return &endpoints
 }
 
