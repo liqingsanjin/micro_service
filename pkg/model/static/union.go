@@ -32,11 +32,21 @@ func (Mcc) TableName() string {
 	return "TBL_UNIONPAY_MCC"
 }
 
-func FindBankListByCode(db *gorm.DB, code string, page int32, size int32) ([]*BankList, int32, error) {
+func FindBankList(db *gorm.DB, condition *BankList, page int32, size int32) ([]*BankList, int32, error) {
 	out := make([]*BankList, 0)
 	var count int32
-	db.Model(&BankList{}).Where("CODE like ?", code+"%").Count(&count)
-	err := db.Where("CODE like ?", code+"%").Offset((page - 1) * size).Limit(size).Find(&out).Error
+	params := make([]interface{}, 0)
+	query := ""
+	if condition.Code != "" {
+		query = query + "CODE like ? "
+		params = append(params, condition.Code+"%")
+	}
+	if condition.Name != "" {
+		query = query + "and NAME = ?"
+		params = append(params, condition.Name)
+	}
+	db.Model(&BankList{}).Where(query, params...).Count(&count)
+	err := db.Where(query, params...).Offset((page - 1) * size).Limit(size).Find(&out).Error
 	return out, count, err
 }
 

@@ -84,13 +84,13 @@ func (s *service) FindUnionPayMccList(ctx context.Context, in *pb.FindUnionPayMc
 	return reply, nil
 }
 
-func (s *service) GetUnionPayBankListByCode(ctx context.Context, in *pb.GetUnionPayBankListByCodeRequest) (*pb.GetUnionPayBankListByCodeReply, error) {
-	reply := new(pb.GetUnionPayBankListByCodeReply)
-	if in.Item == nil || in.Item.Code == "" {
+func (s *service) GetUnionPayBankList(ctx context.Context, in *pb.GetUnionPayBankListRequest) (*pb.GetUnionPayBankListReply, error) {
+	reply := new(pb.GetUnionPayBankListReply)
+	if in.Item == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     InvalidParam,
-			Description: "code不能为空",
+			Description: "item不能为空",
 		}
 		return reply, nil
 	}
@@ -102,7 +102,10 @@ func (s *service) GetUnionPayBankListByCode(ctx context.Context, in *pb.GetUnion
 	}
 	db := common.DB
 
-	items, count, err := static.FindBankListByCode(db, in.Item.Code, in.Page, in.Size)
+	items, count, err := static.FindBankList(db, &static.BankList{
+		Code: in.Item.Code,
+		Name: in.Item.Name,
+	}, in.Page, in.Size)
 	if err != nil {
 		return nil, err
 	}

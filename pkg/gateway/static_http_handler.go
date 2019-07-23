@@ -57,9 +57,9 @@ func RegisterStaticHandler(engine *gin.Engine, endpoints *StaticEndpoints) {
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/static/getUnionPayBankListByCode", convertHttpHandlerToGinHandler(httptransport.NewServer(
-		endpoints.GetUnionPayBankListByCodeEndpoint,
-		decodeHttpRequest(&pb.GetUnionPayBankListByCodeRequest{}),
+	engine.POST("/static/getUnionPayBankList", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.GetUnionPayBankListEndpoint,
+		decodeHttpRequest(&pb.GetUnionPayBankListRequest{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))

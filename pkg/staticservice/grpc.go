@@ -8,15 +8,15 @@ import (
 )
 
 type server struct {
-	syncData                         grpctransport.Handler
-	getDictionaryItem                grpctransport.Handler
-	getDicByProdAndBiz               grpctransport.Handler
-	getDicByInsCmpCd                 grpctransport.Handler
-	checkValues                      grpctransport.Handler
-	getDictionaryLayerItem           grpctransport.Handler
-	getDictionaryItemByPk            grpctransport.Handler
-	GetUnionPayBankListByCodeHandler grpctransport.Handler
-	FindUnionPayMccListHandler       grpctransport.Handler
+	syncData                   grpctransport.Handler
+	getDictionaryItem          grpctransport.Handler
+	getDicByProdAndBiz         grpctransport.Handler
+	getDicByInsCmpCd           grpctransport.Handler
+	checkValues                grpctransport.Handler
+	getDictionaryLayerItem     grpctransport.Handler
+	getDictionaryItemByPk      grpctransport.Handler
+	GetUnionPayBankListHandler grpctransport.Handler
+	FindUnionPayMccListHandler grpctransport.Handler
 }
 
 func (g *server) FindUnionPayMccList(ctx context.Context, in *pb.FindUnionPayMccListRequest) (*pb.FindUnionPayMccListReply, error) {
@@ -27,12 +27,12 @@ func (g *server) FindUnionPayMccList(ctx context.Context, in *pb.FindUnionPayMcc
 	return res.(*pb.FindUnionPayMccListReply), nil
 }
 
-func (g *server) GetUnionPayBankListByCode(ctx context.Context, in *pb.GetUnionPayBankListByCodeRequest) (*pb.GetUnionPayBankListByCodeReply, error) {
-	_, res, err := g.GetUnionPayBankListByCodeHandler.ServeGRPC(ctx, in)
+func (g *server) GetUnionPayBankList(ctx context.Context, in *pb.GetUnionPayBankListRequest) (*pb.GetUnionPayBankListReply, error) {
+	_, res, err := g.GetUnionPayBankListHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
 	}
-	return res.(*pb.GetUnionPayBankListByCodeReply), nil
+	return res.(*pb.GetUnionPayBankListReply), nil
 }
 
 func (g *server) GetDictionaryItemByPk(ctx context.Context, in *pb.GetDictionaryItemByPkReq) (*pb.GetDictionaryItemByPkResp, error) {
@@ -171,8 +171,8 @@ func New(tracer grpctransport.ServerOption) pb.StaticServer {
 	}
 
 	{
-		e := MakeGetUnionPayBankListByCodeEndpoint(svc)
-		svr.GetUnionPayBankListByCodeHandler = grpctransport.NewServer(
+		e := MakeGetUnionPayBankListEndpoint(svc)
+		svr.GetUnionPayBankListHandler = grpctransport.NewServer(
 			e,
 			grpcDecode,
 			grpcEncode,

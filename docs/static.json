@@ -379,9 +379,9 @@
         }
       }
     },
-    "/static/getUnionPayBankListByCode": {
+    "/static/getUnionPayBankList": {
       "post": {
-        "operationId": "getUnionPayBankListByCode",
+        "operationId": "getUnionPayBankList",
         "summary": "union pay bank list",
         "produces": [
           "application/json"
@@ -405,13 +405,14 @@
                   "type": "integer"
                 },
                 "item": {
-                  "required": [
-                    "code"
-                  ],
                   "properties": {
                     "code": {
                       "type": "string",
                       "description": "为前缀，模糊查询"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "精确查询"
                     }
                   }
                 }

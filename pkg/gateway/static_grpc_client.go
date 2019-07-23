@@ -11,15 +11,15 @@ import (
 )
 
 type StaticEndpoints struct {
-	SyncDataEndpoint                  endpoint.Endpoint
-	GetDictionaryItemEndpoint         endpoint.Endpoint
-	GetDicByProdAndBizEndpoint        endpoint.Endpoint
-	GetDicByInsCmpCdEndpoint          endpoint.Endpoint
-	CheckValuesEndpoint               endpoint.Endpoint
-	GetDictionaryLayerItemEndpoint    endpoint.Endpoint
-	GetDictionaryItemByPkEndpoint     endpoint.Endpoint
-	GetUnionPayBankListByCodeEndpoint endpoint.Endpoint
-	FindUnionPayMccListEndpoint       endpoint.Endpoint
+	SyncDataEndpoint               endpoint.Endpoint
+	GetDictionaryItemEndpoint      endpoint.Endpoint
+	GetDicByProdAndBizEndpoint     endpoint.Endpoint
+	GetDicByInsCmpCdEndpoint       endpoint.Endpoint
+	CheckValuesEndpoint            endpoint.Endpoint
+	GetDictionaryLayerItemEndpoint endpoint.Endpoint
+	GetDictionaryItemByPkEndpoint  endpoint.Endpoint
+	GetUnionPayBankListEndpoint    endpoint.Endpoint
+	FindUnionPayMccListEndpoint    endpoint.Endpoint
 }
 
 func (s *StaticEndpoints) FindUnionPayMccList(ctx context.Context, in *pb.FindUnionPayMccListRequest) (*pb.FindUnionPayMccListReply, error) {
@@ -30,12 +30,12 @@ func (s *StaticEndpoints) FindUnionPayMccList(ctx context.Context, in *pb.FindUn
 	return res.(*pb.FindUnionPayMccListReply), nil
 }
 
-func (s *StaticEndpoints) GetUnionPayBankListByCode(ctx context.Context, in *pb.GetUnionPayBankListByCodeRequest) (*pb.GetUnionPayBankListByCodeReply, error) {
-	res, err := s.GetUnionPayBankListByCodeEndpoint(ctx, in)
+func (s *StaticEndpoints) GetUnionPayBankList(ctx context.Context, in *pb.GetUnionPayBankListRequest) (*pb.GetUnionPayBankListReply, error) {
+	res, err := s.GetUnionPayBankListEndpoint(ctx, in)
 	if err != nil {
 		return nil, err
 	}
-	return res.(*pb.GetUnionPayBankListByCodeReply), nil
+	return res.(*pb.GetUnionPayBankListReply), nil
 }
 
 func (s *StaticEndpoints) SyncData(ctx context.Context, in *pb.StaticSyncDataReq) (*pb.StaticSyncDataResp, error) {
@@ -219,13 +219,13 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 		endpoint := grpctransport.NewClient(
 			conn,
 			"pb.Static",
-			"GetUnionPayBankListByCode",
+			"GetUnionPayBankList",
 			encodeRequest,
 			decodeResponse,
-			pb.GetUnionPayBankListByCodeReply{},
+			pb.GetUnionPayBankListReply{},
 			options...,
 		).Endpoint()
-		endpoints.GetUnionPayBankListByCodeEndpoint = endpoint
+		endpoints.GetUnionPayBankListEndpoint = endpoint
 	}
 
 	{
