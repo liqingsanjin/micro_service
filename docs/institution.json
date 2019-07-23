@@ -1015,6 +1015,10 @@
                 "id": {
                   "type": "string",
                   "description": "机构id"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "main为主表，否则为编辑表"
                 }
               }
             }

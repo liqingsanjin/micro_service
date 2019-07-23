@@ -407,6 +407,7 @@ message InstitutionCashField {
 
 message GetInstitutionByIdRequest {
     string id = 1;
+    string type = 2;
 }
 
 message GetInstitutionByIdReply {

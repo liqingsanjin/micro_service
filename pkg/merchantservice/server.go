@@ -22,6 +22,124 @@ type merchantServer struct {
 	GetMerchantBizFeeHandler       grpctransport.Handler
 	GetMerchantBusinessHandler     grpctransport.Handler
 	GetMerchantPictureHandler      grpctransport.Handler
+	GetMerchantByIdHandler         grpctransport.Handler
+}
+
+func (m *merchantServer) GetMerchantById(ctx context.Context, in *pb.GetMerchantByIdRequest) (*pb.GetMerchantByIdReply, error) {
+	_, res, err := m.GetMerchantByIdHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetMerchantByIdReply), nil
+}
+
+func (m *merchantServer) ListMerchant(ctx context.Context, in *pb.ListMerchantRequest) (*pb.ListMerchantReply, error) {
+	_, res, err := m.ListMerchantHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.ListMerchantReply)
+	if !ok {
+		return nil, kit.ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+func (m *merchantServer) ListGroupMerchant(ctx context.Context, in *pb.ListGroupMerchantRequest) (*pb.ListGroupMerchantReply, error) {
+	_, res, err := m.ListGroupMerchantHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.ListGroupMerchantReply)
+	if !ok {
+		return nil, kit.ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+func (m *merchantServer) SaveMerchant(ctx context.Context, in *pb.SaveMerchantRequest) (*pb.SaveMerchantReply, error) {
+	_, res, err := m.SaveMerchantHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveMerchantReply), nil
+}
+func (m *merchantServer) SaveMerchantBankAccount(ctx context.Context, in *pb.SaveMerchantBankAccountRequest) (*pb.SaveMerchantBankAccountReply, error) {
+	_, res, err := m.SaveMerchantBankAccountHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveMerchantBankAccountReply), nil
+}
+
+func (m *merchantServer) SaveMerchantBizDeal(ctx context.Context, in *pb.SaveMerchantBizDealRequest) (*pb.SaveMerchantBizDealReply, error) {
+	_, res, err := m.SaveMerchantBizDealHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveMerchantBizDealReply), nil
+}
+
+func (m *merchantServer) SaveMerchantBizFee(ctx context.Context, in *pb.SaveMerchantBizFeeRequest) (*pb.SaveMerchantBizFeeReply, error) {
+	_, res, err := m.SaveMerchantBizFeeHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveMerchantBizFeeReply), nil
+}
+
+func (m *merchantServer) SaveMerchantBusiness(ctx context.Context, in *pb.SaveMerchantBusinessRequest) (*pb.SaveMerchantBusinessReply, error) {
+	_, res, err := m.SaveMerchantBusinessHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveMerchantBusinessReply), nil
+}
+
+func (m *merchantServer) SaveMerchantPicture(ctx context.Context, in *pb.SaveMerchantPictureRequest) (*pb.SaveMerchantPictureReply, error) {
+	_, res, err := m.SaveMerchantPictureHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveMerchantPictureReply), nil
+}
+
+func (m *merchantServer) GetMerchantBankAccount(ctx context.Context, in *pb.GetMerchantBankAccountRequest) (*pb.GetMerchantBankAccountReply, error) {
+	_, res, err := m.GetMerchantBankAccountHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetMerchantBankAccountReply), nil
+}
+
+func (m *merchantServer) GetMerchantBizDeal(ctx context.Context, in *pb.GetMerchantBizDealRequest) (*pb.GetMerchantBizDealReply, error) {
+	_, res, err := m.GetMerchantBizDealHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetMerchantBizDealReply), nil
+}
+
+func (m *merchantServer) GetMerchantBizFee(ctx context.Context, in *pb.GetMerchantBizFeeRequest) (*pb.GetMerchantBizFeeReply, error) {
+	_, res, err := m.GetMerchantBizFeeHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetMerchantBizFeeReply), nil
+}
+
+func (m *merchantServer) GetMerchantBusiness(ctx context.Context, in *pb.GetMerchantBusinessRequest) (*pb.GetMerchantBusinessReply, error) {
+	_, res, err := m.GetMerchantBusinessHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetMerchantBusinessReply), nil
+}
+
+func (m *merchantServer) GetMerchantPicture(ctx context.Context, in *pb.GetMerchantPictureRequest) (*pb.GetMerchantPictureReply, error) {
+	_, res, err := m.GetMerchantPictureHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetMerchantPictureReply), nil
 }
 
 func New(tracer grpctransport.ServerOption) pb.MerchantServer {
@@ -174,114 +292,16 @@ func New(tracer grpctransport.ServerOption) pb.MerchantServer {
 		)
 	}
 
+	{
+		endpoint := MakeGetMerchantByIdEndpoint(service)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.GetMerchantByIdHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+
 	return svr
-}
-
-func (m *merchantServer) ListMerchant(ctx context.Context, in *pb.ListMerchantRequest) (*pb.ListMerchantReply, error) {
-	_, res, err := m.ListMerchantHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.ListMerchantReply)
-	if !ok {
-		return nil, kit.ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-func (m *merchantServer) ListGroupMerchant(ctx context.Context, in *pb.ListGroupMerchantRequest) (*pb.ListGroupMerchantReply, error) {
-	_, res, err := m.ListGroupMerchantHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.ListGroupMerchantReply)
-	if !ok {
-		return nil, kit.ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-func (m *merchantServer) SaveMerchant(ctx context.Context, in *pb.SaveMerchantRequest) (*pb.SaveMerchantReply, error) {
-	_, res, err := m.SaveMerchantHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.SaveMerchantReply), nil
-}
-func (m *merchantServer) SaveMerchantBankAccount(ctx context.Context, in *pb.SaveMerchantBankAccountRequest) (*pb.SaveMerchantBankAccountReply, error) {
-	_, res, err := m.SaveMerchantBankAccountHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.SaveMerchantBankAccountReply), nil
-}
-
-func (m *merchantServer) SaveMerchantBizDeal(ctx context.Context, in *pb.SaveMerchantBizDealRequest) (*pb.SaveMerchantBizDealReply, error) {
-	_, res, err := m.SaveMerchantBizDealHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.SaveMerchantBizDealReply), nil
-}
-
-func (m *merchantServer) SaveMerchantBizFee(ctx context.Context, in *pb.SaveMerchantBizFeeRequest) (*pb.SaveMerchantBizFeeReply, error) {
-	_, res, err := m.SaveMerchantBizFeeHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.SaveMerchantBizFeeReply), nil
-}
-
-func (m *merchantServer) SaveMerchantBusiness(ctx context.Context, in *pb.SaveMerchantBusinessRequest) (*pb.SaveMerchantBusinessReply, error) {
-	_, res, err := m.SaveMerchantBusinessHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.SaveMerchantBusinessReply), nil
-}
-
-func (m *merchantServer) SaveMerchantPicture(ctx context.Context, in *pb.SaveMerchantPictureRequest) (*pb.SaveMerchantPictureReply, error) {
-	_, res, err := m.SaveMerchantPictureHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.SaveMerchantPictureReply), nil
-}
-
-func (m *merchantServer) GetMerchantBankAccount(ctx context.Context, in *pb.GetMerchantBankAccountRequest) (*pb.GetMerchantBankAccountReply, error) {
-	_, res, err := m.GetMerchantBankAccountHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.GetMerchantBankAccountReply), nil
-}
-
-func (m *merchantServer) GetMerchantBizDeal(ctx context.Context, in *pb.GetMerchantBizDealRequest) (*pb.GetMerchantBizDealReply, error) {
-	_, res, err := m.GetMerchantBizDealHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.GetMerchantBizDealReply), nil
-}
-
-func (m *merchantServer) GetMerchantBizFee(ctx context.Context, in *pb.GetMerchantBizFeeRequest) (*pb.GetMerchantBizFeeReply, error) {
-	_, res, err := m.GetMerchantBizFeeHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.GetMerchantBizFeeReply), nil
-}
-
-func (m *merchantServer) GetMerchantBusiness(ctx context.Context, in *pb.GetMerchantBusinessRequest) (*pb.GetMerchantBusinessReply, error) {
-	_, res, err := m.GetMerchantBusinessHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.GetMerchantBusinessReply), nil
-}
-
-func (m *merchantServer) GetMerchantPicture(ctx context.Context, in *pb.GetMerchantPictureRequest) (*pb.GetMerchantPictureReply, error) {
-	_, res, err := m.GetMerchantPictureHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.GetMerchantPictureReply), nil
 }

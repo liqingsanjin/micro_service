@@ -18,6 +18,7 @@ service Merchant {
     rpc GetMerchantBizFee(GetMerchantBizFeeRequest) returns (GetMerchantBizFeeReply) {}
     rpc GetMerchantBusiness(GetMerchantBusinessRequest) returns (GetMerchantBusinessReply) {}
     rpc GetMerchantPicture(GetMerchantPictureRequest) returns (GetMerchantPictureReply) {}
+    rpc GetMerchantById(GetMerchantByIdRequest) returns (GetMerchantByIdReply) {}
 }
 
 message ListMerchantRequest {
@@ -88,8 +89,8 @@ message MerchantField {
     string ucBcCdArea = 50;
     string recOprId = 51;
     string recUpdOpr = 52;
-    string recCrtTs = 53;
-    string recUpdTs = 54;
+    string createdAt = 53;
+    string updatedAt= 54;
     string operIn = 55;
     string recApllyTs = 56;
     string oemOrgCode = 57;
@@ -350,5 +351,15 @@ message GetMerchantPictureRequest {
 
 message GetMerchantPictureReply {
     repeated MerchantPictureField items = 1;
+    error err = 2;
+}
+
+message GetMerchantByIdRequest {
+    string id = 1;
+    string type = 2;
+}
+
+message GetMerchantByIdReply {
+    MerchantField item = 1;
     error err = 2;
 }

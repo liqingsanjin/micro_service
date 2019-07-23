@@ -1354,6 +1354,47 @@
           }
         }
       }
+    },
+    "/merchant/getMerchantById": {
+      "post": {
+        "operationId": "getMerchantById",
+        "description": "查询单条商户",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "getMerchantById",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "商户id"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "main为主表，否则为编辑表"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

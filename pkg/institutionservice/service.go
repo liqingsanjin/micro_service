@@ -28,53 +28,106 @@ func (s *service) GetInstitutionById(ctx context.Context, in *pb.GetInstitutionB
 		}
 		return reply, nil
 	}
-
 	db := common.DB
-	info, err := insmodel.FindInstitutionInfoById(db, in.Id)
-	if err != nil {
-		return nil, err
+	edit := true
+	if in.Type == "main" {
+		edit = false
 	}
-	if info != nil {
-		item := new(pb.InstitutionField)
-		item.InsIdCd = info.InsIdCd
-		item.InsCompanyCd = info.InsCompanyCd
-		item.InsType = info.InsType
-		item.InsName = info.InsName
-		item.InsProvCd = info.InsProvCd
-		item.InsCityCd = info.InsCityCd
-		item.InsRegionCd = info.InsRegionCd
-		item.InsSta = info.InsSta
-		item.InsStlmTp = info.InsStlmTp
-		item.InsAloStlmCycle = info.InsAloStlmCycle
-		item.InsAloStlmMd = info.InsAloStlmMd
-		item.InsStlmCNm = info.InsStlmCNm
-		item.InsStlmCAcct = info.InsStlmCAcct
-		item.InsStlmCBkNo = info.InsStlmCBkNo
-		item.InsStlmCBkNm = info.InsStlmCBkNm
-		item.InsStlmDNm = info.InsStlmDNm
-		item.InsStlmDAcct = info.InsStlmDAcct
-		item.InsStlmDBkNo = info.InsStlmDBkNo
-		item.InsStlmDBkNm = info.InsStlmDBkNm
-		item.MsgResvFld1 = info.MsgResvFld1
-		item.MsgResvFld2 = info.MsgResvFld2
-		item.MsgResvFld3 = info.MsgResvFld3
-		item.MsgResvFld4 = info.MsgResvFld4
-		item.MsgResvFld5 = info.MsgResvFld5
-		item.MsgResvFld6 = info.MsgResvFld6
-		item.MsgResvFld7 = info.MsgResvFld7
-		item.MsgResvFld8 = info.MsgResvFld8
-		item.MsgResvFld9 = info.MsgResvFld9
-		item.MsgResvFld10 = info.MsgResvFld10
-		item.RecOprId = info.RecOprId
-		item.RecUpdOpr = info.RecUpdOpr
-		if !info.CreatedAt.IsZero() {
-			item.CreatedAt = info.CreatedAt.Format(util.TimePattern)
+
+	if edit {
+		info, err := insmodel.FindInstitutionInfoById(db, in.Id)
+		if err != nil {
+			return nil, err
 		}
-		if !info.UpdatedAt.IsZero() {
-			item.UpdatedAt = info.UpdatedAt.Format(util.TimePattern)
+		if info != nil {
+			item := new(pb.InstitutionField)
+			item.InsIdCd = info.InsIdCd
+			item.InsCompanyCd = info.InsCompanyCd
+			item.InsType = info.InsType
+			item.InsName = info.InsName
+			item.InsProvCd = info.InsProvCd
+			item.InsCityCd = info.InsCityCd
+			item.InsRegionCd = info.InsRegionCd
+			item.InsSta = info.InsSta
+			item.InsStlmTp = info.InsStlmTp
+			item.InsAloStlmCycle = info.InsAloStlmCycle
+			item.InsAloStlmMd = info.InsAloStlmMd
+			item.InsStlmCNm = info.InsStlmCNm
+			item.InsStlmCAcct = info.InsStlmCAcct
+			item.InsStlmCBkNo = info.InsStlmCBkNo
+			item.InsStlmCBkNm = info.InsStlmCBkNm
+			item.InsStlmDNm = info.InsStlmDNm
+			item.InsStlmDAcct = info.InsStlmDAcct
+			item.InsStlmDBkNo = info.InsStlmDBkNo
+			item.InsStlmDBkNm = info.InsStlmDBkNm
+			item.MsgResvFld1 = info.MsgResvFld1
+			item.MsgResvFld2 = info.MsgResvFld2
+			item.MsgResvFld3 = info.MsgResvFld3
+			item.MsgResvFld4 = info.MsgResvFld4
+			item.MsgResvFld5 = info.MsgResvFld5
+			item.MsgResvFld6 = info.MsgResvFld6
+			item.MsgResvFld7 = info.MsgResvFld7
+			item.MsgResvFld8 = info.MsgResvFld8
+			item.MsgResvFld9 = info.MsgResvFld9
+			item.MsgResvFld10 = info.MsgResvFld10
+			item.RecOprId = info.RecOprId
+			item.RecUpdOpr = info.RecUpdOpr
+			if !info.CreatedAt.IsZero() {
+				item.CreatedAt = info.CreatedAt.Format(util.TimePattern)
+			}
+			if !info.UpdatedAt.IsZero() {
+				item.UpdatedAt = info.UpdatedAt.Format(util.TimePattern)
+			}
+			reply.Item = item
 		}
-		reply.Item = item
+	} else {
+		info, err := insmodel.FindInstitutionInfoMainById(db, in.Id)
+		if err != nil {
+			return nil, err
+		}
+		if info != nil {
+			item := new(pb.InstitutionField)
+			item.InsIdCd = info.InsIdCd
+			item.InsCompanyCd = info.InsCompanyCd
+			item.InsType = info.InsType
+			item.InsName = info.InsName
+			item.InsProvCd = info.InsProvCd
+			item.InsCityCd = info.InsCityCd
+			item.InsRegionCd = info.InsRegionCd
+			item.InsSta = info.InsSta
+			item.InsStlmTp = info.InsStlmTp
+			item.InsAloStlmCycle = info.InsAloStlmCycle
+			item.InsAloStlmMd = info.InsAloStlmMd
+			item.InsStlmCNm = info.InsStlmCNm
+			item.InsStlmCAcct = info.InsStlmCAcct
+			item.InsStlmCBkNo = info.InsStlmCBkNo
+			item.InsStlmCBkNm = info.InsStlmCBkNm
+			item.InsStlmDNm = info.InsStlmDNm
+			item.InsStlmDAcct = info.InsStlmDAcct
+			item.InsStlmDBkNo = info.InsStlmDBkNo
+			item.InsStlmDBkNm = info.InsStlmDBkNm
+			item.MsgResvFld1 = info.MsgResvFld1
+			item.MsgResvFld2 = info.MsgResvFld2
+			item.MsgResvFld3 = info.MsgResvFld3
+			item.MsgResvFld4 = info.MsgResvFld4
+			item.MsgResvFld5 = info.MsgResvFld5
+			item.MsgResvFld6 = info.MsgResvFld6
+			item.MsgResvFld7 = info.MsgResvFld7
+			item.MsgResvFld8 = info.MsgResvFld8
+			item.MsgResvFld9 = info.MsgResvFld9
+			item.MsgResvFld10 = info.MsgResvFld10
+			item.RecOprId = info.RecOprId
+			item.RecUpdOpr = info.RecUpdOpr
+			if !info.CreatedAt.IsZero() {
+				item.CreatedAt = info.CreatedAt.Format(util.TimePattern)
+			}
+			if !info.UpdatedAt.IsZero() {
+				item.UpdatedAt = info.UpdatedAt.Format(util.TimePattern)
+			}
+			reply.Item = item
+		}
 	}
+
 	return reply, nil
 }
 

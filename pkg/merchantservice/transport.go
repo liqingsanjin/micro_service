@@ -94,3 +94,9 @@ func MakeGetMerchantPictureEndpoint(service pb.MerchantServer) endpoint.Endpoint
 		return service.GetMerchantPicture(ctx, request.(*pb.GetMerchantPictureRequest))
 	}
 }
+
+func MakeGetMerchantByIdEndpoint(service pb.MerchantServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.GetMerchantById(ctx, request.(*pb.GetMerchantByIdRequest))
+	}
+}

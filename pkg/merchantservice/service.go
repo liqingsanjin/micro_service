@@ -13,6 +13,205 @@ import (
 
 type merchantService struct{}
 
+func (m *merchantService) GetMerchantById(ctx context.Context, in *pb.GetMerchantByIdRequest) (*pb.GetMerchantByIdReply, error) {
+	reply := new(pb.GetMerchantByIdReply)
+	if in.Id == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "id不能为空",
+		}
+		return reply, nil
+	}
+	edit := true
+	if in.Type == "main" {
+		edit = false
+	}
+	db := common.DB
+
+	if edit {
+		info, err := merchantmodel.FindMerchantInfoById(db, in.Id)
+		if err != nil {
+			return nil, err
+		}
+		if info != nil {
+			item := new(pb.MerchantField)
+			item.MchtCd = info.MchtCd
+			item.Sn = info.Sn
+			item.AipBranCd = info.AipBranCd
+			item.GroupCd = info.GroupCd
+			item.OriChnl = info.OriChnl
+			item.OriChnlDesc = info.OriChnlDesc
+			item.BankBelongCd = info.BankBelongCd
+			item.DvpBy = info.DvpBy
+			item.MccCd18 = info.MccCd18
+			item.ApplDate = info.ApplDate
+			item.UpBcCd = info.UpBcCd
+			item.UpAcCd = info.UpAcCd
+			item.UpMccCd = info.UpMccCd
+			item.Name = info.Name
+			item.NameBusi = info.NameBusi
+			item.BusiLiceNo = info.BusiLiceNo
+			item.BusiRang = info.BusiRang
+			item.BusiMain = info.BusiMain
+			item.Certif = info.Certif
+			item.CertifType = info.CertifType
+			item.CertifNo = info.CertifNo
+			item.CityCd = info.CityCd
+			item.AreaCd = info.AreaCd
+			item.RegAddr = info.RegAddr
+			item.ContactName = info.ContactName
+			item.ContactPhoneNo = info.ContactPhoneNo
+			item.IsGroup = info.IsGroup
+			item.MoneyToGroup = info.MoneyToGroup
+			item.StlmWay = info.StlmWay
+			item.StlmWayDesc = info.StlmWayDesc
+			item.StlmInsCircle = info.StlmInsCircle
+			item.Status = info.Status
+			item.UcBcCd32 = info.UcBcCd32
+			item.K2WorkflowId = info.K2WorkflowId
+			item.SystemFlag = info.SystemFlag
+			item.ApprovalUsername = info.ApprovalUsername
+			item.FinalApprovalUsername = info.FinalApprovalUsername
+			item.IsUpStandard = info.IsUpStandard
+			item.BillingType = info.BillingType
+			item.BillingLevel = info.BillingLevel
+			item.Slogan = info.Slogan
+			item.Ext1 = info.Ext1
+			item.Ext2 = info.Ext2
+			item.Ext3 = info.Ext3
+			item.Ext4 = info.Ext4
+			item.AreaStandard = info.AreaStandard
+			item.MchtCdAreaCd = info.MchtCdAreaCd
+			item.UcBcCdArea = info.UcBcCdArea
+			item.RecOprId = info.RecOprId
+			item.RecUpdOpr = info.RecUpdOpr
+			item.OperIn = info.OperIn
+			item.OemOrgCode = info.OemOrgCode
+			item.IsEleInvoice = info.IsEleInvoice
+			item.DutyParagraph = info.DutyParagraph
+			item.TaxMachineBrand = info.TaxMachineBrand
+			item.Ext5 = info.Ext5
+			item.Ext6 = info.Ext6
+			item.Ext7 = info.Ext7
+			item.Ext8 = info.Ext8
+			item.Ext9 = info.Ext9
+			item.BusiLiceSt = info.BusiLiceSt
+			item.BusiLiceDt = info.BusiLiceDt
+			item.CertifSt = info.CertifSt
+			item.CertifDt = info.CertifDt
+
+			if !info.CreatedAt.IsZero() {
+				item.CreatedAt = info.CreatedAt.Format(util.TimePattern)
+			}
+			if !info.UpdatedAt.IsZero() {
+				item.UpdatedAt = info.UpdatedAt.Format(util.TimePattern)
+			}
+			if info.RecApllyTs != nil {
+				item.RecApllyTs = info.RecApllyTs.Format(util.TimePattern)
+			}
+			if info.ApprDate != nil {
+				item.ApprDate = info.ApprDate.Format(util.TimePattern)
+			}
+			if info.DeleteDate != nil {
+				item.DeleteDate = info.DeleteDate.Format(util.TimePattern)
+			}
+			reply.Item = item
+		}
+	} else {
+		info, err := merchantmodel.FindMerchantInfoMainById(db, in.Id)
+		if err != nil {
+			return nil, err
+		}
+		if info != nil {
+			item := new(pb.MerchantField)
+			item.MchtCd = info.MchtCd
+			item.Sn = info.Sn
+			item.AipBranCd = info.AipBranCd
+			item.GroupCd = info.GroupCd
+			item.OriChnl = info.OriChnl
+			item.OriChnlDesc = info.OriChnlDesc
+			item.BankBelongCd = info.BankBelongCd
+			item.DvpBy = info.DvpBy
+			item.MccCd18 = info.MccCd18
+			item.ApplDate = info.ApplDate
+			item.UpBcCd = info.UpBcCd
+			item.UpAcCd = info.UpAcCd
+			item.UpMccCd = info.UpMccCd
+			item.Name = info.Name
+			item.NameBusi = info.NameBusi
+			item.BusiLiceNo = info.BusiLiceNo
+			item.BusiRang = info.BusiRang
+			item.BusiMain = info.BusiMain
+			item.Certif = info.Certif
+			item.CertifType = info.CertifType
+			item.CertifNo = info.CertifNo
+			item.CityCd = info.CityCd
+			item.AreaCd = info.AreaCd
+			item.RegAddr = info.RegAddr
+			item.ContactName = info.ContactName
+			item.ContactPhoneNo = info.ContactPhoneNo
+			item.IsGroup = info.IsGroup
+			item.MoneyToGroup = info.MoneyToGroup
+			item.StlmWay = info.StlmWay
+			item.StlmWayDesc = info.StlmWayDesc
+			item.StlmInsCircle = info.StlmInsCircle
+			item.Status = info.Status
+			item.UcBcCd32 = info.UcBcCd32
+			item.K2WorkflowId = info.K2WorkflowId
+			item.SystemFlag = info.SystemFlag
+			item.ApprovalUsername = info.ApprovalUsername
+			item.FinalApprovalUsername = info.FinalApprovalUsername
+			item.IsUpStandard = info.IsUpStandard
+			item.BillingType = info.BillingType
+			item.BillingLevel = info.BillingLevel
+			item.Slogan = info.Slogan
+			item.Ext1 = info.Ext1
+			item.Ext2 = info.Ext2
+			item.Ext3 = info.Ext3
+			item.Ext4 = info.Ext4
+			item.AreaStandard = info.AreaStandard
+			item.MchtCdAreaCd = info.MchtCdAreaCd
+			item.UcBcCdArea = info.UcBcCdArea
+			item.RecOprId = info.RecOprId
+			item.RecUpdOpr = info.RecUpdOpr
+			item.OperIn = info.OperIn
+			item.OemOrgCode = info.OemOrgCode
+			item.IsEleInvoice = info.IsEleInvoice
+			item.DutyParagraph = info.DutyParagraph
+			item.TaxMachineBrand = info.TaxMachineBrand
+			item.Ext5 = info.Ext5
+			item.Ext6 = info.Ext6
+			item.Ext7 = info.Ext7
+			item.Ext8 = info.Ext8
+			item.Ext9 = info.Ext9
+			item.BusiLiceSt = info.BusiLiceSt
+			item.BusiLiceDt = info.BusiLiceDt
+			item.CertifSt = info.CertifSt
+			item.CertifDt = info.CertifDt
+
+			if !info.CreatedAt.IsZero() {
+				item.CreatedAt = info.CreatedAt.Format(util.TimePattern)
+			}
+			if !info.UpdatedAt.IsZero() {
+				item.UpdatedAt = info.UpdatedAt.Format(util.TimePattern)
+			}
+			if info.RecApllyTs != nil {
+				item.RecApllyTs = info.RecApllyTs.Format(util.TimePattern)
+			}
+			if info.ApprDate != nil {
+				item.ApprDate = info.ApprDate.Format(util.TimePattern)
+			}
+			if info.DeleteDate != nil {
+				item.DeleteDate = info.DeleteDate.Format(util.TimePattern)
+			}
+			reply.Item = item
+		}
+	}
+
+	return reply, nil
+}
+
 func (m *merchantService) GetMerchantPicture(ctx context.Context, in *pb.GetMerchantPictureRequest) (*pb.GetMerchantPictureReply, error) {
 	reply := new(pb.GetMerchantPictureReply)
 	if in.Item == nil || in.Item.MchtCd == "" {
@@ -797,10 +996,10 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 				pbMerchants[i].DeleteDate = merchants[i].DeleteDate.Format("2006-01-02 15:04:05")
 			}
 			if !merchants[i].CreatedAt.IsZero() {
-				pbMerchants[i].RecCrtTs = merchants[i].CreatedAt.Format("2006-01-02 15:04:05")
+				pbMerchants[i].CreatedAt = merchants[i].CreatedAt.Format("2006-01-02 15:04:05")
 			}
 			if merchants[i].UpdatedAt.IsZero() {
-				pbMerchants[i].RecUpdTs = merchants[i].UpdatedAt.Format("2006-01-02 15:04:05")
+				pbMerchants[i].UpdatedAt = merchants[i].UpdatedAt.Format("2006-01-02 15:04:05")
 			}
 			if merchants[i] != nil {
 				pbMerchants[i].RecApllyTs = merchants[i].RecApllyTs.Format("2006-01-02 15:04:05")
@@ -962,10 +1161,10 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 				pbMerchants[i].DeleteDate = merchants[i].DeleteDate.Format("2006-01-02 15:04:05")
 			}
 			if !merchants[i].CreatedAt.IsZero() {
-				pbMerchants[i].RecCrtTs = merchants[i].CreatedAt.Format("2006-01-02 15:04:05")
+				pbMerchants[i].CreatedAt = merchants[i].CreatedAt.Format("2006-01-02 15:04:05")
 			}
 			if !merchants[i].UpdatedAt.IsZero() {
-				pbMerchants[i].RecUpdTs = merchants[i].UpdatedAt.Format("2006-01-02 15:04:05")
+				pbMerchants[i].UpdatedAt = merchants[i].UpdatedAt.Format("2006-01-02 15:04:05")
 			}
 			if merchants[i].RecApllyTs != nil {
 				pbMerchants[i].RecApllyTs = merchants[i].RecApllyTs.Format("2006-01-02 15:04:05")

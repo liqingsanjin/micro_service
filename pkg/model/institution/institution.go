@@ -79,6 +79,15 @@ func FindInstitutionInfoById(db *gorm.DB, id string) (*InstitutionInfo, error) {
 	return out, err
 }
 
+func FindInstitutionInfoMainById(db *gorm.DB, id string) (*InstitutionInfoMain, error) {
+	out := new(InstitutionInfoMain)
+	err := db.Where("INS_ID_CD = ?", id).Take(out).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return out, err
+}
+
 func FindInstitutionInfosByIdList(db *gorm.DB, ids []string) ([]*InstitutionInfo, error) {
 	out := make([]*InstitutionInfo, 0)
 	err := db.Where("INS_ID_CD in (?)", ids).Find(&out).Error

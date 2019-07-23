@@ -128,7 +128,16 @@ func (m MerchantBankAccount) TableName() string {
 
 func FindMerchantInfoById(db *gorm.DB, id string) (*MerchantInfo, error) {
 	out := new(MerchantInfo)
-	err := db.Where("MCHT_CD = ?", id).First(out).Error
+	err := db.Where("MCHT_CD = ?", id).Take(out).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return out, err
+}
+
+func FindMerchantInfoMainById(db *gorm.DB, id string) (*MerchantInfoMain, error) {
+	out := new(MerchantInfoMain)
+	err := db.Where("MCHT_CD = ?", id).Take(out).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}
