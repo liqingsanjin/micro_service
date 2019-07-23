@@ -15,6 +15,8 @@ service Static {
     rpc GetUnionPayBankList(GetUnionPayBankListRequest) returns (GetUnionPayBankListReply) {}
     rpc FindUnionPayMccList(FindUnionPayMccListRequest) returns (FindUnionPayMccListReply) {}
     rpc GetInsProdBizFeeMapInfo(GetInsProdBizFeeMapInfoRequest) returns (GetInsProdBizFeeMapInfoReply) {}
+    rpc ListTransMap(ListTransMapRequest) returns (ListTransMapReply) {}
+    rpc ListFeeMap(ListFeeMapRequest) returns (ListFeeMapReply) {}
 }
 
 message InsProdBizFeeMapInfoField {
@@ -184,4 +186,44 @@ message FindUnionPayMccListReply {
     int32 size = 3;
     int32 count = 4;
     error err = 5;
+}
+
+message ProductBizTransMapField {
+    string prodCd      = 1;
+    string bizCd       = 2;
+    string transCd     = 3;
+    string updateDate  = 4;
+    string description = 5;
+    string resvFld1    = 6;
+    string resvFld2    = 7;
+    string resvFld3    = 8;
+}
+
+message ProductBizFeeMapField {
+    string prodCd      = 1;
+    string bizCd       = 2;
+    string subBizCd    = 3;
+    string updateDate  = 4;
+    string description = 5;
+    string resvFld1    = 6;
+    string resvFld2    = 7;
+    string resvFld3    = 8;
+}
+
+message ListTransMapRequest {
+    ProductBizTransMapField item = 1;
+}
+
+message ListTransMapReply {
+    repeated ProductBizTransMapField items = 1;
+    error err = 2;
+}
+
+message ListFeeMapRequest {
+    ProductBizFeeMapField item = 1;
+}
+
+message ListFeeMapReply {
+    repeated ProductBizFeeMapField items = 1;
+    error err = 2;
 }

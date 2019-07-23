@@ -21,6 +21,24 @@ type StaticEndpoints struct {
 	GetUnionPayBankListEndpoint     endpoint.Endpoint
 	FindUnionPayMccListEndpoint     endpoint.Endpoint
 	GetInsProdBizFeeMapInfoEndpoint endpoint.Endpoint
+	ListTransMapEndpoint            endpoint.Endpoint
+	ListFeeMapEndpoint              endpoint.Endpoint
+}
+
+func (s *StaticEndpoints) ListFeeMap(ctx context.Context, in *pb.ListFeeMapRequest) (*pb.ListFeeMapReply, error) {
+	res, err := s.ListFeeMapEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.ListFeeMapReply), nil
+}
+
+func (s *StaticEndpoints) ListTransMap(ctx context.Context, in *pb.ListTransMapRequest) (*pb.ListTransMapReply, error) {
+	res, err := s.ListTransMapEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.ListTransMapReply), nil
 }
 
 func (s *StaticEndpoints) GetInsProdBizFeeMapInfo(ctx context.Context, in *pb.GetInsProdBizFeeMapInfoRequest) (*pb.GetInsProdBizFeeMapInfoReply, error) {
@@ -133,8 +151,9 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 	if tracer != nil {
 		options = append(options, tracer)
 	}
+
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Static",
 			"SyncData",
@@ -143,11 +162,11 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			pb.StaticSyncDataResp{},
 			options...,
 		).Endpoint()
-		endpoints.SyncDataEndpoint = endpoint
+		endpoints.SyncDataEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Static",
 			"GetDictionaryItem",
@@ -156,11 +175,11 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			pb.StaticGetDictionaryItemResp{},
 			options...,
 		).Endpoint()
-		endpoints.GetDictionaryItemEndpoint = endpoint
+		endpoints.GetDictionaryItemEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Static",
 			"GetDicByProdAndBiz",
@@ -169,11 +188,11 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			pb.StaticGetDicByProdAndBizResp{},
 			options...,
 		).Endpoint()
-		endpoints.GetDicByProdAndBizEndpoint = endpoint
+		endpoints.GetDicByProdAndBizEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Static",
 			"GetDicByInsCmpCd",
@@ -182,11 +201,11 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			pb.StaticGetDicByInsCmpCdResp{},
 			options...,
 		).Endpoint()
-		endpoints.GetDicByInsCmpCdEndpoint = endpoint
+		endpoints.GetDicByInsCmpCdEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Static",
 			"CheckValues",
@@ -195,11 +214,11 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			pb.StaticCheckValuesResp{},
 			options...,
 		).Endpoint()
-		endpoints.CheckValuesEndpoint = endpoint
+		endpoints.CheckValuesEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Static",
 			"GetDictionaryLayerItem",
@@ -208,11 +227,11 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			pb.GetDictionaryLayerItemResp{},
 			options...,
 		).Endpoint()
-		endpoints.GetDictionaryLayerItemEndpoint = endpoint
+		endpoints.GetDictionaryLayerItemEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Static",
 			"GetDictionaryItemByPk",
@@ -221,11 +240,11 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			pb.GetDictionaryItemByPkResp{},
 			options...,
 		).Endpoint()
-		endpoints.GetDictionaryItemByPkEndpoint = endpoint
+		endpoints.GetDictionaryItemByPkEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Static",
 			"GetUnionPayBankList",
@@ -234,11 +253,11 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			pb.GetUnionPayBankListReply{},
 			options...,
 		).Endpoint()
-		endpoints.GetUnionPayBankListEndpoint = endpoint
+		endpoints.GetUnionPayBankListEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Static",
 			"FindUnionPayMccList",
@@ -247,11 +266,11 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			pb.FindUnionPayMccListReply{},
 			options...,
 		).Endpoint()
-		endpoints.FindUnionPayMccListEndpoint = endpoint
+		endpoints.FindUnionPayMccListEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Static",
 			"GetInsProdBizFeeMapInfo",
@@ -260,7 +279,33 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			pb.GetInsProdBizFeeMapInfoReply{},
 			options...,
 		).Endpoint()
-		endpoints.GetInsProdBizFeeMapInfoEndpoint = endpoint
+		endpoints.GetInsProdBizFeeMapInfoEndpoint = e
+	}
+
+	{
+		e := grpctransport.NewClient(
+			conn,
+			"pb.Static",
+			"ListTransMap",
+			encodeRequest,
+			decodeResponse,
+			pb.ListTransMapReply{},
+			options...,
+		).Endpoint()
+		endpoints.ListTransMapEndpoint = e
+	}
+
+	{
+		e := grpctransport.NewClient(
+			conn,
+			"pb.Static",
+			"ListFeeMap",
+			encodeRequest,
+			decodeResponse,
+			pb.ListFeeMapReply{},
+			options...,
+		).Endpoint()
+		endpoints.ListFeeMapEndpoint = e
 	}
 
 	return endpoints

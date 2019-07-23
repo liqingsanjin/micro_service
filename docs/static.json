@@ -574,6 +574,88 @@
           }
         }
       }
+    },
+    "/static/listTransMap": {
+      "post": {
+        "operationId": "listTransMap",
+        "summary": "prod_biz_trans_map列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "listTransMap",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "prodCd": "1000",
+                    "bizCd": "0000000",
+                    "transCd": "1001",
+                    "updateDate": "2016-04-13 13:58:34",
+                    "description": "",
+                    "resvFld1": "",
+                    "resvFld2": "",
+                    "resvFld3": ""
+                  }
+                ],
+                "err": null
+              }
+            }
+          }
+        }
+      }
+    },
+    "/static/listFeeMap": {
+      "post": {
+        "operationId": "listFeeMap",
+        "summary": "prod_biz_fee_map列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "listFeeMap",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "prodCd": "1000",
+                    "bizCd": "0000000",
+                    "subBizCd": "0001000",
+                    "updateDate": "2016-04-13 14:19:20",
+                    "description": "",
+                    "resvFld1": "",
+                    "resvFld2": "",
+                    "resvFld3": ""
+                  }
+                ],
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {

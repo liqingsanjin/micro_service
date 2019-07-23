@@ -8,73 +8,96 @@ import (
 )
 
 func RegisterStaticHandler(engine *gin.Engine, endpoints *StaticEndpoints) {
-	engine.POST("/static/syncData", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	group := engine.Group("/static")
+
+	group.POST("/syncData", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.SyncDataEndpoint,
 		decodeHttpRequest(&pb.StaticSyncDataReq{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/static/getDictionaryItem", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	group.POST("/getDictionaryItem", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.GetDictionaryItemEndpoint,
 		decodeHttpRequest(&pb.StaticGetDictionaryItemReq{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/static/getDicByProdAndBiz", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	group.POST("/getDicByProdAndBiz", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.GetDicByProdAndBizEndpoint,
 		decodeHttpRequest(&pb.StaticGetDicByProdAndBizReq{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/static/getDicByInsCmpCd", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	group.POST("/getDicByInsCmpCd", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.GetDicByInsCmpCdEndpoint,
 		decodeHttpRequest(&pb.StaticGetDicByInsCmpCdReq{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/static/checkValues", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	group.POST("/checkValues", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.CheckValuesEndpoint,
 		decodeHttpRequest(&pb.StaticCheckValuesReq{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/static/getDictionaryLayerItem", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	group.POST("/getDictionaryLayerItem", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.GetDictionaryLayerItemEndpoint,
 		decodeHttpRequest(&pb.GetDictionaryLayerItemReq{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/static/getDictionaryItemByPk", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	group.POST("/getDictionaryItemByPk", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.GetDictionaryItemByPkEndpoint,
 		decodeHttpRequest(&pb.GetDictionaryItemByPkReq{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/static/getUnionPayBankList", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	group.POST("/getUnionPayBankList", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.GetUnionPayBankListEndpoint,
 		decodeHttpRequest(&pb.GetUnionPayBankListRequest{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/static/findUnionPayMccList", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	group.POST("/findUnionPayMccList", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.FindUnionPayMccListEndpoint,
 		decodeHttpRequest(&pb.FindUnionPayMccListRequest{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	engine.POST("/static/getInsProdBizFeeMapInfo", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	group.POST("/getInsProdBizFeeMapInfo", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.GetInsProdBizFeeMapInfoEndpoint,
 		decodeHttpRequest(&pb.GetInsProdBizFeeMapInfoRequest{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
+
+	group.POST("/listTransMap", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.ListTransMapEndpoint,
+		decodeHttpRequest(&pb.ListTransMapRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
+
+	group.POST("/listFeeMap", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.ListFeeMapEndpoint,
+		decodeHttpRequest(&pb.ListFeeMapRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
+
+	//group.POST("/listFeeMap", convertHttpHandlerToGinHandler(httptransport.NewServer(
+	//	endpoints.ListFeeMapEndpoint,
+	//	decodeHttpRequest(&pb.ListFeeMapRequest{}),
+	//	encodeHttpResponse,
+	//	httptransport.ServerErrorEncoder(errorEncoder),
+	//)))
 }

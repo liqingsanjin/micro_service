@@ -85,3 +85,15 @@ func MakeGetInsProdBizFeeMapInfoEndpoint(s pb.StaticServer) endpoint.Endpoint {
 		return s.GetInsProdBizFeeMapInfo(ctx, request.(*pb.GetInsProdBizFeeMapInfoRequest))
 	}
 }
+
+func MakeListTransMapEndpoint(service pb.StaticServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.ListTransMap(ctx, request.(*pb.ListTransMapRequest))
+	}
+}
+
+func MakeListFeeMapEndpoint(service pb.StaticServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.ListFeeMap(ctx, request.(*pb.ListFeeMapRequest))
+	}
+}

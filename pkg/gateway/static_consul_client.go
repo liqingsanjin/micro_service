@@ -33,14 +33,14 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 		ErrorPercentThreshold: 25,
 		SleepWindow:           10000,
 	})
-	staticBreaker := circuitbreaker.Hystrix(staticbreaker)
+	breaker := circuitbreaker.Hystrix(staticbreaker)
 
 	{
 		factory := staticserviceFactory(staticservice.MakeSyncDataEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
-		retry = staticBreaker(retry)
+		retry = breaker(retry)
 		endpoints.SyncDataEndpoint = retry
 	}
 
@@ -49,7 +49,7 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
-		retry = staticBreaker(retry)
+		retry = breaker(retry)
 		endpoints.GetDictionaryItemEndpoint = retry
 	}
 
@@ -58,7 +58,7 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
-		retry = staticBreaker(retry)
+		retry = breaker(retry)
 		endpoints.GetDicByProdAndBizEndpoint = retry
 	}
 
@@ -67,7 +67,7 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
-		retry = staticBreaker(retry)
+		retry = breaker(retry)
 		endpoints.GetDicByInsCmpCdEndpoint = retry
 	}
 
@@ -76,7 +76,7 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
-		retry = staticBreaker(retry)
+		retry = breaker(retry)
 		endpoints.CheckValuesEndpoint = retry
 	}
 
@@ -85,7 +85,7 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
-		retry = staticBreaker(retry)
+		retry = breaker(retry)
 		endpoints.GetDictionaryLayerItemEndpoint = retry
 	}
 
@@ -94,7 +94,7 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
-		retry = staticBreaker(retry)
+		retry = breaker(retry)
 		endpoints.GetDictionaryItemByPkEndpoint = retry
 	}
 
@@ -103,7 +103,7 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
-		retry = staticBreaker(retry)
+		retry = breaker(retry)
 		endpoints.GetUnionPayBankListEndpoint = retry
 	}
 
@@ -112,7 +112,7 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
-		retry = staticBreaker(retry)
+		retry = breaker(retry)
 		endpoints.FindUnionPayMccListEndpoint = retry
 	}
 
@@ -121,8 +121,26 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
-		retry = staticBreaker(retry)
+		retry = breaker(retry)
 		endpoints.GetInsProdBizFeeMapInfoEndpoint = retry
+	}
+
+	{
+		factory := staticserviceFactory(staticservice.MakeListTransMapEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = breaker(retry)
+		endpoints.ListTransMapEndpoint = retry
+	}
+
+	{
+		factory := staticserviceFactory(staticservice.MakeListFeeMapEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = breaker(retry)
+		endpoints.ListFeeMapEndpoint = retry
 	}
 
 	return &endpoints
