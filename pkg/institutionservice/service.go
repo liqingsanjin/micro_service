@@ -1,20 +1,81 @@
 package institutionservice
 
 import (
+	"context"
 	"fmt"
 	"userService/pkg/common"
 	cleartxnM "userService/pkg/model/cleartxn"
 	insmodel "userService/pkg/model/institution"
 	"userService/pkg/pb"
+	"userService/pkg/util"
 
 	"net/http"
 
 	"github.com/jinzhu/copier"
-	"golang.org/x/net/context"
 )
 
 //service .
 type service struct {
+}
+
+func (s *service) GetInstitutionById(ctx context.Context, in *pb.GetInstitutionByIdRequest) (*pb.GetInstitutionByIdReply, error) {
+	reply := new(pb.GetInstitutionByIdReply)
+	if in.Id == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "id不能为空",
+		}
+		return reply, nil
+	}
+
+	db := common.DB
+	info, err := insmodel.FindInstitutionInfoById(db, in.Id)
+	if err != nil {
+		return nil, err
+	}
+	if info != nil {
+		item := new(pb.InstitutionField)
+		item.InsIdCd = info.InsIdCd
+		item.InsCompanyCd = info.InsCompanyCd
+		item.InsType = info.InsType
+		item.InsName = info.InsName
+		item.InsProvCd = info.InsProvCd
+		item.InsCityCd = info.InsCityCd
+		item.InsRegionCd = info.InsRegionCd
+		item.InsSta = info.InsSta
+		item.InsStlmTp = info.InsStlmTp
+		item.InsAloStlmCycle = info.InsAloStlmCycle
+		item.InsAloStlmMd = info.InsAloStlmMd
+		item.InsStlmCNm = info.InsStlmCNm
+		item.InsStlmCAcct = info.InsStlmCAcct
+		item.InsStlmCBkNo = info.InsStlmCBkNo
+		item.InsStlmCBkNm = info.InsStlmCBkNm
+		item.InsStlmDNm = info.InsStlmDNm
+		item.InsStlmDAcct = info.InsStlmDAcct
+		item.InsStlmDBkNo = info.InsStlmDBkNo
+		item.InsStlmDBkNm = info.InsStlmDBkNm
+		item.MsgResvFld1 = info.MsgResvFld1
+		item.MsgResvFld2 = info.MsgResvFld2
+		item.MsgResvFld3 = info.MsgResvFld3
+		item.MsgResvFld4 = info.MsgResvFld4
+		item.MsgResvFld5 = info.MsgResvFld5
+		item.MsgResvFld6 = info.MsgResvFld6
+		item.MsgResvFld7 = info.MsgResvFld7
+		item.MsgResvFld8 = info.MsgResvFld8
+		item.MsgResvFld9 = info.MsgResvFld9
+		item.MsgResvFld10 = info.MsgResvFld10
+		item.RecOprId = info.RecOprId
+		item.RecUpdOpr = info.RecUpdOpr
+		if !info.CreatedAt.IsZero() {
+			item.CreatedAt = info.CreatedAt.Format(util.TimePattern)
+		}
+		if !info.UpdatedAt.IsZero() {
+			item.UpdatedAt = info.UpdatedAt.Format(util.TimePattern)
+		}
+		reply.Item = item
+	}
+	return reply, nil
 }
 
 //Download .
@@ -291,6 +352,7 @@ func (s *service) ListInstitutions(ctx context.Context, in *pb.ListInstitutionsR
 			query.MsgResvFld9 = in.Item.MsgResvFld9
 			query.MsgResvFld10 = in.Item.MsgResvFld10
 			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
 		}
 		ins, count, err := insmodel.QueryInstitutionInfo(db, query, in.Page, in.Size)
 		if err != nil {
@@ -331,6 +393,7 @@ func (s *service) ListInstitutions(ctx context.Context, in *pb.ListInstitutionsR
 				MsgResvFld9:     ins[i].MsgResvFld9,
 				MsgResvFld10:    ins[i].MsgResvFld10,
 				RecOprId:        ins[i].RecOprId,
+				RecUpdOpr:       ins[i].RecUpdOpr,
 			}
 			if !ins[i].CreatedAt.IsZero() {
 				pbIns[i].CreatedAt = ins[i].CreatedAt.Format("2006-01-02 15:04:05")
@@ -381,6 +444,7 @@ func (s *service) ListInstitutions(ctx context.Context, in *pb.ListInstitutionsR
 			query.MsgResvFld9 = in.Item.MsgResvFld9
 			query.MsgResvFld10 = in.Item.MsgResvFld10
 			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
 		}
 		ins, count, err := insmodel.QueryInstitutionInfoMain(db, query, in.Page, in.Size)
 		if err != nil {
@@ -421,6 +485,7 @@ func (s *service) ListInstitutions(ctx context.Context, in *pb.ListInstitutionsR
 				MsgResvFld9:     ins[i].MsgResvFld9,
 				MsgResvFld10:    ins[i].MsgResvFld10,
 				RecOprId:        ins[i].RecOprId,
+				RecUpdOpr:       ins[i].RecUpdOpr,
 			}
 			if !ins[i].CreatedAt.IsZero() {
 				pbIns[i].CreatedAt = ins[i].CreatedAt.Format("2006-01-02 15:04:05")
@@ -494,6 +559,7 @@ func (s *service) SaveInstitution(ctx context.Context, in *pb.SaveInstitutionReq
 		ins.MsgResvFld9 = in.Item.MsgResvFld9
 		ins.MsgResvFld10 = in.Item.MsgResvFld10
 		ins.RecOprId = in.Item.RecOprId
+		ins.RecUpdOpr = in.Item.RecUpdOpr
 	}
 	err := insmodel.SaveInstitution(db, ins)
 	if err != nil {

@@ -124,6 +124,15 @@ func GetInstitutionCliEndpoints(instancer sd.Instancer, log log.Logger) *Institu
 		endpoints.SaveInstitutionCashEndpoint = retry
 	}
 
+	{
+		factory := institutionserviceFactory(institutionservice.MakeGetInstitutionByIdEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = institutionBreaker(retry)
+		endpoints.GetInstitutionByIdEndpoint = retry
+	}
+
 	return &endpoints
 }
 

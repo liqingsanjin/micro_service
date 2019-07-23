@@ -1,11 +1,11 @@
 package institutionservice
 
 import (
+	"context"
 	"userService/pkg/pb"
 
 	"github.com/go-kit/kit/endpoint"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
-	"golang.org/x/net/context"
 )
 
 type server struct {
@@ -19,6 +19,15 @@ type server struct {
 	addInstitutionFeeHandler     grpctransport.Handler
 	addInstitutionControlHandler grpctransport.Handler
 	addInstitutionCashHandler    grpctransport.Handler
+	GetInstitutionByIdHandler    grpctransport.Handler
+}
+
+func (g *server) GetInstitutionById(ctx context.Context, in *pb.GetInstitutionByIdRequest) (*pb.GetInstitutionByIdReply, error) {
+	_, res, err := g.GetInstitutionByIdHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetInstitutionByIdReply), nil
 }
 
 func (g *server) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHisDownloadReq) (*pb.InstitutionTnxHisDownloadResp, error) {
@@ -53,13 +62,106 @@ func (g *server) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrTrnLo
 	return res.(*pb.DownloadTfrTrnLogsResp), nil
 }
 
-//Newserver .
+func grpcNewServer(endpoint endpoint.Endpoint) *grpctransport.Server {
+	return grpctransport.NewServer(endpoint, grpcDecode, grpcEncode)
+}
+
+func grpcDecode(_ context.Context, req interface{}) (interface{}, error) {
+	return req, nil
+}
+
+func grpcEncode(_ context.Context, res interface{}) (interface{}, error) {
+	return res, nil
+}
+
+func (g *server) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListInstitutionsReply, error) {
+	_, res, err := g.listGroupsHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.ListInstitutionsReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (g *server) ListInstitutions(ctx context.Context, in *pb.ListInstitutionsRequest) (*pb.ListInstitutionsReply, error) {
+	_, res, err := g.listInstitutionsHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.ListInstitutionsReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (g *server) SaveInstitution(ctx context.Context, in *pb.SaveInstitutionRequest) (*pb.SaveInstitutionReply, error) {
+	_, res, err := g.addInstitutionHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.SaveInstitutionReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+
+}
+
+func (g *server) SaveInstitutionFee(ctx context.Context, in *pb.SaveInstitutionFeeRequest) (*pb.SaveInstitutionFeeReply, error) {
+	_, res, err := g.addInstitutionFeeHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.SaveInstitutionFeeReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (g *server) SaveInstitutionControl(ctx context.Context, in *pb.SaveInstitutionControlRequest) (*pb.SaveInstitutionControlReply, error) {
+	_, res, err := g.addInstitutionControlHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.SaveInstitutionControlReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+func (g *server) SaveInstitutionCash(ctx context.Context, in *pb.SaveInstitutionCashRequest) (*pb.SaveInstitutionCashReply, error) {
+	_, res, err := g.addInstitutionCashHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.SaveInstitutionCashReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
 func New(tracer grpctransport.ServerOption) pb.InstitutionServer {
 	svc := new(service)
 	svr := new(server)
 	options := make([]grpctransport.ServerOption, 0)
 	if tracer != nil {
 		options = append(options, tracer)
+	}
+
+	{
+		e := MakeGetInstitutionByIdEndpoint(svc)
+		svr.GetInstitutionByIdHandler = grpctransport.NewServer(
+			e,
+			grpcDecode,
+			grpcEncode,
+			options...,
+		)
 	}
 
 	{
@@ -160,88 +262,4 @@ func New(tracer grpctransport.ServerOption) pb.InstitutionServer {
 	}
 
 	return svr
-}
-
-func grpcNewServer(endpoint endpoint.Endpoint) *grpctransport.Server {
-	return grpctransport.NewServer(endpoint, grpcDecode, grpcEncode)
-}
-
-func grpcDecode(_ context.Context, req interface{}) (interface{}, error) {
-	return req, nil
-}
-
-func grpcEncode(_ context.Context, res interface{}) (interface{}, error) {
-	return res, nil
-}
-
-func (g *server) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListInstitutionsReply, error) {
-	_, res, err := g.listGroupsHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.ListInstitutionsReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
-func (g *server) ListInstitutions(ctx context.Context, in *pb.ListInstitutionsRequest) (*pb.ListInstitutionsReply, error) {
-	_, res, err := g.listInstitutionsHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.ListInstitutionsReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
-func (g *server) SaveInstitution(ctx context.Context, in *pb.SaveInstitutionRequest) (*pb.SaveInstitutionReply, error) {
-	_, res, err := g.addInstitutionHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.SaveInstitutionReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-
-}
-
-func (g *server) SaveInstitutionFee(ctx context.Context, in *pb.SaveInstitutionFeeRequest) (*pb.SaveInstitutionFeeReply, error) {
-	_, res, err := g.addInstitutionFeeHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.SaveInstitutionFeeReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
-func (g *server) SaveInstitutionControl(ctx context.Context, in *pb.SaveInstitutionControlRequest) (*pb.SaveInstitutionControlReply, error) {
-	_, res, err := g.addInstitutionControlHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.SaveInstitutionControlReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-func (g *server) SaveInstitutionCash(ctx context.Context, in *pb.SaveInstitutionCashRequest) (*pb.SaveInstitutionCashReply, error) {
-	_, res, err := g.addInstitutionCashHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.SaveInstitutionCashReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
 }

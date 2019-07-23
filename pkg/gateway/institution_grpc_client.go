@@ -5,10 +5,9 @@ import (
 	"userService/pkg/pb"
 
 	"github.com/go-kit/kit/endpoint"
-	"google.golang.org/grpc"
-
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	kitgrpc "github.com/go-kit/kit/transport/grpc"
+	"google.golang.org/grpc"
 )
 
 type InstitutionEndpoints struct {
@@ -22,6 +21,135 @@ type InstitutionEndpoints struct {
 	SaveInstitutionFeeEndpoint     endpoint.Endpoint
 	SaveInstitutionControlEndpoint endpoint.Endpoint
 	SaveInstitutionCashEndpoint    endpoint.Endpoint
+	GetInstitutionByIdEndpoint     endpoint.Endpoint
+}
+
+func (s *InstitutionEndpoints) GetInstitutionById(ctx context.Context, in *pb.GetInstitutionByIdRequest) (*pb.GetInstitutionByIdReply, error) {
+	res, err := s.GetInstitutionByIdEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetInstitutionByIdReply), nil
+}
+
+func (s *InstitutionEndpoints) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHisDownloadReq) (*pb.InstitutionTnxHisDownloadResp, error) {
+	res, err := s.TnxHisDownloadEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.InstitutionTnxHisDownloadResp)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (s *InstitutionEndpoints) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq) (*pb.GetTfrTrnLogsResp, error) {
+	res, err := s.GetTfrTrnLogsEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.GetTfrTrnLogsResp)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (s *InstitutionEndpoints) GetTfrTrnLog(ctx context.Context, in *pb.GetTfrTrnLogReq) (*pb.GetTfrTrnLogResp, error) {
+	res, err := s.GetTfrTrnLogEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.GetTfrTrnLogResp)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (s *InstitutionEndpoints) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrTrnLogsReq) (*pb.DownloadTfrTrnLogsResp, error) {
+	res, err := s.DownloadTfrTrnLogsEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.DownloadTfrTrnLogsResp)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (s *InstitutionEndpoints) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListInstitutionsReply, error) {
+	res, err := s.ListGroupsEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.ListInstitutionsReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (s *InstitutionEndpoints) ListInstitutions(ctx context.Context, in *pb.ListInstitutionsRequest) (*pb.ListInstitutionsReply, error) {
+	res, err := s.ListInstitutionsEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.ListInstitutionsReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (s *InstitutionEndpoints) SaveInstitution(ctx context.Context, in *pb.SaveInstitutionRequest) (*pb.SaveInstitutionReply, error) {
+	res, err := s.SaveInstitutionEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.SaveInstitutionReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (s *InstitutionEndpoints) SaveInstitutionFee(ctx context.Context, in *pb.SaveInstitutionFeeRequest) (*pb.SaveInstitutionFeeReply, error) {
+	res, err := s.SaveInstitutionFeeEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.SaveInstitutionFeeReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (s *InstitutionEndpoints) SaveInstitutionControl(ctx context.Context, in *pb.SaveInstitutionControlRequest) (*pb.SaveInstitutionControlReply, error) {
+	res, err := s.SaveInstitutionControlEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.SaveInstitutionControlReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
+}
+
+func (s *InstitutionEndpoints) SaveInstitutionCash(ctx context.Context, in *pb.SaveInstitutionCashRequest) (*pb.SaveInstitutionCashReply, error) {
+	res, err := s.SaveInstitutionCashEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	reply, ok := res.(*pb.SaveInstitutionCashReply)
+	if !ok {
+		return nil, ErrReplyTypeInvalid
+	}
+	return reply, nil
 }
 
 func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *InstitutionEndpoints {
@@ -160,124 +288,18 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 		endpoints.SaveInstitutionCashEndpoint = endpoint
 	}
 
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Institution",
+			"GetInstitutionById",
+			encodeRequest,
+			decodeResponse,
+			pb.GetInstitutionByIdReply{},
+			options...,
+		).Endpoint()
+		endpoints.GetInstitutionByIdEndpoint = endpoint
+	}
+
 	return endpoints
-}
-func (s *InstitutionEndpoints) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHisDownloadReq) (*pb.InstitutionTnxHisDownloadResp, error) {
-	res, err := s.TnxHisDownloadEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.InstitutionTnxHisDownloadResp)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
-func (s *InstitutionEndpoints) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq) (*pb.GetTfrTrnLogsResp, error) {
-	res, err := s.GetTfrTrnLogsEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.GetTfrTrnLogsResp)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
-func (s *InstitutionEndpoints) GetTfrTrnLog(ctx context.Context, in *pb.GetTfrTrnLogReq) (*pb.GetTfrTrnLogResp, error) {
-	res, err := s.GetTfrTrnLogEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.GetTfrTrnLogResp)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
-func (s *InstitutionEndpoints) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrTrnLogsReq) (*pb.DownloadTfrTrnLogsResp, error) {
-	res, err := s.DownloadTfrTrnLogsEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.DownloadTfrTrnLogsResp)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
-func (s *InstitutionEndpoints) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListInstitutionsReply, error) {
-	res, err := s.ListGroupsEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.ListInstitutionsReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
-func (s *InstitutionEndpoints) ListInstitutions(ctx context.Context, in *pb.ListInstitutionsRequest) (*pb.ListInstitutionsReply, error) {
-	res, err := s.ListInstitutionsEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.ListInstitutionsReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
-func (s *InstitutionEndpoints) SaveInstitution(ctx context.Context, in *pb.SaveInstitutionRequest) (*pb.SaveInstitutionReply, error) {
-	res, err := s.SaveInstitutionEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.SaveInstitutionReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
-func (s *InstitutionEndpoints) SaveInstitutionFee(ctx context.Context, in *pb.SaveInstitutionFeeRequest) (*pb.SaveInstitutionFeeReply, error) {
-	res, err := s.SaveInstitutionFeeEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.SaveInstitutionFeeReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
-func (s *InstitutionEndpoints) SaveInstitutionControl(ctx context.Context, in *pb.SaveInstitutionControlRequest) (*pb.SaveInstitutionControlReply, error) {
-	res, err := s.SaveInstitutionControlEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.SaveInstitutionControlReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
-func (s *InstitutionEndpoints) SaveInstitutionCash(ctx context.Context, in *pb.SaveInstitutionCashRequest) (*pb.SaveInstitutionCashReply, error) {
-	res, err := s.SaveInstitutionCashEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.SaveInstitutionCashReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
 }

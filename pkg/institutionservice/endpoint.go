@@ -96,3 +96,9 @@ func MakeSaveInstitutionCashEndpoint(service pb.InstitutionServer) endpoint.Endp
 		return service.SaveInstitutionCash(ctx, req)
 	}
 }
+
+func MakeGetInstitutionByIdEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.GetInstitutionById(ctx, request.(*pb.GetInstitutionByIdRequest))
+	}
+}

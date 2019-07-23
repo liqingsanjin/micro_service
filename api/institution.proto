@@ -15,6 +15,7 @@ service Institution {
     rpc SaveInstitutionFee(SaveInstitutionFeeRequest) returns (SaveInstitutionFeeReply) {}
     rpc SaveInstitutionControl(SaveInstitutionControlRequest) returns (SaveInstitutionControlReply) {}
     rpc SaveInstitutionCash(SaveInstitutionCashRequest) returns (SaveInstitutionCashReply) {}
+    rpc GetInstitutionById(GetInstitutionByIdRequest) returns (GetInstitutionByIdReply) {}
 }
 
 message InstitutionTnxHisDownloadReq {
@@ -286,8 +287,9 @@ message InstitutionField {
     string msgResvFld9 = 28;
     string msgResvFld10 = 29;
     string recOprId = 30;
-    string createdAt = 31;
-    string updatedAt = 32;
+    string recUpdOpr = 31;
+    string createdAt = 32;
+    string updatedAt = 33;
 }
 
 message SaveInstitutionRequest {
@@ -401,4 +403,13 @@ message InstitutionCashField {
      string recUpdOpr = 17;
      string createdAt = 18;
      string updatedAt = 19;
+}
+
+message GetInstitutionByIdRequest {
+    string id = 1;
+}
+
+message GetInstitutionByIdReply {
+    InstitutionField item = 1;
+    error err = 2;
 }
