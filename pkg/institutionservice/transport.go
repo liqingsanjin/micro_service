@@ -7,7 +7,14 @@ import (
 	"golang.org/x/net/context"
 )
 
-//MakeDownloadEndpoint .
+func grpcDecode(_ context.Context, req interface{}) (interface{}, error) {
+	return req, nil
+}
+
+func grpcEncode(_ context.Context, res interface{}) (interface{}, error) {
+	return res, nil
+}
+
 func MakeTnxHisDownloadEndpoint(s pb.InstitutionServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(*pb.InstitutionTnxHisDownloadReq)
@@ -15,7 +22,6 @@ func MakeTnxHisDownloadEndpoint(s pb.InstitutionServer) endpoint.Endpoint {
 	}
 }
 
-//MakeDownloadEndpoint .
 func MakeGetTfrTrnLogsEndpoint(s pb.InstitutionServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(*pb.GetTfrTrnLogsReq)
@@ -67,38 +73,14 @@ func MakeSaveInstitutionEndpoint(service pb.InstitutionServer) endpoint.Endpoint
 	}
 }
 
-func MakeSaveInstitutionFeeEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		req, ok := request.(*pb.SaveInstitutionFeeRequest)
-		if !ok {
-			return nil, ErrRequestTypeInvalid
-		}
-		return service.SaveInstitutionFee(ctx, req)
-	}
-}
-
-func MakeSaveInstitutionControlEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		req, ok := request.(*pb.SaveInstitutionControlRequest)
-		if !ok {
-			return nil, ErrRequestTypeInvalid
-		}
-		return service.SaveInstitutionControl(ctx, req)
-	}
-}
-
-func MakeSaveInstitutionCashEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		req, ok := request.(*pb.SaveInstitutionCashRequest)
-		if !ok {
-			return nil, ErrRequestTypeInvalid
-		}
-		return service.SaveInstitutionCash(ctx, req)
-	}
-}
-
 func MakeGetInstitutionByIdEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		return service.GetInstitutionById(ctx, request.(*pb.GetInstitutionByIdRequest))
+	}
+}
+
+func MakeSaveInstitutionFeeControlCashEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.SaveInstitutionFeeControlCash(ctx, request.(*pb.SaveInstitutionFeeControlCashRequest))
 	}
 }

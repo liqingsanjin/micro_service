@@ -11,17 +11,23 @@ import (
 )
 
 type InstitutionEndpoints struct {
-	TnxHisDownloadEndpoint         endpoint.Endpoint
-	GetTfrTrnLogsEndpoint          endpoint.Endpoint
-	GetTfrTrnLogEndpoint           endpoint.Endpoint
-	DownloadTfrTrnLogsEndpoint     endpoint.Endpoint
-	ListGroupsEndpoint             endpoint.Endpoint
-	ListInstitutionsEndpoint       endpoint.Endpoint
-	SaveInstitutionEndpoint        endpoint.Endpoint
-	SaveInstitutionFeeEndpoint     endpoint.Endpoint
-	SaveInstitutionControlEndpoint endpoint.Endpoint
-	SaveInstitutionCashEndpoint    endpoint.Endpoint
-	GetInstitutionByIdEndpoint     endpoint.Endpoint
+	TnxHisDownloadEndpoint                endpoint.Endpoint
+	GetTfrTrnLogsEndpoint                 endpoint.Endpoint
+	GetTfrTrnLogEndpoint                  endpoint.Endpoint
+	DownloadTfrTrnLogsEndpoint            endpoint.Endpoint
+	ListGroupsEndpoint                    endpoint.Endpoint
+	ListInstitutionsEndpoint              endpoint.Endpoint
+	SaveInstitutionEndpoint               endpoint.Endpoint
+	GetInstitutionByIdEndpoint            endpoint.Endpoint
+	SaveInstitutionFeeControlCashEndpoint endpoint.Endpoint
+}
+
+func (s *InstitutionEndpoints) SaveInstitutionFeeControlCash(ctx context.Context, in *pb.SaveInstitutionFeeControlCashRequest) (*pb.SaveInstitutionFeeControlCashReply, error) {
+	res, err := s.SaveInstitutionFeeControlCashEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveInstitutionFeeControlCashReply), nil
 }
 
 func (s *InstitutionEndpoints) GetInstitutionById(ctx context.Context, in *pb.GetInstitutionByIdRequest) (*pb.GetInstitutionByIdReply, error) {
@@ -116,42 +122,6 @@ func (s *InstitutionEndpoints) SaveInstitution(ctx context.Context, in *pb.SaveI
 	return reply, nil
 }
 
-func (s *InstitutionEndpoints) SaveInstitutionFee(ctx context.Context, in *pb.SaveInstitutionFeeRequest) (*pb.SaveInstitutionFeeReply, error) {
-	res, err := s.SaveInstitutionFeeEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.SaveInstitutionFeeReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
-func (s *InstitutionEndpoints) SaveInstitutionControl(ctx context.Context, in *pb.SaveInstitutionControlRequest) (*pb.SaveInstitutionControlReply, error) {
-	res, err := s.SaveInstitutionControlEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.SaveInstitutionControlReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
-func (s *InstitutionEndpoints) SaveInstitutionCash(ctx context.Context, in *pb.SaveInstitutionCashRequest) (*pb.SaveInstitutionCashReply, error) {
-	res, err := s.SaveInstitutionCashEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.SaveInstitutionCashReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
 func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *InstitutionEndpoints {
 	endpoints := new(InstitutionEndpoints)
 	options := make([]kitgrpc.ClientOption, 0)
@@ -159,7 +129,7 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 		options = append(options, tracer)
 	}
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Institution",
 			"TnxHisDownload",
@@ -168,11 +138,11 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 			pb.InstitutionTnxHisDownloadResp{},
 			options...,
 		).Endpoint()
-		endpoints.TnxHisDownloadEndpoint = endpoint
+		endpoints.TnxHisDownloadEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Institution",
 			"GetTfrTrnLogs",
@@ -181,11 +151,11 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 			pb.GetTfrTrnLogsResp{},
 			options...,
 		).Endpoint()
-		endpoints.GetTfrTrnLogsEndpoint = endpoint
+		endpoints.GetTfrTrnLogsEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Institution",
 			"GetTfrTrnLog",
@@ -194,11 +164,11 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 			pb.GetTfrTrnLogResp{},
 			options...,
 		).Endpoint()
-		endpoints.GetTfrTrnLogEndpoint = endpoint
+		endpoints.GetTfrTrnLogEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Institution",
 			"DownloadTfrTrnLogs",
@@ -207,11 +177,11 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 			pb.DownloadTfrTrnLogsResp{},
 			options...,
 		).Endpoint()
-		endpoints.DownloadTfrTrnLogsEndpoint = endpoint
+		endpoints.DownloadTfrTrnLogsEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Institution",
 			"ListGroups",
@@ -220,11 +190,11 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 			pb.ListInstitutionsReply{},
 			options...,
 		).Endpoint()
-		endpoints.ListGroupsEndpoint = endpoint
+		endpoints.ListGroupsEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Institution",
 			"ListInstitutions",
@@ -233,11 +203,11 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 			pb.ListInstitutionsReply{},
 			options...,
 		).Endpoint()
-		endpoints.ListInstitutionsEndpoint = endpoint
+		endpoints.ListInstitutionsEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Institution",
 			"SaveInstitution",
@@ -246,50 +216,11 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 			pb.SaveInstitutionReply{},
 			options...,
 		).Endpoint()
-		endpoints.SaveInstitutionEndpoint = endpoint
+		endpoints.SaveInstitutionEndpoint = e
 	}
 
 	{
-		endpoint := grpctransport.NewClient(
-			conn,
-			"pb.Institution",
-			"SaveInstitutionFee",
-			encodeRequest,
-			decodeResponse,
-			pb.SaveInstitutionFeeReply{},
-			options...,
-		).Endpoint()
-		endpoints.SaveInstitutionFeeEndpoint = endpoint
-	}
-
-	{
-		endpoint := grpctransport.NewClient(
-			conn,
-			"pb.Institution",
-			"SaveInstitutionControl",
-			encodeRequest,
-			decodeResponse,
-			pb.SaveInstitutionControlReply{},
-			options...,
-		).Endpoint()
-		endpoints.SaveInstitutionControlEndpoint = endpoint
-	}
-
-	{
-		endpoint := grpctransport.NewClient(
-			conn,
-			"pb.Institution",
-			"SaveInstitutionCash",
-			encodeRequest,
-			decodeResponse,
-			pb.SaveInstitutionCashReply{},
-			options...,
-		).Endpoint()
-		endpoints.SaveInstitutionCashEndpoint = endpoint
-	}
-
-	{
-		endpoint := grpctransport.NewClient(
+		e := grpctransport.NewClient(
 			conn,
 			"pb.Institution",
 			"GetInstitutionById",
@@ -298,7 +229,20 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 			pb.GetInstitutionByIdReply{},
 			options...,
 		).Endpoint()
-		endpoints.GetInstitutionByIdEndpoint = endpoint
+		endpoints.GetInstitutionByIdEndpoint = e
+	}
+
+	{
+		e := grpctransport.NewClient(
+			conn,
+			"pb.Institution",
+			"SaveInstitutionFeeControlCash",
+			encodeRequest,
+			decodeResponse,
+			pb.SaveInstitutionFeeControlCashReply{},
+			options...,
+		).Endpoint()
+		endpoints.SaveInstitutionFeeControlCashEndpoint = e
 	}
 
 	return endpoints

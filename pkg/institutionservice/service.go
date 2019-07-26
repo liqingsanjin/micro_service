@@ -3,6 +3,7 @@ package institutionservice
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"userService/pkg/common"
 	cleartxnM "userService/pkg/model/cleartxn"
 	insmodel "userService/pkg/model/institution"
@@ -16,6 +17,115 @@ import (
 
 //service .
 type service struct {
+}
+
+func (s *service) SaveInstitutionFeeControlCash(ctx context.Context, in *pb.SaveInstitutionFeeControlCashRequest) (*pb.SaveInstitutionFeeControlCashReply, error) {
+	reply := new(pb.SaveInstitutionFeeControlCashReply)
+	db := common.DB.Begin()
+	defer db.Rollback()
+
+	if in.Fees != nil {
+		for _, fee := range in.Fees {
+			ins := new(insmodel.Fee)
+			{
+				ins.InsIdCd = fee.InsIdCd
+				ins.ProdCd = fee.ProdCd
+				ins.BizCd = fee.BizCd
+				ins.SubBizCd = fee.SubBizCd
+				ins.InsFeeBizCd = fee.InsFeeBizCd
+				ins.InsFeeCd = fee.InsFeeCd
+				ins.InsFeeTp = fee.InsFeeTp
+				ins.InsFeeParam = fee.InsFeeParam
+				ins.InsFeePercent, _ = strconv.ParseFloat(fee.InsFeePercent, 64)
+				ins.InsFeePct, _ = strconv.ParseFloat(fee.InsFeePct, 64)
+				ins.InsFeePctMin, _ = strconv.ParseFloat(fee.InsFeePctMin, 64)
+				ins.InsFeePctMax, _ = strconv.ParseFloat(fee.InsFeePctMax, 64)
+				ins.InsAFeeSame = fee.InsAFeeSame
+				ins.InsAFeeParam = fee.InsAFeeParam
+				ins.InsAFeePercent, _ = strconv.ParseFloat(fee.InsAFeePercent, 64)
+				ins.InsAFeePct, _ = strconv.ParseFloat(fee.InsAFeePct, 64)
+				ins.InsAFeePctMin, _ = strconv.ParseFloat(fee.InsAFeePctMin, 64)
+				ins.InsAFeePctMax, _ = strconv.ParseFloat(fee.InsAFeePctMax, 64)
+				ins.MsgResvFld1 = fee.MsgResvFld1
+				ins.MsgResvFld2 = fee.MsgResvFld2
+				ins.MsgResvFld3 = fee.MsgResvFld3
+				ins.MsgResvFld4 = fee.MsgResvFld4
+				ins.MsgResvFld5 = fee.MsgResvFld5
+				ins.MsgResvFld6 = fee.MsgResvFld6
+				ins.MsgResvFld7 = fee.MsgResvFld7
+				ins.MsgResvFld8 = fee.MsgResvFld8
+				ins.MsgResvFld9 = fee.MsgResvFld9
+				ins.MsgResvFld10 = fee.MsgResvFld10
+				ins.RecOprId = fee.RecOprId
+				ins.RecUpdOpr = fee.RecUpdOpr
+			}
+			err := insmodel.SaveInstitutionFee(db, ins)
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+	if in.Cashes != nil {
+		for _, cash := range in.Cashes {
+			ins := new(insmodel.Cash)
+			{
+				ins.InsIdCd = cash.InsIdCd
+				ins.ProdCd = cash.ProdCd
+				ins.InsDefaultFlag = cash.InsDefaultFlag
+				ins.InsDefaultCash, _ = strconv.ParseFloat(cash.InsDefaultCash, 64)
+				ins.InsCurrentCash, _ = strconv.ParseFloat(cash.InsCurrentCash, 64)
+				ins.MsgResvFld1 = cash.MsgResvFld1
+				ins.MsgResvFld2 = cash.MsgResvFld2
+				ins.MsgResvFld3 = cash.MsgResvFld3
+				ins.MsgResvFld4 = cash.MsgResvFld4
+				ins.MsgResvFld5 = cash.MsgResvFld5
+				ins.MsgResvFld6 = cash.MsgResvFld6
+				ins.MsgResvFld7 = cash.MsgResvFld7
+				ins.MsgResvFld8 = cash.MsgResvFld8
+				ins.MsgResvFld9 = cash.MsgResvFld9
+				ins.MsgResvFld10 = cash.MsgResvFld10
+				ins.RecOprId = cash.RecOprId
+				ins.RecUpdOpr = cash.RecUpdOpr
+			}
+			err := insmodel.SaveInstitutionCash(db, ins)
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+	if in.Controls != nil {
+		for _, control := range in.Controls {
+			ins := new(insmodel.Control)
+			{
+				ins.InsIdCd = control.InsIdCd
+				ins.InsCompanyCd = control.InsCompanyCd
+				ins.ProdCd = control.ProdCd
+				ins.BizCd = control.BizCd
+				ins.CtrlSta = control.CtrlSta
+				ins.InsBegTm = control.InsBegTm
+				ins.InsEndTm = control.InsEndTm
+				ins.MsgResvFld1 = control.MsgResvFld1
+				ins.MsgResvFld2 = control.MsgResvFld2
+				ins.MsgResvFld3 = control.MsgResvFld3
+				ins.MsgResvFld4 = control.MsgResvFld4
+				ins.MsgResvFld5 = control.MsgResvFld5
+				ins.MsgResvFld6 = control.MsgResvFld6
+				ins.MsgResvFld7 = control.MsgResvFld7
+				ins.MsgResvFld8 = control.MsgResvFld8
+				ins.MsgResvFld9 = control.MsgResvFld9
+				ins.MsgResvFld10 = control.MsgResvFld10
+				ins.RecOprId = control.RecOprId
+				ins.RecUpdOpr = control.RecUpdOpr
+			}
+			err := insmodel.SaveInstitutionControl(db, ins)
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	db.Commit()
+	return reply, nil
 }
 
 func (s *service) GetInstitutionById(ctx context.Context, in *pb.GetInstitutionByIdRequest) (*pb.GetInstitutionByIdReply, error) {
@@ -615,141 +725,6 @@ func (s *service) SaveInstitution(ctx context.Context, in *pb.SaveInstitutionReq
 		ins.RecUpdOpr = in.Item.RecUpdOpr
 	}
 	err := insmodel.SaveInstitution(db, ins)
-	if err != nil {
-		return nil, err
-	}
-
-	return &reply, nil
-}
-
-func (s *service) SaveInstitutionFee(ctx context.Context, in *pb.SaveInstitutionFeeRequest) (*pb.SaveInstitutionFeeReply, error) {
-	var reply pb.SaveInstitutionFeeReply
-	if in.Item == nil {
-		reply.Err = &pb.Error{
-			Code:        http.StatusBadRequest,
-			Message:     "InvalidParamsError",
-			Description: "支付方式为空",
-		}
-		return &reply, nil
-	}
-	db := common.DB
-
-	ins := new(insmodel.Fee)
-	{
-		ins.InsIdCd = in.Item.InsIdCd
-		ins.ProdCd = in.Item.ProdCd
-		ins.BizCd = in.Item.BizCd
-		ins.SubBizCd = in.Item.SubBizCd
-		ins.InsFeeBizCd = in.Item.InsFeeBizCd
-		ins.InsFeeCd = in.Item.InsFeeCd
-		ins.InsFeeTp = in.Item.InsFeeTp
-		ins.InsFeeParam = in.Item.InsFeeParam
-		ins.InsFeePercent = in.Item.InsFeePercent
-		ins.InsFeePct = in.Item.InsFeePct
-		ins.InsFeePctMin = in.Item.InsFeePctMin
-		ins.InsFeePctMax = in.Item.InsFeePctMax
-		ins.InsAFeeSame = in.Item.InsAFeeSame
-		ins.InsAFeeParam = in.Item.InsAFeeParam
-		ins.InsAFeePercent = in.Item.InsAFeePercent
-		ins.InsAFeePct = in.Item.InsAFeePct
-		ins.InsAFeePctMin = in.Item.InsAFeePctMin
-		ins.InsAFeePctMax = in.Item.InsAFeePctMax
-		ins.MsgResvFld1 = in.Item.MsgResvFld1
-		ins.MsgResvFld2 = in.Item.MsgResvFld2
-		ins.MsgResvFld3 = in.Item.MsgResvFld3
-		ins.MsgResvFld4 = in.Item.MsgResvFld4
-		ins.MsgResvFld5 = in.Item.MsgResvFld5
-		ins.MsgResvFld6 = in.Item.MsgResvFld6
-		ins.MsgResvFld7 = in.Item.MsgResvFld7
-		ins.MsgResvFld8 = in.Item.MsgResvFld8
-		ins.MsgResvFld9 = in.Item.MsgResvFld9
-		ins.MsgResvFld10 = in.Item.MsgResvFld10
-		ins.RecOprId = in.Item.RecOprId
-		ins.RecUpdOpr = in.Item.RecUpdOpr
-	}
-	err := insmodel.SaveInstitutionFee(db, ins)
-	if err != nil {
-		return nil, err
-	}
-
-	return &reply, nil
-}
-
-func (s *service) SaveInstitutionControl(ctx context.Context, in *pb.SaveInstitutionControlRequest) (*pb.SaveInstitutionControlReply, error) {
-	var reply pb.SaveInstitutionControlReply
-	if in.Item == nil {
-		reply.Err = &pb.Error{
-			Code:        http.StatusBadRequest,
-			Message:     "InvalidParamsError",
-			Description: "机构权限为空",
-		}
-		return &reply, nil
-	}
-	db := common.DB
-
-	ins := new(insmodel.Control)
-	{
-		ins.InsIdCd = in.Item.InsIdCd
-		ins.InsCompanyCd = in.Item.InsCompanyCd
-		ins.ProdCd = in.Item.ProdCd
-		ins.BizCd = in.Item.BizCd
-		ins.CtrlSta = in.Item.CtrlSta
-		ins.InsBegTm = in.Item.InsBegTm
-		ins.InsEndTm = in.Item.InsEndTm
-		ins.MsgResvFld1 = in.Item.MsgResvFld1
-		ins.MsgResvFld2 = in.Item.MsgResvFld2
-		ins.MsgResvFld3 = in.Item.MsgResvFld3
-		ins.MsgResvFld4 = in.Item.MsgResvFld4
-		ins.MsgResvFld5 = in.Item.MsgResvFld5
-		ins.MsgResvFld6 = in.Item.MsgResvFld6
-		ins.MsgResvFld7 = in.Item.MsgResvFld7
-		ins.MsgResvFld8 = in.Item.MsgResvFld8
-		ins.MsgResvFld9 = in.Item.MsgResvFld9
-		ins.MsgResvFld10 = in.Item.MsgResvFld10
-		ins.RecOprId = in.Item.RecOprId
-		ins.RecUpdOpr = in.Item.RecUpdOpr
-	}
-	err := insmodel.SaveInstitutionControl(db, ins)
-	if err != nil {
-		return nil, err
-	}
-
-	return &reply, nil
-}
-
-func (s *service) SaveInstitutionCash(ctx context.Context, in *pb.SaveInstitutionCashRequest) (*pb.SaveInstitutionCashReply, error) {
-	var reply pb.SaveInstitutionCashReply
-	if in.Item == nil {
-		reply.Err = &pb.Error{
-			Code:        http.StatusBadRequest,
-			Message:     "InvalidParamsError",
-			Description: "头寸信息为空",
-		}
-		return &reply, nil
-	}
-	db := common.DB
-
-	ins := new(insmodel.Cash)
-	{
-		ins.InsIdCd = in.Item.InsIdCd
-		ins.ProdCd = in.Item.ProdCd
-		ins.InsDefaultFlag = in.Item.InsDefaultFlag
-		ins.InsDefaultCash = in.Item.InsDefaultCash
-		ins.InsCurrentCash = in.Item.InsCurrentCash
-		ins.MsgResvFld1 = in.Item.MsgResvFld1
-		ins.MsgResvFld2 = in.Item.MsgResvFld2
-		ins.MsgResvFld3 = in.Item.MsgResvFld3
-		ins.MsgResvFld4 = in.Item.MsgResvFld4
-		ins.MsgResvFld5 = in.Item.MsgResvFld5
-		ins.MsgResvFld6 = in.Item.MsgResvFld6
-		ins.MsgResvFld7 = in.Item.MsgResvFld7
-		ins.MsgResvFld8 = in.Item.MsgResvFld8
-		ins.MsgResvFld9 = in.Item.MsgResvFld9
-		ins.MsgResvFld10 = in.Item.MsgResvFld10
-		ins.RecOprId = in.Item.RecOprId
-		ins.RecUpdOpr = in.Item.RecUpdOpr
-	}
-	err := insmodel.SaveInstitutionCash(db, ins)
 	if err != nil {
 		return nil, err
 	}
