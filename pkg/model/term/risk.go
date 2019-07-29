@@ -7,9 +7,9 @@ import (
 )
 
 type Risk struct {
-	MchtCd           string    `gorm:"column:MCHT_CD"`
-	TermId           string    `gorm:"column:TERM_ID"`
-	CardType         string    `gorm:"column:CARD_TYPE"`
+	MchtCd           string    `gorm:"column:MCHT_CD;primary_key"`
+	TermId           string    `gorm:"column:TERM_ID;primary_key"`
+	CardType         string    `gorm:"column:CARD_TYPE;primary_key"`
 	TotalLimitMoney  float64   `gorm:"column:TOTAL_LIMITMONEY"`
 	AccpetStartTime  string    `gorm:"column:ACCPET_START_TIME"`
 	AccpetStartDate  string    `gorm:"column:ACCPET_START_DATE"`
@@ -39,11 +39,11 @@ func (RiskMain) TableName() string {
 }
 
 func SaveRisk(db *gorm.DB, data *Risk) error {
-	return db.Create(data).Error
+	return db.Save(data).Error
 }
 
 func SaveRiskMain(db *gorm.DB, data *RiskMain) error {
-	return db.Create(data).Error
+	return db.Save(data).Error
 }
 
 func QueryTermRisk(db *gorm.DB, query *Risk, page int32, size int32) ([]*Risk, int32, error) {

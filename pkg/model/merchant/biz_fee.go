@@ -7,10 +7,10 @@ import (
 )
 
 type BizFee struct {
-	MchtCd          string    `gorm:"column:MCHT_CD"`
-	ProdCd          string    `gorm:"column:PROD_CD"`
-	BizCd           string    `gorm:"column:BIZ_CD"`
-	SubBizCd        string    `gorm:"column:SUB_BIZ_CD"`
+	MchtCd          string    `gorm:"column:MCHT_CD;primary_key"`
+	ProdCd          string    `gorm:"column:PROD_CD;primary_key"`
+	BizCd           string    `gorm:"column:BIZ_CD;primary_key"`
+	SubBizCd        string    `gorm:"column:SUB_BIZ_CD;primary_key"`
 	MchtFeeMd       string    `gorm:"column:MCHT_FEE_MD"`
 	MchtFeePercent  float64   `gorm:"column:MCHT_FEE_PERCENT"`
 	MchtFeePctMin   float64   `gorm:"column:MCHT_FEE_PCT_MIN"`
@@ -42,11 +42,11 @@ func (BizFeeMain) TableName() string {
 }
 
 func SaveBizFee(db *gorm.DB, data *BizFee) error {
-	return db.Create(data).Error
+	return db.Save(data).Error
 }
 
 func SaveBizFeeMain(db *gorm.DB, data *BizFeeMain) error {
-	return db.Create(data).Error
+	return db.Save(data).Error
 }
 
 func QueryBizFee(db *gorm.DB, query *BizFee) ([]*BizFee, error) {

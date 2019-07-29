@@ -7,8 +7,8 @@ import (
 )
 
 type Info struct {
-	MchtCd          string    `gorm:"column:MCHT_CD"`
-	TermId          string    `gorm:"column:TERM_ID"`
+	MchtCd          string    `gorm:"column:MCHT_CD;primary_key"`
+	TermId          string    `gorm:"column:TERM_ID;primary_key"`
 	TermTp          string    `gorm:"column:TERM_TP"`
 	Belong          string    `gorm:"column:BELONG"`
 	BelongSub       string    `gorm:"column:BELONG_SUB"`
@@ -64,11 +64,11 @@ func QueryTermInfo(db *gorm.DB, query *Info, page int32, size int32) ([]*Info, i
 }
 
 func SaveTermInfo(db *gorm.DB, data *Info) error {
-	return db.Create(data).Error
+	return db.Save(data).Error
 }
 
 func SaveTermInfoMain(db *gorm.DB, data *InfoMain) error {
-	return db.Create(data).Error
+	return db.Save(data).Error
 }
 
 func QueryTermInfoMain(db *gorm.DB, query *InfoMain, page int32, size int32) ([]*InfoMain, int32, error) {

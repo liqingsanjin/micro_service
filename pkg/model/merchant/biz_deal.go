@@ -7,10 +7,10 @@ import (
 )
 
 type BizDeal struct {
-	MchtCd    string    `gorm:"column:MCHT_CD"`
-	ProdCd    string    `gorm:"column:PROD_CD"`
-	BizCd     string    `gorm:"column:BIZ_CD"`
-	TransCd   string    `gorm:"column:TRANS_CD"`
+	MchtCd    string    `gorm:"column:MCHT_CD;primary_key"`
+	ProdCd    string    `gorm:"column:PROD_CD;primary_key"`
+	BizCd     string    `gorm:"column:BIZ_CD;primary_key"`
+	TransCd   string    `gorm:"column:TRANS_CD;primary_key"`
 	OperIn    string    `gorm:"column:OPER_IN"`
 	RecOprId  string    `gorm:"column:REC_OPR_ID"`
 	RecUpdOpr string    `gorm:"column:REC_UPD_OPR"`
@@ -31,11 +31,11 @@ func (BizDealMain) TableName() string {
 }
 
 func SaveBizDeal(db *gorm.DB, data *BizDeal) error {
-	return db.Create(data).Error
+	return db.Save(data).Error
 }
 
 func SaveBizDealMain(db *gorm.DB, data *BizDealMain) error {
-	return db.Create(data).Error
+	return db.Save(data).Error
 }
 
 func QueryBizDeal(db *gorm.DB, query *BizDeal) ([]*BizDeal, error) {

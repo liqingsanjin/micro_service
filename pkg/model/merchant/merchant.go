@@ -161,7 +161,7 @@ func QueryMerchantInfosMain(db *gorm.DB, query *MerchantInfoMain, page int32, si
 }
 
 func SaveMerchant(db *gorm.DB, info *MerchantInfo) error {
-	return db.Create(info).Error
+	return db.Save(info).Error
 }
 
 func UpdateMerchant(db *gorm.DB, query *MerchantInfo, data *MerchantInfo) error {
@@ -169,7 +169,7 @@ func UpdateMerchant(db *gorm.DB, query *MerchantInfo, data *MerchantInfo) error 
 }
 
 func SaveMerchantMain(db *gorm.DB, info *MerchantInfoMain) error {
-	return db.Create(info).Error
+	return db.Save(info).Error
 }
 
 func DeleteMerchant(db *gorm.DB, query *MerchantInfo) error {

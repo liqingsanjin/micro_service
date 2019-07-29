@@ -7,8 +7,8 @@ import (
 )
 
 type BankAccount struct {
-	OwnerCd      string    `gorm:"column:OWNER_CD"`
-	AccountType  string    `gorm:"column:ACCOUNTTYPE"`
+	OwnerCd      string    `gorm:"column:OWNER_CD;primary_key"`
+	AccountType  string    `gorm:"column:ACCOUNTTYPE;primary_key"`
 	Name         string    `gorm:"column:NAME"`
 	Account      string    `gorm:"column:ACCOUNT"`
 	UcBcCd       string    `gorm:"column:UC_BC_CD"`
@@ -46,11 +46,11 @@ func (b BankAccountMain) TableName() string {
 }
 
 func SaveBankAccount(db *gorm.DB, data *BankAccount) error {
-	return db.Create(data).Error
+	return db.Save(data).Error
 }
 
 func SaveBankAccountMain(db *gorm.DB, data *BankAccountMain) error {
-	return db.Create(data).Error
+	return db.Save(data).Error
 }
 
 func QueryBankAccount(db *gorm.DB, query *BankAccount) ([]*BankAccount, error) {

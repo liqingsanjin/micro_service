@@ -7,7 +7,7 @@ import (
 )
 
 type Picture struct {
-	FileId     string    `gorm:"column:FILE_ID"`
+	FileId     string    `gorm:"column:FILE_ID;primary_key"`
 	MchtCd     string    `gorm:"column:MCHT_CD"`
 	DocType    string    `gorm:"column:DOC_TYPE"`
 	FileType   string    `gorm:"column:FILE_TYPE"`
@@ -36,11 +36,11 @@ func (PictureMain) TableName() string {
 }
 
 func SavePicture(db *gorm.DB, data *Picture) error {
-	return db.Create(data).Error
+	return db.Save(data).Error
 }
 
 func SavePictureMain(db *gorm.DB, data *PictureMain) error {
-	return db.Create(data).Error
+	return db.Save(data).Error
 }
 
 func QueryPicture(db *gorm.DB, query *Picture) ([]*Picture, error) {

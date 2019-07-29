@@ -7,7 +7,7 @@ import (
 )
 
 type Business struct {
-	MchtCd                 string    `gorm:"column:MCHT_CD"`
+	MchtCd                 string    `gorm:"column:MCHT_CD;primary_key"`
 	ProdCd                 string    `gorm:"column:PROD_CD"`
 	ProdCdText             string    `gorm:"column:PROD_CD_TEXT"`
 	FeeMoneyCd             string    `gorm:"column:FEE_MONEY_CD"`
@@ -52,11 +52,11 @@ func (BusinessMain) TableName() string {
 }
 
 func SaveBusiness(db *gorm.DB, data *Business) error {
-	return db.Create(data).Error
+	return db.Save(data).Error
 }
 
 func SaveBusinessMain(db *gorm.DB, data *BusinessMain) error {
-	return db.Create(data).Error
+	return db.Save(data).Error
 }
 
 func QueryBusiness(db *gorm.DB, query *Business) ([]*Business, error) {
