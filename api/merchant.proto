@@ -9,8 +9,7 @@ service Merchant {
     rpc ListGroupMerchant(ListGroupMerchantRequest) returns (ListGroupMerchantReply) {}
     rpc SaveMerchant(SaveMerchantRequest) returns (SaveMerchantReply) {}
     rpc SaveMerchantBankAccount(SaveMerchantBankAccountRequest) returns (SaveMerchantBankAccountReply) {}
-    rpc SaveMerchantBizDeal(SaveMerchantBizDealRequest) returns (SaveMerchantBizDealReply) {}
-    rpc SaveMerchantBizFee(SaveMerchantBizFeeRequest) returns (SaveMerchantBizFeeReply) {}
+    rpc SaveMerchantBizDealAndFee(SaveMerchantBizDealAndFeeRequest) returns (SaveMerchantBizDealAndFeeReply) {}
     rpc SaveMerchantBusiness(SaveMerchantBusinessRequest) returns (SaveMerchantBusinessReply) {}
     rpc SaveMerchantPicture(SaveMerchantPictureRequest) returns (SaveMerchantPictureReply) {}
     rpc GetMerchantBankAccount(GetMerchantBankAccountRequest) returns (GetMerchantBankAccountReply) {}
@@ -199,11 +198,12 @@ message MerchantBizDealField {
     string updatedAt = 9;
 }
 
-message SaveMerchantBizDealRequest {
-    MerchantBizDealField item = 1;
+message SaveMerchantBizDealAndFeeRequest {
+    MerchantBizDealField deal = 1;
+    MerchantBizFeeField fee = 2;
 }
 
-message SaveMerchantBizDealReply {
+message SaveMerchantBizDealAndFeeReply {
     error err = 1;
 }
 
@@ -213,29 +213,21 @@ message MerchantBizFeeField {
     string  bizCd           = 3;
     string  subBizCd        = 4;
     string  mchtFeeMd       = 5;
-    double  mchtFeePercent  = 6;
-    double  mchtFeePctMin   = 7;
-    double  mchtFeePctMax   = 8;
-    double  mchtFeeSingle   = 9;
+    string  mchtFeePercent  = 6;
+    string  mchtFeePctMin   = 7;
+    string  mchtFeePctMax   = 8;
+    string  mchtFeeSingle   = 9;
     string  mchtAFeeSame    = 10;
     string  mchtAFeeMd      = 11;
-    double  mchtAFeePercent = 12;
-    double  mchtAFeePctMin  = 13;
-    double  mchtAFeePctMax  = 14;
-    double  mchtAFeeSingle  = 15;
+    string  mchtAFeePercent = 12;
+    string  mchtAFeePctMin  = 13;
+    string  mchtAFeePctMax  = 14;
+    string  mchtAFeeSingle  = 15;
     string  operIn          = 16;
     string  recOprId        = 17;
     string  recUpdOpr       = 18;
     string createdAt = 19;
     string updatedAt = 20;
-}
-
-message SaveMerchantBizFeeRequest {
-    MerchantBizFeeField item = 1;
-}
-
-message SaveMerchantBizFeeReply {
-    error err = 1;
 }
 
 message MerchantBusinessField {

@@ -32,6 +32,15 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 	userBreaker := circuitbreaker.Hystrix(userbreaker)
 
 	{
+		factory := merchantServiceFactory(merchantservice.MakeSaveMerchantBizDealAndFeeEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = userBreaker(retry)
+		endpoints.SaveMerchantBizDealAndFeeEndpoint = retry
+	}
+
+	{
 		factory := merchantServiceFactory(merchantservice.MakeListMerchantEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
@@ -65,24 +74,6 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
 		retry = userBreaker(retry)
 		endpoints.SaveMerchantBankAccountEndpoint = retry
-	}
-
-	{
-		factory := merchantServiceFactory(merchantservice.MakeSaveMerchantBizDealEndpoint)
-		endpointer := sd.NewEndpointer(instancer, factory, log)
-		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
-		retry = userBreaker(retry)
-		endpoints.SaveMerchantBizDealEndpoint = retry
-	}
-
-	{
-		factory := merchantServiceFactory(merchantservice.MakeSaveMerchantBizFeeEndpoint)
-		endpointer := sd.NewEndpointer(instancer, factory, log)
-		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
-		retry = userBreaker(retry)
-		endpoints.SaveMerchantBizFeeEndpoint = retry
 	}
 
 	{

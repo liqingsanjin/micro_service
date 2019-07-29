@@ -12,20 +12,27 @@ import (
 )
 
 type MerchantEndpoints struct {
-	ListMerchantEndpoint            endpoint.Endpoint
-	ListGroupMerchantEndpoint       endpoint.Endpoint
-	SaveMerchantEndpoint            endpoint.Endpoint
-	SaveMerchantBankAccountEndpoint endpoint.Endpoint
-	SaveMerchantBizDealEndpoint     endpoint.Endpoint
-	SaveMerchantBizFeeEndpoint      endpoint.Endpoint
-	SaveMerchantBusinessEndpoint    endpoint.Endpoint
-	SaveMerchantPictureEndpoint     endpoint.Endpoint
-	GetMerchantBankAccountEndpoint  endpoint.Endpoint
-	GetMerchantBizDealEndpoint      endpoint.Endpoint
-	GetMerchantBizFeeEndpoint       endpoint.Endpoint
-	GetMerchantBusinessEndpoint     endpoint.Endpoint
-	GetMerchantPictureEndpoint      endpoint.Endpoint
-	GetMerchantByIdEndpoint         endpoint.Endpoint
+	ListMerchantEndpoint              endpoint.Endpoint
+	ListGroupMerchantEndpoint         endpoint.Endpoint
+	SaveMerchantEndpoint              endpoint.Endpoint
+	SaveMerchantBankAccountEndpoint   endpoint.Endpoint
+	SaveMerchantBusinessEndpoint      endpoint.Endpoint
+	SaveMerchantPictureEndpoint       endpoint.Endpoint
+	GetMerchantBankAccountEndpoint    endpoint.Endpoint
+	GetMerchantBizDealEndpoint        endpoint.Endpoint
+	GetMerchantBizFeeEndpoint         endpoint.Endpoint
+	GetMerchantBusinessEndpoint       endpoint.Endpoint
+	GetMerchantPictureEndpoint        endpoint.Endpoint
+	GetMerchantByIdEndpoint           endpoint.Endpoint
+	SaveMerchantBizDealAndFeeEndpoint endpoint.Endpoint
+}
+
+func (m *MerchantEndpoints) SaveMerchantBizDealAndFee(ctx context.Context, in *pb.SaveMerchantBizDealAndFeeRequest) (*pb.SaveMerchantBizDealAndFeeReply, error) {
+	res, err := m.SaveMerchantBizDealAndFeeEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveMerchantBizDealAndFeeReply), nil
 }
 
 func (m *MerchantEndpoints) GetMerchantById(ctx context.Context, in *pb.GetMerchantByIdRequest) (*pb.GetMerchantByIdReply, error) {
@@ -74,22 +81,6 @@ func (m *MerchantEndpoints) SaveMerchantBankAccount(ctx context.Context, in *pb.
 		return nil, err
 	}
 	return res.(*pb.SaveMerchantBankAccountReply), nil
-}
-
-func (m *MerchantEndpoints) SaveMerchantBizDeal(ctx context.Context, in *pb.SaveMerchantBizDealRequest) (*pb.SaveMerchantBizDealReply, error) {
-	res, err := m.SaveMerchantBizDealEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.SaveMerchantBizDealReply), nil
-}
-
-func (m *MerchantEndpoints) SaveMerchantBizFee(ctx context.Context, in *pb.SaveMerchantBizFeeRequest) (*pb.SaveMerchantBizFeeReply, error) {
-	res, err := m.SaveMerchantBizFeeEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.SaveMerchantBizFeeReply), nil
 }
 
 func (m *MerchantEndpoints) SaveMerchantBusiness(ctx context.Context, in *pb.SaveMerchantBusinessRequest) (*pb.SaveMerchantBusinessReply, error) {
@@ -205,32 +196,6 @@ func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption
 			options...,
 		).Endpoint()
 		endpoints.SaveMerchantBankAccountEndpoint = endpoint
-	}
-
-	{
-		endpoint := grpctransport.NewClient(
-			conn,
-			"pb.Merchant",
-			"SaveMerchantBizDeal",
-			encodeRequest,
-			decodeResponse,
-			pb.SaveMerchantBizDealReply{},
-			options...,
-		).Endpoint()
-		endpoints.SaveMerchantBizDealEndpoint = endpoint
-	}
-
-	{
-		endpoint := grpctransport.NewClient(
-			conn,
-			"pb.Merchant",
-			"SaveMerchantBizFee",
-			encodeRequest,
-			decodeResponse,
-			pb.SaveMerchantBizFeeReply{},
-			options...,
-		).Endpoint()
-		endpoints.SaveMerchantBizFeeEndpoint = endpoint
 	}
 
 	{

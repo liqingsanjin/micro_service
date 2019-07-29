@@ -2,7 +2,9 @@ package merchantservice
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 	"userService/pkg/common"
 	"userService/pkg/pb"
@@ -12,6 +14,63 @@ import (
 )
 
 type merchantService struct{}
+
+// 商户产品和费率保存
+func (m *merchantService) SaveMerchantBizDealAndFee(ctx context.Context, in *pb.SaveMerchantBizDealAndFeeRequest) (*pb.SaveMerchantBizDealAndFeeReply, error) {
+	reply := new(pb.SaveMerchantBizDealAndFeeReply)
+	if in.Deal == nil || in.Fee == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "保存信息为空",
+		}
+		return reply, nil
+	}
+	db := common.DB.Begin()
+	defer db.Rollback()
+
+	{
+		data := new(merchantmodel.BizDeal)
+		data.MchtCd = in.Deal.MchtCd
+		data.ProdCd = in.Deal.ProdCd
+		data.BizCd = in.Deal.BizCd
+		data.TransCd = in.Deal.TransCd
+		data.OperIn = in.Deal.OperIn
+		data.RecOprId = in.Deal.RecOprId
+		data.RecUpdOpr = in.Deal.RecUpdOpr
+		err := merchantmodel.SaveBizDeal(db, data)
+		if err != nil {
+			return nil, err
+		}
+	}
+	{
+		data := new(merchantmodel.BizFee)
+		data.MchtCd = in.Fee.MchtCd
+		data.ProdCd = in.Fee.ProdCd
+		data.BizCd = in.Fee.BizCd
+		data.SubBizCd = in.Fee.SubBizCd
+		data.MchtFeeMd = in.Fee.MchtFeeMd
+		data.MchtFeePercent, _ = strconv.ParseFloat(in.Fee.MchtFeePercent, 64)
+		data.MchtFeePctMin, _ = strconv.ParseFloat(in.Fee.MchtFeePctMin, 64)
+		data.MchtFeePctMax, _ = strconv.ParseFloat(in.Fee.MchtFeePctMax, 64)
+		data.MchtFeeSingle, _ = strconv.ParseFloat(in.Fee.MchtFeeSingle, 64)
+		data.MchtAFeeSame = in.Fee.MchtAFeeSame
+		data.MchtAFeeMd = in.Fee.MchtAFeeMd
+		data.MchtAFeePercent, _ = strconv.ParseFloat(in.Fee.MchtAFeePercent, 64)
+		data.MchtAFeePctMin, _ = strconv.ParseFloat(in.Fee.MchtAFeePctMin, 64)
+		data.MchtAFeePctMax, _ = strconv.ParseFloat(in.Fee.MchtAFeePctMax, 64)
+		data.MchtAFeeSingle, _ = strconv.ParseFloat(in.Fee.MchtAFeeSingle, 64)
+		data.OperIn = in.Fee.OperIn
+		data.RecOprId = in.Fee.RecOprId
+		data.RecUpdOpr = in.Fee.RecUpdOpr
+		err := merchantmodel.SaveBizFee(db, data)
+		if err != nil {
+			return nil, err
+		}
+	}
+	db.Commit()
+	return reply, nil
+}
 
 func (m *merchantService) GetMerchantById(ctx context.Context, in *pb.GetMerchantByIdRequest) (*pb.GetMerchantByIdReply, error) {
 	reply := new(pb.GetMerchantByIdReply)
@@ -463,16 +522,16 @@ func (m *merchantService) GetMerchantBizFee(ctx context.Context, in *pb.GetMerch
 				BizCd:           items[i].BizCd,
 				SubBizCd:        items[i].SubBizCd,
 				MchtFeeMd:       items[i].MchtFeeMd,
-				MchtFeePercent:  items[i].MchtFeePercent,
-				MchtFeePctMin:   items[i].MchtFeePctMin,
-				MchtFeePctMax:   items[i].MchtFeePctMax,
-				MchtFeeSingle:   items[i].MchtFeeSingle,
+				MchtFeePercent:  fmt.Sprintf("%f", items[i].MchtFeePercent),
+				MchtFeePctMin:   fmt.Sprintf("%f", items[i].MchtFeePctMin),
+				MchtFeePctMax:   fmt.Sprintf("%f", items[i].MchtFeePctMax),
+				MchtFeeSingle:   fmt.Sprintf("%f", items[i].MchtFeeSingle),
 				MchtAFeeSame:    items[i].MchtAFeeSame,
 				MchtAFeeMd:      items[i].MchtAFeeMd,
-				MchtAFeePercent: items[i].MchtAFeePercent,
-				MchtAFeePctMin:  items[i].MchtAFeePctMin,
-				MchtAFeePctMax:  items[i].MchtAFeePctMax,
-				MchtAFeeSingle:  items[i].MchtAFeeSingle,
+				MchtAFeePercent: fmt.Sprintf("%f", items[i].MchtAFeePercent),
+				MchtAFeePctMin:  fmt.Sprintf("%f", items[i].MchtAFeePctMin),
+				MchtAFeePctMax:  fmt.Sprintf("%f", items[i].MchtAFeePctMax),
+				MchtAFeeSingle:  fmt.Sprintf("%f", items[i].MchtAFeeSingle),
 				OperIn:          items[i].OperIn,
 				RecOprId:        items[i].RecOprId,
 				RecUpdOpr:       items[i].RecUpdOpr,
@@ -504,16 +563,16 @@ func (m *merchantService) GetMerchantBizFee(ctx context.Context, in *pb.GetMerch
 				BizCd:           items[i].BizCd,
 				SubBizCd:        items[i].SubBizCd,
 				MchtFeeMd:       items[i].MchtFeeMd,
-				MchtFeePercent:  items[i].MchtFeePercent,
-				MchtFeePctMin:   items[i].MchtFeePctMin,
-				MchtFeePctMax:   items[i].MchtFeePctMax,
-				MchtFeeSingle:   items[i].MchtFeeSingle,
+				MchtFeePercent:  fmt.Sprintf("%f", items[i].MchtFeePercent),
+				MchtFeePctMin:   fmt.Sprintf("%f", items[i].MchtFeePctMin),
+				MchtFeePctMax:   fmt.Sprintf("%f", items[i].MchtFeePctMax),
+				MchtFeeSingle:   fmt.Sprintf("%f", items[i].MchtFeeSingle),
 				MchtAFeeSame:    items[i].MchtAFeeSame,
 				MchtAFeeMd:      items[i].MchtAFeeMd,
-				MchtAFeePercent: items[i].MchtAFeePercent,
-				MchtAFeePctMin:  items[i].MchtAFeePctMin,
-				MchtAFeePctMax:  items[i].MchtAFeePctMax,
-				MchtAFeeSingle:  items[i].MchtAFeeSingle,
+				MchtAFeePercent: fmt.Sprintf("%f", items[i].MchtAFeePercent),
+				MchtAFeePctMin:  fmt.Sprintf("%f", items[i].MchtAFeePctMin),
+				MchtAFeePctMax:  fmt.Sprintf("%f", items[i].MchtAFeePctMax),
+				MchtAFeeSingle:  fmt.Sprintf("%f", items[i].MchtAFeeSingle),
 				OperIn:          items[i].OperIn,
 				RecOprId:        items[i].RecOprId,
 				RecUpdOpr:       items[i].RecUpdOpr,
@@ -1356,69 +1415,6 @@ func (m *merchantService) SaveMerchantBankAccount(ctx context.Context, in *pb.Sa
 		data.MsgResvFld10 = in.Item.MsgResvFld10
 	}
 	err := merchantmodel.SaveBankAccount(db, data)
-	return &reply, err
-}
-
-func (m *merchantService) SaveMerchantBizDeal(ctx context.Context, in *pb.SaveMerchantBizDealRequest) (*pb.SaveMerchantBizDealReply, error) {
-	var reply pb.SaveMerchantBizDealReply
-	if in.Item == nil {
-		reply.Err = &pb.Error{
-			Code:        http.StatusBadRequest,
-			Message:     "InvalidParamsError",
-			Description: "保存信息为空",
-		}
-		return &reply, nil
-	}
-	db := common.DB
-
-	data := new(merchantmodel.BizDeal)
-	{
-		data.MchtCd = in.Item.MchtCd
-		data.ProdCd = in.Item.ProdCd
-		data.BizCd = in.Item.BizCd
-		data.TransCd = in.Item.TransCd
-		data.OperIn = in.Item.OperIn
-		data.RecOprId = in.Item.RecOprId
-		data.RecUpdOpr = in.Item.RecUpdOpr
-	}
-	err := merchantmodel.SaveBizDeal(db, data)
-	return &reply, err
-}
-
-func (m *merchantService) SaveMerchantBizFee(ctx context.Context, in *pb.SaveMerchantBizFeeRequest) (*pb.SaveMerchantBizFeeReply, error) {
-	var reply pb.SaveMerchantBizFeeReply
-	if in.Item == nil {
-		reply.Err = &pb.Error{
-			Code:        http.StatusBadRequest,
-			Message:     "InvalidParamsError",
-			Description: "保存信息为空",
-		}
-		return &reply, nil
-	}
-	db := common.DB
-
-	data := new(merchantmodel.BizFee)
-	{
-		data.MchtCd = in.Item.MchtCd
-		data.ProdCd = in.Item.ProdCd
-		data.BizCd = in.Item.BizCd
-		data.SubBizCd = in.Item.SubBizCd
-		data.MchtFeeMd = in.Item.MchtFeeMd
-		data.MchtFeePercent = in.Item.MchtFeePercent
-		data.MchtFeePctMin = in.Item.MchtFeePctMin
-		data.MchtFeePctMax = in.Item.MchtFeePctMax
-		data.MchtFeeSingle = in.Item.MchtFeeSingle
-		data.MchtAFeeSame = in.Item.MchtAFeeSame
-		data.MchtAFeeMd = in.Item.MchtAFeeMd
-		data.MchtAFeePercent = in.Item.MchtAFeePercent
-		data.MchtAFeePctMin = in.Item.MchtAFeePctMin
-		data.MchtAFeePctMax = in.Item.MchtAFeePctMax
-		data.MchtAFeeSingle = in.Item.MchtAFeeSingle
-		data.OperIn = in.Item.OperIn
-		data.RecOprId = in.Item.RecOprId
-		data.RecUpdOpr = in.Item.RecUpdOpr
-	}
-	err := merchantmodel.SaveBizFee(db, data)
 	return &reply, err
 }
 

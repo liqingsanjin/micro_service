@@ -41,18 +41,6 @@ func MakeSaveMerchantBankAccountEndpoint(service pb.MerchantServer) endpoint.End
 	}
 }
 
-func MakeSaveMerchantBizDealEndpoint(service pb.MerchantServer) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		return service.SaveMerchantBizDeal(ctx, request.(*pb.SaveMerchantBizDealRequest))
-	}
-}
-
-func MakeSaveMerchantBizFeeEndpoint(service pb.MerchantServer) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		return service.SaveMerchantBizFee(ctx, request.(*pb.SaveMerchantBizFeeRequest))
-	}
-}
-
 func MakeSaveMerchantBusinessEndpoint(service pb.MerchantServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		return service.SaveMerchantBusiness(ctx, request.(*pb.SaveMerchantBusinessRequest))
@@ -98,5 +86,11 @@ func MakeGetMerchantPictureEndpoint(service pb.MerchantServer) endpoint.Endpoint
 func MakeGetMerchantByIdEndpoint(service pb.MerchantServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		return service.GetMerchantById(ctx, request.(*pb.GetMerchantByIdRequest))
+	}
+}
+
+func MakeSaveMerchantBizDealAndFeeEndpoint(service pb.MerchantServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.SaveMerchantBizDealAndFee(ctx, request.(*pb.SaveMerchantBizDealAndFeeRequest))
 	}
 }

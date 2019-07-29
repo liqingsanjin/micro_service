@@ -9,20 +9,29 @@ import (
 )
 
 type merchantServer struct {
-	ListMerchantHandler            grpctransport.Handler
-	ListGroupMerchantHandler       grpctransport.Handler
-	SaveMerchantHandler            grpctransport.Handler
-	SaveMerchantBankAccountHandler grpctransport.Handler
-	SaveMerchantBizDealHandler     grpctransport.Handler
-	SaveMerchantBizFeeHandler      grpctransport.Handler
-	SaveMerchantBusinessHandler    grpctransport.Handler
-	SaveMerchantPictureHandler     grpctransport.Handler
-	GetMerchantBankAccountHandler  grpctransport.Handler
-	GetMerchantBizDealHandler      grpctransport.Handler
-	GetMerchantBizFeeHandler       grpctransport.Handler
-	GetMerchantBusinessHandler     grpctransport.Handler
-	GetMerchantPictureHandler      grpctransport.Handler
-	GetMerchantByIdHandler         grpctransport.Handler
+	ListMerchantHandler              grpctransport.Handler
+	ListGroupMerchantHandler         grpctransport.Handler
+	SaveMerchantHandler              grpctransport.Handler
+	SaveMerchantBankAccountHandler   grpctransport.Handler
+	SaveMerchantBizDealHandler       grpctransport.Handler
+	SaveMerchantBizFeeHandler        grpctransport.Handler
+	SaveMerchantBusinessHandler      grpctransport.Handler
+	SaveMerchantPictureHandler       grpctransport.Handler
+	GetMerchantBankAccountHandler    grpctransport.Handler
+	GetMerchantBizDealHandler        grpctransport.Handler
+	GetMerchantBizFeeHandler         grpctransport.Handler
+	GetMerchantBusinessHandler       grpctransport.Handler
+	GetMerchantPictureHandler        grpctransport.Handler
+	GetMerchantByIdHandler           grpctransport.Handler
+	SaveMerchantBizDealAndFeeHandler grpctransport.Handler
+}
+
+func (m *merchantServer) SaveMerchantBizDealAndFee(ctx context.Context, in *pb.SaveMerchantBizDealAndFeeRequest) (*pb.SaveMerchantBizDealAndFeeReply, error) {
+	_, res, err := m.SaveMerchantBizDealAndFeeHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveMerchantBizDealAndFeeReply), nil
 }
 
 func (m *merchantServer) GetMerchantById(ctx context.Context, in *pb.GetMerchantByIdRequest) (*pb.GetMerchantByIdReply, error) {
@@ -68,22 +77,6 @@ func (m *merchantServer) SaveMerchantBankAccount(ctx context.Context, in *pb.Sav
 		return nil, err
 	}
 	return res.(*pb.SaveMerchantBankAccountReply), nil
-}
-
-func (m *merchantServer) SaveMerchantBizDeal(ctx context.Context, in *pb.SaveMerchantBizDealRequest) (*pb.SaveMerchantBizDealReply, error) {
-	_, res, err := m.SaveMerchantBizDealHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.SaveMerchantBizDealReply), nil
-}
-
-func (m *merchantServer) SaveMerchantBizFee(ctx context.Context, in *pb.SaveMerchantBizFeeRequest) (*pb.SaveMerchantBizFeeReply, error) {
-	_, res, err := m.SaveMerchantBizFeeHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.SaveMerchantBizFeeReply), nil
 }
 
 func (m *merchantServer) SaveMerchantBusiness(ctx context.Context, in *pb.SaveMerchantBusinessRequest) (*pb.SaveMerchantBusinessReply, error) {
@@ -149,6 +142,18 @@ func New(tracer grpctransport.ServerOption) pb.MerchantServer {
 	if tracer != nil {
 		options = append(options, tracer)
 	}
+
+	{
+		endpoint := MakeSaveMerchantBizDealAndFeeEndpoint(service)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.SaveMerchantBizDealAndFeeHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+
 	{
 		endpoint := MakeListMerchantEndpoint(service)
 		endpoint = kit.LogginMiddleware(endpoint)
@@ -186,28 +191,6 @@ func New(tracer grpctransport.ServerOption) pb.MerchantServer {
 		endpoint := MakeSaveMerchantBankAccountEndpoint(service)
 		endpoint = kit.LogginMiddleware(endpoint)
 		svr.SaveMerchantBankAccountHandler = grpctransport.NewServer(
-			endpoint,
-			kit.DecodeRequest,
-			kit.EncodeResponse,
-			options...,
-		)
-	}
-
-	{
-		endpoint := MakeSaveMerchantBizDealEndpoint(service)
-		endpoint = kit.LogginMiddleware(endpoint)
-		svr.SaveMerchantBizDealHandler = grpctransport.NewServer(
-			endpoint,
-			kit.DecodeRequest,
-			kit.EncodeResponse,
-			options...,
-		)
-	}
-
-	{
-		endpoint := MakeSaveMerchantBizFeeEndpoint(service)
-		endpoint = kit.LogginMiddleware(endpoint)
-		svr.SaveMerchantBizFeeHandler = grpctransport.NewServer(
 			endpoint,
 			kit.DecodeRequest,
 			kit.EncodeResponse,

@@ -38,20 +38,6 @@ func RegisterMerchantHandler(engine *gin.Engine, endpoints *MerchantEndpoints) {
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	group.POST("/saveMerchantBizDeal", convertHttpHandlerToGinHandler(httptransport.NewServer(
-		endpoints.SaveMerchantBizDealEndpoint,
-		decodeHttpRequest(&pb.SaveMerchantBizDealRequest{}),
-		encodeHttpResponse,
-		httptransport.ServerErrorEncoder(errorEncoder),
-	)))
-
-	group.POST("/saveMerchantBizFee", convertHttpHandlerToGinHandler(httptransport.NewServer(
-		endpoints.SaveMerchantBizFeeEndpoint,
-		decodeHttpRequest(&pb.SaveMerchantBizFeeRequest{}),
-		encodeHttpResponse,
-		httptransport.ServerErrorEncoder(errorEncoder),
-	)))
-
 	group.POST("/saveMerchantBusiness", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.SaveMerchantBusinessEndpoint,
 		decodeHttpRequest(&pb.SaveMerchantBusinessRequest{}),
@@ -104,6 +90,13 @@ func RegisterMerchantHandler(engine *gin.Engine, endpoints *MerchantEndpoints) {
 	group.POST("/getMerchantById", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.GetMerchantByIdEndpoint,
 		decodeHttpRequest(&pb.GetMerchantByIdRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
+
+	group.POST("/saveMerchantBizDealAndFee", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.SaveMerchantBizDealAndFeeEndpoint,
+		decodeHttpRequest(&pb.SaveMerchantBizDealAndFeeRequest{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
