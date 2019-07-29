@@ -618,16 +618,16 @@
                       "type": "string"
                     },
                     "MchtFeePercent": {
-                      "type": "number"
+                      "type": "string"
                     },
                     "MchtFeePctMin": {
-                      "type": "number"
+                      "type": "string"
                     },
                     "MchtFeePctMax": {
-                      "type": "number"
+                      "type": "string"
                     },
                     "MchtFeeSingle": {
-                      "type": "number"
+                      "type": "string"
                     },
                     "MchtAFeeSame": {
                       "type": "string"
@@ -636,16 +636,16 @@
                       "type": "string"
                     },
                     "MchtAFeePercent": {
-                      "type": "number"
+                      "type": "string"
                     },
                     "MchtAFeePctMin": {
-                      "type": "number"
+                      "type": "string"
                     },
                     "MchtAFeePctMax": {
-                      "type": "number"
+                      "type": "string"
                     },
                     "MchtAFeeSingle": {
-                      "type": "number"
+                      "type": "string"
                     },
                     "OperIn": {
                       "type": "string"
