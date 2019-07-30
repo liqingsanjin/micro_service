@@ -11,11 +11,26 @@ import (
 	"golang.org/x/net/context"
 )
 
+const (
+	addIns           = "add_ins"
+	addMcht          = "add_mcht"
+	deleteIns        = "delete_ins"
+	deleteMcht       = "delete_mcht"
+	updateIns        = "update_ins"
+	cancelUpdateIns  = "cancel_update_ins"
+	updateMcht       = "update_mcht"
+	cancelUpdateMcht = "cancel_update_mcht"
+)
+
 var topics = []string{
-	"add_ins",
-	"add_mcht",
-	"del_ins",
-	"del_mcht",
+	addIns,
+	addMcht,
+	deleteIns,
+	deleteMcht,
+	updateIns,
+	cancelUpdateIns,
+	updateMcht,
+	cancelUpdateMcht,
 }
 
 func RunServiceTask(format string, workerNum int) {
@@ -63,17 +78,26 @@ func finishRegister(ctx context.Context, workerId int, ch <-chan int) {
 					return
 				}
 				switch topic {
-				case "add_ins":
+				case addIns:
 					// 机构注册
 					err = institutionRegister(db, resp.Item[0])
-				case "add_mcht":
+				case addMcht:
 					// 商户注册
 					err = merchantRegister(db, resp.Item[0])
-				case "del_ins":
+				case deleteIns:
 					err = deleteInstitution(db, resp.Item[0])
-				case "del_mcht":
+				case deleteMcht:
 					// 删除商户
 					err = deleteMerchant(db, resp.Item[0])
+				case updateIns:
+					// todo 更新机构
+					err = institutionUpdate(db, resp.Item[0])
+				case cancelUpdateIns:
+					// todo 取消更新机构
+				case updateMcht:
+					// todo 更新商户
+				case cancelUpdateMcht:
+					// todo 取消更新商户
 				}
 				if err != nil {
 					logrus.Errorln(err)

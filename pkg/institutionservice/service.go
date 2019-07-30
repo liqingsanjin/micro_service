@@ -19,6 +19,488 @@ import (
 type service struct {
 }
 
+func (s *service) GetInstitutionCash(ctx context.Context, in *pb.GetInstitutionCashRequest) (*pb.GetInstitutionCashReply, error) {
+	reply := new(pb.GetInstitutionCashReply)
+
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	if in.Size == 0 {
+		in.Size = 10
+	}
+
+	edit := true
+	if in.Type == "main" {
+		edit = false
+	}
+
+	db := common.DB
+
+	if edit {
+		query := new(insmodel.Cash)
+		if in.Item != nil {
+			query.InsIdCd = in.Item.InsIdCd
+			query.ProdCd = in.Item.ProdCd
+			query.InsDefaultFlag = in.Item.InsDefaultFlag
+			query.InsDefaultCash, _ = strconv.ParseFloat(in.Item.InsDefaultCash, 64)
+			query.InsCurrentCash, _ = strconv.ParseFloat(in.Item.InsCurrentCash, 64)
+			query.MsgResvFld1 = in.Item.MsgResvFld1
+			query.MsgResvFld2 = in.Item.MsgResvFld2
+			query.MsgResvFld3 = in.Item.MsgResvFld3
+			query.MsgResvFld4 = in.Item.MsgResvFld4
+			query.MsgResvFld5 = in.Item.MsgResvFld5
+			query.MsgResvFld6 = in.Item.MsgResvFld6
+			query.MsgResvFld7 = in.Item.MsgResvFld7
+			query.MsgResvFld8 = in.Item.MsgResvFld8
+			query.MsgResvFld9 = in.Item.MsgResvFld9
+			query.MsgResvFld10 = in.Item.MsgResvFld10
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+		}
+		out, count, err := insmodel.FindInstitutionCash(db, query, in.Page, in.Size)
+		if err != nil {
+			return nil, err
+		}
+
+		items := make([]*pb.InstitutionCashField, 0, len(out))
+		for _, data := range out {
+			item := &pb.InstitutionCashField{
+				InsIdCd:        data.InsIdCd,
+				ProdCd:         data.ProdCd,
+				InsDefaultFlag: data.InsDefaultFlag,
+				InsDefaultCash: fmt.Sprintf("%f", data.InsDefaultCash),
+				InsCurrentCash: fmt.Sprintf("%f", data.InsCurrentCash),
+				MsgResvFld1:    data.MsgResvFld1,
+				MsgResvFld2:    data.MsgResvFld2,
+				MsgResvFld3:    data.MsgResvFld3,
+				MsgResvFld4:    data.MsgResvFld4,
+				MsgResvFld5:    data.MsgResvFld5,
+				MsgResvFld6:    data.MsgResvFld6,
+				MsgResvFld7:    data.MsgResvFld7,
+				MsgResvFld8:    data.MsgResvFld8,
+				MsgResvFld9:    data.MsgResvFld9,
+				MsgResvFld10:   data.MsgResvFld10,
+				RecOprId:       data.RecOprId,
+				RecUpdOpr:      data.RecUpdOpr,
+			}
+			if !data.CreatedAt.IsZero() {
+				item.CreatedAt = data.CreatedAt.Format(util.TimePattern)
+			}
+			if !data.UpdatedAt.IsZero() {
+				item.UpdatedAt = data.UpdatedAt.Format(util.TimePattern)
+			}
+			items = append(items, item)
+		}
+		reply.Items = items
+		reply.Count = count
+		reply.Size = in.Size
+		reply.Page = in.Page
+	} else {
+		query := new(insmodel.CashMain)
+		if in.Item != nil {
+			query.InsIdCd = in.Item.InsIdCd
+			query.ProdCd = in.Item.ProdCd
+			query.InsDefaultFlag = in.Item.InsDefaultFlag
+			query.InsDefaultCash, _ = strconv.ParseFloat(in.Item.InsDefaultCash, 64)
+			query.InsCurrentCash, _ = strconv.ParseFloat(in.Item.InsCurrentCash, 64)
+			query.MsgResvFld1 = in.Item.MsgResvFld1
+			query.MsgResvFld2 = in.Item.MsgResvFld2
+			query.MsgResvFld3 = in.Item.MsgResvFld3
+			query.MsgResvFld4 = in.Item.MsgResvFld4
+			query.MsgResvFld5 = in.Item.MsgResvFld5
+			query.MsgResvFld6 = in.Item.MsgResvFld6
+			query.MsgResvFld7 = in.Item.MsgResvFld7
+			query.MsgResvFld8 = in.Item.MsgResvFld8
+			query.MsgResvFld9 = in.Item.MsgResvFld9
+			query.MsgResvFld10 = in.Item.MsgResvFld10
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+		}
+		out, count, err := insmodel.FindInstitutionCashMain(db, query, in.Page, in.Size)
+		if err != nil {
+			return nil, err
+		}
+
+		items := make([]*pb.InstitutionCashField, 0, len(out))
+		for _, data := range out {
+			item := &pb.InstitutionCashField{
+				InsIdCd:        data.InsIdCd,
+				ProdCd:         data.ProdCd,
+				InsDefaultFlag: data.InsDefaultFlag,
+				InsDefaultCash: fmt.Sprintf("%f", data.InsDefaultCash),
+				InsCurrentCash: fmt.Sprintf("%f", data.InsCurrentCash),
+				MsgResvFld1:    data.MsgResvFld1,
+				MsgResvFld2:    data.MsgResvFld2,
+				MsgResvFld3:    data.MsgResvFld3,
+				MsgResvFld4:    data.MsgResvFld4,
+				MsgResvFld5:    data.MsgResvFld5,
+				MsgResvFld6:    data.MsgResvFld6,
+				MsgResvFld7:    data.MsgResvFld7,
+				MsgResvFld8:    data.MsgResvFld8,
+				MsgResvFld9:    data.MsgResvFld9,
+				MsgResvFld10:   data.MsgResvFld10,
+				RecOprId:       data.RecOprId,
+				RecUpdOpr:      data.RecUpdOpr,
+			}
+			if !data.CreatedAt.IsZero() {
+				item.CreatedAt = data.CreatedAt.Format(util.TimePattern)
+			}
+			if !data.UpdatedAt.IsZero() {
+				item.UpdatedAt = data.UpdatedAt.Format(util.TimePattern)
+			}
+			items = append(items, item)
+		}
+		reply.Items = items
+		reply.Count = count
+		reply.Size = in.Size
+		reply.Page = in.Page
+	}
+
+	return reply, nil
+}
+
+func (s *service) GetInstitutionFee(ctx context.Context, in *pb.GetInstitutionFeeRequest) (*pb.GetInstitutionFeeReply, error) {
+	reply := new(pb.GetInstitutionFeeReply)
+
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	if in.Size == 0 {
+		in.Size = 10
+	}
+
+	edit := true
+	if in.Type == "main" {
+		edit = false
+	}
+
+	db := common.DB
+
+	if edit {
+		query := new(insmodel.Fee)
+		if in.Item != nil {
+			query.InsIdCd = in.Item.InsIdCd
+			query.ProdCd = in.Item.ProdCd
+			query.BizCd = in.Item.BizCd
+			query.SubBizCd = in.Item.SubBizCd
+			query.InsFeeBizCd = in.Item.InsFeeBizCd
+			query.InsFeeCd = in.Item.InsFeeCd
+			query.InsFeeTp = in.Item.InsFeeTp
+			query.InsFeeParam = in.Item.InsFeeParam
+			query.InsFeePercent, _ = strconv.ParseFloat(in.Item.InsFeePercent, 64)
+			query.InsFeePct, _ = strconv.ParseFloat(in.Item.InsFeePct, 64)
+			query.InsFeePctMin, _ = strconv.ParseFloat(in.Item.InsFeePctMin, 64)
+			query.InsFeePctMax, _ = strconv.ParseFloat(in.Item.InsFeePctMax, 64)
+			query.InsAFeeSame = in.Item.InsAFeeSame
+			query.InsAFeeParam = in.Item.InsAFeeParam
+			query.InsAFeePercent, _ = strconv.ParseFloat(in.Item.InsAFeePercent, 64)
+			query.InsAFeePct, _ = strconv.ParseFloat(in.Item.InsAFeePct, 64)
+			query.InsAFeePctMin, _ = strconv.ParseFloat(in.Item.InsAFeePctMin, 64)
+			query.InsAFeePctMax, _ = strconv.ParseFloat(in.Item.InsAFeePctMax, 64)
+			query.MsgResvFld1 = in.Item.MsgResvFld1
+			query.MsgResvFld2 = in.Item.MsgResvFld2
+			query.MsgResvFld3 = in.Item.MsgResvFld3
+			query.MsgResvFld4 = in.Item.MsgResvFld4
+			query.MsgResvFld5 = in.Item.MsgResvFld5
+			query.MsgResvFld6 = in.Item.MsgResvFld6
+			query.MsgResvFld7 = in.Item.MsgResvFld7
+			query.MsgResvFld8 = in.Item.MsgResvFld8
+			query.MsgResvFld9 = in.Item.MsgResvFld9
+			query.MsgResvFld10 = in.Item.MsgResvFld10
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+		}
+		out, count, err := insmodel.FindInstitutionFee(db, query, in.Page, in.Size)
+		if err != nil {
+			return nil, err
+		}
+
+		items := make([]*pb.InstitutionFeeField, 0, len(out))
+		for _, data := range out {
+			item := &pb.InstitutionFeeField{
+				InsIdCd:        data.InsIdCd,
+				ProdCd:         data.ProdCd,
+				BizCd:          data.BizCd,
+				SubBizCd:       data.SubBizCd,
+				InsFeeBizCd:    data.InsFeeBizCd,
+				InsFeeCd:       data.InsFeeCd,
+				InsFeeTp:       data.InsFeeTp,
+				InsFeeParam:    data.InsFeeParam,
+				InsFeePercent:  fmt.Sprintf("%f", data.InsFeePercent),
+				InsFeePct:      fmt.Sprintf("%f", data.InsFeePct),
+				InsFeePctMin:   fmt.Sprintf("%f", data.InsFeePctMin),
+				InsFeePctMax:   fmt.Sprintf("%f", data.InsFeePctMax),
+				InsAFeePercent: fmt.Sprintf("%f", data.InsAFeePercent),
+				InsAFeePct:     fmt.Sprintf("%f", data.InsAFeePct),
+				InsAFeePctMin:  fmt.Sprintf("%f", data.InsAFeePctMin),
+				InsAFeePctMax:  fmt.Sprintf("%f", data.InsAFeePctMax),
+				InsAFeeSame:    data.InsAFeeSame,
+				InsAFeeParam:   data.InsAFeeParam,
+				MsgResvFld1:    data.MsgResvFld1,
+				MsgResvFld2:    data.MsgResvFld2,
+				MsgResvFld3:    data.MsgResvFld3,
+				MsgResvFld4:    data.MsgResvFld4,
+				MsgResvFld5:    data.MsgResvFld5,
+				MsgResvFld6:    data.MsgResvFld6,
+				MsgResvFld7:    data.MsgResvFld7,
+				MsgResvFld8:    data.MsgResvFld8,
+				MsgResvFld9:    data.MsgResvFld9,
+				MsgResvFld10:   data.MsgResvFld10,
+				RecOprId:       data.RecOprId,
+				RecUpdOpr:      data.RecUpdOpr,
+			}
+			if !data.CreatedAt.IsZero() {
+				item.CreatedAt = data.CreatedAt.Format(util.TimePattern)
+			}
+			if !data.UpdatedAt.IsZero() {
+				item.UpdatedAt = data.UpdatedAt.Format(util.TimePattern)
+			}
+			items = append(items, item)
+		}
+		reply.Items = items
+		reply.Count = count
+		reply.Size = in.Size
+		reply.Page = in.Page
+	} else {
+		query := new(insmodel.FeeMain)
+		if in.Item != nil {
+			query.InsIdCd = in.Item.InsIdCd
+			query.ProdCd = in.Item.ProdCd
+			query.BizCd = in.Item.BizCd
+			query.SubBizCd = in.Item.SubBizCd
+			query.InsFeeBizCd = in.Item.InsFeeBizCd
+			query.InsFeeCd = in.Item.InsFeeCd
+			query.InsFeeTp = in.Item.InsFeeTp
+			query.InsFeeParam = in.Item.InsFeeParam
+			query.InsFeePercent, _ = strconv.ParseFloat(in.Item.InsFeePercent, 64)
+			query.InsFeePct, _ = strconv.ParseFloat(in.Item.InsFeePct, 64)
+			query.InsFeePctMin, _ = strconv.ParseFloat(in.Item.InsFeePctMin, 64)
+			query.InsFeePctMax, _ = strconv.ParseFloat(in.Item.InsFeePctMax, 64)
+			query.InsAFeeSame = in.Item.InsAFeeSame
+			query.InsAFeeParam = in.Item.InsAFeeParam
+			query.InsAFeePercent, _ = strconv.ParseFloat(in.Item.InsAFeePercent, 64)
+			query.InsAFeePct, _ = strconv.ParseFloat(in.Item.InsAFeePct, 64)
+			query.InsAFeePctMin, _ = strconv.ParseFloat(in.Item.InsAFeePctMin, 64)
+			query.InsAFeePctMax, _ = strconv.ParseFloat(in.Item.InsAFeePctMax, 64)
+			query.MsgResvFld1 = in.Item.MsgResvFld1
+			query.MsgResvFld2 = in.Item.MsgResvFld2
+			query.MsgResvFld3 = in.Item.MsgResvFld3
+			query.MsgResvFld4 = in.Item.MsgResvFld4
+			query.MsgResvFld5 = in.Item.MsgResvFld5
+			query.MsgResvFld6 = in.Item.MsgResvFld6
+			query.MsgResvFld7 = in.Item.MsgResvFld7
+			query.MsgResvFld8 = in.Item.MsgResvFld8
+			query.MsgResvFld9 = in.Item.MsgResvFld9
+			query.MsgResvFld10 = in.Item.MsgResvFld10
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+		}
+		out, count, err := insmodel.FindInstitutionFeeMain(db, query, in.Page, in.Size)
+		if err != nil {
+			return nil, err
+		}
+
+		items := make([]*pb.InstitutionFeeField, 0, len(out))
+		for _, data := range out {
+			item := &pb.InstitutionFeeField{
+				InsIdCd:        data.InsIdCd,
+				ProdCd:         data.ProdCd,
+				BizCd:          data.BizCd,
+				SubBizCd:       data.SubBizCd,
+				InsFeeBizCd:    data.InsFeeBizCd,
+				InsFeeCd:       data.InsFeeCd,
+				InsFeeTp:       data.InsFeeTp,
+				InsFeeParam:    data.InsFeeParam,
+				InsFeePercent:  fmt.Sprintf("%f", data.InsFeePercent),
+				InsFeePct:      fmt.Sprintf("%f", data.InsFeePct),
+				InsFeePctMin:   fmt.Sprintf("%f", data.InsFeePctMin),
+				InsFeePctMax:   fmt.Sprintf("%f", data.InsFeePctMax),
+				InsAFeePercent: fmt.Sprintf("%f", data.InsAFeePercent),
+				InsAFeePct:     fmt.Sprintf("%f", data.InsAFeePct),
+				InsAFeePctMin:  fmt.Sprintf("%f", data.InsAFeePctMin),
+				InsAFeePctMax:  fmt.Sprintf("%f", data.InsAFeePctMax),
+				InsAFeeSame:    data.InsAFeeSame,
+				InsAFeeParam:   data.InsAFeeParam,
+				MsgResvFld1:    data.MsgResvFld1,
+				MsgResvFld2:    data.MsgResvFld2,
+				MsgResvFld3:    data.MsgResvFld3,
+				MsgResvFld4:    data.MsgResvFld4,
+				MsgResvFld5:    data.MsgResvFld5,
+				MsgResvFld6:    data.MsgResvFld6,
+				MsgResvFld7:    data.MsgResvFld7,
+				MsgResvFld8:    data.MsgResvFld8,
+				MsgResvFld9:    data.MsgResvFld9,
+				MsgResvFld10:   data.MsgResvFld10,
+				RecOprId:       data.RecOprId,
+				RecUpdOpr:      data.RecUpdOpr,
+			}
+			if !data.CreatedAt.IsZero() {
+				item.CreatedAt = data.CreatedAt.Format(util.TimePattern)
+			}
+			if !data.UpdatedAt.IsZero() {
+				item.UpdatedAt = data.UpdatedAt.Format(util.TimePattern)
+			}
+			items = append(items, item)
+		}
+		reply.Items = items
+		reply.Count = count
+		reply.Size = in.Size
+		reply.Page = in.Page
+	}
+
+	return reply, nil
+}
+
+func (s *service) GetInstitutionControl(ctx context.Context, in *pb.GetInstitutionControlRequest) (*pb.GetInstitutionControlReply, error) {
+	reply := new(pb.GetInstitutionControlReply)
+
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	if in.Size == 0 {
+		in.Size = 10
+	}
+
+	edit := true
+	if in.Type == "main" {
+		edit = false
+	}
+
+	db := common.DB
+
+	if edit {
+		query := new(insmodel.Control)
+		if in.Item != nil {
+			query.InsIdCd = in.Item.InsIdCd
+			query.InsCompanyCd = in.Item.InsCompanyCd
+			query.ProdCd = in.Item.ProdCd
+			query.BizCd = in.Item.BizCd
+			query.CtrlSta = in.Item.CtrlSta
+			query.InsBegTm = in.Item.InsBegTm
+			query.InsEndTm = in.Item.InsEndTm
+			query.MsgResvFld1 = in.Item.MsgResvFld1
+			query.MsgResvFld2 = in.Item.MsgResvFld2
+			query.MsgResvFld3 = in.Item.MsgResvFld3
+			query.MsgResvFld4 = in.Item.MsgResvFld4
+			query.MsgResvFld5 = in.Item.MsgResvFld5
+			query.MsgResvFld6 = in.Item.MsgResvFld6
+			query.MsgResvFld7 = in.Item.MsgResvFld7
+			query.MsgResvFld8 = in.Item.MsgResvFld8
+			query.MsgResvFld9 = in.Item.MsgResvFld9
+			query.MsgResvFld10 = in.Item.MsgResvFld10
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+		}
+		out, count, err := insmodel.FindInstitutionControl(db, query, in.Page, in.Size)
+		if err != nil {
+			return nil, err
+		}
+
+		items := make([]*pb.InstitutionControlField, 0, len(out))
+		for _, data := range out {
+			item := &pb.InstitutionControlField{
+
+				InsIdCd:      data.InsIdCd,
+				InsCompanyCd: data.InsCompanyCd,
+				ProdCd:       data.ProdCd,
+				BizCd:        data.BizCd,
+				CtrlSta:      data.CtrlSta,
+				InsBegTm:     data.InsBegTm,
+				InsEndTm:     data.InsEndTm,
+				MsgResvFld1:  data.MsgResvFld1,
+				MsgResvFld2:  data.MsgResvFld2,
+				MsgResvFld3:  data.MsgResvFld3,
+				MsgResvFld4:  data.MsgResvFld4,
+				MsgResvFld5:  data.MsgResvFld5,
+				MsgResvFld6:  data.MsgResvFld6,
+				MsgResvFld7:  data.MsgResvFld7,
+				MsgResvFld8:  data.MsgResvFld8,
+				MsgResvFld9:  data.MsgResvFld9,
+				MsgResvFld10: data.MsgResvFld10,
+				RecOprId:     data.RecOprId,
+				RecUpdOpr:    data.RecUpdOpr,
+			}
+			if !data.CreatedAt.IsZero() {
+				item.CreatedAt = data.CreatedAt.Format(util.TimePattern)
+			}
+			if !data.UpdatedAt.IsZero() {
+				item.UpdatedAt = data.UpdatedAt.Format(util.TimePattern)
+			}
+			items = append(items, item)
+		}
+		reply.Items = items
+		reply.Count = count
+		reply.Size = in.Size
+		reply.Page = in.Page
+	} else {
+		query := new(insmodel.ControlMain)
+		if in.Item != nil {
+			query.InsIdCd = in.Item.InsIdCd
+			query.InsCompanyCd = in.Item.InsCompanyCd
+			query.ProdCd = in.Item.ProdCd
+			query.BizCd = in.Item.BizCd
+			query.CtrlSta = in.Item.CtrlSta
+			query.InsBegTm = in.Item.InsBegTm
+			query.InsEndTm = in.Item.InsEndTm
+			query.MsgResvFld1 = in.Item.MsgResvFld1
+			query.MsgResvFld2 = in.Item.MsgResvFld2
+			query.MsgResvFld3 = in.Item.MsgResvFld3
+			query.MsgResvFld4 = in.Item.MsgResvFld4
+			query.MsgResvFld5 = in.Item.MsgResvFld5
+			query.MsgResvFld6 = in.Item.MsgResvFld6
+			query.MsgResvFld7 = in.Item.MsgResvFld7
+			query.MsgResvFld8 = in.Item.MsgResvFld8
+			query.MsgResvFld9 = in.Item.MsgResvFld9
+			query.MsgResvFld10 = in.Item.MsgResvFld10
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+		}
+		out, count, err := insmodel.FindInstitutionControlMain(db, query, in.Page, in.Size)
+		if err != nil {
+			return nil, err
+		}
+
+		items := make([]*pb.InstitutionControlField, 0, len(out))
+		for _, data := range out {
+			item := &pb.InstitutionControlField{
+
+				InsIdCd:      data.InsIdCd,
+				InsCompanyCd: data.InsCompanyCd,
+				ProdCd:       data.ProdCd,
+				BizCd:        data.BizCd,
+				CtrlSta:      data.CtrlSta,
+				InsBegTm:     data.InsBegTm,
+				InsEndTm:     data.InsEndTm,
+				MsgResvFld1:  data.MsgResvFld1,
+				MsgResvFld2:  data.MsgResvFld2,
+				MsgResvFld3:  data.MsgResvFld3,
+				MsgResvFld4:  data.MsgResvFld4,
+				MsgResvFld5:  data.MsgResvFld5,
+				MsgResvFld6:  data.MsgResvFld6,
+				MsgResvFld7:  data.MsgResvFld7,
+				MsgResvFld8:  data.MsgResvFld8,
+				MsgResvFld9:  data.MsgResvFld9,
+				MsgResvFld10: data.MsgResvFld10,
+				RecOprId:     data.RecOprId,
+				RecUpdOpr:    data.RecUpdOpr,
+			}
+			if !data.CreatedAt.IsZero() {
+				item.CreatedAt = data.CreatedAt.Format(util.TimePattern)
+			}
+			if !data.UpdatedAt.IsZero() {
+				item.UpdatedAt = data.UpdatedAt.Format(util.TimePattern)
+			}
+			items = append(items, item)
+		}
+		reply.Items = items
+		reply.Count = count
+		reply.Size = in.Size
+		reply.Page = in.Page
+	}
+
+	return reply, nil
+}
+
 func (s *service) SaveInstitutionFeeControlCash(ctx context.Context, in *pb.SaveInstitutionFeeControlCashRequest) (*pb.SaveInstitutionFeeControlCashReply, error) {
 	reply := new(pb.SaveInstitutionFeeControlCashReply)
 	db := common.DB.Begin()

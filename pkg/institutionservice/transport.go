@@ -84,3 +84,21 @@ func MakeSaveInstitutionFeeControlCashEndpoint(service pb.InstitutionServer) end
 		return service.SaveInstitutionFeeControlCash(ctx, request.(*pb.SaveInstitutionFeeControlCashRequest))
 	}
 }
+
+func MakeGetInstitutionControlEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.GetInstitutionControl(ctx, request.(*pb.GetInstitutionControlRequest))
+	}
+}
+
+func MakeGetInstitutionCashEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.GetInstitutionCash(ctx, request.(*pb.GetInstitutionCashRequest))
+	}
+}
+
+func MakeGetInstitutionFeeEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.GetInstitutionFee(ctx, request.(*pb.GetInstitutionFeeRequest))
+	}
+}

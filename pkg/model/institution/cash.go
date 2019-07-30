@@ -44,10 +44,20 @@ func SaveInstitutionCash(db *gorm.DB, cash *Cash) error {
 	return db.Save(cash).Error
 }
 
-func FindInstitutionCash(db *gorm.DB, query *Cash) ([]*Cash, error) {
+func FindInstitutionCashMain(db *gorm.DB, query *CashMain, page int32, size int32) ([]*CashMain, int32, error) {
+	out := make([]*CashMain, 0)
+	var count int32
+	db.Model(&CashMain{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
+}
+
+func FindInstitutionCash(db *gorm.DB, query *Cash, page int32, size int32) ([]*Cash, int32, error) {
 	out := make([]*Cash, 0)
-	err := db.Where(query).Find(&out).Error
-	return out, err
+	var count int32
+	db.Model(&Cash{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
 }
 
 func SaveInstitutionCashMain(db *gorm.DB, cash *CashMain) error {

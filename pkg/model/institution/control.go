@@ -46,10 +46,20 @@ func SaveInstitutionControl(db *gorm.DB, control *Control) error {
 	return db.Save(control).Error
 }
 
-func FindInstitutionControl(db *gorm.DB, query *Control) ([]*Control, error) {
+func FindInstitutionControl(db *gorm.DB, query *Control, page int32, size int32) ([]*Control, int32, error) {
 	out := make([]*Control, 0)
-	err := db.Where(query).Find(&out).Error
-	return out, err
+	var count int32
+	db.Model(&Control{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
+}
+
+func FindInstitutionControlMain(db *gorm.DB, query *ControlMain, page int32, size int32) ([]*ControlMain, int32, error) {
+	out := make([]*ControlMain, 0)
+	var count int32
+	db.Model(&ControlMain{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
 }
 
 func SaveInstitutionControlMain(db *gorm.DB, control *ControlMain) error {

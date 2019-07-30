@@ -28,21 +28,21 @@ func institutionRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) e
 		return fmt.Errorf("institution %s not found", instance.DataId)
 	}
 	// 查询fee，cash，control
-	fees, err := institution.FindInstitutionFee(db, &institution.Fee{
+	fees, _, err := institution.FindInstitutionFee(db, &institution.Fee{
 		InsIdCd: info.InsIdCd,
-	})
+	}, 1, 9999)
 	if err != nil {
 		return err
 	}
-	cashes, err := institution.FindInstitutionCash(db, &institution.Cash{
+	cashes, _, err := institution.FindInstitutionCash(db, &institution.Cash{
 		InsIdCd: info.InsIdCd,
-	})
+	}, 1, 9999)
 	if err != nil {
 		return err
 	}
-	controls, err := institution.FindInstitutionControl(db, &institution.Control{
+	controls, _, err := institution.FindInstitutionControl(db, &institution.Control{
 		InsIdCd: info.InsIdCd,
-	})
+	}, 1, 9999)
 	if err != nil {
 		return err
 	}
@@ -127,5 +127,10 @@ func deleteInstitution(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) err
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func institutionUpdate(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
+
 	return nil
 }

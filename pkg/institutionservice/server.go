@@ -17,10 +17,36 @@ type server struct {
 	addInstitutionHandler                grpctransport.Handler
 	GetInstitutionByIdHandler            grpctransport.Handler
 	SaveInstitutionFeeControlCashHandler grpctransport.Handler
+	GetInstitutionControlHandler         grpctransport.Handler
+	GetInstitutionCashHandler            grpctransport.Handler
+	GetInstitutionFeeHandler             grpctransport.Handler
+}
+
+func (s *server) GetInstitutionControl(ctx context.Context, in *pb.GetInstitutionControlRequest) (*pb.GetInstitutionControlReply, error) {
+	_, res, err := s.GetInstitutionControlHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetInstitutionControlReply), nil
+}
+
+func (s *server) GetInstitutionCash(ctx context.Context, in *pb.GetInstitutionCashRequest) (*pb.GetInstitutionCashReply, error) {
+	_, res, err := s.GetInstitutionCashHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetInstitutionCashReply), nil
+}
+
+func (s *server) GetInstitutionFee(ctx context.Context, in *pb.GetInstitutionFeeRequest) (*pb.GetInstitutionFeeReply, error) {
+	_, res, err := s.GetInstitutionFeeHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetInstitutionFeeReply), nil
 }
 
 func (s *server) SaveInstitutionFeeControlCash(ctx context.Context, in *pb.SaveInstitutionFeeControlCashRequest) (*pb.SaveInstitutionFeeControlCashReply, error) {
-
 	_, res, err := s.SaveInstitutionFeeControlCashHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
@@ -111,6 +137,36 @@ func New(tracer grpctransport.ServerOption) pb.InstitutionServer {
 	options := make([]grpctransport.ServerOption, 0)
 	if tracer != nil {
 		options = append(options, tracer)
+	}
+
+	{
+		e := MakeGetInstitutionControlEndpoint(svc)
+		svr.GetInstitutionControlHandler = grpctransport.NewServer(
+			e,
+			grpcDecode,
+			grpcEncode,
+			options...,
+		)
+	}
+
+	{
+		e := MakeGetInstitutionCashEndpoint(svc)
+		svr.GetInstitutionCashHandler = grpctransport.NewServer(
+			e,
+			grpcDecode,
+			grpcEncode,
+			options...,
+		)
+	}
+
+	{
+		e := MakeGetInstitutionFeeEndpoint(svc)
+		svr.GetInstitutionFeeHandler = grpctransport.NewServer(
+			e,
+			grpcDecode,
+			grpcEncode,
+			options...,
+		)
 	}
 
 	{

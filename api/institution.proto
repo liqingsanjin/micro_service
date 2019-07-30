@@ -14,6 +14,9 @@ service Institution {
     rpc SaveInstitution(SaveInstitutionRequest) returns (SaveInstitutionReply) {}
     rpc SaveInstitutionFeeControlCash(SaveInstitutionFeeControlCashRequest) returns (SaveInstitutionFeeControlCashReply) {}
     rpc GetInstitutionById(GetInstitutionByIdRequest) returns (GetInstitutionByIdReply) {}
+    rpc GetInstitutionControl(GetInstitutionControlRequest) returns (GetInstitutionControlReply) {}
+    rpc GetInstitutionCash(GetInstitutionCashRequest) returns (GetInstitutionCashReply) {}
+    rpc GetInstitutionFee(GetInstitutionFeeRequest) returns (GetInstitutionFeeReply) {}
 }
 
 message InstitutionTnxHisDownloadReq {
@@ -397,4 +400,49 @@ message GetInstitutionByIdRequest {
 message GetInstitutionByIdReply {
     InstitutionField item = 1;
     error err = 2;
+}
+
+message GetInstitutionControlRequest {
+    int32 page = 1;
+    int32 size = 2;
+    InstitutionControlField item = 3;
+    string type = 4;
+}
+
+message GetInstitutionControlReply {
+    repeated InstitutionControlField items = 1;
+    int32 page = 2;
+    int32 size = 3;
+    int32 count = 4;
+    error err = 5;
+}
+
+message GetInstitutionCashRequest {
+    int32 page = 1;
+    int32 size = 2;
+    InstitutionCashField item = 3;
+    string type = 4;
+}
+
+message GetInstitutionCashReply {
+    repeated InstitutionCashField items = 1;
+    int32 page = 2;
+    int32 size = 3;
+    int32 count = 4;
+    error err = 5;
+}
+
+message GetInstitutionFeeRequest {
+    int32 page = 1;
+    int32 size = 2;
+    InstitutionFeeField item = 3;
+    string type = 4;
+}
+
+message GetInstitutionFeeReply {
+    repeated InstitutionFeeField items = 1;
+    int32 page = 2;
+    int32 size = 3;
+    int32 count = 4;
+    error err = 5;
 }

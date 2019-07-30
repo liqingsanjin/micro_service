@@ -57,10 +57,20 @@ func SaveInstitutionFee(db *gorm.DB, fee *Fee) error {
 	return db.Save(fee).Error
 }
 
-func FindInstitutionFee(db *gorm.DB, query *Fee) ([]*Fee, error) {
+func FindInstitutionFee(db *gorm.DB, query *Fee, page int32, size int32) ([]*Fee, int32, error) {
 	out := make([]*Fee, 0)
-	err := db.Where(query).Find(&out).Error
-	return out, err
+	var count int32
+	db.Model(&Fee{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
+}
+
+func FindInstitutionFeeMain(db *gorm.DB, query *FeeMain, page int32, size int32) ([]*FeeMain, int32, error) {
+	out := make([]*FeeMain, 0)
+	var count int32
+	db.Model(&FeeMain{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
 }
 
 func SaveInstitutionFeeMain(db *gorm.DB, fee *FeeMain) error {
