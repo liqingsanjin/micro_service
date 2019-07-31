@@ -1277,10 +1277,10 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 				CertifSt:              merchants[i].CertifSt,
 				CertifDt:              merchants[i].CertifDt,
 			}
-			if merchants[i] != nil {
+			if merchants[i].ApprDate != nil {
 				pbMerchants[i].ApprDate = merchants[i].ApprDate.Format("2006-01-02 15:04:05")
 			}
-			if merchants[i] != nil {
+			if merchants[i].DeleteDate != nil {
 				pbMerchants[i].DeleteDate = merchants[i].DeleteDate.Format("2006-01-02 15:04:05")
 			}
 			if !merchants[i].CreatedAt.IsZero() {
@@ -1289,7 +1289,7 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 			if merchants[i].UpdatedAt.IsZero() {
 				pbMerchants[i].UpdatedAt = merchants[i].UpdatedAt.Format("2006-01-02 15:04:05")
 			}
-			if merchants[i] != nil {
+			if merchants[i].RecApllyTs != nil {
 				pbMerchants[i].RecApllyTs = merchants[i].RecApllyTs.Format("2006-01-02 15:04:05")
 			}
 		}
