@@ -220,3 +220,106 @@ func deleteMerchant(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error 
 
 	return nil
 }
+
+func merchantUpdate(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
+	// 查询商户id
+	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
+	if err != nil {
+		return err
+	}
+	if instance == nil {
+		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
+	}
+
+	// 查询商户信息
+	info, err := merchant.FindMerchantInfoById(db, instance.DataId)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		return fmt.Errorf("merchant %s not found", instance.DataId)
+	}
+
+	// 查询term, bank_account, biz_fee, biz_deal, business, picture, term_risk_cfg
+	accounts, _, err := merchant.QueryBankAccount(db, &merchant.BankAccount{
+		OwnerCd: info.MchtCd,
+	}, 1, 9999)
+	if err != nil {
+		return err
+	}
+	fees, _, err := merchant.QueryBizFee(db, &merchant.BizFee{
+		MchtCd: info.MchtCd,
+	}, 1, 9999)
+	if err != nil {
+		return err
+	}
+	deals, _, err := merchant.QueryBizDeal(db, &merchant.BizDeal{
+		MchtCd: info.MchtCd,
+	}, 1, 9999)
+	if err != nil {
+		return err
+	}
+	business, _, err := merchant.QueryBusiness(db, &merchant.Business{
+		MchtCd: info.MchtCd,
+	}, 1, 9999)
+	if err != nil {
+		return err
+	}
+	pictures, _, err := merchant.QueryPicture(db, &merchant.Picture{
+		MchtCd: info.MchtCd,
+	}, 1, 9999)
+	if err != nil {
+		return err
+	}
+
+	// 入库
+	err = merchant.SaveMerchantMain(db, &merchant.MerchantInfoMain{
+		MerchantInfo: *info,
+	})
+	if err != nil {
+		return err
+	}
+
+	for i := range accounts {
+		err = merchant.SaveBankAccountMain(db, &merchant.BankAccountMain{
+			BankAccount: *accounts[i],
+		})
+		if err != nil {
+			return err
+		}
+	}
+	for i := range fees {
+		err = merchant.SaveBizFeeMain(db, &merchant.BizFeeMain{
+			BizFee: *fees[i],
+		})
+		if err != nil {
+			return err
+		}
+	}
+	for i := range deals {
+		err = merchant.SaveBizDealMain(db, &merchant.BizDealMain{
+			BizDeal: *deals[i],
+		})
+		if err != nil {
+			return err
+		}
+	}
+	for i := range business {
+		err = merchant.SaveBusinessMain(db, &merchant.BusinessMain{
+			Business: *business[i],
+		})
+		if err != nil {
+			return err
+		}
+	}
+	for i := range pictures {
+		err = merchant.SavePictureMain(db, &merchant.PictureMain{
+			Picture: *pictures[i],
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

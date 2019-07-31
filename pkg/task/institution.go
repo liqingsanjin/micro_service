@@ -131,6 +131,73 @@ func deleteInstitution(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) err
 }
 
 func institutionUpdate(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
+	// 查询机构id
+	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
+	if err != nil {
+		return err
+	}
+	if instance == nil {
+		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
+	}
 
+	// 查询机构信息
+	info, err := institution.FindInstitutionInfoById(db, instance.DataId)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		return fmt.Errorf("institution %s not found", instance.DataId)
+	}
+	// 查询fee，cash，control
+	fees, _, err := institution.FindInstitutionFee(db, &institution.Fee{
+		InsIdCd: info.InsIdCd,
+	}, 1, 9999)
+	if err != nil {
+		return err
+	}
+	cashes, _, err := institution.FindInstitutionCash(db, &institution.Cash{
+		InsIdCd: info.InsIdCd,
+	}, 1, 9999)
+	if err != nil {
+		return err
+	}
+	controls, _, err := institution.FindInstitutionControl(db, &institution.Control{
+		InsIdCd: info.InsIdCd,
+	}, 1, 9999)
+	if err != nil {
+		return err
+	}
+
+	// 入正式表 institution fee cash control
+	err = institution.SaveInstitutionMain(db, &institution.InstitutionInfoMain{
+		InstitutionInfo: *info,
+	})
+	if err != nil {
+		return err
+	}
+	for _, fee := range fees {
+		err = institution.SaveInstitutionFeeMain(db, &institution.FeeMain{
+			Fee: *fee,
+		})
+		if err != nil {
+			return err
+		}
+	}
+	for _, cash := range cashes {
+		err = institution.SaveInstitutionCashMain(db, &institution.CashMain{
+			Cash: *cash,
+		})
+		if err != nil {
+			return err
+		}
+	}
+	for _, control := range controls {
+		err = institution.SaveInstitutionControlMain(db, &institution.ControlMain{
+			Control: *control,
+		})
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
