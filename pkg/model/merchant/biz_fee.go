@@ -49,16 +49,20 @@ func SaveBizFeeMain(db *gorm.DB, data *BizFeeMain) error {
 	return db.Save(data).Error
 }
 
-func QueryBizFee(db *gorm.DB, query *BizFee) ([]*BizFee, error) {
+func QueryBizFee(db *gorm.DB, query *BizFee, page int32, size int32) ([]*BizFee, int32, error) {
 	out := make([]*BizFee, 0)
-	err := db.Where(query).Find(&out).Error
-	return out, err
+	var count int32
+	db.Model(&BizFee{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
 }
 
-func QueryBizFeeMain(db *gorm.DB, query *BizFeeMain) ([]*BizFeeMain, error) {
+func QueryBizFeeMain(db *gorm.DB, query *BizFeeMain, page int32, size int32) ([]*BizFeeMain, int32, error) {
 	out := make([]*BizFeeMain, 0)
-	err := db.Where(query).Find(&out).Error
-	return out, err
+	var count int32
+	db.Model(&BizFeeMain{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
 }
 
 func DeleteBizFee(db *gorm.DB, query *BizFee) error {

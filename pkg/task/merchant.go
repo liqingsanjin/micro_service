@@ -30,33 +30,33 @@ func merchantRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) erro
 	}
 
 	// 查询term, bank_account, biz_fee, biz_deal, business, picture, term_risk_cfg
-	accounts, err := merchant.QueryBankAccount(db, &merchant.BankAccount{
+	accounts, _, err := merchant.QueryBankAccount(db, &merchant.BankAccount{
 		OwnerCd: info.MchtCd,
-	})
+	}, 1, 9999)
 	if err != nil {
 		return err
 	}
-	fees, err := merchant.QueryBizFee(db, &merchant.BizFee{
+	fees, _, err := merchant.QueryBizFee(db, &merchant.BizFee{
 		MchtCd: info.MchtCd,
-	})
+	}, 1, 9999)
 	if err != nil {
 		return err
 	}
-	deals, err := merchant.QueryBizDeal(db, &merchant.BizDeal{
+	deals, _, err := merchant.QueryBizDeal(db, &merchant.BizDeal{
 		MchtCd: info.MchtCd,
-	})
+	}, 1, 9999)
 	if err != nil {
 		return err
 	}
-	business, err := merchant.QueryBusiness(db, &merchant.Business{
+	business, _, err := merchant.QueryBusiness(db, &merchant.Business{
 		MchtCd: info.MchtCd,
-	})
+	}, 1, 9999)
 	if err != nil {
 		return err
 	}
-	pictures, err := merchant.QueryPicture(db, &merchant.Picture{
+	pictures, _, err := merchant.QueryPicture(db, &merchant.Picture{
 		MchtCd: info.MchtCd,
-	})
+	}, 1, 9999)
 	if err != nil {
 		return err
 	}

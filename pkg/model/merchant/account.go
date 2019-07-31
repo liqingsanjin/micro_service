@@ -53,16 +53,20 @@ func SaveBankAccountMain(db *gorm.DB, data *BankAccountMain) error {
 	return db.Save(data).Error
 }
 
-func QueryBankAccount(db *gorm.DB, query *BankAccount) ([]*BankAccount, error) {
+func QueryBankAccount(db *gorm.DB, query *BankAccount, page int32, size int32) ([]*BankAccount, int32, error) {
 	out := make([]*BankAccount, 0)
-	err := db.Where(query).Find(&out).Error
-	return out, err
+	var count int32
+	db.Model(&BankAccount{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
 }
 
-func QueryBankAccountMain(db *gorm.DB, query *BankAccountMain) ([]*BankAccountMain, error) {
+func QueryBankAccountMain(db *gorm.DB, query *BankAccountMain, page int32, size int32) ([]*BankAccountMain, int32, error) {
 	out := make([]*BankAccountMain, 0)
-	err := db.Where(query).Find(&out).Error
-	return out, err
+	var count int32
+	db.Model(&BankAccountMain{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
 }
 
 func DeleteBankAccount(db *gorm.DB, query *BankAccount) error {

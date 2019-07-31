@@ -239,8 +239,8 @@ message MerchantBusinessField {
     string feeSettlementType = 6;
     string feeHoliday = 7;
     string serviceFeeType = 8;
-    double serviceFeeStaticAmount = 9;
-    int64  serviceFeeLevelCount = 10;
+    string serviceFeeStaticAmount = 9;
+    string serviceFeeLevelCount = 10;
     string serviceFeeMode = 11;
     string serviceFeeUnit = 12;
     string serviceFeeTerm = 13;
@@ -299,51 +299,76 @@ message SaveMerchantPictureReply {
 message GetMerchantBankAccountRequest {
     MerchantBankAccountField item = 1;
     string type = 2;
+    int32 page = 3;
+    int32 size = 4;
 }
 
 message GetMerchantBankAccountReply {
     repeated MerchantBankAccountField items = 1;
     error err = 2;
+    int32 page = 3;
+    int32 size = 4;
+    int32 count = 5;
 }
 
 message GetMerchantBizDealRequest {
     MerchantBizDealField item = 1;
     string type = 2;
+    int32 page = 3;
+    int32 size = 4;
 }
 
 message GetMerchantBizDealReply {
     repeated MerchantBizDealField items = 1;
     error err = 2;
+    int32 page = 3;
+    int32 size = 4;
+    int32 count = 5;
 }
 
 message GetMerchantBizFeeRequest {
     MerchantBizFeeField item = 1;
     string type = 2;
+    int32 page = 3;
+    int32 size = 4;
 }
 
 message GetMerchantBizFeeReply {
     repeated MerchantBizFeeField items = 1;
     error err = 2;
+    int32 page = 3;
+    int32 size = 4;
+    int32 count = 5;
 }
 
 message GetMerchantBusinessRequest {
     MerchantBusinessField item = 1;
     string type = 2;
+    int32 page = 3;
+    int32 size = 4;
 }
 
 message GetMerchantBusinessReply {
     repeated MerchantBusinessField items = 1;
     error err = 2;
+    int32 page = 3;
+    int32 size = 4;
+    int32 count = 5;
 }
 
 message GetMerchantPictureRequest {
     MerchantPictureField item = 1;
     string type = 2;
+    int32 page = 3;
+    int32 size = 4;
 }
 
 message GetMerchantPictureReply {
     repeated MerchantPictureField items = 1;
     error err = 2;
+    int32 page = 3;
+    int32 size = 4;
+    int32 count = 5;
 }
 
 message GetMerchantByIdRequest {

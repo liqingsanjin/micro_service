@@ -38,16 +38,20 @@ func SaveBizDealMain(db *gorm.DB, data *BizDealMain) error {
 	return db.Save(data).Error
 }
 
-func QueryBizDeal(db *gorm.DB, query *BizDeal) ([]*BizDeal, error) {
+func QueryBizDeal(db *gorm.DB, query *BizDeal, page int32, size int32) ([]*BizDeal, int32, error) {
 	out := make([]*BizDeal, 0)
-	err := db.Where(query).Find(&out).Error
-	return out, err
+	var count int32
+	db.Model(&BizDeal{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
 }
 
-func QueryBizDealMain(db *gorm.DB, query *BizDealMain) ([]*BizDealMain, error) {
+func QueryBizDealMain(db *gorm.DB, query *BizDealMain, page int32, size int32) ([]*BizDealMain, int32, error) {
 	out := make([]*BizDealMain, 0)
-	err := db.Where(query).Find(&out).Error
-	return out, err
+	var count int32
+	db.Model(&BizDealMain{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
 }
 
 func DeleteBizDeal(db *gorm.DB, query *BizDeal) error {

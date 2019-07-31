@@ -273,13 +273,20 @@ func (m *merchantService) GetMerchantById(ctx context.Context, in *pb.GetMerchan
 
 func (m *merchantService) GetMerchantPicture(ctx context.Context, in *pb.GetMerchantPictureRequest) (*pb.GetMerchantPictureReply, error) {
 	reply := new(pb.GetMerchantPictureReply)
-	if in.Item == nil || in.Item.MchtCd == "" {
+	if in.Item == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
-			Description: "mchtCd不能为空",
+			Description: "查询条件不能为空",
 		}
 		return reply, nil
+	}
+
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	if in.Size == 0 {
+		in.Size = 10
 	}
 
 	edit := true
@@ -291,9 +298,21 @@ func (m *merchantService) GetMerchantPicture(ctx context.Context, in *pb.GetMerc
 	if edit {
 		query := new(merchantmodel.Picture)
 		{
+			query.FileId = in.Item.FileId
 			query.MchtCd = in.Item.MchtCd
+			query.DocType = in.Item.DocType
+			query.FileType = in.Item.FileType
+			query.FileName = in.Item.FileName
+			query.PIndex = in.Item.PIndex
+			query.PCode = in.Item.PCode
+			query.Url = in.Item.Url
+			query.SystemFlag = in.Item.SystemFlag
+			query.Status = in.Item.Status
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+
 		}
-		items, err := merchantmodel.QueryPicture(db, query)
+		items, count, err := merchantmodel.QueryPicture(db, query, in.Page, in.Size)
 		if err != nil {
 			return nil, err
 		}
@@ -322,14 +341,27 @@ func (m *merchantService) GetMerchantPicture(ctx context.Context, in *pb.GetMerc
 			}
 		}
 
+		reply.Count = count
 		reply.Items = pbItems
 
 	} else {
 		query := new(merchantmodel.PictureMain)
 		{
+			query.FileId = in.Item.FileId
 			query.MchtCd = in.Item.MchtCd
+			query.DocType = in.Item.DocType
+			query.FileType = in.Item.FileType
+			query.FileName = in.Item.FileName
+			query.PIndex = in.Item.PIndex
+			query.PCode = in.Item.PCode
+			query.Url = in.Item.Url
+			query.SystemFlag = in.Item.SystemFlag
+			query.Status = in.Item.Status
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+
 		}
-		items, err := merchantmodel.QueryPicTureMain(db, query)
+		items, count, err := merchantmodel.QueryPictureMain(db, query, in.Page, in.Size)
 		if err != nil {
 			return nil, err
 		}
@@ -358,21 +390,32 @@ func (m *merchantService) GetMerchantPicture(ctx context.Context, in *pb.GetMerc
 			}
 		}
 
+		reply.Count = count
 		reply.Items = pbItems
 
 	}
+
+	reply.Page = in.Page
+	reply.Size = in.Size
 	return reply, nil
 }
 
 func (m *merchantService) GetMerchantBusiness(ctx context.Context, in *pb.GetMerchantBusinessRequest) (*pb.GetMerchantBusinessReply, error) {
 	reply := new(pb.GetMerchantBusinessReply)
-	if in.Item == nil || in.Item.MchtCd == "" {
+	if in.Item == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
-			Description: "mchtCd不能为空",
+			Description: "查询条件不能为空",
 		}
 		return reply, nil
+	}
+
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	if in.Size == 0 {
+		in.Size = 10
 	}
 
 	edit := true
@@ -385,8 +428,36 @@ func (m *merchantService) GetMerchantBusiness(ctx context.Context, in *pb.GetMer
 		query := new(merchantmodel.Business)
 		{
 			query.MchtCd = in.Item.MchtCd
+			query.ProdCd = in.Item.ProdCd
+			query.ProdCdText = in.Item.ProdCdText
+			query.FeeMoneyCd = in.Item.FeeMoneyCd
+			query.FeeModeType = in.Item.FeeModeType
+			query.FeeSettlementType = in.Item.FeeSettlementType
+			query.FeeHoliday = in.Item.FeeHoliday
+			query.ServiceFeeType = in.Item.ServiceFeeType
+			query.ServiceFeeStaticAmount, _ = strconv.ParseFloat(in.Item.ServiceFeeStaticAmount, 64)
+			query.ServiceFeeLevelCount, _ = strconv.ParseInt(in.Item.ServiceFeeLevelCount, 10, 64)
+			query.ServiceFeeMode = in.Item.ServiceFeeMode
+			query.ServiceFeeUnit = in.Item.ServiceFeeUnit
+			query.ServiceFeeTerm = in.Item.ServiceFeeTerm
+			query.ServiceFeeSumto = in.Item.ServiceFeeSumto
+			query.ServiceFeeCircle = in.Item.ServiceFeeCircle
+			query.ServiceFeeOthers = in.Item.ServiceFeeOthers
+			query.ServiceFeeStart = in.Item.ServiceFeeStart
+			query.ServiceFeeClct = in.Item.ServiceFeeClct
+			query.ServiceFeeClctOthers = in.Item.ServiceFeeClctOthers
+			query.SystemFlag = in.Item.SystemFlag
+			query.Ext1 = in.Item.Ext1
+			query.Ext2 = in.Item.Ext2
+			query.Ext3 = in.Item.Ext3
+			query.Ext4 = in.Item.Ext4
+			query.ServiceFeeYesNo = in.Item.ServiceFeeYesNo
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+			query.OperIn = in.Item.OperIn
+
 		}
-		items, err := merchantmodel.QueryBusiness(db, query)
+		items, count, err := merchantmodel.QueryBusiness(db, query, in.Page, in.Size)
 		if err != nil {
 			return nil, err
 		}
@@ -402,8 +473,8 @@ func (m *merchantService) GetMerchantBusiness(ctx context.Context, in *pb.GetMer
 				FeeSettlementType:      items[i].FeeSettlementType,
 				FeeHoliday:             items[i].FeeHoliday,
 				ServiceFeeType:         items[i].ServiceFeeType,
-				ServiceFeeStaticAmount: items[i].ServiceFeeStaticAmount,
-				ServiceFeeLevelCount:   items[i].ServiceFeeLevelCount,
+				ServiceFeeStaticAmount: fmt.Sprintf("%f", items[i].ServiceFeeStaticAmount),
+				ServiceFeeLevelCount:   fmt.Sprintf("%d", items[i].ServiceFeeLevelCount),
 				ServiceFeeMode:         items[i].ServiceFeeMode,
 				ServiceFeeUnit:         items[i].ServiceFeeUnit,
 				ServiceFeeTerm:         items[i].ServiceFeeTerm,
@@ -431,13 +502,42 @@ func (m *merchantService) GetMerchantBusiness(ctx context.Context, in *pb.GetMer
 			}
 		}
 
+		reply.Count = count
 		reply.Items = pbItems
 	} else {
 		query := new(merchantmodel.BusinessMain)
 		{
 			query.MchtCd = in.Item.MchtCd
+			query.ProdCd = in.Item.ProdCd
+			query.ProdCdText = in.Item.ProdCdText
+			query.FeeMoneyCd = in.Item.FeeMoneyCd
+			query.FeeModeType = in.Item.FeeModeType
+			query.FeeSettlementType = in.Item.FeeSettlementType
+			query.FeeHoliday = in.Item.FeeHoliday
+			query.ServiceFeeType = in.Item.ServiceFeeType
+			query.ServiceFeeStaticAmount, _ = strconv.ParseFloat(in.Item.ServiceFeeStaticAmount, 64)
+			query.ServiceFeeLevelCount, _ = strconv.ParseInt(in.Item.ServiceFeeLevelCount, 10, 64)
+			query.ServiceFeeMode = in.Item.ServiceFeeMode
+			query.ServiceFeeUnit = in.Item.ServiceFeeUnit
+			query.ServiceFeeTerm = in.Item.ServiceFeeTerm
+			query.ServiceFeeSumto = in.Item.ServiceFeeSumto
+			query.ServiceFeeCircle = in.Item.ServiceFeeCircle
+			query.ServiceFeeOthers = in.Item.ServiceFeeOthers
+			query.ServiceFeeStart = in.Item.ServiceFeeStart
+			query.ServiceFeeClct = in.Item.ServiceFeeClct
+			query.ServiceFeeClctOthers = in.Item.ServiceFeeClctOthers
+			query.SystemFlag = in.Item.SystemFlag
+			query.Ext1 = in.Item.Ext1
+			query.Ext2 = in.Item.Ext2
+			query.Ext3 = in.Item.Ext3
+			query.Ext4 = in.Item.Ext4
+			query.ServiceFeeYesNo = in.Item.ServiceFeeYesNo
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+			query.OperIn = in.Item.OperIn
+
 		}
-		items, err := merchantmodel.QueryBusinessMain(db, query)
+		items, count, err := merchantmodel.QueryBusinessMain(db, query, in.Page, in.Size)
 		if err != nil {
 			return nil, err
 		}
@@ -453,8 +553,8 @@ func (m *merchantService) GetMerchantBusiness(ctx context.Context, in *pb.GetMer
 				FeeSettlementType:      items[i].FeeSettlementType,
 				FeeHoliday:             items[i].FeeHoliday,
 				ServiceFeeType:         items[i].ServiceFeeType,
-				ServiceFeeStaticAmount: items[i].ServiceFeeStaticAmount,
-				ServiceFeeLevelCount:   items[i].ServiceFeeLevelCount,
+				ServiceFeeStaticAmount: fmt.Sprintf("%f", items[i].ServiceFeeStaticAmount),
+				ServiceFeeLevelCount:   fmt.Sprintf("%d", items[i].ServiceFeeLevelCount),
 				ServiceFeeMode:         items[i].ServiceFeeMode,
 				ServiceFeeUnit:         items[i].ServiceFeeUnit,
 				ServiceFeeTerm:         items[i].ServiceFeeTerm,
@@ -482,21 +582,31 @@ func (m *merchantService) GetMerchantBusiness(ctx context.Context, in *pb.GetMer
 			}
 		}
 
+		reply.Count = count
 		reply.Items = pbItems
 	}
 
+	reply.Page = in.Page
+	reply.Size = in.Size
 	return reply, nil
 }
 
 func (m *merchantService) GetMerchantBizFee(ctx context.Context, in *pb.GetMerchantBizFeeRequest) (*pb.GetMerchantBizFeeReply, error) {
 	reply := new(pb.GetMerchantBizFeeReply)
-	if in.Item == nil || in.Item.MchtCd == "" {
+	if in.Item == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
-			Description: "mchtCd不能为空",
+			Description: "查询条件不能为空",
 		}
 		return reply, nil
+	}
+
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	if in.Size == 0 {
+		in.Size = 10
 	}
 
 	edit := true
@@ -508,8 +618,26 @@ func (m *merchantService) GetMerchantBizFee(ctx context.Context, in *pb.GetMerch
 		query := new(merchantmodel.BizFee)
 		{
 			query.MchtCd = in.Item.MchtCd
+			query.ProdCd = in.Item.ProdCd
+			query.BizCd = in.Item.BizCd
+			query.SubBizCd = in.Item.SubBizCd
+			query.MchtFeeMd = in.Item.MchtFeeMd
+			query.MchtFeePercent, _ = strconv.ParseFloat(in.Item.MchtFeePercent, 64)
+			query.MchtFeePctMin, _ = strconv.ParseFloat(in.Item.MchtFeePctMin, 64)
+			query.MchtFeePctMax, _ = strconv.ParseFloat(in.Item.MchtFeePctMax, 64)
+			query.MchtFeeSingle, _ = strconv.ParseFloat(in.Item.MchtFeeSingle, 64)
+			query.MchtAFeePercent, _ = strconv.ParseFloat(in.Item.MchtAFeePercent, 64)
+			query.MchtAFeePctMin, _ = strconv.ParseFloat(in.Item.MchtAFeePctMin, 64)
+			query.MchtAFeePctMax, _ = strconv.ParseFloat(in.Item.MchtAFeePctMax, 64)
+			query.MchtAFeeSingle, _ = strconv.ParseFloat(in.Item.MchtAFeeSingle, 64)
+			query.MchtAFeeSame = in.Item.MchtAFeeSame
+			query.MchtAFeeMd = in.Item.MchtAFeeMd
+			query.OperIn = in.Item.OperIn
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+
 		}
-		items, err := merchantmodel.QueryBizFee(db, query)
+		items, count, err := merchantmodel.QueryBizFee(db, query, in.Page, in.Size)
 		if err != nil {
 			return nil, err
 		}
@@ -544,13 +672,32 @@ func (m *merchantService) GetMerchantBizFee(ctx context.Context, in *pb.GetMerch
 			}
 		}
 
+		reply.Count = count
 		reply.Items = pbItems
 	} else {
 		query := new(merchantmodel.BizFeeMain)
 		{
 			query.MchtCd = in.Item.MchtCd
+			query.ProdCd = in.Item.ProdCd
+			query.BizCd = in.Item.BizCd
+			query.SubBizCd = in.Item.SubBizCd
+			query.MchtFeeMd = in.Item.MchtFeeMd
+			query.MchtFeePercent, _ = strconv.ParseFloat(in.Item.MchtFeePercent, 64)
+			query.MchtFeePctMin, _ = strconv.ParseFloat(in.Item.MchtFeePctMin, 64)
+			query.MchtFeePctMax, _ = strconv.ParseFloat(in.Item.MchtFeePctMax, 64)
+			query.MchtFeeSingle, _ = strconv.ParseFloat(in.Item.MchtFeeSingle, 64)
+			query.MchtAFeePercent, _ = strconv.ParseFloat(in.Item.MchtAFeePercent, 64)
+			query.MchtAFeePctMin, _ = strconv.ParseFloat(in.Item.MchtAFeePctMin, 64)
+			query.MchtAFeePctMax, _ = strconv.ParseFloat(in.Item.MchtAFeePctMax, 64)
+			query.MchtAFeeSingle, _ = strconv.ParseFloat(in.Item.MchtAFeeSingle, 64)
+			query.MchtAFeeSame = in.Item.MchtAFeeSame
+			query.MchtAFeeMd = in.Item.MchtAFeeMd
+			query.OperIn = in.Item.OperIn
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+
 		}
-		items, err := merchantmodel.QueryBizFeeMain(db, query)
+		items, count, err := merchantmodel.QueryBizFeeMain(db, query, in.Page, in.Size)
 		if err != nil {
 			return nil, err
 		}
@@ -585,20 +732,31 @@ func (m *merchantService) GetMerchantBizFee(ctx context.Context, in *pb.GetMerch
 			}
 		}
 
+		reply.Count = count
 		reply.Items = pbItems
 	}
+
+	reply.Page = in.Page
+	reply.Size = in.Size
 	return reply, nil
 }
 
 func (m *merchantService) GetMerchantBizDeal(ctx context.Context, in *pb.GetMerchantBizDealRequest) (*pb.GetMerchantBizDealReply, error) {
 	reply := new(pb.GetMerchantBizDealReply)
-	if in.Item == nil || in.Item.MchtCd == "" {
+	if in.Item == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
-			Description: "mchtCd不能为空",
+			Description: "查询条件不能为空",
 		}
 		return reply, nil
+	}
+
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	if in.Size == 0 {
+		in.Size = 10
 	}
 
 	edit := true
@@ -611,8 +769,14 @@ func (m *merchantService) GetMerchantBizDeal(ctx context.Context, in *pb.GetMerc
 		query := new(merchantmodel.BizDeal)
 		{
 			query.MchtCd = in.Item.MchtCd
+			query.ProdCd = in.Item.ProdCd
+			query.BizCd = in.Item.BizCd
+			query.TransCd = in.Item.TransCd
+			query.OperIn = in.Item.OperIn
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
 		}
-		items, err := merchantmodel.QueryBizDeal(db, query)
+		items, count, err := merchantmodel.QueryBizDeal(db, query, in.Page, in.Size)
 		if err != nil {
 			return nil, err
 		}
@@ -636,14 +800,21 @@ func (m *merchantService) GetMerchantBizDeal(ctx context.Context, in *pb.GetMerc
 			}
 		}
 
+		reply.Count = count
 		reply.Items = pbItems
 
 	} else {
 		query := new(merchantmodel.BizDealMain)
 		{
 			query.MchtCd = in.Item.MchtCd
+			query.ProdCd = in.Item.ProdCd
+			query.BizCd = in.Item.BizCd
+			query.TransCd = in.Item.TransCd
+			query.OperIn = in.Item.OperIn
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
 		}
-		items, err := merchantmodel.QueryBizDealMain(db, query)
+		items, count, err := merchantmodel.QueryBizDealMain(db, query, in.Page, in.Size)
 		if err != nil {
 			return nil, err
 		}
@@ -667,21 +838,31 @@ func (m *merchantService) GetMerchantBizDeal(ctx context.Context, in *pb.GetMerc
 			}
 		}
 
+		reply.Count = count
 		reply.Items = pbItems
 	}
 
+	reply.Page = in.Page
+	reply.Size = in.Size
 	return reply, nil
 }
 
 func (m *merchantService) GetMerchantBankAccount(ctx context.Context, in *pb.GetMerchantBankAccountRequest) (*pb.GetMerchantBankAccountReply, error) {
 	reply := new(pb.GetMerchantBankAccountReply)
-	if in.Item == nil || in.Item.OwnerCd == "" {
+	if in.Item == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
-			Description: "ownerCd不能为空",
+			Description: "查询条件不能为空",
 		}
 		return reply, nil
+	}
+
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	if in.Size == 0 {
+		in.Size = 10
 	}
 
 	edit := true
@@ -694,8 +875,30 @@ func (m *merchantService) GetMerchantBankAccount(ctx context.Context, in *pb.Get
 		query := new(merchantmodel.BankAccount)
 		{
 			query.OwnerCd = in.Item.OwnerCd
+			query.OwnerCd = in.Item.OwnerCd
+			query.AccountType = in.Item.AccountType
+			query.Name = in.Item.Name
+			query.Account = in.Item.Account
+			query.UcBcCd = in.Item.UcBcCd
+			query.Province = in.Item.Province
+			query.City = in.Item.City
+			query.BankCode = in.Item.BankCode
+			query.BankName = in.Item.BankName
+			query.OperIn = in.Item.OperIn
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+			query.MsgResvFld1 = in.Item.MsgResvFld1
+			query.MsgResvFld2 = in.Item.MsgResvFld2
+			query.MsgResvFld3 = in.Item.MsgResvFld3
+			query.MsgResvFld4 = in.Item.MsgResvFld4
+			query.MsgResvFld5 = in.Item.MsgResvFld5
+			query.MsgResvFld6 = in.Item.MsgResvFld6
+			query.MsgResvFld7 = in.Item.MsgResvFld7
+			query.MsgResvFld8 = in.Item.MsgResvFld8
+			query.MsgResvFld9 = in.Item.MsgResvFld9
+			query.MsgResvFld10 = in.Item.MsgResvFld10
 		}
-		items, err := merchantmodel.QueryBankAccount(db, query)
+		items, count, err := merchantmodel.QueryBankAccount(db, query, in.Page, in.Size)
 		if err != nil {
 			return nil, err
 		}
@@ -734,14 +937,37 @@ func (m *merchantService) GetMerchantBankAccount(ctx context.Context, in *pb.Get
 			}
 		}
 
+		reply.Count = count
 		reply.Items = pbItems
 
 	} else {
 		query := new(merchantmodel.BankAccountMain)
 		{
 			query.OwnerCd = in.Item.OwnerCd
+			query.OwnerCd = in.Item.OwnerCd
+			query.AccountType = in.Item.AccountType
+			query.Name = in.Item.Name
+			query.Account = in.Item.Account
+			query.UcBcCd = in.Item.UcBcCd
+			query.Province = in.Item.Province
+			query.City = in.Item.City
+			query.BankCode = in.Item.BankCode
+			query.BankName = in.Item.BankName
+			query.OperIn = in.Item.OperIn
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+			query.MsgResvFld1 = in.Item.MsgResvFld1
+			query.MsgResvFld2 = in.Item.MsgResvFld2
+			query.MsgResvFld3 = in.Item.MsgResvFld3
+			query.MsgResvFld4 = in.Item.MsgResvFld4
+			query.MsgResvFld5 = in.Item.MsgResvFld5
+			query.MsgResvFld6 = in.Item.MsgResvFld6
+			query.MsgResvFld7 = in.Item.MsgResvFld7
+			query.MsgResvFld8 = in.Item.MsgResvFld8
+			query.MsgResvFld9 = in.Item.MsgResvFld9
+			query.MsgResvFld10 = in.Item.MsgResvFld10
 		}
-		items, err := merchantmodel.QueryBankAccountMain(db, query)
+		items, count, err := merchantmodel.QueryBankAccountMain(db, query, in.Page, in.Size)
 		if err != nil {
 			return nil, err
 		}
@@ -780,9 +1006,12 @@ func (m *merchantService) GetMerchantBankAccount(ctx context.Context, in *pb.Get
 			}
 		}
 
+		reply.Count = count
 		reply.Items = pbItems
 	}
 
+	reply.Page = in.Page
+	reply.Size = in.Size
 	return reply, nil
 }
 
@@ -1440,8 +1669,8 @@ func (m *merchantService) SaveMerchantBusiness(ctx context.Context, in *pb.SaveM
 		data.FeeSettlementType = in.Item.FeeSettlementType
 		data.FeeHoliday = in.Item.FeeHoliday
 		data.ServiceFeeType = in.Item.ServiceFeeType
-		data.ServiceFeeStaticAmount = in.Item.ServiceFeeStaticAmount
-		data.ServiceFeeLevelCount = in.Item.ServiceFeeLevelCount
+		data.ServiceFeeStaticAmount, _ = strconv.ParseFloat(in.Item.ServiceFeeStaticAmount, 64)
+		data.ServiceFeeLevelCount, _ = strconv.ParseInt(in.Item.ServiceFeeLevelCount, 10, 64)
 		data.ServiceFeeMode = in.Item.ServiceFeeMode
 		data.ServiceFeeUnit = in.Item.ServiceFeeUnit
 		data.ServiceFeeTerm = in.Item.ServiceFeeTerm

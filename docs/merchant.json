@@ -882,12 +882,72 @@
               ],
               "properties": {
                 "item": {
-                  "required": [
-                    "ownerCd"
-                  ],
                   "type": "object",
                   "properties": {
                     "ownerCd": {
+                      "type": "string"
+                    },
+                    "accountType": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "account": {
+                      "type": "string"
+                    },
+                    "ucBcCd": {
+                      "type": "string"
+                    },
+                    "province": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "bankCode": {
+                      "type": "string"
+                    },
+                    "bankName": {
+                      "type": "string"
+                    },
+                    "operIn": {
+                      "type": "string"
+                    },
+                    "recOprId": {
+                      "type": "string"
+                    },
+                    "recUpdOpr": {
+                      "type": "string"
+                    },
+                    "msgResvFld1": {
+                      "type": "string"
+                    },
+                    "msgResvFld2": {
+                      "type": "string"
+                    },
+                    "msgResvFld3": {
+                      "type": "string"
+                    },
+                    "msgResvFld4": {
+                      "type": "string"
+                    },
+                    "msgResvFld5": {
+                      "type": "string"
+                    },
+                    "msgResvFld6": {
+                      "type": "string"
+                    },
+                    "msgResvFld7": {
+                      "type": "string"
+                    },
+                    "msgResvFld8": {
+                      "type": "string"
+                    },
+                    "msgResvFld9": {
+                      "type": "string"
+                    },
+                    "msgResvFld10": {
                       "type": "string"
                     }
                   }
@@ -904,7 +964,38 @@
             "description": "正确返回",
             "examples": {
               "application/json": {
-                "err": null
+                "items": [
+                  {
+                    "ownerCd": "0001000F0507465",
+                    "accountType": "01",
+                    "name": "刘金令",
+                    "account": "6212250200002368254",
+                    "ucBcCd": "102",
+                    "province": "",
+                    "city": "",
+                    "bankCode": "102271204130",
+                    "bankName": "中国工商银行保福寺支行",
+                    "operIn": "I",
+                    "recOprId": "",
+                    "recUpdOpr": "",
+                    "msgResvFld1": "",
+                    "msgResvFld2": "",
+                    "msgResvFld3": "",
+                    "msgResvFld4": "",
+                    "msgResvFld5": "",
+                    "msgResvFld6": "",
+                    "msgResvFld7": "",
+                    "msgResvFld8": "",
+                    "msgResvFld9": "",
+                    "msgResvFld10": "",
+                    "createdAt": "2017-12-14 16:50:34",
+                    "updatedAt": "2017-12-14 16:50:34"
+                  }
+                ],
+                "err": null,
+                "page": 1,
+                "size": 10,
+                "count": 1
               }
             }
           }
@@ -929,12 +1020,27 @@
               ],
               "properties": {
                 "item": {
-                  "required": [
-                    "mchtCd"
-                  ],
                   "type": "object",
                   "properties": {
                     "mchtCd": {
+                      "type": "string"
+                    },
+                    "prodCd": {
+                      "type": "string"
+                    },
+                    "bizCd": {
+                      "type": "string"
+                    },
+                    "transCd": {
+                      "type": "string"
+                    },
+                    "operIn": {
+                      "type": "string"
+                    },
+                    "recOprId": {
+                      "type": "string"
+                    },
+                    "recUpdOpr": {
                       "type": "string"
                     }
                   }
@@ -962,64 +1068,12 @@
                     "recUpdOpr": "1",
                     "createdAt": "2017-12-14 16:50:34",
                     "updatedAt": "2017-12-14 16:50:34"
-                  },
-                  {
-                    "mchtCd": "0001000F0507465",
-                    "prodCd": "1151",
-                    "bizCd": "0000007",
-                    "transCd": "1191",
-                    "operIn": "I",
-                    "recOprId": "",
-                    "recUpdOpr": "1",
-                    "createdAt": "2017-12-14 16:50:34",
-                    "updatedAt": "2017-12-14 16:50:34"
-                  },
-                  {
-                    "mchtCd": "0001000F0507465",
-                    "prodCd": "1151",
-                    "bizCd": "0000007",
-                    "transCd": "7131",
-                    "operIn": "I",
-                    "recOprId": "",
-                    "recUpdOpr": "1",
-                    "createdAt": "2017-12-14 16:50:34",
-                    "updatedAt": "2017-12-14 16:50:34"
-                  },
-                  {
-                    "mchtCd": "0001000F0507465",
-                    "prodCd": "1151",
-                    "bizCd": "0000008",
-                    "transCd": "1131",
-                    "operIn": "I",
-                    "recOprId": "",
-                    "recUpdOpr": "1",
-                    "createdAt": "2017-12-14 16:50:34",
-                    "updatedAt": "2017-12-14 16:50:34"
-                  },
-                  {
-                    "mchtCd": "0001000F0507465",
-                    "prodCd": "1151",
-                    "bizCd": "0000008",
-                    "transCd": "1191",
-                    "operIn": "I",
-                    "recOprId": "",
-                    "recUpdOpr": "1",
-                    "createdAt": "2017-12-14 16:50:34",
-                    "updatedAt": "2017-12-14 16:50:34"
-                  },
-                  {
-                    "mchtCd": "0001000F0507465",
-                    "prodCd": "1151",
-                    "bizCd": "0000008",
-                    "transCd": "7131",
-                    "operIn": "I",
-                    "recOprId": "",
-                    "recUpdOpr": "1",
-                    "createdAt": "2017-12-14 16:50:34",
-                    "updatedAt": "2017-12-14 16:50:34"
                   }
                 ],
-                "err": null
+                "err": null,
+                "page": 1,
+                "size": 10,
+                "count": 1
               }
             }
           }
@@ -1044,12 +1098,60 @@
               ],
               "properties": {
                 "item": {
-                  "required": [
-                    "mchtCd"
-                  ],
                   "type": "object",
                   "properties": {
                     "mchtCd": {
+                      "type": "string"
+                    },
+                    "prodCd": {
+                      "type": "string"
+                    },
+                    "bizCd": {
+                      "type": "string"
+                    },
+                    "subBizCd": {
+                      "type": "string"
+                    },
+                    "mchtFeeMd": {
+                      "type": "string"
+                    },
+                    "mchtFeePercent": {
+                      "type": "string"
+                    },
+                    "mchtFeePctMin": {
+                      "type": "string"
+                    },
+                    "mchtFeePctMax": {
+                      "type": "string"
+                    },
+                    "mchtFeeSingle": {
+                      "type": "string"
+                    },
+                    "mchtAFeeSame": {
+                      "type": "string"
+                    },
+                    "mchtAFeeMd": {
+                      "type": "string"
+                    },
+                    "mchtAFeePercent": {
+                      "type": "string"
+                    },
+                    "mchtAFeePctMin": {
+                      "type": "string"
+                    },
+                    "mchtAFeePctMax": {
+                      "type": "string"
+                    },
+                    "mchtAFeeSingle": {
+                      "type": "string"
+                    },
+                    "operIn": {
+                      "type": "string"
+                    },
+                    "recOprId": {
+                      "type": "string"
+                    },
+                    "recUpdOpr": {
                       "type": "string"
                     }
                   }
@@ -1073,38 +1175,16 @@
                     "bizCd": "0000007",
                     "subBizCd": "0003001",
                     "mchtFeeMd": "0",
-                    "mchtFeePercent": 0.6,
-                    "mchtFeePctMin": 0,
-                    "mchtFeePctMax": 0,
-                    "mchtFeeSingle": 0,
+                    "mchtFeePercent": "0.600000",
+                    "mchtFeePctMin": "0.000000",
+                    "mchtFeePctMax": "0.000000",
+                    "mchtFeeSingle": "0.000000",
                     "mchtAFeeSame": "0",
                     "mchtAFeeMd": "",
-                    "mchtAFeePercent": 0,
-                    "mchtAFeePctMin": 0,
-                    "mchtAFeePctMax": 0,
-                    "mchtAFeeSingle": 0,
-                    "operIn": "I",
-                    "recOprId": "",
-                    "recUpdOpr": "",
-                    "createdAt": "2017-12-14 16:50:34",
-                    "updatedAt": "2017-12-14 16:50:34"
-                  },
-                  {
-                    "mchtCd": "0001000F0507465",
-                    "prodCd": "1151",
-                    "bizCd": "0000008",
-                    "subBizCd": "0003002",
-                    "mchtFeeMd": "0",
-                    "mchtFeePercent": 0.6,
-                    "mchtFeePctMin": 0,
-                    "mchtFeePctMax": 0,
-                    "mchtFeeSingle": 0,
-                    "mchtAFeeSame": "0",
-                    "mchtAFeeMd": "",
-                    "mchtAFeePercent": 0,
-                    "mchtAFeePctMin": 0,
-                    "mchtAFeePctMax": 0,
-                    "mchtAFeeSingle": 0,
+                    "mchtAFeePercent": "0.000000",
+                    "mchtAFeePctMin": "0.000000",
+                    "mchtAFeePctMax": "0.000000",
+                    "mchtAFeeSingle": "0.000000",
                     "operIn": "I",
                     "recOprId": "",
                     "recUpdOpr": "",
@@ -1112,7 +1192,10 @@
                     "updatedAt": "2017-12-14 16:50:34"
                   }
                 ],
-                "err": null
+                "err": null,
+                "page": 1,
+                "size": 10,
+                "count": 1
               }
             }
           }
@@ -1137,12 +1220,90 @@
               ],
               "properties": {
                 "item": {
-                  "required": [
-                    "mchtCd"
-                  ],
                   "type": "object",
                   "properties": {
                     "mchtCd": {
+                      "type": "string"
+                    },
+                    "prodCd": {
+                      "type": "string"
+                    },
+                    "prodCdText": {
+                      "type": "string"
+                    },
+                    "feeMoneyCd": {
+                      "type": "string"
+                    },
+                    "feeModeType": {
+                      "type": "string"
+                    },
+                    "feeSettlementType": {
+                      "type": "string"
+                    },
+                    "feeHoliday": {
+                      "type": "string"
+                    },
+                    "serviceFeeType": {
+                      "type": "string"
+                    },
+                    "serviceFeeStaticAmount": {
+                      "type": "string"
+                    },
+                    "serviceFeeLevelCount": {
+                      "type": "string"
+                    },
+                    "serviceFeeMode": {
+                      "type": "string"
+                    },
+                    "serviceFeeUnit": {
+                      "type": "string"
+                    },
+                    "serviceFeeTerm": {
+                      "type": "string"
+                    },
+                    "serviceFeeSumto": {
+                      "type": "string"
+                    },
+                    "serviceFeeCircle": {
+                      "type": "string"
+                    },
+                    "serviceFeeOthers": {
+                      "type": "string"
+                    },
+                    "serviceFeeStart": {
+                      "type": "string"
+                    },
+                    "serviceFeeClct": {
+                      "type": "string"
+                    },
+                    "serviceFeeClctOthers": {
+                      "type": "string"
+                    },
+                    "systemFlag": {
+                      "type": "string"
+                    },
+                    "ext1": {
+                      "type": "string"
+                    },
+                    "ext2": {
+                      "type": "string"
+                    },
+                    "ext3": {
+                      "type": "string"
+                    },
+                    "ext4": {
+                      "type": "string"
+                    },
+                    "serviceFeeYesNo": {
+                      "type": "string"
+                    },
+                    "recOprId": {
+                      "type": "string"
+                    },
+                    "recUpdOpr": {
+                      "type": "string"
+                    },
+                    "operIn": {
                       "type": "string"
                     }
                   }
@@ -1169,7 +1330,7 @@
                     "feeSettlementType": "",
                     "feeHoliday": "0",
                     "serviceFeeType": "",
-                    "serviceFeeStaticAmount": 0,
+                    "serviceFeeStaticAmount": "0.000000",
                     "serviceFeeLevelCount": "0",
                     "serviceFeeMode": "",
                     "serviceFeeUnit": "",
@@ -1193,7 +1354,10 @@
                     "updatedAt": "2017-12-14 16:50:34"
                   }
                 ],
-                "err": null
+                "err": null,
+                "page": 1,
+                "size": 10,
+                "count": 1
               }
             }
           }
@@ -1218,14 +1382,40 @@
               ],
               "properties": {
                 "item": {
-                  "required": [
-                    "mchtCd"
-                  ],
                   "type": "object",
                   "properties": {
-                    "mchtCd": {
-                      "type": "string"
-                    }
+                    "fileId": {"type": "string"},
+                    "mchtCd": {"type": "string"},
+                    "docType": {"type": "string"},
+                    "fileType": {"type": "string"},
+                    "fileName": {"type": "string"},
+                    "pIndex": {"type": "string"},
+                    "pCode": {"type": "string"},
+                    "url": {"type": "string"},
+                    "systemFlag": {"type": "string"},
+                    "status": {"type": "string"},
+                    "recOprId": {"type": "string"},
+                    "recUpdOpr": {"type": "string"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                   }
                 },
                 "type": {
@@ -1256,73 +1446,12 @@
                     "RecUpdOpr": "5",
                     "createdAt": "2016-08-15 15:15:01",
                     "updatedAt": "2016-08-15 15:15:01"
-                  },
-                  {
-                    "FileId": "FILE_ID_57b16bfbafa5b4.45749394",
-                    "MchtCd": "679110158120000",
-                    "DocType": "01",
-                    "FileType": "",
-                    "FileName": "6791101581200000101.jpg",
-                    "PIndex": "1",
-                    "PCode": "6791101581200000101",
-                    "Url": "/upload/62500000/679110158120000/6791101581200000101.jpg",
-                    "SystemFlag": "00",
-                    "Status": "0",
-                    "RecOprId": "I",
-                    "RecUpdOpr": "5",
-                    "createdAt": "2016-08-15 15:15:08",
-                    "updatedAt": "2016-08-15 15:15:08"
-                  },
-                  {
-                    "FileId": "FILE_ID_57b16c00c69a85.10811540",
-                    "MchtCd": "679110158120000",
-                    "DocType": "02",
-                    "FileType": "",
-                    "FileName": "6791101581200000201.jpg",
-                    "PIndex": "1",
-                    "PCode": "6791101581200000201",
-                    "Url": "/upload/62500000/679110158120000/6791101581200000201.jpg",
-                    "SystemFlag": "00",
-                    "Status": "0",
-                    "RecOprId": "I",
-                    "RecUpdOpr": "5",
-                    "createdAt": "2016-08-15 15:15:13",
-                    "updatedAt": "2016-08-15 15:15:13"
-                  },
-                  {
-                    "FileId": "FILE_ID_57b16c0693d286.11094445",
-                    "MchtCd": "679110158120000",
-                    "DocType": "03",
-                    "FileType": "",
-                    "FileName": "6791101581200000301.jpg",
-                    "PIndex": "1",
-                    "PCode": "6791101581200000301",
-                    "Url": "/upload/62500000/679110158120000/6791101581200000301.jpg",
-                    "SystemFlag": "00",
-                    "Status": "0",
-                    "RecOprId": "I",
-                    "RecUpdOpr": "5",
-                    "createdAt": "2016-08-15 15:15:19",
-                    "updatedAt": "2016-08-15 15:15:19"
-                  },
-                  {
-                    "FileId": "FILE_ID_57b16c0b605ea4.08493974",
-                    "MchtCd": "679110158120000",
-                    "DocType": "05",
-                    "FileType": "",
-                    "FileName": "6791101581200000501.jpg",
-                    "PIndex": "1",
-                    "PCode": "6791101581200000501",
-                    "Url": "/upload/62500000/679110158120000/6791101581200000501.jpg",
-                    "SystemFlag": "00",
-                    "Status": "0",
-                    "RecOprId": "I",
-                    "RecUpdOpr": "5",
-                    "createdAt": "2016-08-15 15:15:23",
-                    "updatedAt": "2016-08-15 15:15:23"
                   }
                 ],
-                "err": null
+                "err": null,
+                "page": 1,
+                "size": 10,
+                "count": 1
               }
             }
           }

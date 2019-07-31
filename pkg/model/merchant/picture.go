@@ -43,16 +43,20 @@ func SavePictureMain(db *gorm.DB, data *PictureMain) error {
 	return db.Save(data).Error
 }
 
-func QueryPicture(db *gorm.DB, query *Picture) ([]*Picture, error) {
+func QueryPicture(db *gorm.DB, query *Picture, page int32, size int32) ([]*Picture, int32, error) {
 	out := make([]*Picture, 0)
-	err := db.Where(query).Find(&out).Error
-	return out, err
+	var count int32
+	db.Model(&Picture{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
 }
 
-func QueryPicTureMain(db *gorm.DB, query *PictureMain) ([]*PictureMain, error) {
+func QueryPictureMain(db *gorm.DB, query *PictureMain, page int32, size int32) ([]*PictureMain, int32, error) {
 	out := make([]*PictureMain, 0)
-	err := db.Where(query).Find(&out).Error
-	return out, err
+	var count int32
+	db.Model(&PictureMain{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
 }
 
 func DeletePicture(db *gorm.DB, query *Picture) error {

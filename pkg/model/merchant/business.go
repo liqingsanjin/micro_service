@@ -59,16 +59,20 @@ func SaveBusinessMain(db *gorm.DB, data *BusinessMain) error {
 	return db.Save(data).Error
 }
 
-func QueryBusiness(db *gorm.DB, query *Business) ([]*Business, error) {
+func QueryBusiness(db *gorm.DB, query *Business, page int32, size int32) ([]*Business, int32, error) {
 	out := make([]*Business, 0)
-	err := db.Where(query).Find(&out).Error
-	return out, err
+	var count int32
+	db.Model(&Business{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
 }
 
-func QueryBusinessMain(db *gorm.DB, query *BusinessMain) ([]*BusinessMain, error) {
+func QueryBusinessMain(db *gorm.DB, query *BusinessMain, page int32, size int32) ([]*BusinessMain, int32, error) {
 	out := make([]*BusinessMain, 0)
-	err := db.Where(query).Find(&out).Error
-	return out, err
+	var count int32
+	db.Model(&BusinessMain{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
 }
 
 func DeleteBusiness(db *gorm.DB, query *Business) error {
