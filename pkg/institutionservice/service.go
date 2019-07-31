@@ -935,11 +935,11 @@ func (s *service) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb
 			RecOprId:        ins[i].RecOprId,
 		}
 		if !ins[i].CreatedAt.IsZero() {
-			pbIns[i].CreatedAt = ins[i].CreatedAt.Format("2006-01-02 15:04:05")
+			pbIns[i].CreatedAt = ins[i].CreatedAt.Format(util.TimePattern)
 		}
 
 		if !ins[i].UpdatedAt.IsZero() {
-			pbIns[i].UpdatedAt = ins[i].UpdatedAt.Format("2006-01-02 15:04:05")
+			pbIns[i].UpdatedAt = ins[i].UpdatedAt.Format(util.TimePattern)
 		}
 	}
 
@@ -1041,11 +1041,11 @@ func (s *service) ListInstitutions(ctx context.Context, in *pb.ListInstitutionsR
 				RecUpdOpr:       ins[i].RecUpdOpr,
 			}
 			if !ins[i].CreatedAt.IsZero() {
-				pbIns[i].CreatedAt = ins[i].CreatedAt.Format("2006-01-02 15:04:05")
+				pbIns[i].CreatedAt = ins[i].CreatedAt.Format(util.TimePattern)
 			}
 
 			if !ins[i].UpdatedAt.IsZero() {
-				pbIns[i].UpdatedAt = ins[i].UpdatedAt.Format("2006-01-02 15:04:05")
+				pbIns[i].UpdatedAt = ins[i].UpdatedAt.Format(util.TimePattern)
 			}
 
 		}
@@ -1133,11 +1133,11 @@ func (s *service) ListInstitutions(ctx context.Context, in *pb.ListInstitutionsR
 				RecUpdOpr:       ins[i].RecUpdOpr,
 			}
 			if !ins[i].CreatedAt.IsZero() {
-				pbIns[i].CreatedAt = ins[i].CreatedAt.Format("2006-01-02 15:04:05")
+				pbIns[i].CreatedAt = ins[i].CreatedAt.Format(util.TimePattern)
 			}
 
 			if !ins[i].UpdatedAt.IsZero() {
-				pbIns[i].UpdatedAt = ins[i].UpdatedAt.Format("2006-01-02 15:04:05")
+				pbIns[i].UpdatedAt = ins[i].UpdatedAt.Format(util.TimePattern)
 			}
 
 		}

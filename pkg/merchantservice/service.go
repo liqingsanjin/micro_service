@@ -166,13 +166,13 @@ func (m *merchantService) GetMerchantById(ctx context.Context, in *pb.GetMerchan
 			if !info.UpdatedAt.IsZero() {
 				item.UpdatedAt = info.UpdatedAt.Format(util.TimePattern)
 			}
-			if info.RecApllyTs != nil {
+			if !info.RecApllyTs.IsZero() {
 				item.RecApllyTs = info.RecApllyTs.Format(util.TimePattern)
 			}
-			if info.ApprDate != nil {
+			if !info.ApprDate.IsZero() {
 				item.ApprDate = info.ApprDate.Format(util.TimePattern)
 			}
-			if info.DeleteDate != nil {
+			if !info.DeleteDate.IsZero() {
 				item.DeleteDate = info.DeleteDate.Format(util.TimePattern)
 			}
 			reply.Item = item
@@ -255,13 +255,13 @@ func (m *merchantService) GetMerchantById(ctx context.Context, in *pb.GetMerchan
 			if !info.UpdatedAt.IsZero() {
 				item.UpdatedAt = info.UpdatedAt.Format(util.TimePattern)
 			}
-			if info.RecApllyTs != nil {
+			if !info.RecApllyTs.IsZero() {
 				item.RecApllyTs = info.RecApllyTs.Format(util.TimePattern)
 			}
-			if info.ApprDate != nil {
+			if !info.ApprDate.IsZero() {
 				item.ApprDate = info.ApprDate.Format(util.TimePattern)
 			}
-			if info.DeleteDate != nil {
+			if !info.DeleteDate.IsZero() {
 				item.DeleteDate = info.DeleteDate.Format(util.TimePattern)
 			}
 			reply.Item = item
@@ -1103,16 +1103,15 @@ func (m *merchantService) SaveMerchant(ctx context.Context, in *pb.SaveMerchantR
 		mtch.CertifDt = in.Item.CertifDt
 		mtch.OemOrgCode = in.Item.OemOrgCode
 		if in.Item.ApprDate != "" {
-			t, _ := time.Parse("2006-01-02 15:04:05", in.Item.ApprDate)
-			mtch.ApprDate = &t
+			mtch.ApprDate, _ = time.Parse(util.TimePattern, in.Item.ApprDate)
+
 		}
 		if in.Item.DeleteDate != "" {
-			t, _ := time.Parse("2006-01-02 15:04:05", in.Item.DeleteDate)
-			mtch.DeleteDate = &t
+			mtch.DeleteDate, _ = time.Parse(util.TimePattern, in.Item.DeleteDate)
+
 		}
 		if in.Item.RecApllyTs != "" {
-			t, _ := time.Parse("2006-01-02 15:04:05", in.Item.RecApllyTs)
-			mtch.RecApllyTs = &t
+			mtch.RecApllyTs, _ = time.Parse(util.TimePattern, in.Item.RecApllyTs)
 		}
 	}
 	err := merchantmodel.SaveMerchant(db, mtch)
@@ -1277,20 +1276,20 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 				CertifSt:              merchants[i].CertifSt,
 				CertifDt:              merchants[i].CertifDt,
 			}
-			if merchants[i].ApprDate != nil {
-				pbMerchants[i].ApprDate = merchants[i].ApprDate.Format("2006-01-02 15:04:05")
+			if !merchants[i].ApprDate.IsZero() {
+				pbMerchants[i].ApprDate = merchants[i].ApprDate.Format(util.TimePattern)
 			}
-			if merchants[i].DeleteDate != nil {
-				pbMerchants[i].DeleteDate = merchants[i].DeleteDate.Format("2006-01-02 15:04:05")
+			if !merchants[i].DeleteDate.IsZero() {
+				pbMerchants[i].DeleteDate = merchants[i].DeleteDate.Format(util.TimePattern)
 			}
 			if !merchants[i].CreatedAt.IsZero() {
-				pbMerchants[i].CreatedAt = merchants[i].CreatedAt.Format("2006-01-02 15:04:05")
+				pbMerchants[i].CreatedAt = merchants[i].CreatedAt.Format(util.TimePattern)
 			}
 			if merchants[i].UpdatedAt.IsZero() {
-				pbMerchants[i].UpdatedAt = merchants[i].UpdatedAt.Format("2006-01-02 15:04:05")
+				pbMerchants[i].UpdatedAt = merchants[i].UpdatedAt.Format(util.TimePattern)
 			}
-			if merchants[i].RecApllyTs != nil {
-				pbMerchants[i].RecApllyTs = merchants[i].RecApllyTs.Format("2006-01-02 15:04:05")
+			if !merchants[i].RecApllyTs.IsZero() {
+				pbMerchants[i].RecApllyTs = merchants[i].RecApllyTs.Format(util.TimePattern)
 			}
 		}
 
@@ -1442,20 +1441,20 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 				CertifSt:              merchants[i].CertifSt,
 				CertifDt:              merchants[i].CertifDt,
 			}
-			if merchants[i].ApprDate != nil {
-				pbMerchants[i].ApprDate = merchants[i].ApprDate.Format("2006-01-02 15:04:05")
+			if !merchants[i].ApprDate.IsZero() {
+				pbMerchants[i].ApprDate = merchants[i].ApprDate.Format(util.TimePattern)
 			}
-			if merchants[i].DeleteDate != nil {
-				pbMerchants[i].DeleteDate = merchants[i].DeleteDate.Format("2006-01-02 15:04:05")
+			if !merchants[i].DeleteDate.IsZero() {
+				pbMerchants[i].DeleteDate = merchants[i].DeleteDate.Format(util.TimePattern)
 			}
 			if !merchants[i].CreatedAt.IsZero() {
-				pbMerchants[i].CreatedAt = merchants[i].CreatedAt.Format("2006-01-02 15:04:05")
+				pbMerchants[i].CreatedAt = merchants[i].CreatedAt.Format(util.TimePattern)
 			}
 			if !merchants[i].UpdatedAt.IsZero() {
-				pbMerchants[i].UpdatedAt = merchants[i].UpdatedAt.Format("2006-01-02 15:04:05")
+				pbMerchants[i].UpdatedAt = merchants[i].UpdatedAt.Format(util.TimePattern)
 			}
-			if merchants[i].RecApllyTs != nil {
-				pbMerchants[i].RecApllyTs = merchants[i].RecApllyTs.Format("2006-01-02 15:04:05")
+			if !merchants[i].RecApllyTs.IsZero() {
+				pbMerchants[i].RecApllyTs = merchants[i].RecApllyTs.Format(util.TimePattern)
 			}
 		}
 
@@ -1531,10 +1530,10 @@ func (m *merchantService) ListGroupMerchant(ctx context.Context, in *pb.ListGrou
 				JtAddr:         groups[i].JtAddr,
 			}
 			if !groups[i].CreatedAt.IsZero() {
-				pbGroups[i].CreatedAt = groups[i].CreatedAt.Format("2006-01-02 15:04:05")
+				pbGroups[i].CreatedAt = groups[i].CreatedAt.Format(util.TimePattern)
 			}
 			if !groups[i].UpdatedAt.IsZero() {
-				pbGroups[i].UpdatedAt = groups[i].UpdatedAt.Format("2006-01-02 15:04:05")
+				pbGroups[i].UpdatedAt = groups[i].UpdatedAt.Format(util.TimePattern)
 			}
 		}
 		return &pb.ListGroupMerchantReply{
@@ -1591,10 +1590,10 @@ func (m *merchantService) ListGroupMerchant(ctx context.Context, in *pb.ListGrou
 				JtAddr:         groups[i].JtAddr,
 			}
 			if !groups[i].CreatedAt.IsZero() {
-				pbGroups[i].CreatedAt = groups[i].CreatedAt.Format("2006-01-02 15:04:05")
+				pbGroups[i].CreatedAt = groups[i].CreatedAt.Format(util.TimePattern)
 			}
 			if !groups[i].UpdatedAt.IsZero() {
-				pbGroups[i].UpdatedAt = groups[i].UpdatedAt.Format("2006-01-02 15:04:05")
+				pbGroups[i].UpdatedAt = groups[i].UpdatedAt.Format(util.TimePattern)
 			}
 		}
 		return &pb.ListGroupMerchantReply{

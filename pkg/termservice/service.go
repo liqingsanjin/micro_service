@@ -6,6 +6,7 @@ import (
 	"userService/pkg/common"
 	termmodel "userService/pkg/model/term"
 	"userService/pkg/pb"
+	"userService/pkg/util"
 )
 
 type service struct{}
@@ -69,10 +70,10 @@ func (s *service) ListTermRisk(ctx context.Context, in *pb.ListTermRiskRequest) 
 				OperIn:           infos[i].OperIn,
 			}
 			if !infos[i].CreatedAt.IsZero() {
-				pbInfos[i].CreatedAt = infos[i].CreatedAt.Format("2006-01-02 15:04:05")
+				pbInfos[i].CreatedAt = infos[i].CreatedAt.Format(util.TimePattern)
 			}
 			if !infos[i].UpdatedAt.IsZero() {
-				pbInfos[i].UpdatedAt = infos[i].UpdatedAt.Format("2006-01-02 15:04:05")
+				pbInfos[i].UpdatedAt = infos[i].UpdatedAt.Format(util.TimePattern)
 			}
 		}
 
@@ -124,10 +125,10 @@ func (s *service) ListTermRisk(ctx context.Context, in *pb.ListTermRiskRequest) 
 				OperIn:           infos[i].OperIn,
 			}
 			if !infos[i].CreatedAt.IsZero() {
-				pbInfos[i].CreatedAt = infos[i].CreatedAt.Format("2006-01-02 15:04:05")
+				pbInfos[i].CreatedAt = infos[i].CreatedAt.Format(util.TimePattern)
 			}
 			if !infos[i].UpdatedAt.IsZero() {
-				pbInfos[i].UpdatedAt = infos[i].UpdatedAt.Format("2006-01-02 15:04:05")
+				pbInfos[i].UpdatedAt = infos[i].UpdatedAt.Format(util.TimePattern)
 			}
 		}
 
@@ -267,10 +268,10 @@ func (s *service) ListTermInfo(ctx context.Context, in *pb.ListTermInfoRequest) 
 				MsgResvFld10:    infos[i].MsgResvFld10,
 			}
 			if !infos[i].CreatedAt.IsZero() {
-				pbInfos[i].CreatedAt = infos[i].CreatedAt.Format("2006-01-02 15:04:05")
+				pbInfos[i].CreatedAt = infos[i].CreatedAt.Format(util.TimePattern)
 			}
 			if !infos[i].UpdatedAt.IsZero() {
-				pbInfos[i].UpdatedAt = infos[i].UpdatedAt.Format("2006-01-02 15:04:05")
+				pbInfos[i].UpdatedAt = infos[i].UpdatedAt.Format(util.TimePattern)
 			}
 		}
 
@@ -354,10 +355,10 @@ func (s *service) ListTermInfo(ctx context.Context, in *pb.ListTermInfoRequest) 
 				MsgResvFld10:    infos[i].MsgResvFld10,
 			}
 			if !infos[i].CreatedAt.IsZero() {
-				pbInfos[i].CreatedAt = infos[i].CreatedAt.Format("2006-01-02 15:04:05")
+				pbInfos[i].CreatedAt = infos[i].CreatedAt.Format(util.TimePattern)
 			}
 			if !infos[i].UpdatedAt.IsZero() {
-				pbInfos[i].UpdatedAt = infos[i].UpdatedAt.Format("2006-01-02 15:04:05")
+				pbInfos[i].UpdatedAt = infos[i].UpdatedAt.Format(util.TimePattern)
 			}
 		}
 
