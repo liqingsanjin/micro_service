@@ -90,14 +90,17 @@ func finishRegister(ctx context.Context, workerId int, ch <-chan int) {
 					// 删除商户
 					err = deleteMerchant(db, resp.Item[0])
 				case updateIns:
-					// todo 更新机构
+					// 更新机构
 					err = institutionUpdate(db, resp.Item[0])
 				case cancelUpdateIns:
-					// todo 取消更新机构
+					// 取消更新机构
+					err = institutionUpdateCancel(db, resp.Item[0])
 				case updateMcht:
-					// todo 更新商户
+					// 更新商户
+					err = merchantUpdate(db, resp.Item[0])
 				case cancelUpdateMcht:
-					// todo 取消更新商户
+					// 消更新商户
+					err = merchantUpdateCancel(db, resp.Item[0])
 				}
 				if err != nil {
 					logrus.Errorln(err)
