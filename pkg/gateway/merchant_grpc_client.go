@@ -228,6 +228,19 @@ func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption
 		endpoint := grpctransport.NewClient(
 			conn,
 			"pb.Merchant",
+			"SaveMerchantBizDealAndFee",
+			encodeRequest,
+			decodeResponse,
+			pb.SaveMerchantBizDealAndFeeReply{},
+			options...,
+		).Endpoint()
+		endpoints.SaveMerchantBizDealAndFeeEndpoint = endpoint
+	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Merchant",
 			"GetMerchantBankAccount",
 			encodeRequest,
 			decodeResponse,
