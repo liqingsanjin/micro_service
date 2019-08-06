@@ -234,205 +234,205 @@
                 "item": {
                   "type": "object",
                   "properties": {
-                    "MchtCd": {
+                    "mchtCd": {
                       "type": "string"
                     },
-                    "Sn": {
+                    "sn": {
                       "type": "string"
                     },
-                    "AipBranCd": {
+                    "aipBranCd": {
                       "type": "string"
                     },
-                    "GroupCd": {
+                    "groupCd": {
                       "type": "string"
                     },
-                    "OriChnl": {
+                    "oriChnl": {
                       "type": "string"
                     },
-                    "OriChnlDesc": {
+                    "oriChnlDesc": {
                       "type": "string"
                     },
-                    "BankBelongCd": {
+                    "bankBelongCd": {
                       "type": "string"
                     },
-                    "DvpBy": {
+                    "dvpBy": {
                       "type": "string"
                     },
-                    "MccCd18": {
+                    "mccCd18": {
                       "type": "string"
                     },
-                    "ApplDate": {
+                    "applDate": {
                       "type": "string"
                     },
-                    "UpBcCd": {
+                    "upBcCd": {
                       "type": "string"
                     },
-                    "UpAcCd": {
+                    "upAcCd": {
                       "type": "string"
                     },
-                    "UpMccCd": {
+                    "upMccCd": {
                       "type": "string"
                     },
-                    "Name": {
+                    "name": {
                       "type": "string"
                     },
-                    "NameBusi": {
+                    "nameBusi": {
                       "type": "string"
                     },
-                    "BusiLiceNo": {
+                    "busiLiceNo": {
                       "type": "string"
                     },
-                    "BusiRang": {
+                    "busiRang": {
                       "type": "string"
                     },
-                    "BusiMain": {
+                    "busiMain": {
                       "type": "string"
                     },
-                    "Certif": {
+                    "certif": {
                       "type": "string"
                     },
-                    "CertifType": {
+                    "certifType": {
                       "type": "string"
                     },
-                    "CertifNo": {
+                    "certifNo": {
                       "type": "string"
                     },
-                    "CityCd": {
+                    "cityCd": {
                       "type": "string"
                     },
-                    "AreaCd": {
+                    "areaCd": {
                       "type": "string"
                     },
-                    "RegAddr": {
+                    "regAddr": {
                       "type": "string"
                     },
-                    "ContactName": {
+                    "contactName": {
                       "type": "string"
                     },
-                    "ContactPhoneNo": {
+                    "contactPhoneNo": {
                       "type": "string"
                     },
-                    "IsGroup": {
+                    "isGroup": {
                       "type": "string"
                     },
-                    "MoneyToGroup": {
+                    "moneyToGroup": {
                       "type": "string"
                     },
-                    "StlmWay": {
+                    "stlmWay": {
                       "type": "string"
                     },
-                    "StlmWayDesc": {
+                    "stlmWayDesc": {
                       "type": "string"
                     },
-                    "StlmInsCircle": {
+                    "stlmInsCircle": {
                       "type": "string"
                     },
-                    "ApprDate": {
+                    "apprDate": {
                       "type": "string"
                     },
-                    "Status": {
+                    "status": {
                       "type": "string"
                     },
-                    "DeleteDate": {
+                    "deleteDate": {
                       "type": "string"
                     },
-                    "UcBcCd32": {
+                    "ucBcCd32": {
                       "type": "string"
                     },
-                    "K2WorkflowId": {
+                    "k2WorkflowId": {
                       "type": "string"
                     },
-                    "SystemFlag": {
+                    "systemFlag": {
                       "type": "string"
                     },
-                    "ApprovalUsername": {
+                    "approvalUsername": {
                       "type": "string"
                     },
-                    "FinalApprovalUsername": {
+                    "finalApprovalUsername": {
                       "type": "string"
                     },
-                    "IsUpStandard": {
+                    "isUpStandard": {
                       "type": "string"
                     },
-                    "BillingType": {
+                    "billingType": {
                       "type": "string"
                     },
-                    "BillingLevel": {
+                    "billingLevel": {
                       "type": "string"
                     },
-                    "Slogan": {
+                    "slogan": {
                       "type": "string"
                     },
-                    "Ext1": {
+                    "ext1": {
                       "type": "string"
                     },
-                    "Ext2": {
+                    "ext2": {
                       "type": "string"
                     },
-                    "Ext3": {
+                    "ext3": {
                       "type": "string"
                     },
-                    "Ext4": {
+                    "ext4": {
                       "type": "string"
                     },
-                    "AreaStandard": {
+                    "areaStandard": {
                       "type": "string"
                     },
-                    "MchtCdAreaCd": {
+                    "mchtCdAreaCd": {
                       "type": "string"
                     },
-                    "UcBcCdArea": {
+                    "ucBcCdArea": {
                       "type": "string"
                     },
-                    "RecOprId": {
+                    "recOprId": {
                       "type": "string"
                     },
-                    "RecUpdOpr": {
+                    "recUpdOpr": {
                       "type": "string"
                     },
-                    "OperIn": {
+                    "operIn": {
                       "type": "string"
                     },
-                    "RecApllyTs": {
+                    "recApllyTs": {
                       "type": "string"
                     },
-                    "OemOrgCode": {
+                    "oemOrgCode": {
                       "type": "string"
                     },
-                    "IsEleInvoice": {
+                    "isEleInvoice": {
                       "type": "string"
                     },
-                    "DutyParagraph": {
+                    "dutyParagraph": {
                       "type": "string"
                     },
-                    "TaxMachineBrand": {
+                    "taxMachineBrand": {
                       "type": "string"
                     },
-                    "Ext5": {
+                    "ext5": {
                       "type": "string"
                     },
-                    "Ext6": {
+                    "ext6": {
                       "type": "string"
                     },
-                    "Ext7": {
+                    "ext7": {
                       "type": "string"
                     },
-                    "Ext8": {
+                    "ext8": {
                       "type": "string"
                     },
-                    "Ext9": {
+                    "ext9": {
                       "type": "string"
                     },
-                    "BusiLiceSt": {
+                    "busiLiceSt": {
                       "type": "string"
                     },
-                    "BusiLiceDt": {
+                    "busiLiceDt": {
                       "type": "string"
                     },
-                    "CertifSt": {
+                    "certifSt": {
                       "type": "string"
                     },
-                    "CertifDt": {
+                    "certifDt": {
                       "type": "string"
                     }
                   }
@@ -602,58 +602,58 @@
                 "fee": {
                   "type": "object",
                   "properties": {
-                    "MchtCd": {
+                    "mchtCd": {
                       "type": "string"
                     },
-                    "ProdCd": {
+                    "prodCd": {
                       "type": "string"
                     },
-                    "BizCd": {
+                    "bizCd": {
                       "type": "string"
                     },
-                    "SubBizCd": {
+                    "subBizCd": {
                       "type": "string"
                     },
-                    "MchtFeeMd": {
+                    "mchtFeeMd": {
                       "type": "string"
                     },
-                    "MchtFeePercent": {
+                    "mchtFeePercent": {
                       "type": "string"
                     },
-                    "MchtFeePctMin": {
+                    "mchtFeePctMin": {
                       "type": "string"
                     },
-                    "MchtFeePctMax": {
+                    "mchtFeePctMax": {
                       "type": "string"
                     },
-                    "MchtFeeSingle": {
+                    "mchtFeeSingle": {
                       "type": "string"
                     },
-                    "MchtAFeeSame": {
+                    "mchtAFeeSame": {
                       "type": "string"
                     },
-                    "MchtAFeeMd": {
+                    "mchtAFeeMd": {
                       "type": "string"
                     },
-                    "MchtAFeePercent": {
+                    "mchtAFeePercent": {
                       "type": "string"
                     },
-                    "MchtAFeePctMin": {
+                    "mchtAFeePctMin": {
                       "type": "string"
                     },
-                    "MchtAFeePctMax": {
+                    "mchtAFeePctMax": {
                       "type": "string"
                     },
-                    "MchtAFeeSingle": {
+                    "mchtAFeeSingle": {
                       "type": "string"
                     },
-                    "OperIn": {
+                    "operIn": {
                       "type": "string"
                     },
-                    "RecOprId": {
+                    "recOprId": {
                       "type": "string"
                     },
-                    "RecUpdOpr": {
+                    "recUpdOpr": {
                       "type": "string"
                     }
                   }
@@ -716,10 +716,10 @@
                       "type": "string"
                     },
                     "serviceFeeStaticAmount": {
-                      "type": "number"
+                      "type": "string"
                     },
                     "serviceFeeLevelCount": {
-                      "type": "integer"
+                      "type": "string"
                     },
                     "serviceFeeMode": {
                       "type": "string"

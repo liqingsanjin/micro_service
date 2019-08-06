@@ -5,7 +5,6 @@
     "title": "workflow api"
   },
   "host": "172.16.7.120:8080",
-  "host": "localhost:8080",
   "schemes": [
     "http"
   ],
@@ -39,7 +38,7 @@
               "properties": {
                 "type": {
                   "type": "string",
-                  "description": "工作流类型: ins_add为新增机构, mcht_add为商户注册"
+                  "description": "工作流类型: ins_add为新增机构, mcht_add为商户注册, ins_change 为机构变更, mcht_change为商户变更"
                 },
                 "name": {
                   "type": "string",
