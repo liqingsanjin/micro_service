@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"userService/pkg/common"
 	productmodel "userService/pkg/model/product"
 	"userService/pkg/model/static"
@@ -35,7 +36,50 @@ var MyMap = StaticMapData{
 }
 
 //service .
-type service struct {
+type service struct{}
+
+func (s *service) FindArea(ctx context.Context, in *pb.FindAreaRequest) (*pb.FindAreaReply, error) {
+	reply := new(pb.FindAreaReply)
+	if in.Code == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "code不能为空",
+		}
+		return reply, nil
+	}
+	level, _ := strconv.Atoi(in.Level)
+	db := common.DB
+	if level > 1 {
+		// 查询城市
+		areas, err := static.FindCity(db, in.Code, in.Level)
+		if err != nil {
+			return nil, err
+		}
+		items := make([]*pb.Area, 0, len(areas))
+		for _, area := range areas {
+			items = append(items, &pb.Area{
+				Name:    area.Name,
+				DicCode: area.DicCode,
+			})
+		}
+		reply.Items = items
+	} else {
+		// 查询省
+		areas, err := static.FindProvince(db, in.Code)
+		if err != nil {
+			return nil, err
+		}
+		items := make([]*pb.Area, 0, len(areas))
+		for _, area := range areas {
+			items = append(items, &pb.Area{
+				Name:    area.Name,
+				DicCode: area.DicCode,
+			})
+		}
+		reply.Items = items
+	}
+	return reply, nil
 }
 
 func (s *service) ListFeeMap(ctx context.Context, in *pb.ListFeeMapRequest) (*pb.ListFeeMapReply, error) {

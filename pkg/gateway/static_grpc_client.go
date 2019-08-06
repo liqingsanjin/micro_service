@@ -23,6 +23,15 @@ type StaticEndpoints struct {
 	GetInsProdBizFeeMapInfoEndpoint endpoint.Endpoint
 	ListTransMapEndpoint            endpoint.Endpoint
 	ListFeeMapEndpoint              endpoint.Endpoint
+	FindAreaEndpoint                endpoint.Endpoint
+}
+
+func (s *StaticEndpoints) FindArea(ctx context.Context, in *pb.FindAreaRequest) (*pb.FindAreaReply, error) {
+	res, err := s.FindAreaEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.FindAreaReply), nil
 }
 
 func (s *StaticEndpoints) ListFeeMap(ctx context.Context, in *pb.ListFeeMapRequest) (*pb.ListFeeMapReply, error) {
@@ -306,6 +315,19 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			options...,
 		).Endpoint()
 		endpoints.ListFeeMapEndpoint = e
+	}
+
+	{
+		e := grpctransport.NewClient(
+			conn,
+			"pb.Static",
+			"FindArea",
+			encodeRequest,
+			decodeResponse,
+			pb.FindAreaReply{},
+			options...,
+		).Endpoint()
+		endpoints.FindAreaEndpoint = e
 	}
 
 	return endpoints

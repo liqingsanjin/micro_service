@@ -94,10 +94,10 @@ func RegisterStaticHandler(engine *gin.Engine, endpoints *StaticEndpoints) {
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	//group.POST("/listFeeMap", convertHttpHandlerToGinHandler(httptransport.NewServer(
-	//	endpoints.ListFeeMapEndpoint,
-	//	decodeHttpRequest(&pb.ListFeeMapRequest{}),
-	//	encodeHttpResponse,
-	//	httptransport.ServerErrorEncoder(errorEncoder),
-	//)))
+	group.POST("/findArea", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.FindAreaEndpoint,
+		decodeHttpRequest(&pb.FindAreaRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
 }

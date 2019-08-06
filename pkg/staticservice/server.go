@@ -21,6 +21,15 @@ type server struct {
 	GetInsProdBizFeeMapInfoHandler grpctransport.Handler
 	ListTransMapHandler            grpctransport.Handler
 	ListFeeMapHandler              grpctransport.Handler
+	FindAreaHandler                grpctransport.Handler
+}
+
+func (s *server) FindArea(ctx context.Context, in *pb.FindAreaRequest) (*pb.FindAreaReply, error) {
+	_, res, err := s.FindAreaHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.FindAreaReply), nil
 }
 
 func (s *server) ListFeeMap(ctx context.Context, in *pb.ListFeeMapRequest) (*pb.ListFeeMapReply, error) {
@@ -244,6 +253,17 @@ func New(tracer grpctransport.ServerOption) pb.StaticServer {
 		endpoint := MakeListFeeMapEndpoint(svc)
 		endpoint = kit.LogginMiddleware(endpoint)
 		svr.ListFeeMapHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+
+	{
+		endpoint := MakeFindAreaEndpoint(svc)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.FindAreaHandler = grpctransport.NewServer(
 			endpoint,
 			kit.DecodeRequest,
 			kit.EncodeResponse,

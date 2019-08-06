@@ -17,6 +17,22 @@ service Static {
     rpc GetInsProdBizFeeMapInfo(GetInsProdBizFeeMapInfoRequest) returns (GetInsProdBizFeeMapInfoReply) {}
     rpc ListTransMap(ListTransMapRequest) returns (ListTransMapReply) {}
     rpc ListFeeMap(ListFeeMapRequest) returns (ListFeeMapReply) {}
+    rpc FindArea(FindAreaRequest) returns (FindAreaReply) {}
+}
+
+message FindAreaRequest {
+    string code = 1;
+    string level = 2;
+}
+
+message Area {
+    string name = 1;
+    string dicCode = 2;
+}
+
+message FindAreaReply {
+    repeated Area items = 1;
+    error err = 2;
 }
 
 message InsProdBizFeeMapInfoField {

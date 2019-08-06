@@ -12,14 +12,16 @@ import (
 )
 
 const (
-	addIns           = "add_ins"
-	addMcht          = "add_mcht"
-	deleteIns        = "delete_ins"
-	deleteMcht       = "delete_mcht"
-	updateIns        = "update_ins"
-	cancelUpdateIns  = "cancel_update_ins"
-	updateMcht       = "update_mcht"
-	cancelUpdateMcht = "cancel_update_mcht"
+	addIns              = "add_ins"
+	addMcht             = "add_mcht"
+	deleteIns           = "delete_ins"
+	deleteMcht          = "delete_mcht"
+	updateIns           = "update_ins"
+	cancelUpdateIns     = "cancel_update_ins"
+	updateMcht          = "update_mcht"
+	cancelUpdateMcht    = "cancel_update_mcht"
+	insUnregister       = "ins_unregister"
+	cancelInsUnregister = "cancel_ins_unregister"
 )
 
 var topics = []string{
@@ -31,6 +33,8 @@ var topics = []string{
 	cancelUpdateIns,
 	updateMcht,
 	cancelUpdateMcht,
+	insUnregister,
+	cancelInsUnregister,
 }
 
 func RunServiceTask(format string, workerNum int) {
@@ -85,6 +89,7 @@ func finishRegister(ctx context.Context, workerId int, ch <-chan int) {
 					// 商户注册
 					err = merchantRegister(db, resp.Item[0])
 				case deleteIns:
+					// 机构删除
 					err = deleteInstitution(db, resp.Item[0])
 				case deleteMcht:
 					// 删除商户
@@ -101,6 +106,10 @@ func finishRegister(ctx context.Context, workerId int, ch <-chan int) {
 				case cancelUpdateMcht:
 					// 消更新商户
 					err = merchantUpdateCancel(db, resp.Item[0])
+				case insUnregister:
+					// todo 机构注销
+				case cancelInsUnregister:
+					// todo 取消机构注销
 				}
 				if err != nil {
 					logrus.Errorln(err)
