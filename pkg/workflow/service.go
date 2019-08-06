@@ -115,8 +115,9 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 	}
 
 	// 保存备注
-	err = camundamodel.SaveRemark(db, &camundamodel.Remark{
+	err = camundamodel.SaveRemark(db, &camundamodel.Action{
 		Comment:    in.Remark,
+		Action:     in.Result,
 		TaskId:     in.TaskId,
 		InstanceId: task.InstanceId,
 		UserId:     id,
@@ -352,11 +353,12 @@ func (s *service) ListRemark(ctx context.Context, in *pb.ListRemarkRequest) (*pb
 		in.Page = 1
 	}
 
-	query := new(camundamodel.Remark)
+	query := new(camundamodel.Action)
 	if in.Item != nil {
-		query.RemarkId = in.Item.RemarkId
+		query.ActionId = in.Item.ActionId
 		query.Comment = in.Item.Comment
 		query.TaskId = in.Item.TaskId
+		query.Action = in.Item.Action
 
 	}
 	db := common.DB
@@ -368,7 +370,8 @@ func (s *service) ListRemark(ctx context.Context, in *pb.ListRemarkRequest) (*pb
 	docs := make([]*pb.RemarkField, len(items))
 	for i := range items {
 		docs[i] = &pb.RemarkField{
-			RemarkId:  items[i].RemarkId,
+			ActionId:  items[i].ActionId,
+			Action:    items[i].Action,
 			Comment:   items[i].Comment,
 			TaskId:    items[i].TaskId,
 			CreatedAt: items[i].CreatedAt.Format(util.TimePattern),

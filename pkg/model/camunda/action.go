@@ -6,8 +6,9 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type Remark struct {
-	RemarkId   int64     `gorm:"column:remark_id;primary_key"`
+type Action struct {
+	ActionId   int64     `gorm:"column:action_id;primary_key"`
+	Action     string    `gorm:"column:action"`
 	Comment    string    `gorm:"column:comment"`
 	TaskId     int64     `gorm:"column:task_id"`
 	InstanceId int64     `gorm:"column:instance_id"`
@@ -17,21 +18,18 @@ type Remark struct {
 	UpdatedAt  time.Time `gorm:"column:updated_at"`
 }
 
-func (Remark) TableName() string {
-	return "TBL_CAMUNDA_REMARK"
+func (Action) TableName() string {
+	return "TBL_CAMUNDA_ACTION"
 }
 
-func SaveRemark(db *gorm.DB, remark *Remark) error {
-	return db.Create(remark).Error
+func SaveRemark(db *gorm.DB, action *Action) error {
+	return db.Create(action).Error
 }
 
-func QueryRemark(db *gorm.DB, query *Remark, page int32, size int32) ([]*Remark, int32, error) {
-	out := make([]*Remark, 0)
+func QueryRemark(db *gorm.DB, query *Action, page int32, size int32) ([]*Action, int32, error) {
+	out := make([]*Action, 0)
 	var count int32
 	db.Model(query).Where(query).Count(&count)
 	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
-	if err == gorm.ErrRecordNotFound {
-		return out, count, nil
-	}
 	return out, count, err
 }
