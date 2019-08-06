@@ -51,14 +51,14 @@ func institutionRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) e
 	err = institution.UpdateInstitution(db, &institution.InstitutionInfo{
 		InsIdCd: info.InsIdCd,
 	}, &institution.InstitutionInfo{
-		InsSta: "1",
+		InsSta: "01",
 	})
 	if err != nil {
 		return err
 	}
 
 	// 入正式表 institution fee cash control
-	info.InsSta = "1"
+	info.InsSta = "01"
 
 	err = institution.SaveInstitutionMain(db, &institution.InstitutionInfoMain{
 		InstitutionInfo: *info,
