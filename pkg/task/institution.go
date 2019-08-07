@@ -271,3 +271,51 @@ func institutionUpdateCancel(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespIte
 	}
 	return nil
 }
+
+func institutionUnRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
+	// 查询机构id
+	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
+	if err != nil {
+		return err
+	}
+	if instance == nil {
+		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
+	}
+
+	// 查询机构信息
+	info, err := institution.FindInstitutionInfoById(db, instance.DataId)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		return fmt.Errorf("institution %s not found", instance.DataId)
+	}
+
+	err = institution.SaveInstitutionMain(db, &institution.InstitutionInfoMain{
+		InstitutionInfo: *info,
+	})
+	return err
+}
+
+func institutionCancelUnRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
+	// 查询机构id
+	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
+	if err != nil {
+		return err
+	}
+	if instance == nil {
+		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
+	}
+
+	// 查询机构信息
+	info, err := institution.FindInstitutionInfoMainById(db, instance.DataId)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		return fmt.Errorf("institution %s not found", instance.DataId)
+	}
+
+	err = institution.SaveInstitution(db, &info.InstitutionInfo)
+	return err
+}
