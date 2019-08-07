@@ -290,20 +290,9 @@ func (s *service) GetUnionPayBankList(ctx context.Context, in *pb.GetUnionPayBan
 
 //Download .
 func (s *service) SyncData(ctx context.Context, in *pb.StaticSyncDataReq) (*pb.StaticSyncDataResp, error) {
-	dicItems := static.GetDictionaryItem(common.DB)
 	insProdBizFeeMapInfs := static.GetInsProdBizFeeMapInf(common.DB)
 	prodBizTransMaps := static.GetProdBizTransMap(common.DB)
 	insInfs := static.GetInsInf(common.DB)
-
-	val1, err := json.Marshal(dicItems)
-	if err != nil {
-		return nil, err
-	}
-	kv1 := &api.KVPair{
-		Key:   DictionaryConsulKey,
-		Flags: 0,
-		Value: val1,
-	}
 
 	val2, err := json.Marshal(insProdBizFeeMapInfs)
 	if err != nil {
@@ -335,7 +324,6 @@ func (s *service) SyncData(ctx context.Context, in *pb.StaticSyncDataReq) (*pb.S
 		Value: val4,
 	}
 
-	common.ConsulClient.KV().Put(kv1, nil)
 	common.ConsulClient.KV().Put(kv2, nil)
 	common.ConsulClient.KV().Put(kv3, nil)
 	common.ConsulClient.KV().Put(kv4, nil)
@@ -345,31 +333,30 @@ func (s *service) SyncData(ctx context.Context, in *pb.StaticSyncDataReq) (*pb.S
 
 func (s *service) GetDictionaryItem(ctx context.Context, in *pb.StaticGetDictionaryItemReq) (*pb.StaticGetDictionaryItemResp, error) {
 
-	dicTypeCondition := make([]string, 0)
-	dicNameCondition := make([]string, 0)
-	dicCodeCondition := make([]string, 0)
-
-	if in.DicType != "" {
-		dicTypeCondition = append(dicTypeCondition, in.DicType)
+	db := common.DB
+	query := new(static.DictionaryItem)
+	if in.Item != nil {
+		query.DicType = in.Item.DicType
+		query.DicCode = in.Item.DicCode
+		query.DicName = in.Item.DicName
+		query.DispOrder = in.Item.DispOrder
+		query.Memo = in.Item.Memo
 	}
-	if in.DicName != "" {
-		dicNameCondition = append(dicNameCondition, in.DicName)
+	items := make([]*pb.DictionaryItemField, 0)
+	results, err := static.QueryDictionaryItem(db, query)
+	if err != nil {
+		return nil, err
 	}
-	if in.DicCode != "" {
-		dicCodeCondition = append(dicCodeCondition, in.DicCode)
-	}
-
-	items := make([]*pb.StaticGetDictionaryItem, 0)
-	results := getDicItemByCondition(dicTypeCondition, dicNameCondition, dicCodeCondition)
-	for i := 0; i < len(results); i++ {
-		items = append(items, &pb.StaticGetDictionaryItem{
-			DicCode: results[i].DicCode,
-			DicName: results[i].DicName,
-			DicType: results[i].DicType,
+	for _, result := range results {
+		items = append(items, &pb.DictionaryItemField{
+			DicType:   result.DicType,
+			DicCode:   result.DicCode,
+			DicName:   result.DicName,
+			DispOrder: result.DispOrder,
+			Memo:      result.Memo,
 		})
 	}
 	return &pb.StaticGetDictionaryItemResp{Items: items}, nil
-
 }
 
 func (s *service) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticGetDicByProdAndBizReq) (*pb.StaticGetDicByProdAndBizResp, error) {

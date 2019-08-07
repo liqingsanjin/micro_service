@@ -20,16 +20,15 @@ const (
 )
 
 type DictionaryItem struct {
-	CommonModel
-	DicType    string    `gorm:"column:DIC_TYPE" json:"DicType"`
-	DicCode    string    `gorm:"column:DIC_CODE" json:"DicCode"`
-	DicName    string    `gorm:"column:DIC_NAME" json:"DicName"`
-	DispOrder  string    `gorm:"column:DISP_ORDER" json:"DispOrder"`
-	UpdateTime time.Time `gorm:"column:UPDATE_TIME" json:"UpdateTime"`
-	Memo       string    `gorm:"column:MEMO" json:"Memo"`
+	DicType   string    `gorm:"column:DIC_TYPE;primary_key"`
+	DicCode   string    `gorm:"column:DIC_CODE;primary_key"`
+	DicName   string    `gorm:"column:DIC_NAME"`
+	DispOrder string    `gorm:"column:DISP_ORDER"`
+	UpdatedAt time.Time `gorm:"column:UPDATE_TIME"`
+	Memo      string    `gorm:"column:MEMO"`
 }
 
-func (d DictionaryItem) TableName() string {
+func (DictionaryItem) TableName() string {
 	return tableDictItem
 }
 
@@ -116,10 +115,10 @@ func (p InsInf) TableName() string {
 	return tableInsInf
 }
 
-func GetDictionaryItem(db *gorm.DB) []*DictionaryItem {
-	dictionaryItem := make([]*DictionaryItem, 0)
-	db.Order("DISP_ORDER").Find(&dictionaryItem)
-	return dictionaryItem
+func QueryDictionaryItem(db *gorm.DB, query *DictionaryItem) ([]*DictionaryItem, error) {
+	out := make([]*DictionaryItem, 0)
+	err := db.Where(query).Order("DISP_ORDER").Find(&out).Error
+	return out, err
 }
 func GetDictionaryItemByPk(db *gorm.DB, query *DictionaryItem) *DictionaryItem {
 	out := new(DictionaryItem)

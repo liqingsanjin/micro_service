@@ -61,7 +61,29 @@
             "in": "body",
             "description": "可以只传DicType， 其余不传。 如DicType=PROD_CD 则获取全部PROD_Cd的配置",
             "schema": {
-              "$ref": "#/definitions/dicItemField"
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "properties": {
+                    "dicType": {
+                      "type": "string"
+                    },
+                    "dicCode": {
+                      "type": "string"
+                    },
+                    "dicName": {
+                      "type": "string"
+                    },
+                    "dispOrder": {
+                      "type": "string"
+                    },
+                    "memo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
             }
           }
         ],
@@ -72,14 +94,12 @@
               "application/json": {
                 "items": [
                   {
-                    "dicType": "PROD_CD",
-                    "dicCode": "1000",
-                    "dicName": "1000_银行卡支付T1"
-                  },
-                  {
-                    "dicType": "PROD_CD",
-                    "dicCode": "1110",
-                    "dicName": "1110_充值"
+                    "dicType": "BIG_TYPE",
+                    "dicCode": "APP_CD",
+                    "dicName": "项目代码",
+                    "dispOrder": "",
+                    "updatedAt": "",
+                    "memo": ""
                   }
                 ],
                 "err": null

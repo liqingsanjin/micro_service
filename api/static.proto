@@ -75,15 +75,21 @@ message StaticSyncDataResp {
     error err = 2;
 }
 
+message DictionaryItemField {
+    string dicType   = 1;
+    string dicCode   = 2;
+    string dicName   = 3;
+    string dispOrder = 4;
+    string memo      = 6;
+}
+
 message StaticGetDictionaryItemReq {
-    string dicType = 1;
-    string dicCode = 2;
-    string dicName = 3;
+    DictionaryItemField item = 1;
 }
 
 
 message StaticGetDictionaryItemResp {
-    repeated StaticGetDictionaryItem items = 1;
+    repeated DictionaryItemField items = 1;
     error err = 2;
 }
 
