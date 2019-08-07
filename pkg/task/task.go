@@ -22,6 +22,10 @@ const (
 	cancelUpdateMcht    = "cancel_update_mcht"
 	insUnregister       = "ins_unregister"
 	cancelInsUnregister = "cancel_ins_unregister"
+	freezeMcht          = "freeze_mcht"
+	cancelFreezeMcht    = "cancel_freeze_mcht"
+	unfreezeMcht        = "unfreeze_mcht"
+	cancelUnfreezeMcht  = "cancel_unfreeze_mcht"
 )
 
 var topics = []string{
@@ -35,6 +39,10 @@ var topics = []string{
 	cancelUpdateMcht,
 	insUnregister,
 	cancelInsUnregister,
+	freezeMcht,
+	cancelFreezeMcht,
+	unfreezeMcht,
+	cancelUnfreezeMcht,
 }
 
 func RunServiceTask(format string, workerNum int) {
@@ -112,6 +120,14 @@ func finishRegister(ctx context.Context, workerId int, ch <-chan int) {
 				case cancelInsUnregister:
 					// 取消机构注销
 					err = institutionCancelUnRegister(db, resp.Item[0])
+				case freezeMcht:
+					// todo 商户冻结
+				case cancelFreezeMcht:
+					// todo 取消商户冻结
+				case unfreezeMcht:
+					// todo 商户解冻
+				case cancelUnfreezeMcht:
+					// todo 取消商户解冻
 				}
 				if err != nil {
 					logrus.Errorln(err)
