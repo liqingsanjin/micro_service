@@ -9,15 +9,15 @@ password = "micro"
 db = "apsmgm"
 
 [db.redis]
-host = "redis"
+host = "127.0.0.1"
 port = 6379
 
 [grpc]
-host = "userservice"
+host = "127.0.0.1"
 port = 5000
 
 [consul]
-host = "consul"
+host = "127.0.0.1"
 port = 8500
 
 [log]
