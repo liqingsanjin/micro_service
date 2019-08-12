@@ -12,20 +12,22 @@ import (
 )
 
 const (
-	addIns              = "add_ins"
-	addMcht             = "add_mcht"
-	deleteIns           = "delete_ins"
-	deleteMcht          = "delete_mcht"
-	updateIns           = "update_ins"
-	cancelUpdateIns     = "cancel_update_ins"
-	updateMcht          = "update_mcht"
-	cancelUpdateMcht    = "cancel_update_mcht"
-	insUnregister       = "ins_unregister"
-	cancelInsUnregister = "cancel_ins_unregister"
-	freezeMcht          = "freeze_mcht"
-	cancelFreezeMcht    = "cancel_freeze_mcht"
-	unfreezeMcht        = "unfreeze_mcht"
-	cancelUnfreezeMcht  = "cancel_unfreeze_mcht"
+	addIns               = "add_ins"
+	addMcht              = "add_mcht"
+	deleteIns            = "delete_ins"
+	deleteMcht           = "delete_mcht"
+	updateIns            = "update_ins"
+	cancelUpdateIns      = "cancel_update_ins"
+	updateMcht           = "update_mcht"
+	cancelUpdateMcht     = "cancel_update_mcht"
+	insUnregister        = "ins_unregister"
+	cancelInsUnregister  = "cancel_ins_unregister"
+	freezeMcht           = "freeze_mcht"
+	cancelFreezeMcht     = "cancel_freeze_mcht"
+	unfreezeMcht         = "unfreeze_mcht"
+	cancelUnfreezeMcht   = "cancel_unfreeze_mcht"
+	mchtUnregister       = "mcht_unregister"
+	cancelMchtUnregister = "cancel_mcht_unregister"
 )
 
 var topics = []string{
@@ -43,6 +45,8 @@ var topics = []string{
 	cancelFreezeMcht,
 	unfreezeMcht,
 	cancelUnfreezeMcht,
+	mchtUnregister,
+	cancelMchtUnregister,
 }
 
 func RunServiceTask(format string, workerNum int) {
@@ -112,7 +116,7 @@ func finishRegister(ctx context.Context, workerId int, ch <-chan int) {
 					// 更新商户
 					err = merchantUpdate(db, resp.Item[0])
 				case cancelUpdateMcht:
-					// 消更新商户
+					// 取消更新商户
 					err = merchantUpdateCancel(db, resp.Item[0])
 				case insUnregister:
 					// 机构注销
@@ -122,12 +126,22 @@ func finishRegister(ctx context.Context, workerId int, ch <-chan int) {
 					err = institutionCancelUnRegister(db, resp.Item[0])
 				case freezeMcht:
 					// todo 商户冻结
+					err = merchantFreeze(db, resp.Item[0])
 				case cancelFreezeMcht:
 					// todo 取消商户冻结
+					err = cancelMerchantFreeze(db, resp.Item[0])
 				case unfreezeMcht:
 					// todo 商户解冻
+					err = merchantUnFreeze(db, resp.Item[0])
 				case cancelUnfreezeMcht:
 					// todo 取消商户解冻
+					err = cancelMerchantUnFreeze(db, resp.Item[0])
+				case mchtUnregister:
+					// todo 商户注销
+					err = merchantUnregister(db, resp.Item[0])
+				case cancelMchtUnregister:
+					// todo 取消商户注销
+					err = cancelMerchantUnregister(db, resp.Item[0])
 				}
 				if err != nil {
 					logrus.Errorln(err)
