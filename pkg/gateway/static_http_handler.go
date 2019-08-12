@@ -31,13 +31,6 @@ func RegisterStaticHandler(engine *gin.Engine, endpoints *StaticEndpoints) {
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	group.POST("/getDicByInsCmpCd", convertHttpHandlerToGinHandler(httptransport.NewServer(
-		endpoints.GetDicByInsCmpCdEndpoint,
-		decodeHttpRequest(&pb.StaticGetDicByInsCmpCdReq{}),
-		encodeHttpResponse,
-		httptransport.ServerErrorEncoder(errorEncoder),
-	)))
-
 	group.POST("/checkValues", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.CheckValuesEndpoint,
 		decodeHttpRequest(&pb.StaticCheckValuesReq{}),

@@ -443,33 +443,6 @@ func (s *service) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticGetDicByP
 
 }
 
-func (s *service) GetDicByInsCmpCd(ctx context.Context, in *pb.StaticGetDicByInsCmpCdReq) (*pb.StaticGetDicByInsCmpCdResp, error) {
-	if in.InsCompanyCd == "" {
-		return &pb.StaticGetDicByInsCmpCdResp{Err: &pb.Error{
-			Code:        http.StatusBadRequest,
-			Message:     InvalidParam,
-			Description: "必须传入InsCompanyCd",
-		}}, nil
-	}
-	dicTypeCondition := []string{"INS_ID_CD"}
-	dicNameCondition := make([]string, 0)
-	insCds := getDicByInsCmpCd(in.InsCompanyCd)
-	if len(insCds) == 0 {
-		return &pb.StaticGetDicByInsCmpCdResp{}, nil
-	}
-
-	results := getDicItemByCondition(dicTypeCondition, dicNameCondition, insCds)
-	items := make([]*pb.StaticGetDictionaryItem, 0)
-	for i := 0; i < len(results); i++ {
-		items = append(items, &pb.StaticGetDictionaryItem{
-			DicCode: results[i].DicCode,
-			DicName: results[i].DicName,
-			DicType: results[i].DicType,
-		})
-	}
-	return &pb.StaticGetDicByInsCmpCdResp{Items: items}, nil
-}
-
 func (s *service) CheckValues(ctx context.Context, in *pb.StaticCheckValuesReq) (*pb.StaticCheckValuesResp, error) {
 	if in.ProdCd == "" && in.BizCd == "" && in.TransCd == "" && in.InsCompanyCd == "" && in.FwdInsIdCd == "" {
 		return &pb.StaticCheckValuesResp{Err: &pb.Error{

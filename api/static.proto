@@ -8,7 +8,6 @@ service Static {
     rpc SyncData(StaticSyncDataReq) returns (StaticSyncDataResp) {}
     rpc GetDictionaryItem(StaticGetDictionaryItemReq) returns (StaticGetDictionaryItemResp) {}
     rpc GetDicByProdAndBiz(StaticGetDicByProdAndBizReq) returns (StaticGetDicByProdAndBizResp) {}
-    rpc GetDicByInsCmpCd(StaticGetDicByInsCmpCdReq) returns (StaticGetDicByInsCmpCdResp) {}
     rpc CheckValues(StaticCheckValuesReq) returns (StaticCheckValuesResp) {}
     rpc GetDictionaryLayerItem(GetDictionaryLayerItemReq) returns (GetDictionaryLayerItemResp) {}
     rpc GetDictionaryItemByPk(GetDictionaryItemByPkReq) returns (GetDictionaryItemByPkResp) {}
@@ -107,15 +106,6 @@ message StaticGetDicByProdAndBizReq {
 }
 
 message StaticGetDicByProdAndBizResp {
-    repeated StaticGetDictionaryItem items = 1;
-    error err = 2;
-}
-
-message StaticGetDicByInsCmpCdReq {
-    string InsCompanyCd = 1;
-}
-
-message StaticGetDicByInsCmpCdResp {
     repeated StaticGetDictionaryItem items = 1;
     error err = 2;
 }

@@ -12,7 +12,6 @@ type server struct {
 	syncData                          grpctransport.Handler
 	getDictionaryItem                 grpctransport.Handler
 	getDicByProdAndBiz                grpctransport.Handler
-	getDicByInsCmpCd                  grpctransport.Handler
 	checkValues                       grpctransport.Handler
 	getDictionaryLayerItem            grpctransport.Handler
 	getDictionaryItemByPk             grpctransport.Handler
@@ -122,14 +121,6 @@ func (g *server) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticGetDicByPr
 	return res.(*pb.StaticGetDicByProdAndBizResp), nil
 }
 
-func (g *server) GetDicByInsCmpCd(ctx context.Context, in *pb.StaticGetDicByInsCmpCdReq) (*pb.StaticGetDicByInsCmpCdResp, error) {
-	_, res, err := g.getDicByInsCmpCd.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.StaticGetDicByInsCmpCdResp), nil
-}
-
 func (g *server) CheckValues(ctx context.Context, in *pb.StaticCheckValuesReq) (*pb.StaticCheckValuesResp, error) {
 	_, res, err := g.checkValues.ServeGRPC(ctx, in)
 	if err != nil {
@@ -170,16 +161,6 @@ func New(tracer grpctransport.ServerOption) pb.StaticServer {
 	{
 		e := MakeGetDicByProdAndBizEndpoint(svc)
 		svr.getDicByProdAndBiz = grpctransport.NewServer(
-			e,
-			grpcDecode,
-			grpcEncode,
-			options...,
-		)
-	}
-
-	{
-		e := MakeGetDicByInsCmpCdEndpoint(svc)
-		svr.getDicByInsCmpCd = grpctransport.NewServer(
 			e,
 			grpcDecode,
 			grpcEncode,

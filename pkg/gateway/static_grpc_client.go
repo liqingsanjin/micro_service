@@ -14,7 +14,6 @@ type StaticEndpoints struct {
 	SyncDataEndpoint                   endpoint.Endpoint
 	GetDictionaryItemEndpoint          endpoint.Endpoint
 	GetDicByProdAndBizEndpoint         endpoint.Endpoint
-	GetDicByInsCmpCdEndpoint           endpoint.Endpoint
 	CheckValuesEndpoint                endpoint.Endpoint
 	GetDictionaryLayerItemEndpoint     endpoint.Endpoint
 	GetDictionaryItemByPkEndpoint      endpoint.Endpoint
@@ -115,18 +114,6 @@ func (s *StaticEndpoints) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticG
 	return reply, nil
 }
 
-func (s *StaticEndpoints) GetDicByInsCmpCd(ctx context.Context, in *pb.StaticGetDicByInsCmpCdReq) (*pb.StaticGetDicByInsCmpCdResp, error) {
-	res, err := s.GetDicByInsCmpCdEndpoint(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	reply, ok := res.(*pb.StaticGetDicByInsCmpCdResp)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
-}
-
 func (s *StaticEndpoints) CheckValues(ctx context.Context, in *pb.StaticCheckValuesReq) (*pb.StaticCheckValuesResp, error) {
 	res, err := s.CheckValuesEndpoint(ctx, in)
 	if err != nil {
@@ -207,19 +194,6 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			options...,
 		).Endpoint()
 		endpoints.GetDicByProdAndBizEndpoint = e
-	}
-
-	{
-		e := grpctransport.NewClient(
-			conn,
-			"pb.Static",
-			"GetDicByInsCmpCd",
-			encodeRequest,
-			decodeResponse,
-			pb.StaticGetDicByInsCmpCdResp{},
-			options...,
-		).Endpoint()
-		endpoints.GetDicByInsCmpCdEndpoint = e
 	}
 
 	{

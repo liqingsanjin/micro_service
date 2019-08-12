@@ -63,15 +63,6 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 	}
 
 	{
-		factory := staticserviceFactory(staticservice.MakeGetDicByInsCmpCdEndpoint)
-		endpointer := sd.NewEndpointer(instancer, factory, log)
-		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
-		retry = breaker(retry)
-		endpoints.GetDicByInsCmpCdEndpoint = retry
-	}
-
-	{
 		factory := staticserviceFactory(staticservice.MakeCheckValuesEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
