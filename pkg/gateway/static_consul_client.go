@@ -152,6 +152,15 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 		endpoints.FindAreaEndpoint = retry
 	}
 
+	{
+		factory := staticserviceFactory(staticservice.MakeFindMerchantFirstThreeCodeEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = breaker(retry)
+		endpoints.FindMerchantFirstThreeCodeEndpoint = retry
+	}
+
 	return &endpoints
 }
 

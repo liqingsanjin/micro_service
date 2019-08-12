@@ -11,19 +11,28 @@ import (
 )
 
 type StaticEndpoints struct {
-	SyncDataEndpoint                endpoint.Endpoint
-	GetDictionaryItemEndpoint       endpoint.Endpoint
-	GetDicByProdAndBizEndpoint      endpoint.Endpoint
-	GetDicByInsCmpCdEndpoint        endpoint.Endpoint
-	CheckValuesEndpoint             endpoint.Endpoint
-	GetDictionaryLayerItemEndpoint  endpoint.Endpoint
-	GetDictionaryItemByPkEndpoint   endpoint.Endpoint
-	GetUnionPayBankListEndpoint     endpoint.Endpoint
-	FindUnionPayMccListEndpoint     endpoint.Endpoint
-	GetInsProdBizFeeMapInfoEndpoint endpoint.Endpoint
-	ListTransMapEndpoint            endpoint.Endpoint
-	ListFeeMapEndpoint              endpoint.Endpoint
-	FindAreaEndpoint                endpoint.Endpoint
+	SyncDataEndpoint                   endpoint.Endpoint
+	GetDictionaryItemEndpoint          endpoint.Endpoint
+	GetDicByProdAndBizEndpoint         endpoint.Endpoint
+	GetDicByInsCmpCdEndpoint           endpoint.Endpoint
+	CheckValuesEndpoint                endpoint.Endpoint
+	GetDictionaryLayerItemEndpoint     endpoint.Endpoint
+	GetDictionaryItemByPkEndpoint      endpoint.Endpoint
+	GetUnionPayBankListEndpoint        endpoint.Endpoint
+	FindUnionPayMccListEndpoint        endpoint.Endpoint
+	GetInsProdBizFeeMapInfoEndpoint    endpoint.Endpoint
+	ListTransMapEndpoint               endpoint.Endpoint
+	ListFeeMapEndpoint                 endpoint.Endpoint
+	FindAreaEndpoint                   endpoint.Endpoint
+	FindMerchantFirstThreeCodeEndpoint endpoint.Endpoint
+}
+
+func (s *StaticEndpoints) FindMerchantFirstThreeCode(ctx context.Context, in *pb.FindMerchantFirstThreeCodeRequest) (*pb.FindMerchantFirstThreeCodeReply, error) {
+	res, err := s.FindMerchantFirstThreeCodeEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.FindMerchantFirstThreeCodeReply), nil
 }
 
 func (s *StaticEndpoints) FindArea(ctx context.Context, in *pb.FindAreaRequest) (*pb.FindAreaReply, error) {
@@ -328,6 +337,19 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			options...,
 		).Endpoint()
 		endpoints.FindAreaEndpoint = e
+	}
+
+	{
+		e := grpctransport.NewClient(
+			conn,
+			"pb.Static",
+			"FindMerchantFirstThreeCode",
+			encodeRequest,
+			decodeResponse,
+			pb.FindMerchantFirstThreeCodeReply{},
+			options...,
+		).Endpoint()
+		endpoints.FindMerchantFirstThreeCodeEndpoint = e
 	}
 
 	return endpoints

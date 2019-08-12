@@ -103,3 +103,9 @@ func MakeFindAreaEndpoint(service pb.StaticServer) endpoint.Endpoint {
 		return service.FindArea(ctx, request.(*pb.FindAreaRequest))
 	}
 }
+
+func MakeFindMerchantFirstThreeCodeEndpoint(service pb.StaticServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.FindMerchantFirstThreeCode(ctx, request.(*pb.FindMerchantFirstThreeCodeRequest))
+	}
+}

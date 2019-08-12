@@ -707,6 +707,53 @@
             "description": "正确返回",
             "examples": {
               "application/json": {
+                "items": [
+                  {
+                    "name": "1000_北京市",
+                    "dicCode": "1000"
+                  }
+                ],
+                "err": null
+              }
+            }
+          }
+        }
+      }
+    },
+    "/static/findMerchantFirstThreeCode": {
+      "post": {
+        "operationId": "findMerchantFirstThreeCode",
+        "summary": "商户编码前三位机构代码",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "findMerchantFirstThreeCode",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "dicCdoe": "201",
+                    "dicName": "201_金苹果"
+                  }
+                ],
+                "err": null
               }
             }
           }

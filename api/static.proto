@@ -18,6 +18,7 @@ service Static {
     rpc ListTransMap(ListTransMapRequest) returns (ListTransMapReply) {}
     rpc ListFeeMap(ListFeeMapRequest) returns (ListFeeMapReply) {}
     rpc FindArea(FindAreaRequest) returns (FindAreaReply) {}
+    rpc FindMerchantFirstThreeCode(FindMerchantFirstThreeCodeRequest) returns (FindMerchantFirstThreeCodeReply) {}
 }
 
 message FindAreaRequest {
@@ -247,5 +248,19 @@ message ListFeeMapRequest {
 
 message ListFeeMapReply {
     repeated ProductBizFeeMapField items = 1;
+    error err = 2;
+}
+
+message MerchantFirstThreeField {
+    string dicCdoe = 1;
+    string dicName = 2;
+}
+
+message FindMerchantFirstThreeCodeRequest {
+    string code = 1;
+}
+
+message FindMerchantFirstThreeCodeReply {
+    repeated MerchantFirstThreeField items = 1;
     error err = 2;
 }

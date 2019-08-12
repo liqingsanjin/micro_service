@@ -100,4 +100,11 @@ func RegisterStaticHandler(engine *gin.Engine, endpoints *StaticEndpoints) {
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
+
+	group.POST("/findMerchantFirstThreeCode", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.FindMerchantFirstThreeCodeEndpoint,
+		decodeHttpRequest(&pb.FindMerchantFirstThreeCodeRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
 }

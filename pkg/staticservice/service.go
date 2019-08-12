@@ -38,6 +38,33 @@ var MyMap = StaticMapData{
 //service .
 type service struct{}
 
+func (s *service) FindMerchantFirstThreeCode(ctx context.Context, in *pb.FindMerchantFirstThreeCodeRequest) (*pb.FindMerchantFirstThreeCodeReply, error) {
+	reply := new(pb.FindMerchantFirstThreeCodeReply)
+	if in.Code == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "code不能为空",
+		}
+		return reply, nil
+	}
+	db := common.DB
+	out, err := static.FindMerchantFirstThree(db, in.Code)
+	if err != nil {
+		return nil, err
+	}
+	items := make([]*pb.MerchantFirstThreeField, 0, len(out))
+	for _, o := range out {
+		items = append(items, &pb.MerchantFirstThreeField{
+			DicCdoe: o.DicCode,
+			DicName: o.DicName,
+		})
+	}
+	reply.Items = items
+	return reply, nil
+
+}
+
 func (s *service) FindArea(ctx context.Context, in *pb.FindAreaRequest) (*pb.FindAreaReply, error) {
 	reply := new(pb.FindAreaReply)
 	if in.Code == "" {

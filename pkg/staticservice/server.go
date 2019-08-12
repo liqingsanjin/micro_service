@@ -9,19 +9,28 @@ import (
 )
 
 type server struct {
-	syncData                       grpctransport.Handler
-	getDictionaryItem              grpctransport.Handler
-	getDicByProdAndBiz             grpctransport.Handler
-	getDicByInsCmpCd               grpctransport.Handler
-	checkValues                    grpctransport.Handler
-	getDictionaryLayerItem         grpctransport.Handler
-	getDictionaryItemByPk          grpctransport.Handler
-	GetUnionPayBankListHandler     grpctransport.Handler
-	FindUnionPayMccListHandler     grpctransport.Handler
-	GetInsProdBizFeeMapInfoHandler grpctransport.Handler
-	ListTransMapHandler            grpctransport.Handler
-	ListFeeMapHandler              grpctransport.Handler
-	FindAreaHandler                grpctransport.Handler
+	syncData                          grpctransport.Handler
+	getDictionaryItem                 grpctransport.Handler
+	getDicByProdAndBiz                grpctransport.Handler
+	getDicByInsCmpCd                  grpctransport.Handler
+	checkValues                       grpctransport.Handler
+	getDictionaryLayerItem            grpctransport.Handler
+	getDictionaryItemByPk             grpctransport.Handler
+	GetUnionPayBankListHandler        grpctransport.Handler
+	FindUnionPayMccListHandler        grpctransport.Handler
+	GetInsProdBizFeeMapInfoHandler    grpctransport.Handler
+	ListTransMapHandler               grpctransport.Handler
+	ListFeeMapHandler                 grpctransport.Handler
+	FindAreaHandler                   grpctransport.Handler
+	FindMerchantFirstThreeCodeHandler grpctransport.Handler
+}
+
+func (s *server) FindMerchantFirstThreeCode(ctx context.Context, in *pb.FindMerchantFirstThreeCodeRequest) (*pb.FindMerchantFirstThreeCodeReply, error) {
+	_, res, err := s.FindMerchantFirstThreeCodeHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.FindMerchantFirstThreeCodeReply), nil
 }
 
 func (s *server) FindArea(ctx context.Context, in *pb.FindAreaRequest) (*pb.FindAreaReply, error) {
@@ -264,6 +273,17 @@ func New(tracer grpctransport.ServerOption) pb.StaticServer {
 		endpoint := MakeFindAreaEndpoint(svc)
 		endpoint = kit.LogginMiddleware(endpoint)
 		svr.FindAreaHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+
+	{
+		endpoint := MakeFindMerchantFirstThreeCodeEndpoint(svc)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.FindMerchantFirstThreeCodeHandler = grpctransport.NewServer(
 			endpoint,
 			kit.DecodeRequest,
 			kit.EncodeResponse,
