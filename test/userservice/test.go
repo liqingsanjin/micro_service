@@ -8,5 +8,5 @@ import (
 func main() {
 	i, err := strconv.ParseInt("0001", 10, 64)
 	fmt.Println(i, err)
-	fmt.Printf("%4d%4d\n", 12, 345)
+	fmt.Printf("%0.4d %0.4d\n", 12, 345)
 }

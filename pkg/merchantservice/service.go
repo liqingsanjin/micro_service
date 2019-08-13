@@ -58,13 +58,7 @@ func (m *merchantService) GenerateMchtCd(ctx context.Context, in *pb.GenerateMch
 	}
 	if hasSkip {
 		// 如果有跳跃，使用跳跃序号
-		str := fmt.Sprintf("%d", cd)
-		l := len(str)
-		if len(str) < 4 {
-			for i := 0; i < 4-l; i++ {
-				str = "0" + str
-			}
-		}
+		str := fmt.Sprintf("%0.4d", cd)
 		id += str
 	} else {
 		// 如果没有跳跃
