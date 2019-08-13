@@ -11,9 +11,78 @@ import (
 	"userService/pkg/util"
 
 	merchantmodel "userService/pkg/model/merchant"
+
+	"github.com/sirupsen/logrus"
 )
 
 type merchantService struct{}
+
+func (m *merchantService) GenerateMchtCd(ctx context.Context, in *pb.GenerateMchtCdRequest) (*pb.GenerateMchtCdReply, error) {
+	reply := new(pb.GenerateMchtCdReply)
+	if len(in.MccCd) != 4 || len(in.MchtCd3) != 3 || len(in.MchtCdPc) != 4 {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "参数错误",
+		}
+		return reply, nil
+	}
+
+	db := common.DB
+	prefix := in.MchtCd3 + in.MchtCdPc + in.MccCd
+	used, err := merchantmodel.FindMerchantCdByPrefix(db, prefix)
+	if err != nil {
+		return nil, err
+	}
+
+	id := prefix
+	cds := make([]bool, 10000)
+	logrus.Debugln(used[0].Id)
+	for _, d := range used {
+		if len(d.Id) == 15 {
+			i, _ := strconv.ParseInt(d.Id[11:], 10, 64)
+			if i >= 0 && i < 10000 {
+				cds[i] = true
+			}
+		}
+	}
+	//logrus.Debugln(cds)
+	cd := 0
+	hasSkip := false
+	for i := 0; i < 10000; i++ {
+		if !cds[i] {
+			hasSkip = true
+			cd = i
+			break
+		}
+	}
+	if hasSkip {
+		// 如果有跳跃，使用跳跃序号
+		str := fmt.Sprintf("%d", cd)
+		l := len(str)
+		if len(str) < 4 {
+			for i := 0; i < 4-l; i++ {
+				str = "0" + str
+			}
+		}
+		id += str
+	} else {
+		// 如果没有跳跃
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "没有可用的商户号",
+		}
+		return reply, nil
+	}
+	err = merchantmodel.SaveMerchantCd(db, &merchantmodel.UsedMerchantCd{Id: id})
+	if err != nil {
+		return nil, err
+	}
+
+	reply.MchtCd = id
+	return reply, nil
+}
 
 // 商户产品和费率保存
 func (m *merchantService) SaveMerchantBizDealAndFee(ctx context.Context, in *pb.SaveMerchantBizDealAndFeeRequest) (*pb.SaveMerchantBizDealAndFeeReply, error) {

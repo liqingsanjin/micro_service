@@ -123,6 +123,14 @@ type MerchantBankAccount struct {
 	MsgResvFld10 string    `gorm:"column:MSG_RESV_FLD10"`
 }
 
+type UsedMerchantCd struct {
+	Id string `gorm:"column:MCHT_CD;primary_key"`
+}
+
+func (UsedMerchantCd) TableName() string {
+	return "TBL_USED_MCHT_CD"
+}
+
 func (m MerchantBankAccount) TableName() string {
 	return TableMerchantBankAccount
 }
@@ -175,4 +183,14 @@ func SaveMerchantMain(db *gorm.DB, info *MerchantInfoMain) error {
 
 func DeleteMerchant(db *gorm.DB, query *MerchantInfo) error {
 	return db.Where(query).Delete(&MerchantInfo{}).Error
+}
+
+func FindMerchantCdByPrefix(db *gorm.DB, prefix string) ([]*UsedMerchantCd, error) {
+	out := make([]*UsedMerchantCd, 0)
+	err := db.Where("MCHT_CD like ?", prefix+"%").Order("MCHT_CD", true).Find(&out).Error
+	return out, err
+}
+
+func SaveMerchantCd(db *gorm.DB, data *UsedMerchantCd) error {
+	return db.Save(data).Error
 }

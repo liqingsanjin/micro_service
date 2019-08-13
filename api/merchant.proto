@@ -18,6 +18,18 @@ service Merchant {
     rpc GetMerchantBusiness(GetMerchantBusinessRequest) returns (GetMerchantBusinessReply) {}
     rpc GetMerchantPicture(GetMerchantPictureRequest) returns (GetMerchantPictureReply) {}
     rpc GetMerchantById(GetMerchantByIdRequest) returns (GetMerchantByIdReply) {}
+    rpc GenerateMchtCd(GenerateMchtCdRequest) returns (GenerateMchtCdReply) {}
+}
+
+message GenerateMchtCdReply {
+    string mchtCd = 1;
+    error err = 2;
+}
+
+message GenerateMchtCdRequest {
+    string mchtCd3 = 1;
+    string mchtCdPc = 2;
+    string mccCd = 3;
 }
 
 message ListMerchantRequest {
