@@ -242,7 +242,7 @@ message ListFeeMapReply {
 }
 
 message MerchantFirstThreeField {
-    string dicCdoe = 1;
+    string dicCode = 1;
     string dicName = 2;
 }
 

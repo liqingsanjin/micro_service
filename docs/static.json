@@ -749,7 +749,7 @@
               "application/json": {
                 "items": [
                   {
-                    "dicCdoe": "201",
+                    "dicCode": "201",
                     "dicName": "201_金苹果"
                   }
                 ],

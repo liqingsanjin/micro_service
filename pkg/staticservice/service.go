@@ -56,7 +56,7 @@ func (s *service) FindMerchantFirstThreeCode(ctx context.Context, in *pb.FindMer
 	items := make([]*pb.MerchantFirstThreeField, 0, len(out))
 	for _, o := range out {
 		items = append(items, &pb.MerchantFirstThreeField{
-			DicCdoe: o.DicCode,
+			DicCode: o.DicCode,
 			DicName: o.DicName,
 		})
 	}
