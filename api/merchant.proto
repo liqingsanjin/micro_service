@@ -22,7 +22,7 @@ service Merchant {
 }
 
 message GenerateMchtCdReply {
-    string mchtCd = 1;
+    string sn = 1;
     error err = 2;
 }
 

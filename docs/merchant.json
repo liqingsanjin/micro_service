@@ -1537,7 +1537,7 @@
             "description": "正确返回",
             "examples": {
               "application/json": {
-                "mchtCd": "111111111110004",
+                "sn": "0001",
                 "err": null
               }
             }

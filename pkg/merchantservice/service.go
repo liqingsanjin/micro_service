@@ -11,8 +11,6 @@ import (
 	"userService/pkg/util"
 
 	merchantmodel "userService/pkg/model/merchant"
-
-	"github.com/sirupsen/logrus"
 )
 
 type merchantService struct{}
@@ -37,7 +35,6 @@ func (m *merchantService) GenerateMchtCd(ctx context.Context, in *pb.GenerateMch
 
 	id := prefix
 	cds := make([]bool, 10000)
-	logrus.Debugln(used[0].Id)
 	for _, d := range used {
 		if len(d.Id) == 15 {
 			i, _ := strconv.ParseInt(d.Id[11:], 10, 64)
@@ -46,8 +43,8 @@ func (m *merchantService) GenerateMchtCd(ctx context.Context, in *pb.GenerateMch
 			}
 		}
 	}
-	//logrus.Debugln(cds)
 	cd := 0
+	sn := ""
 	hasSkip := false
 	for i := 0; i < 10000; i++ {
 		if !cds[i] {
@@ -58,8 +55,8 @@ func (m *merchantService) GenerateMchtCd(ctx context.Context, in *pb.GenerateMch
 	}
 	if hasSkip {
 		// 如果有跳跃，使用跳跃序号
-		str := fmt.Sprintf("%0.4d", cd)
-		id += str
+		sn = fmt.Sprintf("%0.4d", cd)
+		id += sn
 	} else {
 		// 如果没有跳跃
 		reply.Err = &pb.Error{
@@ -74,7 +71,7 @@ func (m *merchantService) GenerateMchtCd(ctx context.Context, in *pb.GenerateMch
 		return nil, err
 	}
 
-	reply.MchtCd = id
+	reply.Sn = sn
 	return reply, nil
 }
 
