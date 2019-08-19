@@ -196,7 +196,7 @@ func (u *userService) CheckPermission(ctx context.Context, in *pb.CheckPermissio
 		return reply, nil
 	}
 
-	ok = common.Enforcer.Enforce(fmt.Sprintf("user:%s", ids[0]), in.GetRoute())
+	ok = common.Enforcer.Enforce(fmt.Sprintf("user:%s", ids[0]), in.GetRoute(), "read")
 	return &pb.CheckPermissionReply{
 		Result: ok,
 	}, nil
@@ -585,7 +585,7 @@ func (u *userService) AddRouteForPermission(ctx context.Context, in *pb.AddRoute
 		return reply, nil
 	}
 
-	if !common.Enforcer.AddPermissionForUser(fmt.Sprintf("permission:%d", permission.ID), in.Route) {
+	if !common.Enforcer.AddPolicy(fmt.Sprintf("permission:%d", permission.ID), in.Route, "read") {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     AlreadyExists,
