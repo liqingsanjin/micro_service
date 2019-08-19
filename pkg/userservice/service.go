@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 	"userService/pkg/cache"
 	"userService/pkg/common"
@@ -147,29 +148,45 @@ func (u *userService) GetPermissions(ctx context.Context, in *pb.GetPermissionsR
 	permissions := common.Enforcer.GetImplicitPermissionsForUser(fmt.Sprintf("user:%s", userids[0]))
 
 	itemNames := make([]string, 0)
+	wild := make([]string, 0)
 	for _, permission := range permissions {
-		for _, ps := range permission {
+		if len(permission) > 1 {
+			ps := permission[1]
 			itemNames = append(itemNames, ps)
+			if strings.Contains(ps, "*") {
+				wild = append(wild, strings.ReplaceAll(ps, "*", "%"))
+			}
 		}
 	}
 
-	menus, err := usermodel.GetAuthMenu(db, itemNames)
+	menus, err := usermodel.GetAuthMenu(db, itemNames, false)
 	if err != nil {
 		return nil, err
 	}
 
-	replyMenus := make([]*pb.Menu, 0, len(menus))
-	for _, m := range menus {
-		replyMenus = append(replyMenus, &pb.Menu{
-			Id:     m.ID,
-			Name:   m.Name,
-			Parent: m.Parent,
-			Route:  m.MenuRoute,
-			Data:   m.MenuData,
-			Order:  m.MenuOrder,
-		})
+	wildMenus, err := usermodel.GetAuthMenu(db, wild, true)
+	if err != nil {
+		return nil, err
 	}
+	menus = append(menus, wildMenus...)
 
+	idMap := make(map[int32]bool)
+	replyMenus := make([]*pb.Menu, 0, len(menus))
+
+	for _, m := range menus {
+		if !idMap[m.ID] {
+			replyMenus = append(replyMenus, &pb.Menu{
+				Id:     m.ID,
+				Name:   m.Name,
+				Parent: m.Parent,
+				Route:  m.MenuRoute,
+				Data:   m.MenuData,
+				Order:  m.MenuOrder,
+			})
+			idMap[m.ID] = true
+		}
+	}
+	logrus.Debugln("------------", len(replyMenus))
 	return &pb.GetPermissionsReply{
 		Menus: replyMenus,
 	}, nil

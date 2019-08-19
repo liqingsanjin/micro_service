@@ -147,59 +147,6 @@ func FindUserByUserName(db *gorm.DB, userName string) (*User, error) {
 	return user, err
 }
 
-// 根据用户id查询权限
-// 入参
-// userID用户id, 对应TBL_USER表中的USER_ID字段
-// 返回
-// []*AuthItem: TBL_AUTH_ITEM表中的数据, 用户所有权限
-// []*Menu: TBL_MENU表中的数据, 用户菜单显示权限
-func GetPermissionsByUserID(db *gorm.DB, userID int64) (*Permissions, error) {
-	// 根据用户查询角色
-	results := make([]*AuthAssignment, 0)
-	err := db.Where(&AuthAssignment{UserID: userID}).Select("ITEM_NAME, USER_ID").Find(&results).Error
-	if err == gorm.ErrRecordNotFound {
-		err = nil
-	}
-	if err != nil {
-		return nil, err
-	}
-
-	// 查询角色权限下的子权限
-	names := make([]string, 0)
-	for _, result := range results {
-		names = append(names, result.ItemName)
-	}
-	children, err := getAuthRoutes(db, names)
-	if err != nil {
-		return nil, err
-	}
-	itemNames := make([]string, 0, len(children))
-	for _, child := range children {
-		itemNames = append(itemNames, child.Child)
-	}
-
-	// 查询子权限对应的菜单权限
-	menus, err := GetAuthMenu(db, itemNames)
-	if err != nil {
-		return nil, err
-	}
-
-	// 查询权限详细信息
-	items := make([]*AuthItem, 0)
-	err = db.Where("NAME in (?)", itemNames).Find(&items).Error
-	if err == gorm.ErrRecordNotFound {
-		err = nil
-	}
-	if err != nil {
-		return nil, err
-	}
-
-	return &Permissions{
-		Items: items,
-		Menus: menus,
-	}, nil
-}
-
 func getAuthRoutes(db *gorm.DB, itemNames []string) ([]*AuthItemChild, error) {
 	results := make([]*AuthItemChild, 0)
 	err := db.Where("PARENT in (?)", itemNames).Find(&results).Error
@@ -221,11 +168,20 @@ func getAuthRoutes(db *gorm.DB, itemNames []string) ([]*AuthItemChild, error) {
 	return results, err
 }
 
-func GetAuthMenu(db *gorm.DB, items []string) ([]*Menu, error) {
+func GetAuthMenu(db *gorm.DB, items []string, like bool) ([]*Menu, error) {
 	menus := make([]*Menu, 0)
-	err := db.Where("MENU_ROUTE in (?)", items).Find(&menus).Error
-	if err == gorm.ErrRecordNotFound {
-		err = nil
+	var err error
+	if like {
+		for _, item := range items {
+			ms := make([]*Menu, 0)
+			err = db.Where("MENU_ROUTE like ?", item).Find(&ms).Error
+			if err != nil {
+				return nil, err
+			}
+			menus = append(menus, ms...)
+		}
+	} else {
+		err = db.Where("MENU_ROUTE in (?)", items).Find(&menus).Error
 	}
 	if err != nil {
 		return nil, err
