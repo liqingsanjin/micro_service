@@ -602,7 +602,7 @@ func (u *userService) AddRouteForPermission(ctx context.Context, in *pb.AddRoute
 		return reply, nil
 	}
 
-	if !common.Enforcer.AddPolicy(fmt.Sprintf("permission:%d", permission.ID), in.Route, "read") {
+	if !common.Enforcer.AddPolicy(fmt.Sprintf("permission:%d", permission.ID), in.Route, "*") {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     AlreadyExists,
