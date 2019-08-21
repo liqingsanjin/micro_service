@@ -569,92 +569,98 @@
             "schema": {
               "type": "object",
               "required": [
-                "deal",
-                "fee"
+                "deals",
+                "fees"
               ],
               "properties": {
-                "deal": {
-                  "type": "object",
-                  "properties": {
-                    "mchtCd": {
-                      "type": "string"
-                    },
-                    "prodCd": {
-                      "type": "string"
-                    },
-                    "bizCd": {
-                      "type": "string"
-                    },
-                    "transCd": {
-                      "type": "string"
-                    },
-                    "operIn": {
-                      "type": "string"
-                    },
-                    "recOprId": {
-                      "type": "string"
-                    },
-                    "recUpdOpr": {
-                      "type": "string"
+                "deals": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "mchtCd": {
+                        "type": "string"
+                      },
+                      "prodCd": {
+                        "type": "string"
+                      },
+                      "bizCd": {
+                        "type": "string"
+                      },
+                      "transCd": {
+                        "type": "string"
+                      },
+                      "operIn": {
+                        "type": "string"
+                      },
+                      "recOprId": {
+                        "type": "string"
+                      },
+                      "recUpdOpr": {
+                        "type": "string"
+                      }
                     }
                   }
                 },
-                "fee": {
-                  "type": "object",
-                  "properties": {
-                    "mchtCd": {
-                      "type": "string"
-                    },
-                    "prodCd": {
-                      "type": "string"
-                    },
-                    "bizCd": {
-                      "type": "string"
-                    },
-                    "subBizCd": {
-                      "type": "string"
-                    },
-                    "mchtFeeMd": {
-                      "type": "string"
-                    },
-                    "mchtFeePercent": {
-                      "type": "string"
-                    },
-                    "mchtFeePctMin": {
-                      "type": "string"
-                    },
-                    "mchtFeePctMax": {
-                      "type": "string"
-                    },
-                    "mchtFeeSingle": {
-                      "type": "string"
-                    },
-                    "mchtAFeeSame": {
-                      "type": "string"
-                    },
-                    "mchtAFeeMd": {
-                      "type": "string"
-                    },
-                    "mchtAFeePercent": {
-                      "type": "string"
-                    },
-                    "mchtAFeePctMin": {
-                      "type": "string"
-                    },
-                    "mchtAFeePctMax": {
-                      "type": "string"
-                    },
-                    "mchtAFeeSingle": {
-                      "type": "string"
-                    },
-                    "operIn": {
-                      "type": "string"
-                    },
-                    "recOprId": {
-                      "type": "string"
-                    },
-                    "recUpdOpr": {
-                      "type": "string"
+                "fees": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "mchtCd": {
+                        "type": "string"
+                      },
+                      "prodCd": {
+                        "type": "string"
+                      },
+                      "bizCd": {
+                        "type": "string"
+                      },
+                      "subBizCd": {
+                        "type": "string"
+                      },
+                      "mchtFeeMd": {
+                        "type": "string"
+                      },
+                      "mchtFeePercent": {
+                        "type": "string"
+                      },
+                      "mchtFeePctMin": {
+                        "type": "string"
+                      },
+                      "mchtFeePctMax": {
+                        "type": "string"
+                      },
+                      "mchtFeeSingle": {
+                        "type": "string"
+                      },
+                      "mchtAFeeSame": {
+                        "type": "string"
+                      },
+                      "mchtAFeeMd": {
+                        "type": "string"
+                      },
+                      "mchtAFeePercent": {
+                        "type": "string"
+                      },
+                      "mchtAFeePctMin": {
+                        "type": "string"
+                      },
+                      "mchtAFeePctMax": {
+                        "type": "string"
+                      },
+                      "mchtAFeeSingle": {
+                        "type": "string"
+                      },
+                      "operIn": {
+                        "type": "string"
+                      },
+                      "recOprId": {
+                        "type": "string"
+                      },
+                      "recUpdOpr": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
