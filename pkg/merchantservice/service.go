@@ -78,7 +78,7 @@ func (m *merchantService) GenerateMchtCd(ctx context.Context, in *pb.GenerateMch
 // 商户产品和费率保存
 func (m *merchantService) SaveMerchantBizDealAndFee(ctx context.Context, in *pb.SaveMerchantBizDealAndFeeRequest) (*pb.SaveMerchantBizDealAndFeeReply, error) {
 	reply := new(pb.SaveMerchantBizDealAndFeeReply)
-	if in.Deal == nil || in.Fee == nil {
+	if in.Fees == nil || in.Deals == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
@@ -90,42 +90,46 @@ func (m *merchantService) SaveMerchantBizDealAndFee(ctx context.Context, in *pb.
 	defer db.Rollback()
 
 	{
-		data := new(merchantmodel.BizDeal)
-		data.MchtCd = in.Deal.MchtCd
-		data.ProdCd = in.Deal.ProdCd
-		data.BizCd = in.Deal.BizCd
-		data.TransCd = in.Deal.TransCd
-		data.OperIn = in.Deal.OperIn
-		data.RecOprId = in.Deal.RecOprId
-		data.RecUpdOpr = in.Deal.RecUpdOpr
-		err := merchantmodel.SaveBizDeal(db, data)
-		if err != nil {
-			return nil, err
+		for _, deal := range in.Deals {
+			data := new(merchantmodel.BizDeal)
+			data.MchtCd = deal.MchtCd
+			data.ProdCd = deal.ProdCd
+			data.BizCd = deal.BizCd
+			data.TransCd = deal.TransCd
+			data.OperIn = deal.OperIn
+			data.RecOprId = deal.RecOprId
+			data.RecUpdOpr = deal.RecUpdOpr
+			err := merchantmodel.SaveBizDeal(db, data)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	{
-		data := new(merchantmodel.BizFee)
-		data.MchtCd = in.Fee.MchtCd
-		data.ProdCd = in.Fee.ProdCd
-		data.BizCd = in.Fee.BizCd
-		data.SubBizCd = in.Fee.SubBizCd
-		data.MchtFeeMd = in.Fee.MchtFeeMd
-		data.MchtFeePercent, _ = strconv.ParseFloat(in.Fee.MchtFeePercent, 64)
-		data.MchtFeePctMin, _ = strconv.ParseFloat(in.Fee.MchtFeePctMin, 64)
-		data.MchtFeePctMax, _ = strconv.ParseFloat(in.Fee.MchtFeePctMax, 64)
-		data.MchtFeeSingle, _ = strconv.ParseFloat(in.Fee.MchtFeeSingle, 64)
-		data.MchtAFeeSame = in.Fee.MchtAFeeSame
-		data.MchtAFeeMd = in.Fee.MchtAFeeMd
-		data.MchtAFeePercent, _ = strconv.ParseFloat(in.Fee.MchtAFeePercent, 64)
-		data.MchtAFeePctMin, _ = strconv.ParseFloat(in.Fee.MchtAFeePctMin, 64)
-		data.MchtAFeePctMax, _ = strconv.ParseFloat(in.Fee.MchtAFeePctMax, 64)
-		data.MchtAFeeSingle, _ = strconv.ParseFloat(in.Fee.MchtAFeeSingle, 64)
-		data.OperIn = in.Fee.OperIn
-		data.RecOprId = in.Fee.RecOprId
-		data.RecUpdOpr = in.Fee.RecUpdOpr
-		err := merchantmodel.SaveBizFee(db, data)
-		if err != nil {
-			return nil, err
+		for _, fee := range in.Fees {
+			data := new(merchantmodel.BizFee)
+			data.MchtCd = fee.MchtCd
+			data.ProdCd = fee.ProdCd
+			data.BizCd = fee.BizCd
+			data.SubBizCd = fee.SubBizCd
+			data.MchtFeeMd = fee.MchtFeeMd
+			data.MchtFeePercent, _ = strconv.ParseFloat(fee.MchtFeePercent, 64)
+			data.MchtFeePctMin, _ = strconv.ParseFloat(fee.MchtFeePctMin, 64)
+			data.MchtFeePctMax, _ = strconv.ParseFloat(fee.MchtFeePctMax, 64)
+			data.MchtFeeSingle, _ = strconv.ParseFloat(fee.MchtFeeSingle, 64)
+			data.MchtAFeeSame = fee.MchtAFeeSame
+			data.MchtAFeeMd = fee.MchtAFeeMd
+			data.MchtAFeePercent, _ = strconv.ParseFloat(fee.MchtAFeePercent, 64)
+			data.MchtAFeePctMin, _ = strconv.ParseFloat(fee.MchtAFeePctMin, 64)
+			data.MchtAFeePctMax, _ = strconv.ParseFloat(fee.MchtAFeePctMax, 64)
+			data.MchtAFeeSingle, _ = strconv.ParseFloat(fee.MchtAFeeSingle, 64)
+			data.OperIn = fee.OperIn
+			data.RecOprId = fee.RecOprId
+			data.RecUpdOpr = fee.RecUpdOpr
+			err := merchantmodel.SaveBizFee(db, data)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	db.Commit()

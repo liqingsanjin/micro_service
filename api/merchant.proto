@@ -211,8 +211,8 @@ message MerchantBizDealField {
 }
 
 message SaveMerchantBizDealAndFeeRequest {
-    MerchantBizDealField deal = 1;
-    MerchantBizFeeField fee = 2;
+    repeated MerchantBizDealField deals = 1;
+    repeated MerchantBizFeeField fees = 2;
 }
 
 message SaveMerchantBizDealAndFeeReply {
