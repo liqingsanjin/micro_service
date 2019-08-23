@@ -5,7 +5,6 @@
     "title": "term api"
   },
   "host": "172.16.7.120:8080",
-  "host": "localhost:8080",
   "schemes": [
     "http"
   ],
@@ -615,6 +614,9 @@
                 },
                 "size": {
                   "type": "integer"
+                },
+                "type": {
+                  "type": "string"
                 },
                 "item": {
                   "type": "object",
