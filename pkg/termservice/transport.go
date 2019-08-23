@@ -2,7 +2,6 @@ package termservice
 
 import (
 	"context"
-	"userService/pkg/kit"
 	"userService/pkg/pb"
 
 	"github.com/go-kit/kit/endpoint"
@@ -10,11 +9,7 @@ import (
 
 func MakeListTermInfoEndpoint(service pb.TermServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		req, ok := request.(*pb.ListTermInfoRequest)
-		if !ok {
-			return nil, kit.ErrRequestTypeInvalid
-		}
-		return service.ListTermInfo(ctx, req)
+		return service.ListTermInfo(ctx, request.(*pb.ListTermInfoRequest))
 	}
 }
 
@@ -33,5 +28,11 @@ func MakeSaveTermRiskEndpoint(service pb.TermServer) endpoint.Endpoint {
 func MakeListTermRiskEndpoint(service pb.TermServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		return service.ListTermRisk(ctx, request.(*pb.ListTermRiskRequest))
+	}
+}
+
+func MakeSaveTermActivationStateEndpoint(service pb.TermServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.SaveTermActivationState(ctx, request.(*pb.SaveTermActivationStateRequest))
 	}
 }

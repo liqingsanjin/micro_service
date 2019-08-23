@@ -3,6 +3,7 @@ package termservice
 import (
 	"context"
 	"net/http"
+	"time"
 	"userService/pkg/common"
 	termmodel "userService/pkg/model/term"
 	"userService/pkg/pb"
@@ -10,6 +11,48 @@ import (
 )
 
 type service struct{}
+
+func (s *service) SaveTermActivationState(ctx context.Context, in *pb.SaveTermActivationStateRequest) (*pb.SaveTermActivationStateReply, error) {
+	var reply pb.SaveTermActivationStateReply
+	var err error
+	if in.Item == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamsError",
+			Description: "保存信息为空",
+		}
+		return &reply, nil
+	}
+	db := common.DB
+
+	data := new(termmodel.ActivationState)
+	{
+		data.ActiveCode = in.Item.ActiveCode
+		data.ActiveType = in.Item.ActiveType
+		data.MchtCd = in.Item.MchtCd
+		data.TermId = in.Item.TermId
+		data.NewKsn = in.Item.NewKsn
+		data.OldKsn = in.Item.OldKsn
+		data.IsActive = in.Item.IsActive
+		data.RecOprId = in.Item.RecOprId
+		data.RecUpdOpr = in.Item.RecUpdOpr
+		if in.Item.ActiveDate != "" {
+			data.ActiveDate.Time, err = time.Parse(util.TimePattern, in.Item.ActiveDate)
+			if err == nil {
+				data.ActiveDate.Valid = true
+			}
+		}
+		if in.Item.CreateDate != "" {
+			data.CreateDate.Time, err = time.Parse(util.TimePattern, in.Item.CreateDate)
+			if err == nil {
+				data.CreateDate.Valid = true
+			}
+		}
+
+	}
+	err = termmodel.SaveActivationState(db, data)
+	return &reply, err
+}
 
 func (s *service) ListTermRisk(ctx context.Context, in *pb.ListTermRiskRequest) (*pb.ListTermRiskReply, error) {
 	reply := new(pb.ListTermRiskReply)

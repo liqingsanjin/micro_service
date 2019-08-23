@@ -37,4 +37,11 @@ func RegisterTermHandler(engine *gin.Engine, endpoints *TermEndpoints) {
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
+
+	group.POST("/saveTermActivationState", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.SaveTermActivationStateEndpoint,
+		decodeHttpRequest(&pb.SaveTermActivationStateRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
 }
