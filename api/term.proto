@@ -10,6 +10,7 @@ service Term {
     rpc SaveTermRisk(SaveTermRiskRequest) returns (SaveTermRiskReply) {}
     rpc ListTermRisk(ListTermRiskRequest) returns (ListTermRiskReply) {}
     rpc SaveTermActivationState(SaveTermActivationStateRequest) returns (SaveTermActivationStateReply) {}
+    rpc ListTermActivationState(ListTermActivationStateRequest) returns (ListTermActivationStateReply) {}
 }
 
 message ListTermInfoRequest {
@@ -137,4 +138,19 @@ message SaveTermActivationStateRequest {
 
 message SaveTermActivationStateReply {
     error err = 1;
+}
+
+message ListTermActivationStateRequest {
+    int32 page = 1;
+    int32 size = 2;
+    TermActivationStateField item = 3;
+    string type = 4;
+}
+
+message ListTermActivationStateReply {
+    int32 page = 1;
+    int32 size = 2;
+    int32 count = 3;
+    repeated TermActivationStateField items = 4;
+    error err = 5;
 }

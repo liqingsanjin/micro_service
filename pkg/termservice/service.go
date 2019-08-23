@@ -12,6 +12,123 @@ import (
 
 type service struct{}
 
+func (s *service) ListTermActivationState(ctx context.Context, in *pb.ListTermActivationStateRequest) (*pb.ListTermActivationStateReply, error) {
+	reply := new(pb.ListTermActivationStateReply)
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	if in.Size == 0 {
+		in.Size = 10
+	}
+
+	edit := true
+	if in.Type == "main" {
+		edit = false
+	}
+
+	db := common.DB
+	if edit {
+		query := new(termmodel.ActivationState)
+		if in.Item != nil {
+			query.ActiveCode = in.Item.ActiveCode
+			query.ActiveType = in.Item.ActiveType
+			query.MchtCd = in.Item.MchtCd
+			query.TermId = in.Item.TermId
+			query.NewKsn = in.Item.NewKsn
+			query.OldKsn = in.Item.OldKsn
+			query.IsActive = in.Item.IsActive
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+		}
+		infos, count, err := termmodel.QueryActivationState(db, query, in.Page, in.Size)
+		if err != nil {
+			return nil, err
+		}
+
+		pbInfos := make([]*pb.TermActivationStateField, len(infos))
+		for i := range infos {
+			pbInfos[i] = &pb.TermActivationStateField{
+				ActiveCode: infos[i].ActiveCode,
+				ActiveType: infos[i].ActiveType,
+				MchtCd:     infos[i].MchtCd,
+				TermId:     infos[i].TermId,
+				NewKsn:     infos[i].NewKsn,
+				OldKsn:     infos[i].OldKsn,
+				IsActive:   infos[i].IsActive,
+				RecOprId:   infos[i].RecOprId,
+				RecUpdOpr:  infos[i].RecUpdOpr,
+			}
+			if !infos[i].CreatedAt.IsZero() {
+				pbInfos[i].CreatedAt = infos[i].CreatedAt.Format(util.TimePattern)
+			}
+			if !infos[i].UpdatedAt.IsZero() {
+				pbInfos[i].UpdatedAt = infos[i].UpdatedAt.Format(util.TimePattern)
+			}
+			if infos[i].ActiveDate.Valid {
+				pbInfos[i].ActiveDate = infos[i].ActiveDate.Time.Format(util.TimePattern)
+			}
+			if infos[i].CreateDate.Valid {
+				pbInfos[i].CreateDate = infos[i].CreateDate.Time.Format(util.TimePattern)
+			}
+		}
+
+		reply.Count = count
+		reply.Items = pbInfos
+
+	} else {
+		query := new(termmodel.ActivationStateMain)
+		if in.Item != nil {
+			query.ActiveCode = in.Item.ActiveCode
+			query.ActiveType = in.Item.ActiveType
+			query.MchtCd = in.Item.MchtCd
+			query.TermId = in.Item.TermId
+			query.NewKsn = in.Item.NewKsn
+			query.OldKsn = in.Item.OldKsn
+			query.IsActive = in.Item.IsActive
+			query.RecOprId = in.Item.RecOprId
+			query.RecUpdOpr = in.Item.RecUpdOpr
+		}
+		infos, count, err := termmodel.QueryActivationStateMain(db, query, in.Page, in.Size)
+		if err != nil {
+			return nil, err
+		}
+
+		pbInfos := make([]*pb.TermActivationStateField, len(infos))
+		for i := range infos {
+			pbInfos[i] = &pb.TermActivationStateField{
+				ActiveCode: infos[i].ActiveCode,
+				ActiveType: infos[i].ActiveType,
+				MchtCd:     infos[i].MchtCd,
+				TermId:     infos[i].TermId,
+				NewKsn:     infos[i].NewKsn,
+				OldKsn:     infos[i].OldKsn,
+				IsActive:   infos[i].IsActive,
+				RecOprId:   infos[i].RecOprId,
+				RecUpdOpr:  infos[i].RecUpdOpr,
+			}
+			if !infos[i].CreatedAt.IsZero() {
+				pbInfos[i].CreatedAt = infos[i].CreatedAt.Format(util.TimePattern)
+			}
+			if !infos[i].UpdatedAt.IsZero() {
+				pbInfos[i].UpdatedAt = infos[i].UpdatedAt.Format(util.TimePattern)
+			}
+			if infos[i].ActiveDate.Valid {
+				pbInfos[i].ActiveDate = infos[i].ActiveDate.Time.Format(util.TimePattern)
+			}
+			if infos[i].CreateDate.Valid {
+				pbInfos[i].CreateDate = infos[i].CreateDate.Time.Format(util.TimePattern)
+			}
+		}
+
+		reply.Count = count
+		reply.Items = pbInfos
+	}
+
+	reply.Size = in.Size
+	reply.Page = in.Page
+	return reply, nil
+}
+
 func (s *service) SaveTermActivationState(ctx context.Context, in *pb.SaveTermActivationStateRequest) (*pb.SaveTermActivationStateReply, error) {
 	var reply pb.SaveTermActivationStateReply
 	var err error

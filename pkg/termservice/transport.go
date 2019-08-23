@@ -36,3 +36,9 @@ func MakeSaveTermActivationStateEndpoint(service pb.TermServer) endpoint.Endpoin
 		return service.SaveTermActivationState(ctx, request.(*pb.SaveTermActivationStateRequest))
 	}
 }
+
+func MakeListTermActivationStateEndpoint(service pb.TermServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.ListTermActivationState(ctx, request.(*pb.ListTermActivationStateRequest))
+	}
+}

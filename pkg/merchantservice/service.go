@@ -1358,7 +1358,7 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 			if !merchants[i].CreatedAt.IsZero() {
 				pbMerchants[i].CreatedAt = merchants[i].CreatedAt.Format(util.TimePattern)
 			}
-			if merchants[i].UpdatedAt.IsZero() {
+			if !merchants[i].UpdatedAt.IsZero() {
 				pbMerchants[i].UpdatedAt = merchants[i].UpdatedAt.Format(util.TimePattern)
 			}
 			if merchants[i].RecApllyTs.Valid {
@@ -1523,7 +1523,7 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 			if !merchants[i].CreatedAt.IsZero() {
 				pbMerchants[i].CreatedAt = merchants[i].CreatedAt.Format(util.TimePattern)
 			}
-			if merchants[i].UpdatedAt.IsZero() {
+			if !merchants[i].UpdatedAt.IsZero() {
 				pbMerchants[i].UpdatedAt = merchants[i].UpdatedAt.Format(util.TimePattern)
 			}
 			if merchants[i].RecApllyTs.Valid {

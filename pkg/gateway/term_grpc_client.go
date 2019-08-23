@@ -17,6 +17,15 @@ type TermEndpoints struct {
 	SaveTermRiskEndpoint            endpoint.Endpoint
 	ListTermRiskEndpoint            endpoint.Endpoint
 	SaveTermActivationStateEndpoint endpoint.Endpoint
+	ListTermActivationStateEndpoint endpoint.Endpoint
+}
+
+func (t *TermEndpoints) ListTermActivationState(ctx context.Context, in *pb.ListTermActivationStateRequest) (*pb.ListTermActivationStateReply, error) {
+	res, err := t.ListTermActivationStateEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.ListTermActivationStateReply), nil
 }
 
 func (t *TermEndpoints) SaveTermActivationState(ctx context.Context, in *pb.SaveTermActivationStateRequest) (*pb.SaveTermActivationStateReply, error) {
@@ -133,6 +142,19 @@ func NewTermServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *T
 			options...,
 		).Endpoint()
 		endpoints.SaveTermActivationStateEndpoint = endpoint
+	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Term",
+			"ListTermActivationState",
+			encodeRequest,
+			decodeResponse,
+			pb.ListTermActivationStateReply{},
+			options...,
+		).Endpoint()
+		endpoints.ListTermActivationStateEndpoint = endpoint
 	}
 
 	return endpoints

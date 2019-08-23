@@ -14,6 +14,15 @@ type server struct {
 	SaveTermRiskHandler            grpctransport.Handler
 	ListTermRiskHandler            grpctransport.Handler
 	SaveTermActivationStateHandler grpctransport.Handler
+	ListTermActivationStateHandler grpctransport.Handler
+}
+
+func (s *server) ListTermActivationState(ctx context.Context, in *pb.ListTermActivationStateRequest) (*pb.ListTermActivationStateReply, error) {
+	_, res, err := s.ListTermActivationStateHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.ListTermActivationStateReply), nil
 }
 
 func (s *server) ListTermInfo(ctx context.Context, in *pb.ListTermInfoRequest) (*pb.ListTermInfoReply, error) {
@@ -112,6 +121,17 @@ func New(tracer grpctransport.ServerOption) pb.TermServer {
 		endpoint := MakeSaveTermActivationStateEndpoint(svc)
 		endpoint = kit.LogginMiddleware(endpoint)
 		svr.SaveTermActivationStateHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+
+	{
+		endpoint := MakeListTermActivationStateEndpoint(svc)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.ListTermActivationStateHandler = grpctransport.NewServer(
 			endpoint,
 			kit.DecodeRequest,
 			kit.EncodeResponse,
