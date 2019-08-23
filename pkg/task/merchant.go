@@ -72,6 +72,12 @@ func merchantRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) erro
 	if err != nil {
 		return err
 	}
+	actives, _, err := term.QueryActivationState(db, &term.ActivationState{
+		MchtCd: info.MchtCd,
+	}, 1, 10000)
+	if err != nil {
+		return err
+	}
 
 	// 入库
 	err = merchant.UpdateMerchant(db, &merchant.MerchantInfo{
@@ -147,6 +153,14 @@ func merchantRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) erro
 			return err
 		}
 	}
+	for i := range actives {
+		err = term.SaveActivationStateMain(db, &term.ActivationStateMain{
+			ActivationState: *actives[i],
+		})
+		if err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
@@ -212,6 +226,13 @@ func deleteMerchant(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error 
 	}
 
 	err = term.DeleteRisk(db, &term.Risk{
+		MchtCd: instance.DataId,
+	})
+	if err != nil {
+		return err
+	}
+
+	err = term.DeleteActivationState(db, &term.ActivationState{
 		MchtCd: instance.DataId,
 	})
 	if err != nil {
