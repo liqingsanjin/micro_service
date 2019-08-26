@@ -1390,38 +1390,42 @@
                 "item": {
                   "type": "object",
                   "properties": {
-                    "fileId": {"type": "string"},
-                    "mchtCd": {"type": "string"},
-                    "docType": {"type": "string"},
-                    "fileType": {"type": "string"},
-                    "fileName": {"type": "string"},
-                    "pIndex": {"type": "string"},
-                    "pCode": {"type": "string"},
-                    "url": {"type": "string"},
-                    "systemFlag": {"type": "string"},
-                    "status": {"type": "string"},
-                    "recOprId": {"type": "string"},
-                    "recUpdOpr": {"type": "string"}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    "fileId": {
+                      "type": "string"
+                    },
+                    "mchtCd": {
+                      "type": "string"
+                    },
+                    "docType": {
+                      "type": "string"
+                    },
+                    "fileType": {
+                      "type": "string"
+                    },
+                    "fileName": {
+                      "type": "string"
+                    },
+                    "pIndex": {
+                      "type": "string"
+                    },
+                    "pCode": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "systemFlag": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "recOprId": {
+                      "type": "string"
+                    },
+                    "recUpdOpr": {
+                      "type": "string"
+                    }
                   }
                 },
                 "type": {
@@ -1438,18 +1442,18 @@
               "application/json": {
                 "items": [
                   {
-                    "FileId": "FILE_ID_57b16bf486c205.16207617",
-                    "MchtCd": "679110158120000",
-                    "DocType": "00",
-                    "FileType": "",
-                    "FileName": "6791101581200000001.jpg",
-                    "PIndex": "1",
-                    "PCode": "6791101581200000001",
-                    "Url": "/upload/62500000/679110158120000/6791101581200000001.jpg",
-                    "SystemFlag": "00",
-                    "Status": "0",
-                    "RecOprId": "I",
-                    "RecUpdOpr": "5",
+                    "fileId": "FILE_ID_57b16bf486c205.16207617",
+                    "mchtCd": "679110158120000",
+                    "docType": "00",
+                    "fileType": "",
+                    "fileName": "6791101581200000001.jpg",
+                    "pIndex": "1",
+                    "pCode": "6791101581200000001",
+                    "url": "/upload/62500000/679110158120000/6791101581200000001.jpg",
+                    "systemFlag": "00",
+                    "status": "0",
+                    "recOprId": "I",
+                    "recUpdOpr": "5",
                     "createdAt": "2016-08-15 15:15:01",
                     "updatedAt": "2016-08-15 15:15:01"
                   }

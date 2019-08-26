@@ -284,18 +284,18 @@ message SaveMerchantBusinessReply {
 }
 
 message MerchantPictureField {
-    string FileId = 1;
-    string MchtCd = 2;
-    string DocType = 3;
-    string FileType = 4;
-    string FileName = 5;
-    int64  PIndex = 6;
-    string PCode = 7;
-    string Url = 8;
-    string SystemFlag = 9;
-    string Status = 10;
-    string RecOprId = 11;
-    string RecUpdOpr = 12;
+    string fileId = 1;
+    string mchtCd = 2;
+    string docType = 3;
+    string fileType = 4;
+    string fileName = 5;
+    int64  pIndex = 6;
+    string pCode = 7;
+    string url = 8;
+    string systemFlag = 9;
+    string status = 10;
+    string recOprId = 11;
+    string recUpdOpr = 12;
     string createdAt = 13;
     string updatedAt = 14;
 }
