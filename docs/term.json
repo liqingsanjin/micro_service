@@ -213,7 +213,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "item": {
+                "term": {
                   "type": "object",
                   "properties": {
                     "mchtCd": {
@@ -313,39 +313,8 @@
                       "type": "string"
                     }
                   }
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "正确返回",
-            "examples": {
-              "application/json": {
-                "err": null
-              }
-            }
-          }
-        }
-      }
-    },
-    "/term/saveTermRisk": {
-      "post": {
-        "operationId": "saveTermRisk",
-        "description": "保存终端风控",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "saveTermRisk",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "item": {
+                },
+                "risk": {
                   "type": "object",
                   "properties": {
                     "mchtCd": {
@@ -391,6 +360,44 @@
                       "type": "string"
                     },
                     "operIn": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "activation": {
+                  "type": "object",
+                  "properties": {
+                    "activeCode": {
+                      "type": "string"
+                    },
+                    "activeType": {
+                      "type": "string"
+                    },
+                    "mchtCd    ": {
+                      "type": "string"
+                    },
+                    "termId    ": {
+                      "type": "string"
+                    },
+                    "newKsn    ": {
+                      "type": "string"
+                    },
+                    "oldKsn    ": {
+                      "type": "string"
+                    },
+                    "isActive  ": {
+                      "type": "string"
+                    },
+                    "recOprId  ": {
+                      "type": "string"
+                    },
+                    "recUpdOpr ": {
+                      "type": "string"
+                    },
+                    "activeDate": {
+                      "type": "string"
+                    },
+                    "createDate": {
                       "type": "string"
                     }
                   }
@@ -518,75 +525,6 @@
                     "updatedAt": "2016-10-28 16:06:45"
                   }
                 ],
-                "err": null
-              }
-            }
-          }
-        }
-      }
-    },
-    "/term/saveTermActivationState": {
-      "post": {
-        "operationId": "saveTermActivationState",
-        "summary": "保存终端激活码信息",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "saveTermActivationState",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "item": {
-                  "type": "object",
-                  "properties": {
-                    "activeCode": {
-                      "type": "string"
-                    },
-                    "activeType": {
-                      "type": "string"
-                    },
-                    "mchtCd    ": {
-                      "type": "string"
-                    },
-                    "termId    ": {
-                      "type": "string"
-                    },
-                    "newKsn    ": {
-                      "type": "string"
-                    },
-                    "oldKsn    ": {
-                      "type": "string"
-                    },
-                    "isActive  ": {
-                      "type": "string"
-                    },
-                    "recOprId  ": {
-                      "type": "string"
-                    },
-                    "recUpdOpr ": {
-                      "type": "string"
-                    },
-                    "activeDate": {
-                      "type": "string"
-                    },
-                    "createDate": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "正确返回",
-            "examples": {
-              "application/json": {
                 "err": null
               }
             }

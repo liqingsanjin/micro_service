@@ -19,21 +19,9 @@ func MakeSaveTermEndpoint(service pb.TermServer) endpoint.Endpoint {
 	}
 }
 
-func MakeSaveTermRiskEndpoint(service pb.TermServer) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		return service.SaveTermRisk(ctx, request.(*pb.SaveTermRiskRequest))
-	}
-}
-
 func MakeListTermRiskEndpoint(service pb.TermServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		return service.ListTermRisk(ctx, request.(*pb.ListTermRiskRequest))
-	}
-}
-
-func MakeSaveTermActivationStateEndpoint(service pb.TermServer) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		return service.SaveTermActivationState(ctx, request.(*pb.SaveTermActivationStateRequest))
 	}
 }
 

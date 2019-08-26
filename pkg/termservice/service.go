@@ -2,7 +2,6 @@ package termservice
 
 import (
 	"context"
-	"net/http"
 	"time"
 	"userService/pkg/common"
 	termmodel "userService/pkg/model/term"
@@ -127,48 +126,6 @@ func (s *service) ListTermActivationState(ctx context.Context, in *pb.ListTermAc
 	reply.Size = in.Size
 	reply.Page = in.Page
 	return reply, nil
-}
-
-func (s *service) SaveTermActivationState(ctx context.Context, in *pb.SaveTermActivationStateRequest) (*pb.SaveTermActivationStateReply, error) {
-	var reply pb.SaveTermActivationStateReply
-	var err error
-	if in.Item == nil {
-		reply.Err = &pb.Error{
-			Code:        http.StatusBadRequest,
-			Message:     "InvalidParamsError",
-			Description: "保存信息为空",
-		}
-		return &reply, nil
-	}
-	db := common.DB
-
-	data := new(termmodel.ActivationState)
-	{
-		data.ActiveCode = in.Item.ActiveCode
-		data.ActiveType = in.Item.ActiveType
-		data.MchtCd = in.Item.MchtCd
-		data.TermId = in.Item.TermId
-		data.NewKsn = in.Item.NewKsn
-		data.OldKsn = in.Item.OldKsn
-		data.IsActive = in.Item.IsActive
-		data.RecOprId = in.Item.RecOprId
-		data.RecUpdOpr = in.Item.RecUpdOpr
-		if in.Item.ActiveDate != "" {
-			data.ActiveDate.Time, err = time.Parse(util.TimePattern, in.Item.ActiveDate)
-			if err == nil {
-				data.ActiveDate.Valid = true
-			}
-		}
-		if in.Item.CreateDate != "" {
-			data.CreateDate.Time, err = time.Parse(util.TimePattern, in.Item.CreateDate)
-			if err == nil {
-				data.CreateDate.Valid = true
-			}
-		}
-
-	}
-	err = termmodel.SaveActivationState(db, data)
-	return &reply, err
 }
 
 func (s *service) ListTermRisk(ctx context.Context, in *pb.ListTermRiskRequest) (*pb.ListTermRiskReply, error) {
@@ -299,40 +256,6 @@ func (s *service) ListTermRisk(ctx context.Context, in *pb.ListTermRiskRequest) 
 	reply.Size = in.Size
 	reply.Page = in.Page
 	return reply, nil
-}
-
-func (s *service) SaveTermRisk(ctx context.Context, in *pb.SaveTermRiskRequest) (*pb.SaveTermRiskReply, error) {
-	var reply pb.SaveTermRiskReply
-	if in.Item == nil {
-		reply.Err = &pb.Error{
-			Code:        http.StatusBadRequest,
-			Message:     "InvalidParamsError",
-			Description: "保存信息为空",
-		}
-		return &reply, nil
-	}
-	db := common.DB
-
-	data := new(termmodel.Risk)
-	{
-		data.MchtCd = in.Item.MchtCd
-		data.TermId = in.Item.TermId
-		data.CardType = in.Item.CardType
-		data.TotalLimitMoney = in.Item.TotalLimitMoney
-		data.AccpetStartTime = in.Item.AccpetStartTime
-		data.AccpetStartDate = in.Item.AccpetStartDate
-		data.AccpetEndTime = in.Item.AccpetEndTime
-		data.AccpetEndDate = in.Item.AccpetEndDate
-		data.SingleLimitMoney = in.Item.SingleLimitMoney
-		data.ControlWay = in.Item.ControlWay
-		data.SingleMinMoney = in.Item.SingleMinMoney
-		data.TotalPeriod = in.Item.TotalPeriod
-		data.RecOprId = in.Item.RecOprId
-		data.RecUpdOpr = in.Item.RecUpdOpr
-		data.OperIn = in.Item.OperIn
-	}
-	err := termmodel.SaveRisk(db, data)
-	return &reply, err
 }
 
 func (s *service) ListTermInfo(ctx context.Context, in *pb.ListTermInfoRequest) (*pb.ListTermInfoReply, error) {
@@ -533,51 +456,101 @@ func (s *service) ListTermInfo(ctx context.Context, in *pb.ListTermInfoRequest) 
 
 func (s *service) SaveTerm(ctx context.Context, in *pb.SaveTermRequest) (*pb.SaveTermReply, error) {
 	var reply pb.SaveTermReply
-	if in.Item == nil {
-		reply.Err = &pb.Error{
-			Code:        http.StatusBadRequest,
-			Message:     "InvalidParamsError",
-			Description: "保存信息为空",
-		}
-		return &reply, nil
-	}
+	var err error
 	db := common.DB
+	db = db.Begin()
+	defer db.Rollback()
 
-	data := new(termmodel.Info)
-	{
-		data.MchtCd = in.Item.MchtCd
-		data.TermId = in.Item.TermId
-		data.TermTp = in.Item.TermTp
-		data.Belong = in.Item.Belong
-		data.BelongSub = in.Item.BelongSub
-		data.TmnlMoneyIntype = in.Item.TmnlMoneyIntype
-		data.TmnlMoney = in.Item.TmnlMoney
-		data.TmnlBrand = in.Item.TmnlBrand
-		data.TmnlModelNo = in.Item.TmnlModelNo
-		data.TmnlBarcode = in.Item.TmnlBarcode
-		data.DeviceCd = in.Item.DeviceCd
-		data.InstallLocation = in.Item.InstallLocation
-		data.TmnlIntype = in.Item.TmnlIntype
-		data.DialOut = in.Item.DialOut
-		data.DealTypes = in.Item.DealTypes
-		data.RecOprId = in.Item.RecOprId
-		data.RecUpdOpr = in.Item.RecUpdOpr
-		data.AppCd = in.Item.AppCd
-		data.SystemFlag = in.Item.SystemFlag
-		data.Status = in.Item.Status
-		data.ActiveCode = in.Item.ActiveCode
-		data.NoFlag = in.Item.NoFlag
-		data.MsgResvFld1 = in.Item.MsgResvFld1
-		data.MsgResvFld2 = in.Item.MsgResvFld2
-		data.MsgResvFld3 = in.Item.MsgResvFld3
-		data.MsgResvFld4 = in.Item.MsgResvFld4
-		data.MsgResvFld5 = in.Item.MsgResvFld5
-		data.MsgResvFld6 = in.Item.MsgResvFld6
-		data.MsgResvFld7 = in.Item.MsgResvFld7
-		data.MsgResvFld8 = in.Item.MsgResvFld8
-		data.MsgResvFld9 = in.Item.MsgResvFld9
-		data.MsgResvFld10 = in.Item.MsgResvFld10
+	if in.Term != nil {
+		data := new(termmodel.Info)
+		data.MchtCd = in.Term.MchtCd
+		data.TermId = in.Term.TermId
+		data.TermTp = in.Term.TermTp
+		data.Belong = in.Term.Belong
+		data.BelongSub = in.Term.BelongSub
+		data.TmnlMoneyIntype = in.Term.TmnlMoneyIntype
+		data.TmnlMoney = in.Term.TmnlMoney
+		data.TmnlBrand = in.Term.TmnlBrand
+		data.TmnlModelNo = in.Term.TmnlModelNo
+		data.TmnlBarcode = in.Term.TmnlBarcode
+		data.DeviceCd = in.Term.DeviceCd
+		data.InstallLocation = in.Term.InstallLocation
+		data.TmnlIntype = in.Term.TmnlIntype
+		data.DialOut = in.Term.DialOut
+		data.DealTypes = in.Term.DealTypes
+		data.RecOprId = in.Term.RecOprId
+		data.RecUpdOpr = in.Term.RecUpdOpr
+		data.AppCd = in.Term.AppCd
+		data.SystemFlag = in.Term.SystemFlag
+		data.Status = in.Term.Status
+		data.ActiveCode = in.Term.ActiveCode
+		data.NoFlag = in.Term.NoFlag
+		data.MsgResvFld1 = in.Term.MsgResvFld1
+		data.MsgResvFld2 = in.Term.MsgResvFld2
+		data.MsgResvFld3 = in.Term.MsgResvFld3
+		data.MsgResvFld4 = in.Term.MsgResvFld4
+		data.MsgResvFld5 = in.Term.MsgResvFld5
+		data.MsgResvFld6 = in.Term.MsgResvFld6
+		data.MsgResvFld7 = in.Term.MsgResvFld7
+		data.MsgResvFld8 = in.Term.MsgResvFld8
+		data.MsgResvFld9 = in.Term.MsgResvFld9
+		data.MsgResvFld10 = in.Term.MsgResvFld10
+		err = termmodel.SaveTermInfo(db, data)
+		if err != nil {
+			return nil, err
+		}
 	}
-	err := termmodel.SaveTermInfo(db, data)
+
+	if in.Risk != nil {
+		data := new(termmodel.Risk)
+		data.MchtCd = in.Risk.MchtCd
+		data.TermId = in.Risk.TermId
+		data.CardType = in.Risk.CardType
+		data.TotalLimitMoney = in.Risk.TotalLimitMoney
+		data.AccpetStartTime = in.Risk.AccpetStartTime
+		data.AccpetStartDate = in.Risk.AccpetStartDate
+		data.AccpetEndTime = in.Risk.AccpetEndTime
+		data.AccpetEndDate = in.Risk.AccpetEndDate
+		data.SingleLimitMoney = in.Risk.SingleLimitMoney
+		data.ControlWay = in.Risk.ControlWay
+		data.SingleMinMoney = in.Risk.SingleMinMoney
+		data.TotalPeriod = in.Risk.TotalPeriod
+		data.RecOprId = in.Risk.RecOprId
+		data.RecUpdOpr = in.Risk.RecUpdOpr
+		data.OperIn = in.Risk.OperIn
+		err = termmodel.SaveRisk(db, data)
+		if err != nil {
+			return nil, err
+		}
+	}
+	if in.Activation != nil {
+		data := new(termmodel.ActivationState)
+		data.ActiveCode = in.Activation.ActiveCode
+		data.ActiveType = in.Activation.ActiveType
+		data.MchtCd = in.Activation.MchtCd
+		data.TermId = in.Activation.TermId
+		data.NewKsn = in.Activation.NewKsn
+		data.OldKsn = in.Activation.OldKsn
+		data.IsActive = in.Activation.IsActive
+		data.RecOprId = in.Activation.RecOprId
+		data.RecUpdOpr = in.Activation.RecUpdOpr
+		if in.Activation.ActiveDate != "" {
+			data.ActiveDate.Time, err = time.Parse(util.TimePattern, in.Activation.ActiveDate)
+			if err == nil {
+				data.ActiveDate.Valid = true
+			}
+		}
+		if in.Activation.CreateDate != "" {
+			data.CreateDate.Time, err = time.Parse(util.TimePattern, in.Activation.CreateDate)
+			if err == nil {
+				data.CreateDate.Valid = true
+			}
+		}
+		err = termmodel.SaveActivationState(db, data)
+		if err != nil {
+			return nil, err
+		}
+	}
+	db.Commit()
 	return &reply, err
 }

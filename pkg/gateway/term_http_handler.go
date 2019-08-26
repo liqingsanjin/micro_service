@@ -24,23 +24,9 @@ func RegisterTermHandler(engine *gin.Engine, endpoints *TermEndpoints) {
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
-	group.POST("/saveTermRisk", convertHttpHandlerToGinHandler(httptransport.NewServer(
-		endpoints.SaveTermRiskEndpoint,
-		decodeHttpRequest(&pb.SaveTermRiskRequest{}),
-		encodeHttpResponse,
-		httptransport.ServerErrorEncoder(errorEncoder),
-	)))
-
 	group.POST("/listTermRisk", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.ListTermRiskEndpoint,
 		decodeHttpRequest(&pb.ListTermRiskRequest{}),
-		encodeHttpResponse,
-		httptransport.ServerErrorEncoder(errorEncoder),
-	)))
-
-	group.POST("/saveTermActivationState", convertHttpHandlerToGinHandler(httptransport.NewServer(
-		endpoints.SaveTermActivationStateEndpoint,
-		decodeHttpRequest(&pb.SaveTermActivationStateRequest{}),
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))

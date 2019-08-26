@@ -7,9 +7,7 @@ import "error.proto";
 service Term {
     rpc ListTermInfo(ListTermInfoRequest) returns (ListTermInfoReply) {}
     rpc SaveTerm(SaveTermRequest) returns (SaveTermReply) {}
-    rpc SaveTermRisk(SaveTermRiskRequest) returns (SaveTermRiskReply) {}
     rpc ListTermRisk(ListTermRiskRequest) returns (ListTermRiskReply) {}
-    rpc SaveTermActivationState(SaveTermActivationStateRequest) returns (SaveTermActivationStateReply) {}
     rpc ListTermActivationState(ListTermActivationStateRequest) returns (ListTermActivationStateReply) {}
 }
 
@@ -66,7 +64,9 @@ message TermInfoField {
 }
 
 message SaveTermRequest {
-    TermInfoField item = 1;
+    TermInfoField term = 1;
+    TermRiskField risk = 2;
+    TermActivationStateField activation = 3;
 }
 
 message SaveTermReply {
@@ -91,14 +91,6 @@ message TermRiskField {
     string operIn           = 15;
     string createdAt        = 16;
     string updatedAt        = 17;
-}
-
-message SaveTermRiskRequest {
-    TermRiskField item = 1;
-}
-
-message SaveTermRiskReply {
-    error err = 1;
 }
 
 message ListTermRiskRequest {
@@ -130,14 +122,6 @@ message TermActivationStateField {
     string createDate = 11;
     string createdAt  = 12;
     string updatedAt  = 13;
-}
-
-message SaveTermActivationStateRequest {
-    TermActivationStateField item = 1;
-}
-
-message SaveTermActivationStateReply {
-    error err = 1;
 }
 
 message ListTermActivationStateRequest {

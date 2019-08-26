@@ -11,9 +11,7 @@ import (
 type server struct {
 	ListTermInfoHandler            grpctransport.Handler
 	SaveTermHandler                grpctransport.Handler
-	SaveTermRiskHandler            grpctransport.Handler
 	ListTermRiskHandler            grpctransport.Handler
-	SaveTermActivationStateHandler grpctransport.Handler
 	ListTermActivationStateHandler grpctransport.Handler
 }
 
@@ -41,28 +39,12 @@ func (s *server) SaveTerm(ctx context.Context, in *pb.SaveTermRequest) (*pb.Save
 	return res.(*pb.SaveTermReply), nil
 }
 
-func (s *server) SaveTermRisk(ctx context.Context, in *pb.SaveTermRiskRequest) (*pb.SaveTermRiskReply, error) {
-	_, res, err := s.SaveTermRiskHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.SaveTermRiskReply), nil
-}
-
 func (s *server) ListTermRisk(ctx context.Context, in *pb.ListTermRiskRequest) (*pb.ListTermRiskReply, error) {
 	_, res, err := s.ListTermRiskHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
 	}
 	return res.(*pb.ListTermRiskReply), nil
-}
-
-func (s *server) SaveTermActivationState(ctx context.Context, in *pb.SaveTermActivationStateRequest) (*pb.SaveTermActivationStateReply, error) {
-	_, res, err := s.SaveTermActivationStateHandler.ServeGRPC(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return res.(*pb.SaveTermActivationStateReply), nil
 }
 
 func New(tracer grpctransport.ServerOption) pb.TermServer {
@@ -96,31 +78,9 @@ func New(tracer grpctransport.ServerOption) pb.TermServer {
 	}
 
 	{
-		endpoint := MakeSaveTermRiskEndpoint(svc)
-		endpoint = kit.LogginMiddleware(endpoint)
-		svr.SaveTermRiskHandler = grpctransport.NewServer(
-			endpoint,
-			kit.DecodeRequest,
-			kit.EncodeResponse,
-			options...,
-		)
-	}
-
-	{
 		endpoint := MakeListTermRiskEndpoint(svc)
 		endpoint = kit.LogginMiddleware(endpoint)
 		svr.ListTermRiskHandler = grpctransport.NewServer(
-			endpoint,
-			kit.DecodeRequest,
-			kit.EncodeResponse,
-			options...,
-		)
-	}
-
-	{
-		endpoint := MakeSaveTermActivationStateEndpoint(svc)
-		endpoint = kit.LogginMiddleware(endpoint)
-		svr.SaveTermActivationStateHandler = grpctransport.NewServer(
 			endpoint,
 			kit.DecodeRequest,
 			kit.EncodeResponse,
