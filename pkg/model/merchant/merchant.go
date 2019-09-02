@@ -34,6 +34,7 @@ type MerchantInfo struct {
 	Certif                string         `gorm:"column:CERTIF"`
 	CertifType            string         `gorm:"column:CERTIF_TYPE"`
 	CertifNo              string         `gorm:"column:CERTIF_NO"`
+	ProvCd                string         `gorm:"column:PROV_CD"`
 	CityCd                string         `gorm:"column:CITY_CD"`
 	AreaCd                string         `gorm:"column:AREA_CD"`
 	RegAddr               string         `gorm:"column:REG_ADDR"`

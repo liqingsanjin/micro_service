@@ -180,6 +180,7 @@ func (m *merchantService) GetMerchantById(ctx context.Context, in *pb.GetMerchan
 			item.Certif = info.Certif
 			item.CertifType = info.CertifType
 			item.CertifNo = info.CertifNo
+			item.ProvCd = info.ProvCd
 			item.CityCd = info.CityCd
 			item.AreaCd = info.AreaCd
 			item.RegAddr = info.RegAddr
@@ -269,6 +270,7 @@ func (m *merchantService) GetMerchantById(ctx context.Context, in *pb.GetMerchan
 			item.Certif = info.Certif
 			item.CertifType = info.CertifType
 			item.CertifNo = info.CertifNo
+			item.ProvCd = info.ProvCd
 			item.CityCd = info.CityCd
 			item.AreaCd = info.AreaCd
 			item.RegAddr = info.RegAddr
@@ -1124,6 +1126,7 @@ func (m *merchantService) SaveMerchant(ctx context.Context, in *pb.SaveMerchantR
 		mtch.Certif = in.Item.Certif
 		mtch.CertifType = in.Item.CertifType
 		mtch.CertifNo = in.Item.CertifNo
+		mtch.ProvCd = in.Item.ProvCd
 		mtch.CityCd = in.Item.CityCd
 		mtch.AreaCd = in.Item.AreaCd
 		mtch.RegAddr = in.Item.RegAddr
@@ -1231,6 +1234,7 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 			query.Certif = in.Item.Certif
 			query.CertifType = in.Item.CertifType
 			query.CertifNo = in.Item.CertifNo
+			query.ProvCd = in.Item.ProvCd
 			query.CityCd = in.Item.CityCd
 			query.AreaCd = in.Item.AreaCd
 			query.RegAddr = in.Item.RegAddr
@@ -1305,6 +1309,7 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 				Certif:                merchants[i].Certif,
 				CertifType:            merchants[i].CertifType,
 				CertifNo:              merchants[i].CertifNo,
+				ProvCd:                merchants[i].ProvCd,
 				CityCd:                merchants[i].CityCd,
 				AreaCd:                merchants[i].AreaCd,
 				RegAddr:               merchants[i].RegAddr,
@@ -1396,6 +1401,7 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 			query.Certif = in.Item.Certif
 			query.CertifType = in.Item.CertifType
 			query.CertifNo = in.Item.CertifNo
+			query.ProvCd = in.Item.ProvCd
 			query.CityCd = in.Item.CityCd
 			query.AreaCd = in.Item.AreaCd
 			query.RegAddr = in.Item.RegAddr
@@ -1470,6 +1476,7 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 				Certif:                merchants[i].Certif,
 				CertifType:            merchants[i].CertifType,
 				CertifNo:              merchants[i].CertifNo,
+				ProvCd:                merchants[i].ProvCd,
 				CityCd:                merchants[i].CityCd,
 				AreaCd:                merchants[i].AreaCd,
 				RegAddr:               merchants[i].RegAddr,
