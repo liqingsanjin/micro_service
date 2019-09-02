@@ -84,7 +84,7 @@ func (s *service) ListTask(ctx context.Context, in *pb.ListTaskRequest) (*pb.Lis
 
 func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb.HandleTaskReply, error) {
 	reply := new(pb.HandleTaskReply)
-	if in.TaskId == 0 || in.Result == "" {
+	if in.TaskId == "" || in.Result == "" {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamError",
@@ -101,9 +101,10 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 		}
 		return reply, nil
 	}
+	taskId, _ := strconv.ParseInt(in.TaskId, 10, 64)
 	db := common.DB.Begin()
 	defer db.Rollback()
-	task, err := camundamodel.FindTaskById(db, in.TaskId)
+	task, err := camundamodel.FindTaskById(db, taskId)
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +120,7 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 	err = camundamodel.SaveRemark(db, &camundamodel.Action{
 		Comment:    in.Remark,
 		Action:     in.Result,
-		TaskId:     in.TaskId,
+		TaskId:     taskId,
 		InstanceId: task.InstanceId,
 		UserId:     id,
 		RoleId:     task.RoleId,

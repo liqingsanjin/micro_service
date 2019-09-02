@@ -224,7 +224,7 @@
               ],
               "properties": {
                 "taskId": {
-                  "type": "integer",
+                  "type": "string",
                   "description": "任务id"
                 },
                 "result": {

@@ -49,7 +49,7 @@ message ListTaskReply {
 }
 
 message HandleTaskRequest {
-    int64 taskId = 1;
+    string taskId = 1;
     string result = 2;
     string remark = 3;
 }
