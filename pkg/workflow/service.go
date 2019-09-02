@@ -163,7 +163,7 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 		reply.Err = &pb.Error{
 			Code:        http.StatusInternalServerError,
 			Message:     INTERNAL,
-			Description: "找不到任务流程流程",
+			Description: "找不到任务流程",
 		}
 		return reply, nil
 	}
@@ -324,53 +324,54 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 		}
 		return reply, nil
 	}
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, instanceId)
-	if err != nil {
-		return nil, err
-	}
-	if instance == nil {
-		reply.Err = &pb.Error{
-			Code:        http.StatusInternalServerError,
-			Message:     INTERNAL,
-			Description: "找不到任务流程流程",
-		}
-		return reply, nil
-	}
 
-	for _, task := range taskListRes.Tasks {
-		var endFlag = false
-		role, err := user.FindRole(db, task.Assignee)
+	if len(instances) == 0 {
+		instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, instanceId)
 		if err != nil {
 			return nil, err
 		}
-		if role == nil {
+		if instance == nil {
 			reply.Err = &pb.Error{
 				Code:        http.StatusInternalServerError,
 				Message:     INTERNAL,
-				Description: "角色不存在",
+				Description: "找不到任务流程流程",
 			}
 			return reply, nil
 		}
-		err = camundamodel.SaveTask(db, &camundamodel.Task{
-			Title:         in.Name,
-			RoleId:        role.ID,
-			CurrentNode:   task.Name,
-			CamundaTaskId: task.Id,
-			InstanceId:    instance.InstanceId,
-			EndFlag:       &endFlag,
-		})
-		if err != nil {
-			return nil, err
+
+		for _, task := range taskListRes.Tasks {
+			var endFlag = false
+			role, err := user.FindRole(db, task.Assignee)
+			if err != nil {
+				return nil, err
+			}
+			if role == nil {
+				reply.Err = &pb.Error{
+					Code:        http.StatusInternalServerError,
+					Message:     INTERNAL,
+					Description: "角色不存在",
+				}
+				return reply, nil
+			}
+			err = camundamodel.SaveTask(db, &camundamodel.Task{
+				Title:         in.Name,
+				RoleId:        role.ID,
+				CurrentNode:   task.Name,
+				CamundaTaskId: task.Id,
+				InstanceId:    instance.InstanceId,
+				EndFlag:       &endFlag,
+			})
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	db.Commit()
-	if len(taskListRes.Tasks) > 0 {
-		task, err := camundamodel.FindTaskByCamundaId(common.DB, taskListRes.Tasks[0].Id)
-		if err != nil {
-			return nil, err
-		}
-		reply.TaskId = task.TaskId
+	task, err := camundamodel.FindTaskByCamundaId(common.DB, taskListRes.Tasks[0].Id)
+	if err != nil {
+		return nil, err
 	}
+	reply.TaskId = task.TaskId
 	return reply, nil
 }
 
