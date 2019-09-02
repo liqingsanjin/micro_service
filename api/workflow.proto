@@ -18,7 +18,8 @@ message StartWorkflowRequest {
 }
 
 message StartWorkflowReply {
-    error err = 1;
+    int64 taskId = 1;
+    error err = 2;
 }
 
 message ListTaskRequest {

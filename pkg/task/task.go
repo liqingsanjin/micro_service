@@ -1,10 +1,12 @@
 package task
 
 import (
+	"database/sql"
 	"strconv"
 	"userService/pkg/camunda"
 	"userService/pkg/camunda/pb"
 	"userService/pkg/common"
+	camundamodel "userService/pkg/model/camunda"
 
 	"github.com/robfig/cron"
 	"github.com/sirupsen/logrus"
@@ -93,60 +95,84 @@ func finishRegister(ctx context.Context, workerId int, ch <-chan int) {
 				if len(resp.Item) == 0 {
 					return
 				}
+
+				item := resp.Item[0]
+				// 查询机构id
+				instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, item.ProcessInstanceId)
+				if err != nil {
+					logrus.Errorln(err)
+					return
+				}
+				if instance == nil {
+					logrus.Errorln("process %s not found", item.ProcessInstanceId)
+					return
+				}
 				switch topic {
 				case addIns:
 					// 机构注册
-					err = institutionRegister(db, resp.Item[0])
+					err = institutionRegister(db, instance)
 				case addMcht:
 					// 商户注册
-					err = merchantRegister(db, resp.Item[0])
+					err = merchantRegister(db, instance)
 				case deleteIns:
 					// 机构删除
-					err = deleteInstitution(db, resp.Item[0])
+					err = deleteInstitution(db, instance)
 				case deleteMcht:
 					// 删除商户
-					err = deleteMerchant(db, resp.Item[0])
+					err = deleteMerchant(db, instance)
 				case updateIns:
 					// 更新机构
-					err = institutionUpdate(db, resp.Item[0])
+					err = institutionUpdate(db, instance)
 				case cancelUpdateIns:
 					// 取消更新机构
-					err = institutionUpdateCancel(db, resp.Item[0])
+					err = institutionUpdateCancel(db, instance)
 				case updateMcht:
 					// 更新商户
-					err = merchantUpdate(db, resp.Item[0])
+					err = merchantUpdate(db, instance)
 				case cancelUpdateMcht:
 					// 取消更新商户
-					err = merchantUpdateCancel(db, resp.Item[0])
+					err = merchantUpdateCancel(db, instance)
 				case insUnregister:
 					// 机构注销
-					err = institutionUnRegister(db, resp.Item[0])
+					err = institutionUnRegister(db, instance)
 				case cancelInsUnregister:
 					// 取消机构注销
-					err = institutionCancelUnRegister(db, resp.Item[0])
+					err = institutionCancelUnRegister(db, instance)
 				case freezeMcht:
-					// todo 商户冻结
-					err = merchantFreeze(db, resp.Item[0])
+					// 商户冻结
+					err = merchantFreeze(db, instance)
 				case cancelFreezeMcht:
-					// todo 取消商户冻结
-					err = cancelMerchantFreeze(db, resp.Item[0])
+					// 取消商户冻结
+					err = cancelMerchantFreeze(db, instance)
 				case unfreezeMcht:
-					// todo 商户解冻
-					err = merchantUnFreeze(db, resp.Item[0])
+					// 商户解冻
+					err = merchantUnFreeze(db, instance)
 				case cancelUnfreezeMcht:
-					// todo 取消商户解冻
-					err = cancelMerchantUnFreeze(db, resp.Item[0])
+					// 取消商户解冻
+					err = cancelMerchantUnFreeze(db, instance)
 				case mchtUnregister:
-					// todo 商户注销
-					err = merchantUnregister(db, resp.Item[0])
+					// 商户注销
+					err = merchantUnregister(db, instance)
 				case cancelMchtUnregister:
-					// todo 取消商户注销
-					err = cancelMerchantUnregister(db, resp.Item[0])
+					// 取消商户注销
+					err = cancelMerchantUnregister(db, instance)
 				}
 				if err != nil {
 					logrus.Errorln(err)
 					return
 				}
+				// 将工作流最终状态修改为已完成
+				err = camundamodel.UpdateProcessInstance(db, instance.InstanceId, &camundamodel.ProcessInstance{
+					EndFlag: sql.NullInt64{
+						Int64: 1,
+						Valid: true,
+					},
+				})
+				if err != nil {
+					logrus.Errorln(err)
+					return
+				}
+
 				completeResp, err := client.ExternalTask.Complete(ctx, &pb.CompleteExternalTaskReq{
 					Id: resp.Item[0].Id,
 					Body: &pb.CompleteExternalTaskReqBody{

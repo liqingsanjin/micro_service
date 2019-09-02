@@ -2,23 +2,13 @@ package task
 
 import (
 	"fmt"
-	"userService/pkg/camunda/pb"
 	camundamodel "userService/pkg/model/camunda"
 	"userService/pkg/model/institution"
 
 	"github.com/jinzhu/gorm"
 )
 
-func institutionRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询机构id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
+func institutionRegister(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	// 查询机构信息
 	info, err := institution.FindInstitutionInfoById(db, instance.DataId)
 	if err != nil {
@@ -93,15 +83,8 @@ func institutionRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) e
 	return nil
 }
 
-func deleteInstitution(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询机构id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
+func deleteInstitution(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
+	var err error
 	// 删除 institution fee cash control
 	err = institution.DeleteInstitution(db, &institution.InstitutionInfo{
 		InsIdCd: instance.DataId,
@@ -130,16 +113,7 @@ func deleteInstitution(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) err
 	return nil
 }
 
-func institutionUpdate(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询机构id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
+func institutionUpdate(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	// 查询机构信息
 	info, err := institution.FindInstitutionInfoById(db, instance.DataId)
 	if err != nil {
@@ -202,16 +176,7 @@ func institutionUpdate(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) err
 	return nil
 }
 
-func institutionUpdateCancel(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询机构id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
+func institutionUpdateCancel(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	// 查询正式表机构信息
 	info, err := institution.FindInstitutionInfoMainById(db, instance.DataId)
 	if err != nil {
@@ -272,16 +237,7 @@ func institutionUpdateCancel(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespIte
 	return nil
 }
 
-func institutionUnRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询机构id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
+func institutionUnRegister(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	// 查询机构信息
 	info, err := institution.FindInstitutionInfoById(db, instance.DataId)
 	if err != nil {
@@ -297,16 +253,7 @@ func institutionUnRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem)
 	return err
 }
 
-func institutionCancelUnRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询机构id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
+func institutionCancelUnRegister(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	// 查询机构信息
 	info, err := institution.FindInstitutionInfoMainById(db, instance.DataId)
 	if err != nil {

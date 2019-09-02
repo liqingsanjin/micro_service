@@ -2,7 +2,6 @@ package task
 
 import (
 	"fmt"
-	"userService/pkg/camunda/pb"
 	camundamodel "userService/pkg/model/camunda"
 	"userService/pkg/model/merchant"
 	"userService/pkg/model/term"
@@ -10,16 +9,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func merchantRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询商户id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
+func merchantRegister(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	// 查询商户信息
 	info, err := merchant.FindMerchantInfoById(db, instance.DataId)
 	if err != nil {
@@ -165,16 +155,8 @@ func merchantRegister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) erro
 	return nil
 }
 
-func deleteMerchant(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询商户id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
+func deleteMerchant(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
+	var err error
 	// 删除商户相关信息
 	err = merchant.DeleteMerchant(db, &merchant.MerchantInfo{
 		MchtCd: instance.DataId,
@@ -242,16 +224,7 @@ func deleteMerchant(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error 
 	return nil
 }
 
-func merchantUpdate(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询商户id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
+func merchantUpdate(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	// 查询商户信息
 	info, err := merchant.FindMerchantInfoById(db, instance.DataId)
 	if err != nil {
@@ -345,16 +318,7 @@ func merchantUpdate(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error 
 	return nil
 }
 
-func merchantUpdateCancel(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询商户id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
+func merchantUpdateCancel(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	// 查询正式表商户信息
 	info, err := merchant.FindMerchantInfoMainById(db, instance.DataId)
 	if err != nil {
@@ -446,16 +410,7 @@ func merchantUpdateCancel(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) 
 	return nil
 }
 
-func merchantUnFreeze(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询商户id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
+func merchantUnFreeze(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	// 查询编辑表商户信息
 	info, err := merchant.FindMerchantInfoById(db, instance.DataId)
 	if err != nil {
@@ -471,16 +426,7 @@ func merchantUnFreeze(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) erro
 	return err
 }
 
-func cancelMerchantUnFreeze(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询商户id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
+func cancelMerchantUnFreeze(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	// 查询主表商户信息
 	info, err := merchant.FindMerchantInfoMainById(db, instance.DataId)
 	if err != nil {
@@ -494,16 +440,7 @@ func cancelMerchantUnFreeze(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem
 	return err
 }
 
-func merchantFreeze(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询商户id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
+func merchantFreeze(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	// 查询编辑表商户信息
 	info, err := merchant.FindMerchantInfoById(db, instance.DataId)
 	if err != nil {
@@ -519,16 +456,7 @@ func merchantFreeze(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error 
 	return err
 }
 
-func cancelMerchantFreeze(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询商户id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
+func cancelMerchantFreeze(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	// 查询主表商户信息
 	info, err := merchant.FindMerchantInfoMainById(db, instance.DataId)
 	if err != nil {
@@ -542,16 +470,7 @@ func cancelMerchantFreeze(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) 
 	return err
 }
 
-func merchantUnregister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询商户id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
+func merchantUnregister(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	// 查询编辑表商户信息
 	info, err := merchant.FindMerchantInfoById(db, instance.DataId)
 	if err != nil {
@@ -567,16 +486,7 @@ func merchantUnregister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) er
 	return err
 }
 
-func cancelMerchantUnregister(db *gorm.DB, in *pb.FetchAndLockExternalTaskRespItem) error {
-	// 查询商户id
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, in.ProcessInstanceId)
-	if err != nil {
-		return err
-	}
-	if instance == nil {
-		return fmt.Errorf("process %s not found", in.ProcessInstanceId)
-	}
-
+func cancelMerchantUnregister(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	// 查询主表商户信息
 	info, err := merchant.FindMerchantInfoMainById(db, instance.DataId)
 	if err != nil {

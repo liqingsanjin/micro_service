@@ -38,12 +38,21 @@ func SaveTask(db *gorm.DB, task *Task) error {
 }
 
 func UpdateTask(db *gorm.DB, query *Task, task *Task) error {
-	return db.Model(task).Where(query).Update(task).Error
+	return db.Model(task).Where(query).Updates(task).Error
 }
 
 func FindTaskById(db *gorm.DB, id int64) (*Task, error) {
 	out := new(Task)
 	err := db.Where("task_id = ?", id).Take(out).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return out, err
+}
+
+func FindTaskByCamundaId(db *gorm.DB, id string) (*Task, error) {
+	out := new(Task)
+	err := db.Where("camunda_task_id = ?", id).Take(out).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}

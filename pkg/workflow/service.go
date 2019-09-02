@@ -2,6 +2,7 @@ package workflow
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -252,37 +253,57 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 		}
 		return reply, nil
 	}
-
-	client := camunda.Get()
-
-	startProcessInstanceRes, err := client.ProcessDefinition.Start(ctx, &camundapb.StartProcessDefinitionReq{
-		Id: processes[0].Id,
-		Body: &camundapb.StartProcessDefinitionReqBody{
-			BusinessKey: in.Name,
+	// 查询是否有未完成的任务
+	instances, err := camundamodel.QueryProcessInstance(db, &camundamodel.ProcessInstance{
+		DataId: in.DataId,
+		EndFlag: sql.NullInt64{
+			Int64: 0,
+			Valid: true,
 		},
 	})
 	if err != nil {
 		return nil, err
 	}
+	var instanceId string
 
-	if camunda.CheckError(startProcessInstanceRes) {
-		reply.Err = camunda.TransError(startProcessInstanceRes)
-		return reply, nil
-	}
+	client := camunda.Get()
+	if len(instances) == 0 {
+		startProcessInstanceRes, err := client.ProcessDefinition.Start(ctx, &camundapb.StartProcessDefinitionReq{
+			Id: processes[0].Id,
+			Body: &camundapb.StartProcessDefinitionReqBody{
+				BusinessKey: in.Name,
+			},
+		})
+		if err != nil {
+			return nil, err
+		}
 
-	err = camundamodel.SaveProcessInstance(db, &camundamodel.ProcessInstance{
-		CamundaInstanceId: startProcessInstanceRes.Item.Id,
-		Title:             in.Name,
-		DataId:            in.DataId,
-		UserId:            id,
-	})
-	if err != nil {
-		return nil, err
+		if camunda.CheckError(startProcessInstanceRes) {
+			reply.Err = camunda.TransError(startProcessInstanceRes)
+			return reply, nil
+		}
+
+		err = camundamodel.SaveProcessInstance(db, &camundamodel.ProcessInstance{
+			CamundaInstanceId: startProcessInstanceRes.Item.Id,
+			Title:             in.Name,
+			DataId:            in.DataId,
+			UserId:            id,
+			EndFlag: sql.NullInt64{
+				Int64: 0,
+				Valid: true,
+			},
+		})
+		if err != nil {
+			return nil, err
+		}
+		instanceId = startProcessInstanceRes.Item.Id
+	} else {
+		instanceId = instances[0].CamundaInstanceId
 	}
 
 	// 获取任务
 	taskListRes, err := client.Task.GetList(ctx, &camundapb.GetListTaskReq{
-		ProcessInstanceId: startProcessInstanceRes.Item.Id,
+		ProcessInstanceId: instanceId,
 	})
 	if err != nil {
 		return nil, err
@@ -302,7 +323,7 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 		}
 		return reply, nil
 	}
-	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, startProcessInstanceRes.Item.Id)
+	instance, err := camundamodel.FindProcessInstanceByCamundaInstanceId(db, instanceId)
 	if err != nil {
 		return nil, err
 	}
@@ -342,6 +363,13 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 		}
 	}
 	db.Commit()
+	if len(taskListRes.Tasks) > 0 {
+		task, err := camundamodel.FindTaskByCamundaId(common.DB, taskListRes.Tasks[0].Id)
+		if err != nil {
+			return nil, err
+		}
+		reply.TaskId = task.TaskId
+	}
 	return reply, nil
 }
 
