@@ -71,6 +71,7 @@ func (s *service) ListTask(ctx context.Context, in *pb.ListTaskRequest) (*pb.Lis
 			EndFlag:       *tasks[i].EndFlag,
 			WorkflowName:  tasks[i].WorkflowName,
 			Username:      tasks[i].UserName,
+			DataId:        tasks[i].DataId,
 			CreatedAt:     tasks[i].CreatedAt.Format("2006-01-02 15:03:04"),
 			UpdatedAt:     tasks[i].UpdatedAt.Format("2006-01-02 15:03:04"),
 		}
@@ -208,6 +209,7 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 				EndFlag:       &endFlag,
 				WorkflowName:  instance.WorkflowName,
 				UserName:      instance.UserName,
+				DataId:        instance.DataId,
 			})
 			if err != nil {
 				return nil, err
@@ -383,6 +385,7 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 				EndFlag:       &endFlag,
 				WorkflowName:  in.Type,
 				UserName:      userInfo.UserName,
+				DataId:        instance.DataId,
 			})
 			if err != nil {
 				return nil, err

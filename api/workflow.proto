@@ -38,8 +38,9 @@ message TaskField {
     bool endFlag = 7;
     string workflowName = 8;
     string username = 9;
-    string createdAt = 10;
-    string updatedAt = 11;
+    string dataId = 10;
+    string createdAt = 11;
+    string updatedAt = 12;
 }
 
 message ListTaskReply {

@@ -16,6 +16,7 @@ type Task struct {
 	EndFlag       *bool     `gorm:"column:end_flag"`
 	UserName      string    `gorm:"column:username"`
 	WorkflowName  string    `gorm:"column:workflow_name"`
+	DataId        string    `gorm:"column:data_id"`
 	CreatedAt     time.Time `gorm:"column:created_at"`
 	UpdatedAt     time.Time `gorm:"column:updated_at"`
 }
