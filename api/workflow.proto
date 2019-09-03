@@ -36,8 +36,10 @@ message TaskField {
     string camundaTaskId = 5;
     int64 instanceId = 6;
     bool endFlag = 7;
-    string createdAt = 8;
-    string updatedAt = 9;
+    string workflowName = 8;
+    string username = 9;
+    string createdAt = 10;
+    string updatedAt = 11;
 }
 
 message ListTaskReply {

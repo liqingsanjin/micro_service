@@ -69,6 +69,8 @@ func (s *service) ListTask(ctx context.Context, in *pb.ListTaskRequest) (*pb.Lis
 			CamundaTaskId: tasks[i].CamundaTaskId,
 			InstanceId:    tasks[i].InstanceId,
 			EndFlag:       *tasks[i].EndFlag,
+			WorkflowName:  tasks[i].WorkflowName,
+			Username:      tasks[i].UserName,
 			CreatedAt:     tasks[i].CreatedAt.Format("2006-01-02 15:03:04"),
 			UpdatedAt:     tasks[i].UpdatedAt.Format("2006-01-02 15:03:04"),
 		}
@@ -204,6 +206,8 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 				CamundaTaskId: t.Id,
 				InstanceId:    instance.InstanceId,
 				EndFlag:       &endFlag,
+				WorkflowName:  instance.WorkflowName,
+				UserName:      instance.UserName,
 			})
 			if err != nil {
 				return nil, err
@@ -239,6 +243,21 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 
 	db := common.DB.Begin()
 	defer db.Rollback()
+
+	// 查询用户信息
+	userInfo, err := user.FindUserByID(db, id)
+	if err != nil {
+		return nil, err
+	}
+
+	if userInfo == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     "InvalidParamError",
+			Description: "用户不存在",
+		}
+		return reply, nil
+	}
 
 	processes, err := camundamodel.QueryProcessDefinition(db, &camundamodel.ProcessDefinition{
 		Name: in.Type,
@@ -289,6 +308,8 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 			Title:             in.Name,
 			DataId:            in.DataId,
 			UserId:            id,
+			UserName:          userInfo.UserName,
+			WorkflowName:      in.Type,
 			EndFlag: sql.NullInt64{
 				Int64: 0,
 				Valid: true,
@@ -360,6 +381,8 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 				CamundaTaskId: task.Id,
 				InstanceId:    instance.InstanceId,
 				EndFlag:       &endFlag,
+				WorkflowName:  in.Type,
+				UserName:      userInfo.UserName,
 			})
 			if err != nil {
 				return nil, err

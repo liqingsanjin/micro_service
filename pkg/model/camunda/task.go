@@ -14,6 +14,8 @@ type Task struct {
 	CurrentNode   string    `gorm:"column:current_node"`
 	CamundaTaskId string    `gorm:"column:camunda_task_id"`
 	EndFlag       *bool     `gorm:"column:end_flag"`
+	UserName      string    `gorm:"column:username"`
+	WorkflowName  string    `gorm:"column:workflow_name"`
 	CreatedAt     time.Time `gorm:"column:created_at"`
 	UpdatedAt     time.Time `gorm:"column:updated_at"`
 }

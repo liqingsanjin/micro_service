@@ -32,6 +32,8 @@ type ProcessInstance struct {
 	DataId            string        `gorm:"column:data_id"`
 	UserId            int64         `gorm:"column:user_id"`
 	EndFlag           sql.NullInt64 `gorm:"column:end_flag"`
+	UserName          string        `gorm:"column:username"`
+	WorkflowName      string        `gorm:"column:workflow_name"`
 	CreatedAt         time.Time     `gorm:"column:created_at"`
 	UpdatedAt         time.Time     `gorm:"column:updated_at"`
 }
