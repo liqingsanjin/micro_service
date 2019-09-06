@@ -19,7 +19,7 @@
       <bpmn:outgoing>SequenceFlow_0t96xry</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="SequenceFlow_1p742w2" sourceRef="Task_0xt0b1u" targetRef="ExclusiveGateway_0ytbz6o" />
-    <bpmn:userTask id="Task_0xt0b1u" name="终审节点" camunda:assignee="机构终审员">
+    <bpmn:userTask id="Task_0xt0b1u" name="finalCheck" camunda:assignee="机构终审员">
       <bpmn:incoming>SequenceFlow_1ctx2qu</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1p742w2</bpmn:outgoing>
     </bpmn:userTask>
@@ -44,7 +44,7 @@
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_0zpyu98" sourceRef="Task_0qsjd1x" targetRef="EndEvent_1j1wwrp" />
     <bpmn:sequenceFlow id="SequenceFlow_05xmmx2" sourceRef="StartEvent_076p239" targetRef="Task_17gsglc" />
-    <bpmn:userTask id="Task_17gsglc" name="机构经办" camunda:assignee="机构经办员">
+    <bpmn:userTask id="Task_17gsglc" name="edit" camunda:assignee="机构经办员">
       <bpmn:incoming>SequenceFlow_05xmmx2</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0t96xry</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_09kj7zv</bpmn:outgoing>

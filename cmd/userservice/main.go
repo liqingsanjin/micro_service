@@ -15,6 +15,7 @@ import (
 	"userService/pkg/termservice"
 	"userService/pkg/workflow"
 
+	logrustash "github.com/bshuster-repo/logrus-logstash-hook"
 	"github.com/go-kit/kit/sd/consul"
 	"github.com/go-kit/kit/tracing/zipkin"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
@@ -62,6 +63,13 @@ var (
 )
 
 func main() {
+	hook, err := logrustash.NewHook("tcp", "127.0.0.1:5100", "userService")
+	if err != nil {
+		logrus.Errorln(err)
+	} else {
+		logrus.AddHook(hook)
+	}
+
 	// 初始化log
 	level := os.Getenv("LOG_LEVEL")
 	if level == "debug" {
@@ -72,7 +80,6 @@ func main() {
 	}
 	logrus.SetFormatter(&util.LogFormatter{})
 
-	var err error
 	if err = parseConfigFile(); err != nil {
 		logrus.Fatal("解析配置文件错误", err)
 	}

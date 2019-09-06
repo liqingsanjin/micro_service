@@ -43,17 +43,17 @@
     <bpmn:sequenceFlow id="SequenceFlow_05v8xi6" name="退回" sourceRef="ExclusiveGateway_1raoyqc" targetRef="Task_1ecc4qq">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${result == 'no'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:userTask id="Task_0p5xdct" name="编辑节点" camunda:assignee="商户编辑员">
+    <bpmn:userTask id="Task_0p5xdct" name="edit" camunda:assignee="商户编辑员">
       <bpmn:incoming>SequenceFlow_0xm3ach</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_003kq1a</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_167l0e5</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_1ecc4qq" name="复核节点" camunda:assignee="商户复核员">
+    <bpmn:userTask id="Task_1ecc4qq" name="check" camunda:assignee="商户复核员">
       <bpmn:incoming>SequenceFlow_0vsw7md</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_05v8xi6</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1yrdlxx</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_1f6zw86" name="终审节点" camunda:assignee="商户终审员">
+    <bpmn:userTask id="Task_1f6zw86" name="finalCheck" camunda:assignee="商户终审员">
       <bpmn:incoming>SequenceFlow_00q3i24</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_09svbji</bpmn:outgoing>
     </bpmn:userTask>
