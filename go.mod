@@ -35,5 +35,6 @@ require (
 	github.com/tebeka/strftime v0.0.0-20140926081919-3f9c7761e312 // indirect
 	golang.org/x/crypto v0.0.0-20190621222207-cc06ce4a13d4
 	golang.org/x/net v0.0.0-20190620200207-3b0461eec859
+	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4
 	google.golang.org/grpc v1.21.1
 )
