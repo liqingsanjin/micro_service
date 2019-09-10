@@ -171,7 +171,16 @@ func QueryMerchantInfosMain(db *gorm.DB, query *MerchantInfoMain, page int32, si
 }
 
 func SaveMerchant(db *gorm.DB, info *MerchantInfo) error {
-	return db.Save(info).Error
+	query := &MerchantInfo{MchtCd: info.MchtCd}
+	out := new(MerchantInfo)
+	err := db.Where(query).Take(out).Error
+	if err == gorm.ErrRecordNotFound {
+		return db.Save(info).Error
+	}
+	if err != nil {
+		return err
+	}
+	return db.Model(&MerchantInfo{}).Where(query).Updates(info).Error
 }
 
 func UpdateMerchant(db *gorm.DB, query *MerchantInfo, data *MerchantInfo) error {

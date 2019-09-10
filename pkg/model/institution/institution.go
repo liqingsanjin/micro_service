@@ -95,7 +95,16 @@ func FindInstitutionInfosByIdList(db *gorm.DB, ids []string) ([]*InstitutionInfo
 }
 
 func SaveInstitution(db *gorm.DB, ins *InstitutionInfo) error {
-	return db.Save(ins).Error
+	query := &InstitutionInfo{InsIdCd: ins.InsIdCd}
+	out := new(InstitutionInfo)
+	err := db.Where(query).Take(out).Error
+	if err == gorm.ErrRecordNotFound {
+		return db.Save(ins).Error
+	}
+	if err != nil {
+		return err
+	}
+	return db.Model(&InstitutionInfo{}).Where(query).Updates(ins).Error
 }
 
 func UpdateInstitution(db *gorm.DB, query *InstitutionInfo, info *InstitutionInfo) error {
