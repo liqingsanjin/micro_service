@@ -220,16 +220,9 @@
                   "type": "object",
                   "description": "备注",
                   "properties": {
-                    "remarkId": {
-                      "type": "integer"
-                    },
-                    "comment": {
-                      "type": "string",
-                      "description": "内容"
-                    },
-                    "taskId": {
+                    "instanceId": {
                       "type": "integer",
-                      "description": "任务id"
+                      "description": "实例id"
                     }
                   }
                 }
@@ -242,6 +235,20 @@
             "description": "正确返回",
             "examples": {
               "application/json": {
+                "items": [
+                  {
+                    "actionId": "20",
+                    "action": "",
+                    "comment": "提交复审",
+                    "taskId": "25",
+                    "username": "test11",
+                    "createdAt": "2019-07-22 15:40:08",
+                    "updatedAt": "2019-07-22 15:40:08"
+                  }
+                ],
+                "count": 1,
+                "size": 10,
+                "page": 1,
                 "err": null
               }
             }

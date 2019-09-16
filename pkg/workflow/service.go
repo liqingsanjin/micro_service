@@ -415,7 +415,7 @@ func (s *service) ListRemark(ctx context.Context, in *pb.ListRemarkRequest) (*pb
 		query.Comment = in.Item.Comment
 		query.TaskId = in.Item.TaskId
 		query.Action = in.Item.Action
-
+		query.InstanceId = in.Item.InstanceId
 	}
 	db := common.DB
 	items, count, err := camundamodel.QueryRemark(db, query, in.Page, in.Size)
@@ -426,13 +426,14 @@ func (s *service) ListRemark(ctx context.Context, in *pb.ListRemarkRequest) (*pb
 	docs := make([]*pb.RemarkField, len(items))
 	for i := range items {
 		docs[i] = &pb.RemarkField{
-			ActionId:  items[i].ActionId,
-			Action:    items[i].Action,
-			Comment:   items[i].Comment,
-			TaskId:    items[i].TaskId,
-			UserId:    items[i].TaskId,
-			CreatedAt: items[i].CreatedAt.Format(util.TimePattern),
-			UpdatedAt: items[i].UpdatedAt.Format(util.TimePattern),
+			ActionId:   items[i].ActionId,
+			Action:     items[i].Action,
+			Comment:    items[i].Comment,
+			TaskId:     items[i].TaskId,
+			InstanceId: items[i].InstanceId,
+			Username:   items[i].UserName,
+			CreatedAt:  items[i].CreatedAt.Format(util.TimePattern),
+			UpdatedAt:  items[i].UpdatedAt.Format(util.TimePattern),
 		}
 	}
 

@@ -65,10 +65,11 @@ message RemarkField {
     int64 actionId = 1;
     string action = 2;
     string comment = 3;
-    int64 taskId = 4;
-    int64 userId = 5;
-    string createdAt = 6;
-    string updatedAt = 7;
+    int64 instanceId = 4;
+    int64 taskId = 5;
+    string username = 6;
+    string createdAt = 7;
+    string updatedAt = 8;
 }
 
 message ListRemarkRequest {
