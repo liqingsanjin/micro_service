@@ -430,6 +430,7 @@ func (s *service) ListRemark(ctx context.Context, in *pb.ListRemarkRequest) (*pb
 			Action:    items[i].Action,
 			Comment:   items[i].Comment,
 			TaskId:    items[i].TaskId,
+			UserId:    items[i].TaskId,
 			CreatedAt: items[i].CreatedAt.Format(util.TimePattern),
 			UpdatedAt: items[i].UpdatedAt.Format(util.TimePattern),
 		}
