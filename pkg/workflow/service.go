@@ -435,7 +435,7 @@ func (s *service) ListRemark(ctx context.Context, in *pb.ListRemarkRequest) (*pb
 	for i := range items {
 		docs[i] = &pb.RemarkField{
 			ActionId:   items[i].ActionId,
-			Action:     items[i].Action,
+			Action:     items[i].Action.Action,
 			Comment:    items[i].Comment,
 			TaskId:     items[i].TaskId,
 			InstanceId: items[i].InstanceId,
