@@ -35,6 +35,6 @@ func QueryRemark(db *gorm.DB, query *Action, page int32, size int32) ([]*Remark,
 	out := make([]*Remark, 0)
 	var count int32
 	db.Model(query).Where(query).Count(&count)
-	err := db.Select("TBL_CAMUNDA_ACTION.*, u.USER_NAME").Joins("left join TBL_USER u on u.USER_ID = TBL_CAMUNDA_ACTION.user_id").Where(query).Offset((page - 1) * size).Limit(size).Scan(&out).Error
+	err := db.Table("TBL_CAMUNDA_ACTION").Select("TBL_CAMUNDA_ACTION.*, u.USER_NAME").Joins("left join TBL_USER u on u.USER_ID = TBL_CAMUNDA_ACTION.user_id").Where(query).Offset((page - 1) * size).Limit(size).Scan(&out).Error
 	return out, count, err
 }
