@@ -111,6 +111,14 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 	if err != nil {
 		return nil, err
 	}
+	if task == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "找不到任务",
+		}
+		return reply, nil
+	}
 
 	client := camunda.Get()
 	values := make(map[string]*camundapb.Variable)
