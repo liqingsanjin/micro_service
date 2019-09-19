@@ -6,24 +6,28 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type InstitutionGroup struct {
-	InsGroup  string    `gorm:"column:INS_GROUP;primary_key"`
-	InsIdCd   string    `gorm:"column:INS_ID_CD;primary_key"`
-	CreatedAt time.Time `gorm:"column:REC_CRT_TS"`
-	UpdatedAt time.Time `gorm:"column:REC_UPD_TS"`
+type Group struct {
+	GroupId   int64     `gorm:"column:group_id;primary_key"`
+	Name      string    `gorm:"column:name"`
+	CreatedAt time.Time `gorm:"column:created"`
+	UpdatedAt time.Time `gorm:"column:updated"`
 }
 
-func (i InstitutionGroup) TableName() string {
+func (Group) TableName() string {
 	return "TBL_INS_GROUP"
 }
 
-func ListGroups(db *gorm.DB, page int32, size int32) ([]*InstitutionGroup, int32, error) {
-	gs := make([]*InstitutionGroup, 0)
+func ListGroups(db *gorm.DB, page int32, size int32) ([]*Group, int32, error) {
+	gs := make([]*Group, 0)
 	var count int32
-	db.Model(&InstitutionGroup{}).Group("INS_GROUP").Count(&count)
-	err := db.Select("INS_GROUP").Offset((page - 1) * size).Limit(size).Group("INS_GROUP").Find(&gs).Error
+	db.Model(&Group{}).Count(&count)
+	err := db.Offset((page - 1) * size).Limit(size).Find(&gs).Error
 	if err == gorm.ErrRecordNotFound {
 		return gs, count, nil
 	}
 	return gs, count, err
+}
+
+func SaveGroup(db *gorm.DB, data *Group) error {
+	return db.Save(data).Error
 }

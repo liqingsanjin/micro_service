@@ -19,6 +19,24 @@ import (
 type service struct {
 }
 
+func (s *service) SaveGroup(ctx context.Context, in *pb.SaveGroupRequest) (*pb.SaveGroupReply, error) {
+	reply := new(pb.SaveGroupReply)
+	if in.Item == nil || in.Item.Name == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "机构组数据不能为空",
+		}
+		return reply, nil
+	}
+
+	group := new(insmodel.Group)
+	group.GroupId, _ = strconv.ParseInt(in.Item.GroupId, 10, 64)
+	group.Name = in.Item.Name
+	err := insmodel.SaveGroup(common.DB, group)
+	return reply, err
+}
+
 func (s *service) GetInstitutionCash(ctx context.Context, in *pb.GetInstitutionCashRequest) (*pb.GetInstitutionCashReply, error) {
 	reply := new(pb.GetInstitutionCashReply)
 
@@ -876,8 +894,8 @@ func (s *service) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrTrnL
 	return &pb.DownloadTfrTrnLogsResp{Code: true}, nil
 }
 
-func (s *service) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListInstitutionsReply, error) {
-	reply := new(pb.ListInstitutionsReply)
+func (s *service) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListGroupsReply, error) {
+	reply := new(pb.ListGroupsReply)
 	db := common.DB
 	if in.Page == 0 {
 		in.Page = 1
@@ -891,55 +909,18 @@ func (s *service) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb
 		return nil, err
 	}
 
-	list := make([]string, len(groups))
+	pbIns := make([]*pb.InstitutionGroupField, len(groups))
 	for i := range groups {
-		list[i] = groups[i].InsGroup
-	}
-	ins, err := insmodel.FindInstitutionInfosByIdList(db, list)
-	if err != nil {
-		return nil, err
-	}
-
-	pbIns := make([]*pb.InstitutionField, len(ins))
-	for i := range ins {
-		pbIns[i] = &pb.InstitutionField{
-			InsIdCd:         ins[i].InsIdCd,
-			InsCompanyCd:    ins[i].InsCompanyCd,
-			InsType:         ins[i].InsType,
-			InsName:         ins[i].InsName,
-			InsProvCd:       ins[i].InsProvCd,
-			InsCityCd:       ins[i].InsCityCd,
-			InsRegionCd:     ins[i].InsRegionCd,
-			InsSta:          ins[i].InsSta,
-			InsStlmTp:       ins[i].InsStlmTp,
-			InsAloStlmCycle: ins[i].InsAloStlmCycle,
-			InsAloStlmMd:    ins[i].InsAloStlmMd,
-			InsStlmCNm:      ins[i].InsStlmCNm,
-			InsStlmCAcct:    ins[i].InsStlmCAcct,
-			InsStlmCBkNo:    ins[i].InsStlmCBkNo,
-			InsStlmCBkNm:    ins[i].InsStlmCBkNm,
-			InsStlmDNm:      ins[i].InsStlmDNm,
-			InsStlmDAcct:    ins[i].InsStlmDAcct,
-			InsStlmDBkNo:    ins[i].InsStlmDBkNo,
-			InsStlmDBkNm:    ins[i].InsStlmDBkNm,
-			MsgResvFld1:     ins[i].MsgResvFld1,
-			MsgResvFld2:     ins[i].MsgResvFld2,
-			MsgResvFld3:     ins[i].MsgResvFld3,
-			MsgResvFld4:     ins[i].MsgResvFld4,
-			MsgResvFld5:     ins[i].MsgResvFld5,
-			MsgResvFld6:     ins[i].MsgResvFld6,
-			MsgResvFld7:     ins[i].MsgResvFld7,
-			MsgResvFld8:     ins[i].MsgResvFld8,
-			MsgResvFld9:     ins[i].MsgResvFld9,
-			MsgResvFld10:    ins[i].MsgResvFld10,
-			RecOprId:        ins[i].RecOprId,
+		pbIns[i] = &pb.InstitutionGroupField{
+			GroupId: fmt.Sprintf("%d", groups[i].GroupId),
+			Name:    groups[i].Name,
 		}
-		if !ins[i].CreatedAt.IsZero() {
-			pbIns[i].CreatedAt = ins[i].CreatedAt.Format(util.TimePattern)
+		if !groups[i].CreatedAt.IsZero() {
+			pbIns[i].CreatedAt = groups[i].CreatedAt.Format(util.TimePattern)
 		}
 
-		if !ins[i].UpdatedAt.IsZero() {
-			pbIns[i].UpdatedAt = ins[i].UpdatedAt.Format(util.TimePattern)
+		if !groups[i].UpdatedAt.IsZero() {
+			pbIns[i].UpdatedAt = groups[i].UpdatedAt.Format(util.TimePattern)
 		}
 	}
 

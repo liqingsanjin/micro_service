@@ -8,11 +8,12 @@ import (
 )
 
 type server struct {
-	tnxHisDownload                       grpctransport.Handler
+	TnxHisDownloadHandler                grpctransport.Handler
 	getTfrTrnLogs                        grpctransport.Handler
 	getTfrTrnLog                         grpctransport.Handler
 	downloadTfrTrnLogs                   grpctransport.Handler
 	listGroupsHandler                    grpctransport.Handler
+	SaveGroupHandler                     grpctransport.Handler
 	listInstitutionsHandler              grpctransport.Handler
 	addInstitutionHandler                grpctransport.Handler
 	GetInstitutionByIdHandler            grpctransport.Handler
@@ -20,6 +21,14 @@ type server struct {
 	GetInstitutionControlHandler         grpctransport.Handler
 	GetInstitutionCashHandler            grpctransport.Handler
 	GetInstitutionFeeHandler             grpctransport.Handler
+}
+
+func (s *server) SaveGroup(ctx context.Context, in *pb.SaveGroupRequest) (*pb.SaveGroupReply, error) {
+	_, res, err := s.SaveGroupHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveGroupReply), nil
 }
 
 func (s *server) GetInstitutionControl(ctx context.Context, in *pb.GetInstitutionControlRequest) (*pb.GetInstitutionControlReply, error) {
@@ -63,7 +72,7 @@ func (s *server) GetInstitutionById(ctx context.Context, in *pb.GetInstitutionBy
 }
 
 func (s *server) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHisDownloadReq) (*pb.InstitutionTnxHisDownloadResp, error) {
-	_, res, err := s.tnxHisDownload.ServeGRPC(ctx, in)
+	_, res, err := s.TnxHisDownloadHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -94,12 +103,12 @@ func (s *server) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrTrnLo
 	return res.(*pb.DownloadTfrTrnLogsResp), nil
 }
 
-func (s *server) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListInstitutionsReply, error) {
+func (s *server) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListGroupsReply, error) {
 	_, res, err := s.listGroupsHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.ListInstitutionsReply)
+	reply, ok := res.(*pb.ListGroupsReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}
@@ -181,7 +190,7 @@ func New(tracer grpctransport.ServerOption) pb.InstitutionServer {
 
 	{
 		e := MakeTnxHisDownloadEndpoint(svc)
-		svr.tnxHisDownload = grpctransport.NewServer(
+		svr.TnxHisDownloadHandler = grpctransport.NewServer(
 			e,
 			grpcDecode,
 			grpcEncode,
@@ -249,6 +258,16 @@ func New(tracer grpctransport.ServerOption) pb.InstitutionServer {
 	{
 		e := MakeSaveInstitutionFeeControlCashEndpoint(svc)
 		svr.SaveInstitutionFeeControlCashHandler = grpctransport.NewServer(
+			e,
+			grpcDecode,
+			grpcEncode,
+			options...,
+		)
+	}
+
+	{
+		e := MakeSaveGroupEndpoint(svc)
+		svr.SaveGroupHandler = grpctransport.NewServer(
 			e,
 			grpcDecode,
 			grpcEncode,

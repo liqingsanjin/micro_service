@@ -16,6 +16,7 @@ type InstitutionEndpoints struct {
 	GetTfrTrnLogEndpoint                  endpoint.Endpoint
 	DownloadTfrTrnLogsEndpoint            endpoint.Endpoint
 	ListGroupsEndpoint                    endpoint.Endpoint
+	SaveGroupEndpoint                     endpoint.Endpoint
 	ListInstitutionsEndpoint              endpoint.Endpoint
 	SaveInstitutionEndpoint               endpoint.Endpoint
 	GetInstitutionByIdEndpoint            endpoint.Endpoint
@@ -23,6 +24,14 @@ type InstitutionEndpoints struct {
 	GetInstitutionControlEndpoint         endpoint.Endpoint
 	GetInstitutionCashEndpoint            endpoint.Endpoint
 	GetInstitutionFeeEndpoint             endpoint.Endpoint
+}
+
+func (s *InstitutionEndpoints) SaveGroup(ctx context.Context, in *pb.SaveGroupRequest) (*pb.SaveGroupReply, error) {
+	res, err := s.SaveGroupEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveGroupReply), nil
 }
 
 func (s *InstitutionEndpoints) GetInstitutionControl(ctx context.Context, in *pb.GetInstitutionControlRequest) (*pb.GetInstitutionControlReply, error) {
@@ -113,12 +122,12 @@ func (s *InstitutionEndpoints) DownloadTfrTrnLogs(ctx context.Context, in *pb.Do
 	return reply, nil
 }
 
-func (s *InstitutionEndpoints) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListInstitutionsReply, error) {
+func (s *InstitutionEndpoints) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListGroupsReply, error) {
 	res, err := s.ListGroupsEndpoint(ctx, in)
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.ListInstitutionsReply)
+	reply, ok := res.(*pb.ListGroupsReply)
 	if !ok {
 		return nil, ErrReplyTypeInvalid
 	}
@@ -214,7 +223,7 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 			"ListGroups",
 			encodeRequest,
 			decodeResponse,
-			pb.ListInstitutionsReply{},
+			pb.ListGroupsReply{},
 			options...,
 		).Endpoint()
 		endpoints.ListGroupsEndpoint = e
@@ -309,6 +318,19 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 			options...,
 		).Endpoint()
 		endpoints.GetInstitutionFeeEndpoint = e
+	}
+
+	{
+		e := grpctransport.NewClient(
+			conn,
+			"pb.Institution",
+			"SaveGroup",
+			encodeRequest,
+			decodeResponse,
+			pb.SaveGroupReply{},
+			options...,
+		).Endpoint()
+		endpoints.SaveGroupEndpoint = e
 	}
 
 	return endpoints

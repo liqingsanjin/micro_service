@@ -102,3 +102,9 @@ func MakeGetInstitutionFeeEndpoint(service pb.InstitutionServer) endpoint.Endpoi
 		return service.GetInstitutionFee(ctx, request.(*pb.GetInstitutionFeeRequest))
 	}
 }
+
+func MakeSaveGroupEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.SaveGroup(ctx, request.(*pb.SaveGroupRequest))
+	}
+}

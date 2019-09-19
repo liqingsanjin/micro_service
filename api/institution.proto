@@ -9,7 +9,8 @@ service Institution {
     rpc GetTfrTrnLogs(GetTfrTrnLogsReq) returns (GetTfrTrnLogsResp){}
     rpc GetTfrTrnLog(GetTfrTrnLogReq) returns (GetTfrTrnLogResp){}
     rpc DownloadTfrTrnLogs(DownloadTfrTrnLogsReq) returns (DownloadTfrTrnLogsResp){}
-    rpc ListGroups(ListGroupsRequest) returns (ListInstitutionsReply) {}
+    rpc ListGroups(ListGroupsRequest) returns (ListGroupsReply) {}
+    rpc SaveGroup(SaveGroupRequest) returns (SaveGroupReply) {}
     rpc ListInstitutions(ListInstitutionsRequest) returns (ListInstitutionsReply) {}
     rpc SaveInstitution(SaveInstitutionRequest) returns (SaveInstitutionReply) {}
     rpc SaveInstitutionFeeControlCash(SaveInstitutionFeeControlCashRequest) returns (SaveInstitutionFeeControlCashReply) {}
@@ -242,6 +243,21 @@ message ListGroupsRequest {
     int32 size = 2;
 }
 
+message InstitutionGroupField {
+    string groupId = 1;
+    string name = 2;
+    string createdAt = 3;
+    string updatedAt = 4;
+}
+
+message ListGroupsReply {
+    repeated InstitutionGroupField items = 1;
+    int32 count = 2;
+    int32 size = 3;
+    int32 page = 4;
+    error err = 5;
+}
+
 message ListInstitutionsReply {
     repeated InstitutionField items = 1;
     int32 count = 2;
@@ -445,4 +461,12 @@ message GetInstitutionFeeReply {
     int32 size = 3;
     int32 count = 4;
     error err = 5;
+}
+
+message SaveGroupRequest {
+    InstitutionGroupField item = 1;
+}
+
+message SaveGroupReply {
+    error err = 1;
 }
