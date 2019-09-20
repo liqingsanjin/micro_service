@@ -532,6 +532,58 @@
         }
       }
     },
+    "/institution/removeBindGroup": {
+      "post": {
+        "operationId": "removeBindGroup",
+        "summary": "移除绑定机构组信息",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "removeBindGroup",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "item"
+              ],
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "description": "绑定信息",
+                  "required": [
+                    "groupId",
+                    "insIdCd"
+                  ],
+                  "properties": {
+                    "groupId": {
+                      "type": "string",
+                      "description": "机构组号"
+                    },
+                    "insIdCd": {
+                      "type": "string",
+                      "description": "机构号"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "err": null
+              }
+            }
+          }
+        }
+      }
+    },
     "/institution/listInstitutions": {
       "post": {
         "operationId": "listInstitutions",

@@ -26,6 +26,15 @@ type InstitutionEndpoints struct {
 	GetInstitutionFeeEndpoint             endpoint.Endpoint
 	BindGroupEndpoint                     endpoint.Endpoint
 	ListBindGroupEndpoint                 endpoint.Endpoint
+	RemoveBindGroupEndpoint               endpoint.Endpoint
+}
+
+func (s *InstitutionEndpoints) RemoveBindGroup(ctx context.Context, in *pb.RemoveBindGroupRequest) (*pb.RemoveBindGroupReply, error) {
+	res, err := s.RemoveBindGroupEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.RemoveBindGroupReply), nil
 }
 
 func (s *InstitutionEndpoints) ListBindGroup(ctx context.Context, in *pb.ListBindGroupRequest) (*pb.ListBindGroupReply, error) {
@@ -375,6 +384,19 @@ func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.Clien
 			options...,
 		).Endpoint()
 		endpoints.ListBindGroupEndpoint = e
+	}
+
+	{
+		e := grpctransport.NewClient(
+			conn,
+			"pb.Institution",
+			"RemoveBindGroup",
+			encodeRequest,
+			decodeResponse,
+			pb.RemoveBindGroupReply{},
+			options...,
+		).Endpoint()
+		endpoints.RemoveBindGroupEndpoint = e
 	}
 
 	return endpoints

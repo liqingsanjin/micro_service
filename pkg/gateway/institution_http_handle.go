@@ -113,4 +113,11 @@ func RegisterInstitutionHandler(engine *gin.Engine, endpoints *InstitutionEndpoi
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
 
+	engine.POST("/institution/removeBindGroup", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.RemoveBindGroupEndpoint,
+		decodeHttpRequest(&pb.RemoveBindGroupRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
+
 }

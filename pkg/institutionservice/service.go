@@ -17,6 +17,22 @@ import (
 
 type service struct{}
 
+func (s *service) RemoveBindGroup(ctx context.Context, in *pb.RemoveBindGroupRequest) (*pb.RemoveBindGroupReply, error) {
+	reply := new(pb.RemoveBindGroupReply)
+	if in.Item == nil || in.Item.GroupId == "" || in.Item.InsIdCd == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "删除信息不能为空",
+		}
+		return reply, nil
+	}
+	data := new(insmodel.InsGroupBind)
+	data.InsIdCd = in.Item.InsIdCd
+	data.GroupId, _ = strconv.ParseInt(in.Item.GroupId, 10, 64)
+	return reply, insmodel.RemoveInsGroupBind(common.DB, data)
+}
+
 func (s *service) ListBindGroup(ctx context.Context, in *pb.ListBindGroupRequest) (*pb.ListBindGroupReply, error) {
 	reply := new(pb.ListBindGroupReply)
 	if in.Item == nil {
@@ -57,7 +73,7 @@ func (s *service) ListBindGroup(ctx context.Context, in *pb.ListBindGroupRequest
 
 func (s *service) BindGroup(ctx context.Context, in *pb.BindGroupRequest) (*pb.BindGroupReply, error) {
 	reply := new(pb.BindGroupReply)
-	if in.Item == nil {
+	if in.Item == nil || in.Item.GroupId == "" || in.Item.InsIdCd == "" {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     InvalidParam,

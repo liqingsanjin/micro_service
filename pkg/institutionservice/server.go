@@ -11,7 +11,7 @@ type server struct {
 	TnxHisDownloadHandler                grpctransport.Handler
 	GetTfrTrnLogsHandler                 grpctransport.Handler
 	GetTfrTrnLogHandler                  grpctransport.Handler
-	downloadTfrTrnLogs                   grpctransport.Handler
+	DownloadTfrTrnLogsHandler            grpctransport.Handler
 	listGroupsHandler                    grpctransport.Handler
 	SaveGroupHandler                     grpctransport.Handler
 	listInstitutionsHandler              grpctransport.Handler
@@ -23,6 +23,15 @@ type server struct {
 	GetInstitutionFeeHandler             grpctransport.Handler
 	BindGroupHandler                     grpctransport.Handler
 	ListBindGroupHandler                 grpctransport.Handler
+	RemoveBindGroupHandler               grpctransport.Handler
+}
+
+func (s *server) RemoveBindGroup(ctx context.Context, in *pb.RemoveBindGroupRequest) (*pb.RemoveBindGroupReply, error) {
+	_, res, err := s.RemoveBindGroupHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.RemoveBindGroupReply), nil
 }
 
 func (s *server) ListBindGroup(ctx context.Context, in *pb.ListBindGroupRequest) (*pb.ListBindGroupReply, error) {
@@ -114,7 +123,7 @@ func (s *server) GetTfrTrnLog(ctx context.Context, in *pb.GetTfrTrnLogReq) (*pb.
 }
 
 func (s *server) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrTrnLogsReq) (*pb.DownloadTfrTrnLogsResp, error) {
-	_, res, err := s.downloadTfrTrnLogs.ServeGRPC(ctx, in)
+	_, res, err := s.DownloadTfrTrnLogsHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -235,7 +244,7 @@ func New(tracer grpctransport.ServerOption) pb.InstitutionServer {
 	}
 	{
 		e := MakeDownloadTfrTrnLogsEndpoint(svc)
-		svr.downloadTfrTrnLogs = grpctransport.NewServer(
+		svr.DownloadTfrTrnLogsHandler = grpctransport.NewServer(
 			e,
 			grpcDecode,
 			grpcEncode,
@@ -306,6 +315,16 @@ func New(tracer grpctransport.ServerOption) pb.InstitutionServer {
 	{
 		e := MakeListBindGroupEndpoint(svc)
 		svr.ListBindGroupHandler = grpctransport.NewServer(
+			e,
+			grpcDecode,
+			grpcEncode,
+			options...,
+		)
+	}
+
+	{
+		e := MakeRemoveBindGroupEndpoint(svc)
+		svr.RemoveBindGroupHandler = grpctransport.NewServer(
 			e,
 			grpcDecode,
 			grpcEncode,

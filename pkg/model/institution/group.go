@@ -51,3 +51,7 @@ func ListInsGroupBind(db *gorm.DB, groupId int64) ([]*InsGroupBind, error) {
 func SaveInsGroupBind(db *gorm.DB, data *InsGroupBind) error {
 	return db.Save(data).Error
 }
+
+func RemoveInsGroupBind(db *gorm.DB, data *InsGroupBind) error {
+	return db.Delete(data).Error
+}

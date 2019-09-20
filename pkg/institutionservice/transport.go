@@ -120,3 +120,9 @@ func MakeListBindGroupEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
 		return service.ListBindGroup(ctx, request.(*pb.ListBindGroupRequest))
 	}
 }
+
+func MakeRemoveBindGroupEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.RemoveBindGroup(ctx, request.(*pb.RemoveBindGroupRequest))
+	}
+}
