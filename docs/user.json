@@ -1634,7 +1634,7 @@
           ],
           "properties": {
             "id": {
-              "type": "integer"
+              "type": "string"
             },
             "username": {
               "type": "string"
