@@ -1164,9 +1164,10 @@ func (u *userService) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) 
 	}
 
 	err = usermodel.UpdateUser(db, in.Id, &usermodel.User{
-		UserName: in.Username,
-		Email:    in.Email,
-		UserType: in.UserType,
+		UserName:    in.Username,
+		Email:       in.Email,
+		UserType:    in.UserType,
+		UserGroupNo: in.UserGroupNo,
 	})
 	if err != nil {
 		return nil, err

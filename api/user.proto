@@ -341,6 +341,7 @@ message UpdateUserRequest {
     string username = 2;
     string email = 3;
     string userType = 4;
+    string userGroupNo = 5;
 }
 
 message UpdateUserReply {
