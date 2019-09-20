@@ -1494,13 +1494,13 @@ func (u *userService) GetUser(ctx context.Context, in *pb.GetUserRequest) (*pb.G
 		return reply, nil
 	}
 	reply = &pb.GetUserReply{
-		Id:         user.UserID,
-		Username:   user.UserName,
-		UserType:   user.UserType,
-		LeaguerNo:  user.LeaguerNO,
-		Email:      user.Email,
-		UserStatus: user.UserStatus,
-		CreatedAt:  user.CreatedAt.Unix(),
+		Id:          user.UserID,
+		Username:    user.UserName,
+		UserType:    user.UserType,
+		UserGroupNo: user.UserGroupNo,
+		Email:       user.Email,
+		UserStatus:  user.UserStatus,
+		CreatedAt:   user.CreatedAt.Unix(),
 	}
 	return reply, nil
 }

@@ -428,7 +428,7 @@ message GetUserRequest {
 
 message GetUserReply {
     int64 id = 1;
-    string leaguerNo = 2;
+    string userGroupNo = 2;
     string username = 3;
     string email = 4;
     string userType = 5;
