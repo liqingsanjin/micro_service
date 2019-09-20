@@ -108,3 +108,9 @@ func MakeSaveGroupEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
 		return service.SaveGroup(ctx, request.(*pb.SaveGroupRequest))
 	}
 }
+
+func MakeBindGroupEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.BindGroup(ctx, request.(*pb.BindGroupRequest))
+	}
+}

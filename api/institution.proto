@@ -11,6 +11,7 @@ service Institution {
     rpc DownloadTfrTrnLogs(DownloadTfrTrnLogsReq) returns (DownloadTfrTrnLogsResp){}
     rpc ListGroups(ListGroupsRequest) returns (ListGroupsReply) {}
     rpc SaveGroup(SaveGroupRequest) returns (SaveGroupReply) {}
+    rpc BindGroup(BindGroupRequest) returns (BindGroupReply) {}
     rpc ListInstitutions(ListInstitutionsRequest) returns (ListInstitutionsReply) {}
     rpc SaveInstitution(SaveInstitutionRequest) returns (SaveInstitutionReply) {}
     rpc SaveInstitutionFeeControlCash(SaveInstitutionFeeControlCashRequest) returns (SaveInstitutionFeeControlCashReply) {}
@@ -468,5 +469,20 @@ message SaveGroupRequest {
 }
 
 message SaveGroupReply {
+    error err = 1;
+}
+
+message BindGroupField {
+    string groupId = 1;
+    string insIdCd = 2;
+    string createdAt = 3;
+    string updatedAt = 4;
+}
+
+message BindGroupRequest {
+    BindGroupField item = 1;
+}
+
+message BindGroupReply {
     error err = 1;
 }

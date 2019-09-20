@@ -389,7 +389,7 @@
             "schema": {
               "type": "object",
               "required": [
-                "item",
+                "item"
               ],
               "properties": {
                 "item": {
@@ -406,6 +406,58 @@
                     "name": {
                       "type": "string",
                       "description": "机构组名"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "err": null
+              }
+            }
+          }
+        }
+      }
+    },
+    "/institution/bindGroup": {
+      "post": {
+        "operationId": "bindGroup",
+        "summary": "绑定机构组",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "bindGroup",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "item"
+              ],
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "description": "绑定信息",
+                  "required": [
+                    "insIdCd",
+                    "groupId"
+                  ],
+                  "properties": {
+                    "groupId": {
+                      "type": "string",
+                      "description": "机构组号"
+                    },
+                    "insIdCd": {
+                      "type": "string",
+                      "description": "机构号"
                     }
                   }
                 }

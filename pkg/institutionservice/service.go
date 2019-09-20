@@ -15,8 +15,24 @@ import (
 	"github.com/jinzhu/copier"
 )
 
-//service .
-type service struct {
+type service struct{}
+
+func (s *service) BindGroup(ctx context.Context, in *pb.BindGroupRequest) (*pb.BindGroupReply, error) {
+	reply := new(pb.BindGroupReply)
+	if in.Item == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "绑定信息不能为空",
+		}
+		return reply, nil
+	}
+
+	group := new(insmodel.InsGroupBind)
+	group.GroupId, _ = strconv.ParseInt(in.Item.GroupId, 10, 64)
+	group.InsIdCd = in.Item.InsIdCd
+	err := insmodel.SaveInsGroupBind(common.DB, group)
+	return reply, err
 }
 
 func (s *service) SaveGroup(ctx context.Context, in *pb.SaveGroupRequest) (*pb.SaveGroupReply, error) {

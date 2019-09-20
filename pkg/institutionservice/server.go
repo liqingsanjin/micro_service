@@ -9,7 +9,7 @@ import (
 
 type server struct {
 	TnxHisDownloadHandler                grpctransport.Handler
-	getTfrTrnLogs                        grpctransport.Handler
+	GetTfrTrnLogsHandler                 grpctransport.Handler
 	getTfrTrnLog                         grpctransport.Handler
 	downloadTfrTrnLogs                   grpctransport.Handler
 	listGroupsHandler                    grpctransport.Handler
@@ -21,6 +21,15 @@ type server struct {
 	GetInstitutionControlHandler         grpctransport.Handler
 	GetInstitutionCashHandler            grpctransport.Handler
 	GetInstitutionFeeHandler             grpctransport.Handler
+	BindGroupHandler                     grpctransport.Handler
+}
+
+func (s *server) BindGroup(ctx context.Context, in *pb.BindGroupRequest) (*pb.BindGroupReply, error) {
+	_, res, err := s.BindGroupHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.BindGroupReply), nil
 }
 
 func (s *server) SaveGroup(ctx context.Context, in *pb.SaveGroupRequest) (*pb.SaveGroupReply, error) {
@@ -80,7 +89,7 @@ func (s *server) TnxHisDownload(ctx context.Context, in *pb.InstitutionTnxHisDow
 }
 
 func (s *server) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq) (*pb.GetTfrTrnLogsResp, error) {
-	_, res, err := s.getTfrTrnLogs.ServeGRPC(ctx, in)
+	_, res, err := s.GetTfrTrnLogsHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -199,7 +208,7 @@ func New(tracer grpctransport.ServerOption) pb.InstitutionServer {
 	}
 	{
 		e := MakeGetTfrTrnLogsEndpoint(svc)
-		svr.getTfrTrnLogs = grpctransport.NewServer(
+		svr.GetTfrTrnLogsHandler = grpctransport.NewServer(
 			e,
 			grpcDecode,
 			grpcEncode,
@@ -268,6 +277,16 @@ func New(tracer grpctransport.ServerOption) pb.InstitutionServer {
 	{
 		e := MakeSaveGroupEndpoint(svc)
 		svr.SaveGroupHandler = grpctransport.NewServer(
+			e,
+			grpcDecode,
+			grpcEncode,
+			options...,
+		)
+	}
+
+	{
+		e := MakeBindGroupEndpoint(svc)
+		svr.BindGroupHandler = grpctransport.NewServer(
 			e,
 			grpcDecode,
 			grpcEncode,
