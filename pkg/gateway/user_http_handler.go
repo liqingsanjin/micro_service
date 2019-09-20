@@ -443,9 +443,9 @@ func decodeListUserRequest(ctx context.Context, r *http.Request) (interface{}, e
 	query := r.URL.Query()
 	page, _ := strconv.Atoi(query.Get("page"))
 	size, _ := strconv.Atoi(query.Get("size"))
-	id, _ := strconv.Atoi(query.Get("id"))
-	userStatus, _ := strconv.Atoi(query.Get("userStatus"))
-	createdAt, _ := strconv.Atoi(query.Get("createdAt"))
+	id := query.Get("id")
+	userStatus := query.Get("userStatus")
+	createdAt := query.Get("createdAt")
 	leaguerNo := query.Get("leaguerNo")
 	username := query.Get("username")
 	email := query.Get("email")
@@ -454,13 +454,13 @@ func decodeListUserRequest(ctx context.Context, r *http.Request) (interface{}, e
 		Page: int32(page),
 		Size: int32(size),
 		User: &pb.UserField{
-			Id:         int64(id),
+			Id:         id,
 			LeaguerNo:  leaguerNo,
 			Username:   username,
 			Email:      email,
 			UserType:   userType,
-			UserStatus: int64(userStatus),
-			CreatedAt:  int64(createdAt),
+			UserStatus: userStatus,
+			CreatedAt:  createdAt,
 		},
 	}, nil
 }
