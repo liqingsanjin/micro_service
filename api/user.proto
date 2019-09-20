@@ -327,17 +327,17 @@ message ListUsersReply {
 }
 
 message UserField {
-    int64 id = 1;
+    string id = 1;
     string leaguerNo = 2;
     string username = 3;
     string email = 4;
     string userType = 5;
-    int64 userStatus = 6;
-    int64 createdAt = 7;
+    string userStatus = 6;
+    string createdAt = 7;
 }
 
 message UpdateUserRequest {
-    int64 id = 1;
+    string id = 1;
     string username = 2;
     string email = 3;
     string userType = 4;

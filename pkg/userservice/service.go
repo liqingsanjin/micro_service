@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 	"userService/pkg/cache"
@@ -14,6 +15,7 @@ import (
 	usermodel "userService/pkg/model/user"
 	"userService/pkg/pb"
 	"userService/pkg/rbac"
+	"userService/pkg/util"
 
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
@@ -1099,15 +1101,12 @@ func (u *userService) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*
 
 	query := &usermodel.User{}
 	if in.User != nil {
-		query.UserID = in.User.Id
+		query.UserID, _ = strconv.ParseInt(in.User.Id, 10, 64)
 		query.UserName = in.User.Username
 		query.LeaguerNO = in.User.LeaguerNo
 		query.Email = in.User.Email
 		query.UserType = in.User.UserType
-		query.UserStatus = in.User.UserStatus
-		if in.User.CreatedAt != 0 {
-			query.CreatedAt = time.Unix(in.User.CreatedAt, 0)
-		}
+		query.UserStatus, _ = strconv.ParseInt(in.User.UserStatus, 10, 64)
 	}
 
 	us, count, err := usermodel.ListUsers(db, query, in.Page, in.Size)
@@ -1119,13 +1118,13 @@ func (u *userService) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*
 
 	for _, u := range us {
 		users = append(users, &pb.UserField{
-			Id:         u.UserID,
+			Id:         fmt.Sprintf("%d", u.UserID),
 			Username:   u.UserName,
 			UserType:   u.UserType,
 			LeaguerNo:  u.LeaguerNO,
 			Email:      u.Email,
-			UserStatus: u.UserStatus,
-			CreatedAt:  u.CreatedAt.Unix(),
+			UserStatus: fmt.Sprintf("%d", u.UserStatus),
+			CreatedAt:  u.CreatedAt.Format(util.TimePattern),
 		})
 	}
 
@@ -1140,7 +1139,7 @@ func (u *userService) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*
 func (u *userService) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) (*pb.UpdateUserReply, error) {
 	db := common.DB
 	reply := &pb.UpdateUserReply{}
-	if in.Id == 0 {
+	if in.Id == "" {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     InvalidParam,
@@ -1148,8 +1147,9 @@ func (u *userService) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) 
 		}
 		return reply, nil
 	}
+	userId, _ := strconv.ParseInt(in.Id, 10, 64)
 
-	user, err := usermodel.FindUserByID(db, in.Id)
+	user, err := usermodel.FindUserByID(db, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -1163,7 +1163,7 @@ func (u *userService) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) 
 		return reply, nil
 	}
 
-	err = usermodel.UpdateUser(db, in.Id, &usermodel.User{
+	err = usermodel.UpdateUser(db, userId, &usermodel.User{
 		UserName:    in.Username,
 		Email:       in.Email,
 		UserType:    in.UserType,
