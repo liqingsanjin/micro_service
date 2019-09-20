@@ -17,6 +17,44 @@ import (
 
 type service struct{}
 
+func (s *service) ListBindGroup(ctx context.Context, in *pb.ListBindGroupRequest) (*pb.ListBindGroupReply, error) {
+	reply := new(pb.ListBindGroupReply)
+	if in.Item == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "绑定信息不能为空",
+		}
+		return reply, nil
+	}
+
+	groupId, _ := strconv.ParseInt(in.Item.GroupId, 10, 64)
+	items, err := insmodel.ListInsGroupBind(common.DB, groupId)
+	if err != nil {
+		return nil, err
+	}
+
+	pbItems := make([]*pb.BindGroupField, 0, len(items))
+	for _, item := range items {
+		data := &pb.BindGroupField{
+			GroupId: fmt.Sprintf("%d", item.GroupId),
+			InsIdCd: item.InsIdCd,
+		}
+		if !item.CreatedAt.IsZero() {
+			data.CreatedAt = item.CreatedAt.Format(util.TimePattern)
+		}
+
+		if !item.UpdatedAt.IsZero() {
+			data.UpdatedAt = item.UpdatedAt.Format(util.TimePattern)
+		}
+		pbItems = append(pbItems, data)
+	}
+
+	reply.Items = pbItems
+
+	return reply, err
+}
+
 func (s *service) BindGroup(ctx context.Context, in *pb.BindGroupRequest) (*pb.BindGroupReply, error) {
 	reply := new(pb.BindGroupReply)
 	if in.Item == nil {

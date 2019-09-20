@@ -114,3 +114,9 @@ func MakeBindGroupEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
 		return service.BindGroup(ctx, request.(*pb.BindGroupRequest))
 	}
 }
+
+func MakeListBindGroupEndpoint(service pb.InstitutionServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.ListBindGroup(ctx, request.(*pb.ListBindGroupRequest))
+	}
+}

@@ -477,6 +477,61 @@
         }
       }
     },
+    "/institution/listBindGroup": {
+      "post": {
+        "operationId": "listBindGroup",
+        "summary": "绑定机构组列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "listBindGroup",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "item"
+              ],
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "description": "绑定信息",
+                  "required": [
+                    "groupId"
+                  ],
+                  "properties": {
+                    "groupId": {
+                      "type": "string",
+                      "description": "机构组号"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "groupId": "1",
+                    "insIdCd": "00007294",
+                    "createdAt": "2019-09-20 10:10:06",
+                    "updatedAt": "2019-09-20 10:10:06"
+                  }
+                ],
+                "err": null
+              }
+            }
+          }
+        }
+      }
+    },
     "/institution/listInstitutions": {
       "post": {
         "operationId": "listInstitutions",

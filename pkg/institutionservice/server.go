@@ -10,7 +10,7 @@ import (
 type server struct {
 	TnxHisDownloadHandler                grpctransport.Handler
 	GetTfrTrnLogsHandler                 grpctransport.Handler
-	getTfrTrnLog                         grpctransport.Handler
+	GetTfrTrnLogHandler                  grpctransport.Handler
 	downloadTfrTrnLogs                   grpctransport.Handler
 	listGroupsHandler                    grpctransport.Handler
 	SaveGroupHandler                     grpctransport.Handler
@@ -22,6 +22,15 @@ type server struct {
 	GetInstitutionCashHandler            grpctransport.Handler
 	GetInstitutionFeeHandler             grpctransport.Handler
 	BindGroupHandler                     grpctransport.Handler
+	ListBindGroupHandler                 grpctransport.Handler
+}
+
+func (s *server) ListBindGroup(ctx context.Context, in *pb.ListBindGroupRequest) (*pb.ListBindGroupReply, error) {
+	_, res, err := s.ListBindGroupHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.ListBindGroupReply), nil
 }
 
 func (s *server) BindGroup(ctx context.Context, in *pb.BindGroupRequest) (*pb.BindGroupReply, error) {
@@ -97,7 +106,7 @@ func (s *server) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq) (*p
 }
 
 func (s *server) GetTfrTrnLog(ctx context.Context, in *pb.GetTfrTrnLogReq) (*pb.GetTfrTrnLogResp, error) {
-	_, res, err := s.getTfrTrnLog.ServeGRPC(ctx, in)
+	_, res, err := s.GetTfrTrnLogHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +226,7 @@ func New(tracer grpctransport.ServerOption) pb.InstitutionServer {
 	}
 	{
 		e := MakeGetTfrTrnLogEndpoint(svc)
-		svr.getTfrTrnLog = grpctransport.NewServer(
+		svr.GetTfrTrnLogHandler = grpctransport.NewServer(
 			e,
 			grpcDecode,
 			grpcEncode,
@@ -287,6 +296,16 @@ func New(tracer grpctransport.ServerOption) pb.InstitutionServer {
 	{
 		e := MakeBindGroupEndpoint(svc)
 		svr.BindGroupHandler = grpctransport.NewServer(
+			e,
+			grpcDecode,
+			grpcEncode,
+			options...,
+		)
+	}
+
+	{
+		e := MakeListBindGroupEndpoint(svc)
+		svr.ListBindGroupHandler = grpctransport.NewServer(
 			e,
 			grpcDecode,
 			grpcEncode,

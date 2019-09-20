@@ -12,6 +12,7 @@ service Institution {
     rpc ListGroups(ListGroupsRequest) returns (ListGroupsReply) {}
     rpc SaveGroup(SaveGroupRequest) returns (SaveGroupReply) {}
     rpc BindGroup(BindGroupRequest) returns (BindGroupReply) {}
+    rpc ListBindGroup(ListBindGroupRequest) returns (ListBindGroupReply) {}
     rpc ListInstitutions(ListInstitutionsRequest) returns (ListInstitutionsReply) {}
     rpc SaveInstitution(SaveInstitutionRequest) returns (SaveInstitutionReply) {}
     rpc SaveInstitutionFeeControlCash(SaveInstitutionFeeControlCashRequest) returns (SaveInstitutionFeeControlCashReply) {}
@@ -485,4 +486,13 @@ message BindGroupRequest {
 
 message BindGroupReply {
     error err = 1;
+}
+
+message ListBindGroupRequest {
+    BindGroupField item = 1;
+}
+
+message ListBindGroupReply {
+    repeated BindGroupField items = 1;
+    error err = 2;
 }
