@@ -655,7 +655,7 @@ func (u *userService) RemoveRouteForPermission(ctx context.Context, in *pb.Remov
 		return reply, nil
 	}
 
-	if !common.Enforcer.DeletePermissionForUser(fmt.Sprintf("permission:%d", permission.ID), in.Route) {
+	if !common.Enforcer.RemovePolicy(fmt.Sprintf("permission:%d", permission.ID), in.Route, "*") {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     NotFound,
