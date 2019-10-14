@@ -16,7 +16,7 @@ func merchantRegister(db *gorm.DB, instance *camundamodel.ProcessInstance) error
 		return err
 	}
 	if info == nil {
-		return fmt.Errorf("merchant %s not found", instance.DataId)
+		return fmt.Errorf("merchant edit %s not found", instance.DataId)
 	}
 
 	// 查询term, bank_account, biz_fee, biz_deal, business, picture, term_risk_cfg
@@ -73,7 +73,8 @@ func merchantRegister(db *gorm.DB, instance *camundamodel.ProcessInstance) error
 	err = merchant.UpdateMerchant(db, &merchant.MerchantInfo{
 		MchtCd: info.MchtCd,
 	}, &merchant.MerchantInfo{
-		Status: "01",
+		Status:     "01",
+		SystemFlag: "01",
 	})
 	if err != nil {
 		return err
