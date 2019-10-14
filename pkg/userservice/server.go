@@ -48,6 +48,15 @@ type userServer struct {
 	getRolePermissionsAndRolesHandler    grpctransport.Handler
 	getPermissionsAndRoutesHandler       grpctransport.Handler
 	listLeaguerHandler                   grpctransport.Handler
+	RemoveRouteHandler                   grpctransport.Handler
+}
+
+func (u *userServer) RemoveRoute(ctx context.Context, in *pb.RemoveRouteRequest) (*pb.RemoveRouteReply, error) {
+	_, res, err := u.RemoveRouteHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.RemoveRouteReply), nil
 }
 
 func New(tracer grpctransport.ServerOption) pb.UserServer {
@@ -59,6 +68,18 @@ func New(tracer grpctransport.ServerOption) pb.UserServer {
 	options := make([]grpctransport.ServerOption, 0)
 	if tracer != nil {
 		options = append(options, tracer)
+	}
+
+	{
+		endpoint := MakeRemoveRouteEndpoint(userService)
+		endpoint = limitMiddleware(endpoint)
+		endpoint = logginMiddleware(endpoint)
+		svr.RemoveRouteHandler = grpctransport.NewServer(
+			endpoint,
+			decodeRequest,
+			encodeResponse,
+			options...,
+		)
 	}
 
 	{

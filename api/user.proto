@@ -27,6 +27,7 @@ service User {
     rpc AddPermissionForPermission(AddPermissionForPermissionRequest) returns (AddPermissionForPermissionReply) {}
     rpc RemovePermissionForPermission(RemovePermissionForPermissionRequest) returns (RemovePermissionForPermissionReply) {}
     rpc GetPermissionsAndRoutes(GetPermissionsAndRoutesRequest) returns (GetPermissionsAndRoutesReply) {}
+    rpc RemoveRoute(RemoveRouteRequest) returns (RemoveRouteReply) {}
 
     // 角色和权限
     rpc CreateRole(CreateRoleRequest) returns(CreateRoleReply) {}
@@ -55,6 +56,14 @@ service User {
 
     // 会员
     rpc ListLeaguer(ListLeaguerRequest) returns (ListLeaguerReply) {}
+}
+
+message RemoveRouteRequest {
+    string route = 1;
+}
+
+message RemoveRouteReply {
+    error err = 1;
 }
 
 message LoginRequest {

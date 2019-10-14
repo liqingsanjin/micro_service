@@ -485,3 +485,7 @@ func FindPermissionsByIds(db *gorm.DB, ids []int64) ([]*Permission, error) {
 	}
 	return permissions, err
 }
+
+func DeleteRoute(db *gorm.DB, data *Route) error {
+	return db.Where(data).Delete(data).Error
+}

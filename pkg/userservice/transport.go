@@ -377,6 +377,12 @@ func MakeListLeaguerEndpoint(service pb.UserServer) endpoint.Endpoint {
 	}
 }
 
+func MakeRemoveRouteEndpoint(service pb.UserServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.RemoveRoute(ctx, request.(*pb.RemoveRouteRequest))
+	}
+}
+
 func decodeRequest(ctx context.Context, request interface{}) (interface{}, error) {
 	return request, nil
 }

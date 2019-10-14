@@ -24,6 +24,25 @@ import (
 
 type userService struct{}
 
+func (u *userService) RemoveRoute(ctx context.Context, in *pb.RemoveRouteRequest) (*pb.RemoveRouteReply, error) {
+	reply := &pb.RemoveRouteReply{}
+	if in.Route == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "路由不能为空",
+		}
+		return reply, nil
+	}
+	db := common.DB
+
+	err := usermodel.DeleteRoute(db, &usermodel.Route{Name: in.Route})
+	if err != nil {
+		return nil, err
+	}
+	return reply, err
+}
+
 type UserInfo struct {
 	ID       int64
 	UserName string

@@ -352,6 +352,15 @@ func RegisterUserHandler(engine *gin.Engine, endpoints *UserEndpoints) {
 			encodeHttpResponse,
 			httptransport.ServerErrorEncoder(errorEncoder),
 		)))
+
+	userGroup.POST("/removeRoute",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.RemoveRouteEndpoint,
+			decodeHttpRequest(&pb.RemoveRouteRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
 }
 
 func convertHttpHandlerToGinHandler(handler http.Handler) gin.HandlerFunc {

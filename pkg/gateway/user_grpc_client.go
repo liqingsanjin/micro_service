@@ -50,6 +50,7 @@ type UserEndpoints struct {
 	GetRolePermissionsAndRolesEndpoint    endpoint.Endpoint
 	GetPermissionsAndRoutesEndpoint       endpoint.Endpoint
 	ListLeaguerEndpoint                   endpoint.Endpoint
+	RemoveRouteEndpoint                   endpoint.Endpoint
 }
 
 func NewUserServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *UserEndpoints {
@@ -539,6 +540,19 @@ func NewUserServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption
 		endpoints.ListLeaguerEndpoint = endpoint
 	}
 
+	{
+		e := grpctransport.NewClient(
+			conn,
+			"pb.User",
+			"RemoveRoute",
+			encodeRequest,
+			decodeResponse,
+			pb.RemoveRouteReply{},
+			options...,
+		).Endpoint()
+		endpoints.RemoveRouteEndpoint = e
+	}
+
 	return endpoints
 }
 func (u *UserEndpoints) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, error) {
@@ -980,6 +994,7 @@ func (u *UserEndpoints) GetPermissionsAndRoutes(ctx context.Context, in *pb.GetP
 	}
 	return reply, nil
 }
+
 func (u *UserEndpoints) ListLeaguer(ctx context.Context, in *pb.ListLeaguerRequest) (*pb.ListLeaguerReply, error) {
 	res, err := u.ListLeaguerEndpoint(ctx, in)
 	if err != nil {
@@ -990,4 +1005,12 @@ func (u *UserEndpoints) ListLeaguer(ctx context.Context, in *pb.ListLeaguerReque
 		return nil, ErrReplyTypeInvalid
 	}
 	return reply, nil
+}
+
+func (u *UserEndpoints) RemoveRoute(ctx context.Context, in *pb.RemoveRouteRequest) (*pb.RemoveRouteReply, error) {
+	res, err := u.RemoveRouteEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.RemoveRouteReply), nil
 }

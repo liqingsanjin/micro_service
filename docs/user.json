@@ -322,6 +322,49 @@
         }
       }
     },
+    "/user/removeRoute": {
+      "post": {
+        "tags": [
+          "route"
+        ],
+        "operationId": "removeRoute",
+        "summary": "删除路由",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "removeRoute",
+            "in": "body",
+            "required": true,
+            "description": "添加路由",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "route": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": "{\n  \"err\": null\n}"
+            }
+          }
+        }
+      }
+    },
     "/user/listRoutes": {
       "get": {
         "tags": [
