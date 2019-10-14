@@ -281,7 +281,16 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 			return reply, nil
 		}
 	case "institution_group":
-		ins, err := insmodel.FindInsGroupByName(db, in.UserGroupNo)
+		id, err := strconv.ParseInt(in.UserGroupNo, 10, 64)
+		if err != nil {
+			reply.Err = &pb.Error{
+				Code:        http.StatusBadRequest,
+				Message:     InvalidParam,
+				Description: "机构组号错误",
+			}
+			return reply, nil
+		}
+		ins, err := insmodel.FindInsGroupById(db, id)
 		if err != nil {
 			return nil, err
 		}

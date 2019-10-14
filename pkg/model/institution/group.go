@@ -64,3 +64,12 @@ func FindInsGroupByName(db *gorm.DB, name string) (*Group, error) {
 	}
 	return out, err
 }
+
+func FindInsGroupById(db *gorm.DB, id int64) (*Group, error) {
+	out := new(Group)
+	err := db.Where(&Group{GroupId: id}).Take(out).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return out, err
+}
