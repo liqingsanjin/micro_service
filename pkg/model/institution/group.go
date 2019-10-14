@@ -55,3 +55,12 @@ func SaveInsGroupBind(db *gorm.DB, data *InsGroupBind) error {
 func RemoveInsGroupBind(db *gorm.DB, data *InsGroupBind) error {
 	return db.Delete(data).Error
 }
+
+func FindInsGroupByName(db *gorm.DB, name string) (*Group, error) {
+	out := new(Group)
+	err := db.Where(&Group{Name: name}).Take(out).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return out, err
+}

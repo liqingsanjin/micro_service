@@ -248,7 +248,7 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 			}
 			return reply, nil
 		}
-	case "institution", "institution_group":
+	case "institution":
 		ins, err := insmodel.FindInstitutionInfoById(db, in.UserGroupNo)
 		if err != nil {
 			return nil, err
@@ -258,6 +258,19 @@ func (u *userService) Register(ctx context.Context, in *pb.RegisterRequest) (*pb
 				Code:        http.StatusBadRequest,
 				Message:     InvalidParam,
 				Description: "机构号不存在",
+			}
+			return reply, nil
+		}
+	case "institution_group":
+		ins, err := insmodel.FindInsGroupByName(db, in.UserGroupNo)
+		if err != nil {
+			return nil, err
+		}
+		if ins == nil {
+			reply.Err = &pb.Error{
+				Code:        http.StatusBadRequest,
+				Message:     InvalidParam,
+				Description: "机构组号不存在",
 			}
 			return reply, nil
 		}
