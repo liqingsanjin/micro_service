@@ -2,7 +2,9 @@ package gateway
 
 import (
 	"userService/pkg/pb"
+	"userService/pkg/userservice"
 
+	stdjwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	httptransport "github.com/go-kit/kit/transport/http"
 )
@@ -10,12 +12,15 @@ import (
 func RegisterMerchantHandler(engine *gin.Engine, endpoints *MerchantEndpoints) {
 	group := engine.Group("/merchant")
 
-	group.POST("/listMerchant", convertHttpHandlerToGinHandler(httptransport.NewServer(
-		endpoints.ListMerchantEndpoint,
-		decodeHttpRequest(&pb.ListMerchantRequest{}),
-		encodeHttpResponse,
-		httptransport.ServerErrorEncoder(errorEncoder),
-	)))
+	group.POST("/listMerchant",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.ListMerchantEndpoint,
+			decodeHttpRequest(&pb.ListMerchantRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+			httptransport.ServerBefore(setUserInfoContext),
+		)))
 
 	group.POST("/listGroup", convertHttpHandlerToGinHandler(httptransport.NewServer(
 		endpoints.ListGroupMerchantEndpoint,

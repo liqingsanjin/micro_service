@@ -45,7 +45,7 @@ func SaveGroup(db *gorm.DB, data *Group) error {
 
 func ListInsGroupBind(db *gorm.DB, groupId int64) ([]*InsGroupBind, error) {
 	out := make([]*InsGroupBind, 0)
-	return out, db.Where(&InsGroupBind{GroupId: groupId}).Find(&out).Error
+	return out, db.Where("group_id = ?", groupId).Find(&out).Error
 }
 
 func SaveInsGroupBind(db *gorm.DB, data *InsGroupBind) error {
@@ -54,15 +54,6 @@ func SaveInsGroupBind(db *gorm.DB, data *InsGroupBind) error {
 
 func RemoveInsGroupBind(db *gorm.DB, data *InsGroupBind) error {
 	return db.Delete(data).Error
-}
-
-func FindInsGroupByName(db *gorm.DB, name string) (*Group, error) {
-	out := new(Group)
-	err := db.Where(&Group{Name: name}).Take(out).Error
-	if err == gorm.ErrRecordNotFound {
-		return nil, nil
-	}
-	return out, err
 }
 
 func FindInsGroupById(db *gorm.DB, id int64) (*Group, error) {

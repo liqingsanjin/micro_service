@@ -163,7 +163,7 @@ func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption
 			encodeRequest,
 			decodeResponse,
 			pb.ListMerchantReply{},
-			options...,
+			append(options, grpctransport.ClientBefore(setUserInfoMD))...,
 		).Endpoint()
 		endpoints.ListMerchantEndpoint = endpoint
 	}

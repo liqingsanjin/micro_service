@@ -10,7 +10,11 @@ import (
 	"userService/pkg/pb"
 	"userService/pkg/util"
 
+	insmodel "userService/pkg/model/institution"
 	merchantmodel "userService/pkg/model/merchant"
+	usermodel "userService/pkg/model/user"
+
+	"google.golang.org/grpc/metadata"
 )
 
 type merchantService struct{}
@@ -1196,6 +1200,7 @@ func (m *merchantService) SaveMerchant(ctx context.Context, in *pb.SaveMerchantR
 }
 
 func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantRequest) (*pb.ListMerchantReply, error) {
+	reply := new(pb.ListMerchantReply)
 	if in.Size == 0 {
 		in.Size = 10
 	}
@@ -1204,6 +1209,64 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 	}
 
 	db := common.DB
+
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "找不到用户信息",
+		}
+		return reply, nil
+	}
+	ids := md.Get("userid")
+	if !ok || len(ids) == 0 {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "找不到用户信息",
+		}
+		return reply, nil
+	}
+	id, _ := strconv.ParseInt(ids[0], 10, 64)
+	user, err := usermodel.FindUserByID(db, id)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "找不到用户信息",
+		}
+		return reply, nil
+	}
+
+	insIds := make([]string, 0)
+	if user.UserType != "admin" && user.UserType != "institution" && user.UserType != "institution_group" {
+		reply.Items = make([]*pb.MerchantField, 0)
+		reply.Count = 0
+		reply.Page = in.Page
+		reply.Size = in.Size
+		return reply, nil
+	}
+	if user.UserType == "institution_group" {
+		groupId, _ := strconv.ParseInt(user.UserGroupNo, 10, 64)
+		groups, err := insmodel.ListInsGroupBind(db, groupId)
+		if err != nil {
+			return nil, err
+		}
+		for _, group := range groups {
+			insIds = append(insIds, group.InsIdCd)
+		}
+		if len(insIds) == 0 {
+			reply.Items = make([]*pb.MerchantField, 0)
+			reply.Count = 0
+			reply.Page = in.Page
+			reply.Size = in.Size
+			return reply, nil
+		}
+	}
 
 	edit := true
 	if in.Type == "main" {
@@ -1215,7 +1278,9 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 		if in.Item != nil {
 			query.MchtCd = in.Item.MchtCd
 			query.Sn = in.Item.Sn
-			query.AipBranCd = in.Item.AipBranCd
+			if user.UserType == "institution" {
+				query.AipBranCd = user.UserGroupNo
+			}
 			query.GroupCd = in.Item.GroupCd
 			query.OriChnl = in.Item.OriChnl
 			query.OriChnlDesc = in.Item.OriChnlDesc
@@ -1280,7 +1345,7 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 			query.CertifDt = in.Item.CertifDt
 		}
 
-		merchants, count, err := merchantmodel.QueryMerchantInfos(db, query, in.Page, in.Size)
+		merchants, count, err := merchantmodel.QueryMerchantInfos(db, query, insIds, in.Page, in.Size)
 		if err != nil {
 			return nil, err
 		}
@@ -1382,7 +1447,9 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 		if in.Item != nil {
 			query.MchtCd = in.Item.MchtCd
 			query.Sn = in.Item.Sn
-			query.AipBranCd = in.Item.AipBranCd
+			if user.UserType == "institution" {
+				query.AipBranCd = user.UserGroupNo
+			}
 			query.GroupCd = in.Item.GroupCd
 			query.OriChnl = in.Item.OriChnl
 			query.OriChnlDesc = in.Item.OriChnlDesc
@@ -1447,7 +1514,7 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 			query.CertifDt = in.Item.CertifDt
 		}
 
-		merchants, count, err := merchantmodel.QueryMerchantInfosMain(db, query, in.Page, in.Size)
+		merchants, count, err := merchantmodel.QueryMerchantInfosMain(db, query, insIds, in.Page, in.Size)
 		if err != nil {
 			return nil, err
 		}
