@@ -81,6 +81,7 @@ func merchantRegister(db *gorm.DB, instance *camundamodel.ProcessInstance) error
 	}
 
 	info.Status = "01"
+	info.SystemFlag = "01"
 	err = merchant.SaveMerchantMain(db, &merchant.MerchantInfoMain{
 		MerchantInfo: *info,
 	})
