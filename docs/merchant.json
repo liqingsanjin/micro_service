@@ -1561,6 +1561,114 @@
           }
         }
       }
+    },
+    "/merchant/merchantInfoQuery": {
+      "post": {
+        "operationId": "merchantInfoQuery",
+        "summary": "查询商户列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "description": "Authorization",
+            "type": "string"
+          },
+          {
+            "name": "merchantInfoQuery",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "page",
+                "size"
+              ],
+              "properties": {
+                "page": {
+                  "type": "integer",
+                  "description": "页码"
+                },
+                "size": {
+                  "type": "integer",
+                  "description": "单页大小"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "主表为main，默认为编辑表"
+                },
+                "item": {
+                  "type": "object",
+                  "description": "商户具体查询字段",
+                  "properties": {
+                    "mchtCd": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "aipBranCd": {
+                      "type": "string"
+                    },
+                    "bankBelongCd": {
+                      "type": "string"
+                    },
+                    "accountName": {
+                      "type": "string"
+                    },
+                    "account": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "systemFlag": {
+                      "type": "string"
+                    },
+                    "nameBusi": {
+                      "type": "string"
+                    },
+                    "groupCd": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "mchtCd": "0001000F0507465",
+                    "name": "买乐便利店",
+                    "aipBranCd": "80009999",
+                    "bankBelongCd": "80000000",
+                    "nameBusi": "买乐便利店",
+                    "groupCd": "",
+                    "accountName": "刘金令",
+                    "account": "6212250200002368254",
+                    "updatedAt": "2017-12-15 00:50:34",
+                    "status": "01",
+                    "systemFlag": "01"
+                  }
+                ],
+                "err": null,
+                "page": 1,
+                "size": 10,
+                "count": 1
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

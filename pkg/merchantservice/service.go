@@ -19,6 +19,135 @@ import (
 
 type merchantService struct{}
 
+func (m *merchantService) MerchantInfoQuery(ctx context.Context, in *pb.MerchantInfoQueryRequest) (*pb.MerchantInfoQueryReply, error) {
+	reply := new(pb.MerchantInfoQueryReply)
+	if in.Size == 0 {
+		in.Size = 10
+	}
+	if in.Page == 0 {
+		in.Page = 1
+	}
+
+	db := common.DB
+
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "找不到用户信息",
+		}
+		return reply, nil
+	}
+	ids := md.Get("userid")
+	if !ok || len(ids) == 0 {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "找不到用户信息",
+		}
+		return reply, nil
+	}
+	id, _ := strconv.ParseInt(ids[0], 10, 64)
+	user, err := usermodel.FindUserByID(db, id)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "找不到用户信息",
+		}
+		return reply, nil
+	}
+
+	insIds := make([]string, 0)
+	if user.UserType != "admin" && user.UserType != "institution" && user.UserType != "institution_group" {
+		reply.Items = make([]*pb.MerchantInfoField, 0)
+		reply.Count = 0
+		reply.Page = in.Page
+		reply.Size = in.Size
+		return reply, nil
+	}
+	if user.UserType == "institution_group" {
+		groupId, _ := strconv.ParseInt(user.UserGroupNo, 10, 64)
+		groups, err := insmodel.ListInsGroupBind(db, groupId)
+		if err != nil {
+			return nil, err
+		}
+		for _, group := range groups {
+			insIds = append(insIds, group.InsIdCd)
+		}
+		if len(insIds) == 0 {
+			reply.Items = make([]*pb.MerchantInfoField, 0)
+			reply.Count = 0
+			reply.Page = in.Page
+			reply.Size = in.Size
+			return reply, nil
+		}
+	}
+
+	edit := true
+	if in.Type == "main" {
+		edit = false
+	}
+	if edit {
+		query := new(merchantmodel.MerchantAccount)
+		if in.Item != nil {
+			query.MchtCd = in.Item.MchtCd
+			if user.UserType == "institution" {
+				query.AipBranCd = user.UserGroupNo
+			}
+			if in.Item.AipBranCd != "" {
+				query.AipBranCd = in.Item.AipBranCd
+			}
+			query.GroupCd = in.Item.GroupCd
+			query.Name = in.Item.Name
+			query.NameBusi = in.Item.NameBusi
+			query.Status = in.Item.Status
+			query.SystemFlag = in.Item.SystemFlag
+			query.BankBelongCd = in.Item.BankBelongCd
+			query.GroupCd = in.Item.GroupCd
+			query.AccountName = in.Item.AccountName
+			query.Account = in.Item.Account
+
+		}
+		merchants, count, err := merchantmodel.QueryMerchantAccountInfos(db, query, in.Page, in.Size)
+		if err != nil {
+			return nil, err
+		}
+
+		pbMerchants := make([]*pb.MerchantInfoField, len(merchants))
+		for i := range merchants {
+			pbMerchants[i] = &pb.MerchantInfoField{
+				MchtCd:       merchants[i].MchtCd,
+				Name:         merchants[i].Name,
+				AipBranCd:    merchants[i].AipBranCd,
+				BankBelongCd: merchants[i].BankBelongCd,
+				NameBusi:     merchants[i].NameBusi,
+				GroupCd:      merchants[i].GroupCd,
+				AccountName:  merchants[i].AccountName,
+				Account:      merchants[i].Account,
+				Status:       merchants[i].Status,
+				SystemFlag:   merchants[i].SystemFlag,
+			}
+			if !merchants[i].UpdatedAt.IsZero() {
+				pbMerchants[i].UpdatedAt = merchants[i].UpdatedAt.Format(util.TimePattern)
+			}
+		}
+		reply.Items = pbMerchants
+		reply.Count = count
+		reply.Page = in.Page
+		reply.Size = in.Size
+		return reply, nil
+
+	} else {
+
+	}
+	return reply, nil
+}
+
 func (m *merchantService) GenerateMchtCd(ctx context.Context, in *pb.GenerateMchtCdRequest) (*pb.GenerateMchtCdReply, error) {
 	reply := new(pb.GenerateMchtCdReply)
 	if len(in.MccCd) != 4 || len(in.MchtCd3) != 3 || len(in.MchtCdPc) != 4 {
@@ -1281,6 +1410,9 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 			if user.UserType == "institution" {
 				query.AipBranCd = user.UserGroupNo
 			}
+			if in.Item.AipBranCd != "" {
+				query.AipBranCd = in.Item.AipBranCd
+			}
 			query.GroupCd = in.Item.GroupCd
 			query.OriChnl = in.Item.OriChnl
 			query.OriChnlDesc = in.Item.OriChnlDesc
@@ -1449,6 +1581,9 @@ func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantR
 			query.Sn = in.Item.Sn
 			if user.UserType == "institution" {
 				query.AipBranCd = user.UserGroupNo
+			}
+			if in.Item.AipBranCd != "" {
+				query.AipBranCd = in.Item.AipBranCd
 			}
 			query.GroupCd = in.Item.GroupCd
 			query.OriChnl = in.Item.OriChnl

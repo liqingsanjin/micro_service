@@ -19,6 +19,7 @@ service Merchant {
     rpc GetMerchantPicture(GetMerchantPictureRequest) returns (GetMerchantPictureReply) {}
     rpc GetMerchantById(GetMerchantByIdRequest) returns (GetMerchantByIdReply) {}
     rpc GenerateMchtCd(GenerateMchtCdRequest) returns (GenerateMchtCdReply) {}
+    rpc MerchantInfoQuery(MerchantInfoQueryRequest) returns (MerchantInfoQueryReply) {}
 }
 
 message GenerateMchtCdReply {
@@ -392,4 +393,46 @@ message GetMerchantByIdRequest {
 message GetMerchantByIdReply {
     MerchantField item = 1;
     error err = 2;
+}
+
+message MerchantInfoQueryField {
+    string mchtCd = 1;
+    string name = 2;
+    string aipBranCd = 3;
+    string bankBelongCd = 4;
+    string accountName = 5;
+    string account = 6;
+    string status = 7;
+    string systemFlag = 8;
+    string nameBusi = 9;
+    string groupCd = 10;
+}
+
+message MerchantInfoQueryRequest {
+   MerchantInfoQueryField item = 1;
+   string type = 2;
+   int32 page = 3;
+   int32 size = 4;
+}
+
+message MerchantInfoField {
+    string mchtCd       = 1;
+    string name         = 2;
+    string aipBranCd    = 3;
+    string bankBelongCd = 4;
+    string nameBusi     = 5;
+    string groupCd      = 6;
+    string accountName  = 7;
+    string account      = 8;
+    string updatedAt    = 9;
+    string status       = 10;
+    string systemFlag   = 11;
+}
+
+message MerchantInfoQueryReply {
+    repeated MerchantInfoField items = 1;
+    error err = 2;
+    int32 page = 3;
+    int32 size = 4;
+    int32 count = 5;
 }

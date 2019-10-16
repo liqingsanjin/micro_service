@@ -112,4 +112,14 @@ func RegisterMerchantHandler(engine *gin.Engine, endpoints *MerchantEndpoints) {
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
+
+	group.POST("/merchantInfoQuery",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.MerchantInfoQueryEndpoint,
+			decodeHttpRequest(&pb.MerchantInfoQueryRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+			httptransport.ServerBefore(setUserInfoContext),
+		)))
 }

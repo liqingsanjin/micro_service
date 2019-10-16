@@ -25,6 +25,15 @@ type merchantServer struct {
 	GetMerchantByIdHandler           grpctransport.Handler
 	SaveMerchantBizDealAndFeeHandler grpctransport.Handler
 	GenerateMchtCdHandler            grpctransport.Handler
+	MerchantInfoQueryHandler         grpctransport.Handler
+}
+
+func (m *merchantServer) MerchantInfoQuery(ctx context.Context, in *pb.MerchantInfoQueryRequest) (*pb.MerchantInfoQueryReply, error) {
+	_, res, err := m.MerchantInfoQueryHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.MerchantInfoQueryReply), nil
 }
 
 func (m *merchantServer) GenerateMchtCd(ctx context.Context, in *pb.GenerateMchtCdRequest) (*pb.GenerateMchtCdReply, error) {
@@ -299,6 +308,17 @@ func New(tracer grpctransport.ServerOption) pb.MerchantServer {
 		endpoint := MakeGenerateMchtCdEndpoint(service)
 		endpoint = kit.LogginMiddleware(endpoint)
 		svr.GenerateMchtCdHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+
+	{
+		endpoint := MakeMerchantInfoQueryEndpoint(service)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.MerchantInfoQueryHandler = grpctransport.NewServer(
 			endpoint,
 			kit.DecodeRequest,
 			kit.EncodeResponse,

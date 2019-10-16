@@ -100,3 +100,9 @@ func MakeGenerateMchtCdEndpoint(service pb.MerchantServer) endpoint.Endpoint {
 		return service.GenerateMchtCd(ctx, request.(*pb.GenerateMchtCdRequest))
 	}
 }
+
+func MakeMerchantInfoQueryEndpoint(service pb.MerchantServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.MerchantInfoQuery(ctx, request.(*pb.MerchantInfoQueryRequest))
+	}
+}

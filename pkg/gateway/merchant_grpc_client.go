@@ -26,6 +26,15 @@ type MerchantEndpoints struct {
 	GetMerchantByIdEndpoint           endpoint.Endpoint
 	SaveMerchantBizDealAndFeeEndpoint endpoint.Endpoint
 	GenerateMchtCdEndpoint            endpoint.Endpoint
+	MerchantInfoQueryEndpoint         endpoint.Endpoint
+}
+
+func (m *MerchantEndpoints) MerchantInfoQuery(ctx context.Context, in *pb.MerchantInfoQueryRequest) (*pb.MerchantInfoQueryReply, error) {
+	res, err := m.MerchantInfoQueryEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.MerchantInfoQueryReply), nil
 }
 
 func (m *MerchantEndpoints) GenerateMchtCd(ctx context.Context, in *pb.GenerateMchtCdRequest) (*pb.GenerateMchtCdReply, error) {
@@ -335,6 +344,19 @@ func NewMerchantServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption
 			options...,
 		).Endpoint()
 		endpoints.GenerateMchtCdEndpoint = endpoint
+	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Merchant",
+			"MerchantInfoQuery",
+			encodeRequest,
+			decodeResponse,
+			pb.MerchantInfoQueryReply{},
+			append(options, grpctransport.ClientBefore(setUserInfoMD))...,
+		).Endpoint()
+		endpoints.MerchantInfoQueryEndpoint = endpoint
 	}
 
 	return endpoints

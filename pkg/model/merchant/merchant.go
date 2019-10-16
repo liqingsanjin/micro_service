@@ -216,3 +216,29 @@ func FindMerchantCdByPrefix(db *gorm.DB, prefix string) ([]*UsedMerchantCd, erro
 func SaveMerchantCd(db *gorm.DB, data *UsedMerchantCd) error {
 	return db.Save(data).Error
 }
+
+type MerchantAccount struct {
+	MchtCd       string    `gorm:"column:MCHT_CD"`
+	Name         string    `gorm:"column:NAME"`
+	AipBranCd    string    `gorm:"column:AIP_BRAN_CD"`
+	BankBelongCd string    `gorm:"column:BANK_BELONG_CD"`
+	NameBusi     string    `gorm:"column:NAME_BUSI"`
+	GroupCd      string    `gorm:"column:GROUP_CD"`
+	AccountName  string    `gorm:"column:ACCOUNT_NAME"`
+	Account      string    `gorm:"column:ACCOUNT"`
+	UpdatedAt    time.Time `gorm:"column:REC_UPD_TS"`
+	Status       string    `gorm:"column:STATUS"`
+	SystemFlag   string    `gorm:"column:SYSTEMFLAG"`
+}
+
+func (MerchantAccount) TableName() string {
+	return "EDIT_MCHT_ACCOUNT"
+}
+
+func QueryMerchantAccountInfos(db *gorm.DB, query *MerchantAccount, page int32, size int32) ([]*MerchantAccount, int32, error) {
+	out := make([]*MerchantAccount, 0)
+	var count int32
+	db.Model(&MerchantAccount{}).Where(query).Count(&count)
+	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
+}
