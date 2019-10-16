@@ -416,7 +416,7 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 					return nil, err
 				}
 			} else if task.FormKey == "mcht" {
-				err = mchtmodel.UpdateMerchant(db, &mchtmodel.MerchantInfo{MchtCd: instance.DataId}, &mchtmodel.MerchantInfo{Status: formValue.Value})
+				err = mchtmodel.UpdateMerchant(db, &mchtmodel.MerchantInfo{MchtCd: instance.DataId}, &mchtmodel.MerchantInfo{SystemFlag: formValue.Value})
 				if err != nil {
 					return nil, err
 				}
