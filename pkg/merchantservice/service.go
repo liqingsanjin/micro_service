@@ -113,7 +113,7 @@ func (m *merchantService) MerchantInfoQuery(ctx context.Context, in *pb.Merchant
 			query.Account = in.Item.Account
 
 		}
-		merchants, count, err := merchantmodel.QueryMerchantAccountInfos(db, query, in.Page, in.Size)
+		merchants, count, err := merchantmodel.QueryMerchantAccountInfos(db, query, insIds, in.Page, in.Size)
 		if err != nil {
 			return nil, err
 		}
@@ -143,9 +143,54 @@ func (m *merchantService) MerchantInfoQuery(ctx context.Context, in *pb.Merchant
 		return reply, nil
 
 	} else {
+		query := new(merchantmodel.MerchantAccountMain)
+		if in.Item != nil {
+			query.MchtCd = in.Item.MchtCd
+			if user.UserType == "institution" {
+				query.AipBranCd = user.UserGroupNo
+			}
+			if in.Item.AipBranCd != "" {
+				query.AipBranCd = in.Item.AipBranCd
+			}
+			query.GroupCd = in.Item.GroupCd
+			query.Name = in.Item.Name
+			query.NameBusi = in.Item.NameBusi
+			query.Status = in.Item.Status
+			query.SystemFlag = in.Item.SystemFlag
+			query.BankBelongCd = in.Item.BankBelongCd
+			query.GroupCd = in.Item.GroupCd
+			query.AccountName = in.Item.AccountName
+			query.Account = in.Item.Account
+		}
+		merchants, count, err := merchantmodel.QueryMerchantAccountInfosMain(db, query, insIds, in.Page, in.Size)
+		if err != nil {
+			return nil, err
+		}
 
+		pbMerchants := make([]*pb.MerchantInfoField, len(merchants))
+		for i := range merchants {
+			pbMerchants[i] = &pb.MerchantInfoField{
+				MchtCd:       merchants[i].MchtCd,
+				Name:         merchants[i].Name,
+				AipBranCd:    merchants[i].AipBranCd,
+				BankBelongCd: merchants[i].BankBelongCd,
+				NameBusi:     merchants[i].NameBusi,
+				GroupCd:      merchants[i].GroupCd,
+				AccountName:  merchants[i].AccountName,
+				Account:      merchants[i].Account,
+				Status:       merchants[i].Status,
+				SystemFlag:   merchants[i].SystemFlag,
+			}
+			if !merchants[i].UpdatedAt.IsZero() {
+				pbMerchants[i].UpdatedAt = merchants[i].UpdatedAt.Format(util.TimePattern)
+			}
+		}
+		reply.Items = pbMerchants
+		reply.Count = count
+		reply.Page = in.Page
+		reply.Size = in.Size
+		return reply, nil
 	}
-	return reply, nil
 }
 
 func (m *merchantService) GenerateMchtCd(ctx context.Context, in *pb.GenerateMchtCdRequest) (*pb.GenerateMchtCdReply, error) {

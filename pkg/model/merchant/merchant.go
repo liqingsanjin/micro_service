@@ -235,10 +235,38 @@ func (MerchantAccount) TableName() string {
 	return "EDIT_MCHT_ACCOUNT"
 }
 
-func QueryMerchantAccountInfos(db *gorm.DB, query *MerchantAccount, page int32, size int32) ([]*MerchantAccount, int32, error) {
+func QueryMerchantAccountInfos(db *gorm.DB, query *MerchantAccount, insIds []string, page int32, size int32) ([]*MerchantAccount, int32, error) {
 	out := make([]*MerchantAccount, 0)
 	var count int32
-	db.Model(&MerchantAccount{}).Where(query).Count(&count)
-	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	var err error
+	if len(insIds) == 0 {
+		db.Model(&MerchantAccount{}).Where(query).Count(&count)
+		err = db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	} else {
+		db.Model(&MerchantAccount{}).Where("AIP_BRAN_CD in (?)", insIds).Where(query).Count(&count)
+		err = db.Where("AIP_BRAN_CD in (?)", insIds).Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	}
+	return out, count, err
+}
+
+type MerchantAccountMain struct {
+	MerchantAccount
+}
+
+func (MerchantAccountMain) TableName() string {
+	return "MCHT_ACCOUNT"
+}
+
+func QueryMerchantAccountInfosMain(db *gorm.DB, query *MerchantAccountMain, insIds []string, page int32, size int32) ([]*MerchantAccountMain, int32, error) {
+	out := make([]*MerchantAccountMain, 0)
+	var count int32
+	var err error
+	if len(insIds) == 0 {
+		db.Model(&MerchantAccountMain{}).Where(query).Count(&count)
+		err = db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	} else {
+		db.Model(&MerchantAccountMain{}).Where("AIP_BRAN_CD in (?)", insIds).Where(query).Count(&count)
+		err = db.Where("AIP_BRAN_CD in (?)", insIds).Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	}
 	return out, count, err
 }
