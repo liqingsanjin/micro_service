@@ -64,6 +64,13 @@ func MakeTaskCompleteEndpoint(service pb.TaskServer) endpoint.Endpoint {
 	}
 }
 
+func MakeGetTaskFormValueEndpoint(s pb.TaskServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req := request.(*pb.GetFormValueRequest)
+		return s.GetFormValue(ctx, req)
+	}
+}
+
 func MakeExternalTaskGetEndpoint(service pb.ExternalTaskServer) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		return service.Get(ctx, request.(*pb.GetExternalTaskReq))

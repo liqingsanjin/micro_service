@@ -11,6 +11,8 @@ import (
 	camundapb "userService/pkg/camunda/pb"
 	"userService/pkg/common"
 	camundamodel "userService/pkg/model/camunda"
+	insmodel "userService/pkg/model/institution"
+	mchtmodel "userService/pkg/model/merchant"
 	"userService/pkg/model/user"
 	"userService/pkg/pb"
 	"userService/pkg/util"
@@ -371,6 +373,14 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 		}
 
 		for _, task := range taskListRes.Tasks {
+			formValue, err := client.Task.GetFormValue(ctx, &camundapb.GetFormValueRequest{
+				TaskId:    task.Id,
+				ValueName: "status",
+			})
+			if err != nil {
+				return nil, err
+			}
+
 			var endFlag = false
 			role, err := user.FindRole(db, task.Assignee)
 			if err != nil {
@@ -397,6 +407,19 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 			})
 			if err != nil {
 				return nil, err
+			}
+
+			// 修改商户或者机构状态
+			if task.FormKey == "ins" {
+				err = insmodel.UpdateInstitution(db, &insmodel.InstitutionInfo{InsIdCd: instance.DataId}, &insmodel.InstitutionInfo{InsSta: formValue.Value})
+				if err != nil {
+					return nil, err
+				}
+			} else if task.FormKey == "mcht" {
+				err = mchtmodel.UpdateMerchant(db, &mchtmodel.MerchantInfo{MchtCd: instance.DataId}, &mchtmodel.MerchantInfo{Status: formValue.Value})
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 	}

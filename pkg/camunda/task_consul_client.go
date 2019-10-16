@@ -57,6 +57,15 @@ func GetTaskConsulEndpoints(instancer sd.Instancer, log log.Logger) *TaskEndpoin
 		endpoints.CompleteEndpoint = retry
 	}
 
+	{
+		factory := taskFactory(transport.MakeGetTaskFormValueEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = institutionBreaker(retry)
+		endpoints.GetFormValueEndpoint = retry
+	}
+
 	return &endpoints
 }
 

@@ -60,8 +60,20 @@ message CompleteTaskResp {
   CamundaError err = 2;
 }
 
+message GetFormValueRequest {
+    string taskId = 1;
+    string valueName = 2;
+}
+
+message GetFormValueReply {
+    string type = 1;
+    string value = 2;
+    CamundaError err = 3;
+}
+
 service Task {
   rpc GetList(GetListTaskReq) returns (GetListTaskResp) {}
   rpc Complete(CompleteTaskReq) returns (CompleteTaskResp) {}
   rpc Get(GetTaskReq) returns (GetTaskResp) {}
+  rpc GetFormValue(GetFormValueRequest) returns (GetFormValueReply) {}
 }

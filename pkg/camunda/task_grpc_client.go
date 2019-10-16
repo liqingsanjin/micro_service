@@ -11,9 +11,18 @@ import (
 )
 
 type TaskEndpoints struct {
-	GetListEndpoint  endpoint.Endpoint
-	GetEndpoint      endpoint.Endpoint
-	CompleteEndpoint endpoint.Endpoint
+	GetListEndpoint      endpoint.Endpoint
+	GetEndpoint          endpoint.Endpoint
+	CompleteEndpoint     endpoint.Endpoint
+	GetFormValueEndpoint endpoint.Endpoint
+}
+
+func (t *TaskEndpoints) GetFormValue(ctx context.Context, in *pb.GetFormValueRequest) (*pb.GetFormValueReply, error) {
+	res, err := t.GetFormValueEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.GetFormValueReply), nil
 }
 
 func (t *TaskEndpoints) GetList(ctx context.Context, in *pb.GetListTaskReq) (*pb.GetListTaskResp, error) {
@@ -83,6 +92,19 @@ func NewTaskClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *TaskEndp
 			options...,
 		).Endpoint()
 		endpoints.CompleteEndpoint = e
+	}
+
+	{
+		e := grpctransport.NewClient(
+			conn,
+			"pb.Task",
+			"GetFormValue",
+			encodeRequest,
+			decodeResponse,
+			pb.GetFormValueReply{},
+			options...,
+		).Endpoint()
+		endpoints.GetFormValueEndpoint = e
 	}
 
 	return endpoints

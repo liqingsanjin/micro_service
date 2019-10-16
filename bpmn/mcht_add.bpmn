@@ -47,7 +47,15 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${result == 'no'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1ycn8s7" sourceRef="Task_1olkk06" targetRef="EndEvent_1ity16b" />
-    <bpmn:userTask id="Task_1urwosn" name="edit" camunda:assignee="商户编辑员">
+    <bpmn:userTask id="Task_1urwosn" name="edit" camunda:formKey="mcht" camunda:assignee="商户编辑员">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="status">05</camunda:outputParameter>
+        </camunda:inputOutput>
+        <camunda:formData>
+          <camunda:formField id="status" type="string" defaultValue="05" />
+        </camunda:formData>
+      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_00kb30d</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0po6d3t</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0grjzgb</bpmn:outgoing>
