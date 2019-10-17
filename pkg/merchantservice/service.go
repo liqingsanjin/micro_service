@@ -1374,34 +1374,36 @@ func (m *merchantService) SaveMerchant(ctx context.Context, in *pb.SaveMerchantR
 		return nil, err
 	}
 
-	data := new(merchantmodel.BankAccount)
-	{
-		data.OwnerCd = in.Account.OwnerCd
-		data.AccountType = in.Account.AccountType
-		data.Name = in.Account.Name
-		data.Account = in.Account.Account
-		data.UcBcCd = in.Account.UcBcCd
-		data.Province = in.Account.Province
-		data.City = in.Account.City
-		data.BankCode = in.Account.BankCode
-		data.BankName = in.Account.BankName
-		data.OperIn = in.Account.OperIn
-		data.RecOprId = in.Account.RecOprId
-		data.RecUpdOpr = in.Account.RecUpdOpr
-		data.MsgResvFld1 = in.Account.MsgResvFld1
-		data.MsgResvFld2 = in.Account.MsgResvFld2
-		data.MsgResvFld3 = in.Account.MsgResvFld3
-		data.MsgResvFld4 = in.Account.MsgResvFld4
-		data.MsgResvFld5 = in.Account.MsgResvFld5
-		data.MsgResvFld6 = in.Account.MsgResvFld6
-		data.MsgResvFld7 = in.Account.MsgResvFld7
-		data.MsgResvFld8 = in.Account.MsgResvFld8
-		data.MsgResvFld9 = in.Account.MsgResvFld9
-		data.MsgResvFld10 = in.Account.MsgResvFld10
-	}
-	err = merchantmodel.SaveBankAccount(db, data)
-	if err != nil {
-		return nil, err
+	if in.Account != nil {
+		data := new(merchantmodel.BankAccount)
+		{
+			data.OwnerCd = in.Account.OwnerCd
+			data.AccountType = in.Account.AccountType
+			data.Name = in.Account.Name
+			data.Account = in.Account.Account
+			data.UcBcCd = in.Account.UcBcCd
+			data.Province = in.Account.Province
+			data.City = in.Account.City
+			data.BankCode = in.Account.BankCode
+			data.BankName = in.Account.BankName
+			data.OperIn = in.Account.OperIn
+			data.RecOprId = in.Account.RecOprId
+			data.RecUpdOpr = in.Account.RecUpdOpr
+			data.MsgResvFld1 = in.Account.MsgResvFld1
+			data.MsgResvFld2 = in.Account.MsgResvFld2
+			data.MsgResvFld3 = in.Account.MsgResvFld3
+			data.MsgResvFld4 = in.Account.MsgResvFld4
+			data.MsgResvFld5 = in.Account.MsgResvFld5
+			data.MsgResvFld6 = in.Account.MsgResvFld6
+			data.MsgResvFld7 = in.Account.MsgResvFld7
+			data.MsgResvFld8 = in.Account.MsgResvFld8
+			data.MsgResvFld9 = in.Account.MsgResvFld9
+			data.MsgResvFld10 = in.Account.MsgResvFld10
+		}
+		err = merchantmodel.SaveBankAccount(db, data)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	db.Commit()
