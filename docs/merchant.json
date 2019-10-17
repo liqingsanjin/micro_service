@@ -238,7 +238,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "item": {
+                "merchant": {
                   "type": "object",
                   "properties": {
                     "mchtCd": {
@@ -440,6 +440,77 @@
                       "type": "string"
                     },
                     "certifDt": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "account": {
+                  "type": "object",
+                  "properties": {
+                    "ownerCd": {
+                      "type": "string"
+                    },
+                    "accountType": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "account": {
+                      "type": "string"
+                    },
+                    "ucBcCd": {
+                      "type": "string"
+                    },
+                    "province": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "bankCode": {
+                      "type": "string"
+                    },
+                    "bankName": {
+                      "type": "string"
+                    },
+                    "operIn": {
+                      "type": "string"
+                    },
+                    "recOprId": {
+                      "type": "string"
+                    },
+                    "recUpdOpr": {
+                      "type": "string"
+                    },
+                    "msgResvFld1": {
+                      "type": "string"
+                    },
+                    "msgResvFld2": {
+                      "type": "string"
+                    },
+                    "msgResvFld3": {
+                      "type": "string"
+                    },
+                    "msgResvFld4": {
+                      "type": "string"
+                    },
+                    "msgResvFld5": {
+                      "type": "string"
+                    },
+                    "msgResvFld6": {
+                      "type": "string"
+                    },
+                    "msgResvFld7": {
+                      "type": "string"
+                    },
+                    "msgResvFld8": {
+                      "type": "string"
+                    },
+                    "msgResvFld9": {
+                      "type": "string"
+                    },
+                    "msgResvFld10": {
                       "type": "string"
                     }
                   }

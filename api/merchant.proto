@@ -158,7 +158,8 @@ message ListGroupMerchantReply {
 }
 
 message SaveMerchantRequest {
-    MerchantField item = 1;
+    MerchantField merchant = 1;
+    MerchantBankAccountField account = 2;
 }
 
 message SaveMerchantReply {

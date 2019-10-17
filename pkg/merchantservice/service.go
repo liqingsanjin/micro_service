@@ -1261,7 +1261,7 @@ func (m *merchantService) GetMerchantBankAccount(ctx context.Context, in *pb.Get
 
 func (m *merchantService) SaveMerchant(ctx context.Context, in *pb.SaveMerchantRequest) (*pb.SaveMerchantReply, error) {
 	var reply pb.SaveMerchantReply
-	if in.Item == nil {
+	if in.Merchant == nil {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
@@ -1270,7 +1270,7 @@ func (m *merchantService) SaveMerchant(ctx context.Context, in *pb.SaveMerchantR
 		return &reply, nil
 	}
 
-	if in.Item.MchtCd == "" {
+	if in.Merchant.MchtCd == "" {
 		reply.Err = &pb.Error{
 			Code:        http.StatusBadRequest,
 			Message:     "InvalidParamsError",
@@ -1278,99 +1278,134 @@ func (m *merchantService) SaveMerchant(ctx context.Context, in *pb.SaveMerchantR
 		}
 		return &reply, nil
 	}
-	db := common.DB
+	db := common.DB.Begin()
+	defer db.Rollback()
 	var err error
 
 	mtch := new(merchantmodel.MerchantInfo)
 	{
-		mtch.MchtCd = in.Item.MchtCd
-		mtch.Sn = in.Item.Sn
-		mtch.AipBranCd = in.Item.AipBranCd
-		mtch.GroupCd = in.Item.GroupCd
-		mtch.OriChnl = in.Item.OriChnl
-		mtch.OriChnlDesc = in.Item.OriChnlDesc
-		mtch.BankBelongCd = in.Item.BankBelongCd
-		mtch.DvpBy = in.Item.DvpBy
-		mtch.MccCd18 = in.Item.MccCd18
-		mtch.ApplDate = in.Item.ApplDate
-		mtch.UpBcCd = in.Item.UpBcCd
-		mtch.UpAcCd = in.Item.UpAcCd
-		mtch.UpMccCd = in.Item.UpMccCd
-		mtch.Name = in.Item.Name
-		mtch.NameBusi = in.Item.NameBusi
-		mtch.BusiLiceNo = in.Item.BusiLiceNo
-		mtch.BusiRang = in.Item.BusiRang
-		mtch.BusiMain = in.Item.BusiMain
-		mtch.Certif = in.Item.Certif
-		mtch.CertifType = in.Item.CertifType
-		mtch.CertifNo = in.Item.CertifNo
-		mtch.ProvCd = in.Item.ProvCd
-		mtch.CityCd = in.Item.CityCd
-		mtch.AreaCd = in.Item.AreaCd
-		mtch.RegAddr = in.Item.RegAddr
-		mtch.ContactName = in.Item.ContactName
-		mtch.ContactPhoneNo = in.Item.ContactPhoneNo
-		mtch.IsGroup = in.Item.IsGroup
-		mtch.MoneyToGroup = in.Item.MoneyToGroup
-		mtch.StlmWay = in.Item.StlmWay
-		mtch.StlmWayDesc = in.Item.StlmWayDesc
-		mtch.StlmInsCircle = in.Item.StlmInsCircle
-		mtch.Status = in.Item.Status
-		mtch.UcBcCd32 = in.Item.UcBcCd32
-		mtch.K2WorkflowId = in.Item.K2WorkflowId
-		mtch.SystemFlag = in.Item.SystemFlag
-		mtch.ApprovalUsername = in.Item.ApprovalUsername
-		mtch.FinalApprovalUsername = in.Item.FinalApprovalUsername
-		mtch.IsUpStandard = in.Item.IsUpStandard
-		mtch.BillingType = in.Item.BillingType
-		mtch.BillingLevel = in.Item.BillingLevel
-		mtch.Slogan = in.Item.Slogan
-		mtch.Ext1 = in.Item.Ext1
-		mtch.Ext2 = in.Item.Ext2
-		mtch.Ext3 = in.Item.Ext3
-		mtch.Ext4 = in.Item.Ext4
-		mtch.AreaStandard = in.Item.AreaStandard
-		mtch.MchtCdAreaCd = in.Item.MchtCdAreaCd
-		mtch.UcBcCdArea = in.Item.UcBcCdArea
-		mtch.RecOprId = in.Item.RecOprId
-		mtch.RecUpdOpr = in.Item.RecUpdOpr
-		mtch.OperIn = in.Item.OperIn
-		mtch.IsEleInvoice = in.Item.IsEleInvoice
-		mtch.DutyParagraph = in.Item.DutyParagraph
-		mtch.TaxMachineBrand = in.Item.TaxMachineBrand
-		mtch.Ext5 = in.Item.Ext5
-		mtch.Ext6 = in.Item.Ext6
-		mtch.Ext7 = in.Item.Ext7
-		mtch.Ext8 = in.Item.Ext8
-		mtch.Ext9 = in.Item.Ext9
-		mtch.BusiLiceSt = in.Item.BusiLiceSt
-		mtch.BusiLiceDt = in.Item.BusiLiceDt
-		mtch.CertifSt = in.Item.CertifSt
-		mtch.CertifDt = in.Item.CertifDt
-		mtch.OemOrgCode = in.Item.OemOrgCode
+		mtch.MchtCd = in.Merchant.MchtCd
+		mtch.Sn = in.Merchant.Sn
+		mtch.AipBranCd = in.Merchant.AipBranCd
+		mtch.GroupCd = in.Merchant.GroupCd
+		mtch.OriChnl = in.Merchant.OriChnl
+		mtch.OriChnlDesc = in.Merchant.OriChnlDesc
+		mtch.BankBelongCd = in.Merchant.BankBelongCd
+		mtch.DvpBy = in.Merchant.DvpBy
+		mtch.MccCd18 = in.Merchant.MccCd18
+		mtch.ApplDate = in.Merchant.ApplDate
+		mtch.UpBcCd = in.Merchant.UpBcCd
+		mtch.UpAcCd = in.Merchant.UpAcCd
+		mtch.UpMccCd = in.Merchant.UpMccCd
+		mtch.Name = in.Merchant.Name
+		mtch.NameBusi = in.Merchant.NameBusi
+		mtch.BusiLiceNo = in.Merchant.BusiLiceNo
+		mtch.BusiRang = in.Merchant.BusiRang
+		mtch.BusiMain = in.Merchant.BusiMain
+		mtch.Certif = in.Merchant.Certif
+		mtch.CertifType = in.Merchant.CertifType
+		mtch.CertifNo = in.Merchant.CertifNo
+		mtch.ProvCd = in.Merchant.ProvCd
+		mtch.CityCd = in.Merchant.CityCd
+		mtch.AreaCd = in.Merchant.AreaCd
+		mtch.RegAddr = in.Merchant.RegAddr
+		mtch.ContactName = in.Merchant.ContactName
+		mtch.ContactPhoneNo = in.Merchant.ContactPhoneNo
+		mtch.IsGroup = in.Merchant.IsGroup
+		mtch.MoneyToGroup = in.Merchant.MoneyToGroup
+		mtch.StlmWay = in.Merchant.StlmWay
+		mtch.StlmWayDesc = in.Merchant.StlmWayDesc
+		mtch.StlmInsCircle = in.Merchant.StlmInsCircle
+		mtch.Status = in.Merchant.Status
+		mtch.UcBcCd32 = in.Merchant.UcBcCd32
+		mtch.K2WorkflowId = in.Merchant.K2WorkflowId
+		mtch.SystemFlag = in.Merchant.SystemFlag
+		mtch.ApprovalUsername = in.Merchant.ApprovalUsername
+		mtch.FinalApprovalUsername = in.Merchant.FinalApprovalUsername
+		mtch.IsUpStandard = in.Merchant.IsUpStandard
+		mtch.BillingType = in.Merchant.BillingType
+		mtch.BillingLevel = in.Merchant.BillingLevel
+		mtch.Slogan = in.Merchant.Slogan
+		mtch.Ext1 = in.Merchant.Ext1
+		mtch.Ext2 = in.Merchant.Ext2
+		mtch.Ext3 = in.Merchant.Ext3
+		mtch.Ext4 = in.Merchant.Ext4
+		mtch.AreaStandard = in.Merchant.AreaStandard
+		mtch.MchtCdAreaCd = in.Merchant.MchtCdAreaCd
+		mtch.UcBcCdArea = in.Merchant.UcBcCdArea
+		mtch.RecOprId = in.Merchant.RecOprId
+		mtch.RecUpdOpr = in.Merchant.RecUpdOpr
+		mtch.OperIn = in.Merchant.OperIn
+		mtch.IsEleInvoice = in.Merchant.IsEleInvoice
+		mtch.DutyParagraph = in.Merchant.DutyParagraph
+		mtch.TaxMachineBrand = in.Merchant.TaxMachineBrand
+		mtch.Ext5 = in.Merchant.Ext5
+		mtch.Ext6 = in.Merchant.Ext6
+		mtch.Ext7 = in.Merchant.Ext7
+		mtch.Ext8 = in.Merchant.Ext8
+		mtch.Ext9 = in.Merchant.Ext9
+		mtch.BusiLiceSt = in.Merchant.BusiLiceSt
+		mtch.BusiLiceDt = in.Merchant.BusiLiceDt
+		mtch.CertifSt = in.Merchant.CertifSt
+		mtch.CertifDt = in.Merchant.CertifDt
+		mtch.OemOrgCode = in.Merchant.OemOrgCode
 
-		if in.Item.ApprDate != "" {
-			mtch.ApprDate.Time, err = time.Parse(util.TimePattern, in.Item.ApprDate)
+		if in.Merchant.ApprDate != "" {
+			mtch.ApprDate.Time, err = time.Parse(util.TimePattern, in.Merchant.ApprDate)
 			if err == nil {
 				mtch.ApprDate.Valid = true
 			}
 		}
-		if in.Item.DeleteDate != "" {
-			mtch.DeleteDate.Time, err = time.Parse(util.TimePattern, in.Item.ApprDate)
+		if in.Merchant.DeleteDate != "" {
+			mtch.DeleteDate.Time, err = time.Parse(util.TimePattern, in.Merchant.ApprDate)
 			if err == nil {
 				mtch.DeleteDate.Valid = true
 			}
 		}
-		if in.Item.RecApllyTs != "" {
-			mtch.DeleteDate.Time, err = time.Parse(util.TimePattern, in.Item.ApprDate)
+		if in.Merchant.RecApllyTs != "" {
+			mtch.DeleteDate.Time, err = time.Parse(util.TimePattern, in.Merchant.ApprDate)
 			if err == nil {
 				mtch.DeleteDate.Valid = true
 			}
 		}
 	}
 	err = merchantmodel.SaveMerchant(db, mtch)
+	if err != nil {
+		return nil, err
+	}
 
-	return &reply, err
+	data := new(merchantmodel.BankAccount)
+	{
+		data.OwnerCd = in.Account.OwnerCd
+		data.AccountType = in.Account.AccountType
+		data.Name = in.Account.Name
+		data.Account = in.Account.Account
+		data.UcBcCd = in.Account.UcBcCd
+		data.Province = in.Account.Province
+		data.City = in.Account.City
+		data.BankCode = in.Account.BankCode
+		data.BankName = in.Account.BankName
+		data.OperIn = in.Account.OperIn
+		data.RecOprId = in.Account.RecOprId
+		data.RecUpdOpr = in.Account.RecUpdOpr
+		data.MsgResvFld1 = in.Account.MsgResvFld1
+		data.MsgResvFld2 = in.Account.MsgResvFld2
+		data.MsgResvFld3 = in.Account.MsgResvFld3
+		data.MsgResvFld4 = in.Account.MsgResvFld4
+		data.MsgResvFld5 = in.Account.MsgResvFld5
+		data.MsgResvFld6 = in.Account.MsgResvFld6
+		data.MsgResvFld7 = in.Account.MsgResvFld7
+		data.MsgResvFld8 = in.Account.MsgResvFld8
+		data.MsgResvFld9 = in.Account.MsgResvFld9
+		data.MsgResvFld10 = in.Account.MsgResvFld10
+	}
+	err = merchantmodel.SaveBankAccount(db, data)
+	if err != nil {
+		return nil, err
+	}
+
+	db.Commit()
+	return &reply, nil
 }
 
 func (m *merchantService) ListMerchant(ctx context.Context, in *pb.ListMerchantRequest) (*pb.ListMerchantReply, error) {

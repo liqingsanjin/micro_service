@@ -1,12 +1,18 @@
 package main
 
-import (
-	"fmt"
-	"strconv"
-)
+import "fmt"
+
+type Main map[string]interface{}
+type Edit map[string]interface{}
 
 func main() {
-	i, err := strconv.ParseInt("0001", 10, 64)
-	fmt.Println(i, err)
-	fmt.Printf("%0.4d %0.4d\n", 12, 345)
+	m := make(Main)
+	e := make(Edit)
+	m["mchtCd"] = "111"
+	e["mchtCd"] = "112"
+
+	for k, _ := range m {
+		str := m[k].(string) + "," + e[k].(string) + "," + fmt.Sprint(m[k].(string) == e[k].(string))
+		fmt.Println(str)
+	}
 }
