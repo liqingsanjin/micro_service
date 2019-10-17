@@ -196,6 +196,14 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 	if len(listTaskRes.Tasks) != 0 {
 		// 有下个任务，保存新的任务节点
 		for _, t := range listTaskRes.Tasks {
+			formValue, err := client.Task.GetFormValue(ctx, &camundapb.GetFormValueRequest{
+				TaskId:    t.Id,
+				ValueName: "status",
+			})
+			if err != nil {
+				return nil, err
+			}
+
 			endFlag := false
 			role, err := user.FindRole(db, t.Assignee)
 			if err != nil {
@@ -223,6 +231,19 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 			})
 			if err != nil {
 				return nil, err
+			}
+
+			// 修改商户或者机构状态
+			if t.FormKey == "ins" {
+				err = insmodel.UpdateInstitution(db, &insmodel.InstitutionInfo{InsIdCd: instance.DataId}, &insmodel.InstitutionInfo{InsSta: formValue.Value})
+				if err != nil {
+					return nil, err
+				}
+			} else if t.FormKey == "mcht" {
+				err = mchtmodel.UpdateMerchant(db, &mchtmodel.MerchantInfo{MchtCd: instance.DataId}, &mchtmodel.MerchantInfo{SystemFlag: formValue.Value})
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 	}

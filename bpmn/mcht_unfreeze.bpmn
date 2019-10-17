@@ -43,20 +43,20 @@
       <bpmn:incoming>SequenceFlow_0z3ihsl</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0tnjvh6</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="Task_0gwm0it" name="check" camunda:formKey="mcht" camunda:assignee="商户复核员">
+    <bpmn:userTask id="Task_0gwm0it" name="edit" camunda:formKey="mcht" camunda:assignee="商户编辑员">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="status" type="string" defaultValue="15" />
+          <camunda:formField id="status" type="string" defaultValue="14" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1k1qm9y</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0jbhtul</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0t5jwc3</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_01i62lw" name="finalCheck" camunda:formKey="mcht" camunda:assignee="商户终审员">
+    <bpmn:userTask id="Task_01i62lw" name="check" camunda:formKey="mcht" camunda:assignee="商户复核员">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="status" type="string" defaultValue="17" />
+          <camunda:formField id="status" type="string" defaultValue="15" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1kzjlnv</bpmn:incoming>

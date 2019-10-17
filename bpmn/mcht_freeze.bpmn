@@ -35,20 +35,20 @@
     <bpmn:sequenceFlow id="SequenceFlow_0zmw0om" name="退回" sourceRef="ExclusiveGateway_0zxdceb" targetRef="Task_1cq7qtc">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${result == 'no'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:userTask id="Task_1cq7qtc" name="check" camunda:formKey="mcht" camunda:assignee="商户复核员">
+    <bpmn:userTask id="Task_1cq7qtc" name="edit" camunda:formKey="mcht" camunda:assignee="商户编辑员">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="status" type="string" defaultValue="10" />
+          <camunda:formField id="status" type="string" defaultValue="09" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0l8wzi2</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0zmw0om</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0rrm94b</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_02qf1qm" name="finalCheck" camunda:formKey="mcht" camunda:assignee="商户终审员">
+    <bpmn:userTask id="Task_02qf1qm" name="check" camunda:formKey="mcht" camunda:assignee="商户复核员">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="status" type="string" defaultValue="12" />
+          <camunda:formField id="status" type="string" defaultValue="10" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1sac9xa</bpmn:incoming>
