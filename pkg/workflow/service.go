@@ -17,6 +17,7 @@ import (
 	"userService/pkg/pb"
 	"userService/pkg/util"
 
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -233,6 +234,7 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 				return nil, err
 			}
 
+			logrus.Debugln("systemfalg", formValue.Value)
 			// 修改商户或者机构状态
 			if t.FormKey == "ins" {
 				err = insmodel.UpdateInstitution(db, &insmodel.InstitutionInfo{InsIdCd: instance.DataId}, &insmodel.InstitutionInfo{InsSta: formValue.Value})
