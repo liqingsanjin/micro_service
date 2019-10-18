@@ -20,6 +20,16 @@ service Merchant {
     rpc GetMerchantById(GetMerchantByIdRequest) returns (GetMerchantByIdReply) {}
     rpc GenerateMchtCd(GenerateMchtCdRequest) returns (GenerateMchtCdReply) {}
     rpc MerchantInfoQuery(MerchantInfoQueryRequest) returns (MerchantInfoQueryReply) {}
+    rpc MerchantForceChangeStatus(MerchantForceChangeStatusRequest) returns (MerchantForceChangeStatusReply) {}
+}
+
+message MerchantForceChangeStatusRequest {
+    string operate = 1;
+    string mchtCd = 2;
+}
+
+message MerchantForceChangeStatusReply {
+    error err = 1;
 }
 
 message GenerateMchtCdReply {

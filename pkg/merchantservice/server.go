@@ -26,6 +26,15 @@ type merchantServer struct {
 	SaveMerchantBizDealAndFeeHandler grpctransport.Handler
 	GenerateMchtCdHandler            grpctransport.Handler
 	MerchantInfoQueryHandler         grpctransport.Handler
+	MerchantForceChangeStatusHandler grpctransport.Handler
+}
+
+func (m *merchantServer) MerchantForceChangeStatus(ctx context.Context, in *pb.MerchantForceChangeStatusRequest) (*pb.MerchantForceChangeStatusReply, error) {
+	_, res, err := m.MerchantForceChangeStatusHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.MerchantForceChangeStatusReply), nil
 }
 
 func (m *merchantServer) MerchantInfoQuery(ctx context.Context, in *pb.MerchantInfoQueryRequest) (*pb.MerchantInfoQueryReply, error) {
@@ -319,6 +328,17 @@ func New(tracer grpctransport.ServerOption) pb.MerchantServer {
 		endpoint := MakeMerchantInfoQueryEndpoint(service)
 		endpoint = kit.LogginMiddleware(endpoint)
 		svr.MerchantInfoQueryHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+
+	{
+		endpoint := MakeMerchantForceChangeStatusEndpoint(service)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.MerchantForceChangeStatusHandler = grpctransport.NewServer(
 			endpoint,
 			kit.DecodeRequest,
 			kit.EncodeResponse,

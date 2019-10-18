@@ -106,3 +106,9 @@ func MakeMerchantInfoQueryEndpoint(service pb.MerchantServer) endpoint.Endpoint 
 		return service.MerchantInfoQuery(ctx, request.(*pb.MerchantInfoQueryRequest))
 	}
 }
+
+func MakeMerchantForceChangeStatusEndpoint(service pb.MerchantServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.MerchantForceChangeStatus(ctx, request.(*pb.MerchantForceChangeStatusRequest))
+	}
+}

@@ -19,6 +19,68 @@ import (
 
 type merchantService struct{}
 
+func (m *merchantService) MerchantForceChangeStatus(ctx context.Context, in *pb.MerchantForceChangeStatusRequest) (*pb.MerchantForceChangeStatusReply, error) {
+	reply := new(pb.MerchantForceChangeStatusReply)
+	if in.MchtCd == "" {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "商户号不能为空",
+		}
+		return reply, nil
+	}
+	status := "01"
+	systemFlag := "01"
+	switch in.Operate {
+	case "freeze":
+		status = "13"
+		systemFlag = "13"
+	case "unfreeze":
+		status = "01"
+		systemFlag = "01"
+	case "cancel":
+		status = "00"
+		systemFlag = "00"
+	default:
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "商户号不能为空",
+		}
+		return reply, nil
+	}
+	db := common.DB.Begin()
+	defer db.Rollback()
+
+	err := merchantmodel.UpdateMerchant(
+		db,
+		&merchantmodel.MerchantInfo{MchtCd: in.MchtCd},
+		&merchantmodel.MerchantInfo{Status: status, SystemFlag: systemFlag},
+	)
+	if err != nil {
+		return nil, err
+	}
+	err = merchantmodel.UpdateMerchantMain(
+		db,
+		&merchantmodel.MerchantInfoMain{
+			MerchantInfo: merchantmodel.MerchantInfo{
+				MchtCd: in.MchtCd,
+			}},
+		&merchantmodel.MerchantInfoMain{
+			MerchantInfo: merchantmodel.MerchantInfo{
+				Status:     status,
+				SystemFlag: systemFlag,
+			}},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	db.Commit()
+
+	return reply, nil
+}
+
 func (m *merchantService) MerchantInfoQuery(ctx context.Context, in *pb.MerchantInfoQueryRequest) (*pb.MerchantInfoQueryReply, error) {
 	reply := new(pb.MerchantInfoQueryReply)
 	if in.Size == 0 {

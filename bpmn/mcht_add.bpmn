@@ -49,9 +49,6 @@
     <bpmn:sequenceFlow id="SequenceFlow_1ycn8s7" sourceRef="Task_1olkk06" targetRef="EndEvent_1ity16b" />
     <bpmn:userTask id="Task_1urwosn" name="edit" camunda:formKey="mcht" camunda:assignee="商户编辑员">
       <bpmn:extensionElements>
-        <camunda:inputOutput>
-          <camunda:outputParameter name="status">05</camunda:outputParameter>
-        </camunda:inputOutput>
         <camunda:formData>
           <camunda:formField id="status" type="string" defaultValue="38" />
         </camunda:formData>

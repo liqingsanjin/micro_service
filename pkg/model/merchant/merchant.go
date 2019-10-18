@@ -199,6 +199,10 @@ func UpdateMerchant(db *gorm.DB, query *MerchantInfo, data *MerchantInfo) error 
 	return db.Model(&MerchantInfo{}).Where(query).Updates(data).Error
 }
 
+func UpdateMerchantMain(db *gorm.DB, query *MerchantInfoMain, data *MerchantInfoMain) error {
+	return db.Model(&MerchantInfoMain{}).Where(query).Updates(data).Error
+}
+
 func SaveMerchantMain(db *gorm.DB, info *MerchantInfoMain) error {
 	return db.Save(info).Error
 }

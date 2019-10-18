@@ -122,4 +122,12 @@ func RegisterMerchantHandler(engine *gin.Engine, endpoints *MerchantEndpoints) {
 			httptransport.ServerErrorEncoder(errorEncoder),
 			httptransport.ServerBefore(setUserInfoContext),
 		)))
+
+	group.POST("/merchantForceChangeStatus",
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.MerchantForceChangeStatusEndpoint,
+			decodeHttpRequest(&pb.MerchantForceChangeStatusRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+		)))
 }
