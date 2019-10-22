@@ -603,6 +603,57 @@
           }
         }
       }
+    },
+    "/term/updateTermInfo": {
+      "post": {
+        "operationId": "updateTermInfo",
+        "summary": "修改终端信息",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "updateTermInfo",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mchtCd": {
+                  "type": "string"
+                },
+                "termIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "item": {
+                  "type": "object",
+                  "properties": {
+                    "systemFlag": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

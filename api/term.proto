@@ -9,6 +9,17 @@ service Term {
     rpc SaveTerm(SaveTermRequest) returns (SaveTermReply) {}
     rpc ListTermRisk(ListTermRiskRequest) returns (ListTermRiskReply) {}
     rpc ListTermActivationState(ListTermActivationStateRequest) returns (ListTermActivationStateReply) {}
+    rpc UpdateTermInfo(UpdateTermInfoRequest) returns (UpdateTermInfoReply) {}
+}
+
+message UpdateTermInfoRequest {
+    string mchtCd = 1;
+    repeated string termIds = 2;
+    TermInfoField item = 3;
+}
+
+message UpdateTermInfoReply {
+    error err = 1;
 }
 
 message ListTermInfoRequest {

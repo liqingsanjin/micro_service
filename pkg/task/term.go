@@ -1,8 +1,6 @@
 package task
 
 import (
-	"fmt"
-	"strings"
 	camundamodel "userService/pkg/model/camunda"
 	"userService/pkg/model/merchant"
 	"userService/pkg/model/term"
@@ -11,125 +9,105 @@ import (
 )
 
 func termAdd(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
-	strs := strings.Split(instance.DataId, ",")
-	if len(strs) == 2 {
-		mchtCd := strs[0]
-		termId := strs[1]
-
-		// 查询终端信息
-		info, err := term.FindTermByPk(db, mchtCd, termId)
-		if err != nil {
-			return err
-		}
-		if info == nil {
-			return fmt.Errorf("term edit %s not found", instance.DataId)
-		}
-
-		err = term.UpdateTerm(db, &term.Info{MchtCd: mchtCd, TermId: termId}, &term.Info{Status: "01", SystemFlag: "01"})
-		if err != nil {
-			return err
-		}
-
-		info.Status = "01"
-		info.SystemFlag = "01"
-		err = term.SaveTermInfoMain(db, &term.InfoMain{Info: *info})
-		if err != nil {
-			return err
-		}
-
-		err = merchant.UpdateMerchant(db, &merchant.MerchantInfo{MchtCd: mchtCd}, &merchant.MerchantInfo{SystemFlag: "01"})
-
+	// 查询终端信息
+	infos, _, err := term.QueryTermInfo(db, &term.Info{MchtCd: instance.DataId}, 1, 9999)
+	if err != nil {
 		return err
-	} else {
-		return fmt.Errorf("dataId 错误: %s", instance.DataId)
 	}
+
+	for _, info := range infos {
+		if info.SystemFlag != "00" && info.SystemFlag != "01" {
+			err = term.UpdateTerm(db, &term.Info{MchtCd: info.MchtCd, TermId: info.TermId}, &term.Info{Status: "01", SystemFlag: "01"})
+			if err != nil {
+				return err
+			}
+
+			info.Status = "01"
+			info.SystemFlag = "01"
+			err = term.SaveTermInfoMain(db, &term.InfoMain{Info: *info})
+			if err != nil {
+				return err
+			}
+		}
+
+	}
+
+	err = merchant.UpdateMerchant(db, &merchant.MerchantInfo{MchtCd: instance.DataId}, &merchant.MerchantInfo{SystemFlag: "01"})
+
+	return err
 }
 
 func termDelete(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
-	strs := strings.Split(instance.DataId, ",")
-	if len(strs) == 2 {
-		mchtCd := strs[0]
-		termId := strs[1]
-		info, err := term.FindTermByPk(db, mchtCd, termId)
-		if err != nil {
-			return err
-		}
-		if info == nil {
-			return fmt.Errorf("term edit %s not found", instance.DataId)
-		}
-
-		err = term.DeleteTerm(db, &term.Info{MchtCd: info.MchtCd, TermId: info.TermId})
-		if err != nil {
-			return err
-		}
-
-		err = merchant.UpdateMerchant(db, &merchant.MerchantInfo{MchtCd: mchtCd}, &merchant.MerchantInfo{SystemFlag: "01"})
-
+	infos, _, err := term.QueryTermInfo(db, &term.Info{MchtCd: instance.DataId}, 1, 9999)
+	if err != nil {
 		return err
-	} else {
-		return fmt.Errorf("dataId 错误: %s", instance.DataId)
 	}
+
+	for _, info := range infos {
+		if info.SystemFlag != "00" && info.SystemFlag != "01" {
+			err = term.DeleteTerm(db, &term.Info{MchtCd: info.MchtCd, TermId: info.TermId})
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	err = merchant.UpdateMerchant(db, &merchant.MerchantInfo{MchtCd: instance.DataId}, &merchant.MerchantInfo{SystemFlag: "01"})
+
+	return err
 }
 
 func termInfoUnregister(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
-	strs := strings.Split(instance.DataId, ",")
-	if len(strs) == 2 {
-		mchtCd := strs[0]
-		termId := strs[1]
-
-		// 查询终端信息
-		info, err := term.FindTermByPk(db, mchtCd, termId)
-		if err != nil {
-			return err
-		}
-		if info == nil {
-			return fmt.Errorf("term edit %s not found", instance.DataId)
-		}
-
-		err = term.UpdateTerm(db, &term.Info{MchtCd: mchtCd, TermId: termId}, &term.Info{Status: "00", SystemFlag: "00"})
-		if err != nil {
-			return err
-		}
-
-		info.Status = "00"
-		info.SystemFlag = "00"
-		err = term.SaveTermInfoMain(db, &term.InfoMain{Info: *info})
-		if err != nil {
-			return err
-		}
-
-		err = merchant.UpdateMerchant(db, &merchant.MerchantInfo{MchtCd: mchtCd}, &merchant.MerchantInfo{SystemFlag: "01"})
-
+	infos, _, err := term.QueryTermInfo(db, &term.Info{MchtCd: instance.DataId}, 1, 9999)
+	if err != nil {
 		return err
-	} else {
-		return fmt.Errorf("dataId 错误: %s", instance.DataId)
 	}
+
+	for _, info := range infos {
+		if info.SystemFlag != "00" && info.SystemFlag != "01" {
+			err = term.UpdateTerm(
+				db,
+				&term.Info{MchtCd: info.MchtCd, TermId: info.TermId},
+				&term.Info{Status: "00", SystemFlag: "00"},
+			)
+			if err != nil {
+				return err
+			}
+
+			err = term.UpdateTermMain(
+				db,
+				&term.InfoMain{Info: term.Info{MchtCd: info.MchtCd, TermId: info.TermId}},
+				&term.InfoMain{Info: term.Info{Status: "00", SystemFlag: "00"}},
+			)
+			if err != nil {
+				return err
+			}
+		}
+
+	}
+
+	err = merchant.UpdateMerchant(db, &merchant.MerchantInfo{MchtCd: instance.DataId}, &merchant.MerchantInfo{SystemFlag: "01"})
+
+	return err
 }
 
 func cancelTermInfoUnregister(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
-	strs := strings.Split(instance.DataId, ",")
-	if len(strs) == 2 {
-		mchtCd := strs[0]
-		termId := strs[1]
-
-		// 查询终端信息
-		info, err := term.FindTermByPk(db, mchtCd, termId)
-		if err != nil {
-			return err
-		}
-		if info == nil {
-			return fmt.Errorf("term edit %s not found", instance.DataId)
-		}
-
-		err = term.UpdateTerm(db, &term.Info{MchtCd: mchtCd, TermId: termId}, &term.Info{Status: "01", SystemFlag: "01"})
-		if err != nil {
-			return err
-		}
-
-		err = merchant.UpdateMerchant(db, &merchant.MerchantInfo{MchtCd: mchtCd}, &merchant.MerchantInfo{SystemFlag: "01"})
-
+	infos, _, err := term.QueryTermInfo(db, &term.Info{MchtCd: instance.DataId}, 1, 9999)
+	if err != nil {
 		return err
-	} else {
-		return fmt.Errorf("dataId 错误: %s", instance.DataId)
 	}
+
+	for _, info := range infos {
+		if info.SystemFlag != "00" && info.SystemFlag != "01" {
+			err = term.UpdateTerm(db, &term.Info{MchtCd: info.MchtCd, TermId: info.TermId}, &term.Info{Status: "01", SystemFlag: "01"})
+			if err != nil {
+				return err
+			}
+		}
+
+	}
+
+	err = merchant.UpdateMerchant(db, &merchant.MerchantInfo{MchtCd: instance.DataId}, &merchant.MerchantInfo{SystemFlag: "01"})
+
+	return err
 }

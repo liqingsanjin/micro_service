@@ -2,6 +2,7 @@ package termservice
 
 import (
 	"context"
+	"net/http"
 	"time"
 	"userService/pkg/common"
 	termmodel "userService/pkg/model/term"
@@ -10,6 +11,68 @@ import (
 )
 
 type service struct{}
+
+func (s *service) UpdateTermInfo(ctx context.Context, in *pb.UpdateTermInfoRequest) (*pb.UpdateTermInfoReply, error) {
+	reply := new(pb.UpdateTermInfoReply)
+	if in.MchtCd == "" || len(in.TermIds) == 0 || in.Item == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     common.InvalidParam,
+			Description: "商户号, 终端号, 修改值不能为空",
+		}
+	}
+	db := common.DB.Begin()
+	defer db.Rollback()
+	var err error
+
+	info := new(termmodel.Info)
+	info.MchtCd = in.Item.MchtCd
+	info.TermId = in.Item.TermId
+	info.TermTp = in.Item.TermTp
+	info.Belong = in.Item.Belong
+	info.BelongSub = in.Item.BelongSub
+	info.TmnlMoneyIntype = in.Item.TmnlMoneyIntype
+	info.TmnlMoney = in.Item.TmnlMoney
+	info.TmnlBrand = in.Item.TmnlBrand
+	info.TmnlModelNo = in.Item.TmnlModelNo
+	info.TmnlBarcode = in.Item.TmnlBarcode
+	info.DeviceCd = in.Item.DeviceCd
+	info.InstallLocation = in.Item.InstallLocation
+	info.TmnlIntype = in.Item.TmnlIntype
+	info.DialOut = in.Item.DialOut
+	info.DealTypes = in.Item.DealTypes
+	info.RecOprId = in.Item.RecOprId
+	info.RecUpdOpr = in.Item.RecUpdOpr
+	info.AppCd = in.Item.AppCd
+	info.SystemFlag = in.Item.SystemFlag
+	info.Status = in.Item.Status
+	info.ActiveCode = in.Item.ActiveCode
+	info.NoFlag = in.Item.NoFlag
+	info.MsgResvFld1 = in.Item.MsgResvFld1
+	info.MsgResvFld2 = in.Item.MsgResvFld2
+	info.MsgResvFld3 = in.Item.MsgResvFld3
+	info.MsgResvFld4 = in.Item.MsgResvFld4
+	info.MsgResvFld5 = in.Item.MsgResvFld5
+	info.MsgResvFld6 = in.Item.MsgResvFld6
+	info.MsgResvFld7 = in.Item.MsgResvFld7
+	info.MsgResvFld8 = in.Item.MsgResvFld8
+	info.MsgResvFld9 = in.Item.MsgResvFld9
+	info.MsgResvFld10 = in.Item.MsgResvFld10
+
+	for _, id := range in.TermIds {
+		err = termmodel.UpdateTerm(
+			db,
+			&termmodel.Info{MchtCd: in.MchtCd, TermId: id},
+			info,
+		)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	db.Commit()
+	return reply, nil
+}
 
 func (s *service) ListTermActivationState(ctx context.Context, in *pb.ListTermActivationStateRequest) (*pb.ListTermActivationStateReply, error) {
 	reply := new(pb.ListTermActivationStateReply)

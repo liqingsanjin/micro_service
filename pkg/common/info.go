@@ -13,4 +13,5 @@ var (
 	Enforcer     *casbin.Enforcer
 	ConsulClient *api.Client
 	SignKey      = "huiepay"
+	InvalidParam = "InvalidParamError"
 )

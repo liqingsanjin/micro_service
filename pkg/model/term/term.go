@@ -87,6 +87,10 @@ func UpdateTerm(db *gorm.DB, query *Info, data *Info) error {
 	return db.Model(&Info{}).Where(query).Updates(data).Error
 }
 
+func UpdateTermMain(db *gorm.DB, query *InfoMain, data *InfoMain) error {
+	return db.Model(&InfoMain{}).Where(query).Updates(data).Error
+}
+
 func FindTermByPk(db *gorm.DB, mchtCd string, termId string) (*Info, error) {
 	out := new(Info)
 	err := db.Where(&Info{MchtCd: mchtCd, TermId: termId}).Take(out).Error

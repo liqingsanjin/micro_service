@@ -18,7 +18,6 @@ import (
 	"userService/pkg/pb"
 	"userService/pkg/util"
 
-	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -241,7 +240,7 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 				if err != nil {
 					return nil, err
 				}
-			} else if t.FormKey == "mcht" {
+			} else if t.FormKey == "mcht" || t.FormKey == "term" {
 				err = mchtmodel.UpdateMerchant(db, &mchtmodel.MerchantInfo{MchtCd: instance.DataId}, &mchtmodel.MerchantInfo{SystemFlag: formValue.Value})
 				if err != nil {
 					return nil, err
@@ -257,20 +256,6 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 							return nil, err
 						}
 					}
-				}
-			} else if t.FormKey == "term" {
-				strs := strings.Split(instance.DataId, ",")
-				if len(strs) == 2 {
-					err = termmodel.UpdateTerm(db, &termmodel.Info{MchtCd: strs[0], TermId: strs[1]}, &termmodel.Info{SystemFlag: formValue.Value})
-					if err != nil {
-						return nil, err
-					}
-					err = mchtmodel.UpdateMerchant(db, &mchtmodel.MerchantInfo{MchtCd: strs[0]}, &mchtmodel.MerchantInfo{SystemFlag: formValue.Value})
-					if err != nil {
-						return nil, err
-					}
-				} else {
-					logrus.Errorln("dataId 错误", instance.DataId)
 				}
 			}
 		}
@@ -464,7 +449,7 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 				if err != nil {
 					return nil, err
 				}
-			} else if task.FormKey == "mcht" {
+			} else if task.FormKey == "mcht" || task.FormKey == "term" {
 				err = mchtmodel.UpdateMerchant(db, &mchtmodel.MerchantInfo{MchtCd: instance.DataId}, &mchtmodel.MerchantInfo{SystemFlag: formValue.Value})
 				if err != nil {
 					return nil, err
@@ -480,20 +465,6 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 							return nil, err
 						}
 					}
-				}
-			} else if task.FormKey == "term" {
-				strs := strings.Split(instance.DataId, ",")
-				if len(strs) == 2 {
-					err = termmodel.UpdateTerm(db, &termmodel.Info{MchtCd: strs[0], TermId: strs[1]}, &termmodel.Info{SystemFlag: formValue.Value})
-					if err != nil {
-						return nil, err
-					}
-					err = mchtmodel.UpdateMerchant(db, &mchtmodel.MerchantInfo{MchtCd: strs[0]}, &mchtmodel.MerchantInfo{SystemFlag: formValue.Value})
-					if err != nil {
-						return nil, err
-					}
-				} else {
-					logrus.Errorln("dataId 错误", instance.DataId)
 				}
 			}
 		}
