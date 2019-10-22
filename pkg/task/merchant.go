@@ -130,6 +130,17 @@ func merchantRegister(db *gorm.DB, instance *camundamodel.ProcessInstance) error
 		}
 	}
 	for i := range terms {
+		// 修改状态
+		err = term.UpdateTerm(
+			db,
+			&term.Info{MchtCd: terms[i].MchtCd, TermId: terms[i].TermId},
+			&term.Info{Status: "01", SystemFlag: "01"},
+		)
+		if err != nil {
+			return err
+		}
+		terms[i].SystemFlag = "01"
+		terms[i].Status = "01"
 		err = term.SaveTermInfoMain(db, &term.InfoMain{
 			Info: *terms[i],
 		})

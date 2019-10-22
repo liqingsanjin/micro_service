@@ -61,6 +61,7 @@
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="status" type="string" defaultValue="02" />
+          <camunda:formField id="term_status" type="string" defaultValue="06" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_167zu7e</bpmn:incoming>

@@ -82,3 +82,16 @@ func QueryTermInfoMain(db *gorm.DB, query *InfoMain, page int32, size int32) ([]
 func DeleteTerm(db *gorm.DB, query *Info) error {
 	return db.Where(query).Delete(&Info{}).Error
 }
+
+func UpdateTerm(db *gorm.DB, query *Info, data *Info) error {
+	return db.Model(&Info{}).Where(query).Updates(data).Error
+}
+
+func FindTermByPk(db *gorm.DB, mchtCd string, termId string) (*Info, error) {
+	out := new(Info)
+	err := db.Where(&Info{MchtCd: mchtCd, TermId: termId}).Take(out).Error
+	if err == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	return out, err
+}

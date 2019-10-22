@@ -13,6 +13,7 @@ import (
 	camundamodel "userService/pkg/model/camunda"
 	insmodel "userService/pkg/model/institution"
 	mchtmodel "userService/pkg/model/merchant"
+	termmodel "userService/pkg/model/term"
 	"userService/pkg/model/user"
 	"userService/pkg/pb"
 	"userService/pkg/util"
@@ -234,8 +235,7 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 				return nil, err
 			}
 
-			logrus.Debugln("systemfalg", formValue.Value)
-			// 修改商户或者机构状态
+			// 修改状态
 			if t.FormKey == "ins" {
 				err = insmodel.UpdateInstitution(db, &insmodel.InstitutionInfo{InsIdCd: instance.DataId}, &insmodel.InstitutionInfo{InsSta: formValue.Value})
 				if err != nil {
@@ -245,6 +245,32 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 				err = mchtmodel.UpdateMerchant(db, &mchtmodel.MerchantInfo{MchtCd: instance.DataId}, &mchtmodel.MerchantInfo{SystemFlag: formValue.Value})
 				if err != nil {
 					return nil, err
+				}
+				infos, _, err := termmodel.QueryTermInfo(db, &termmodel.Info{MchtCd: instance.DataId}, 1, 9999)
+				if err != nil {
+					return nil, err
+				}
+				for _, info := range infos {
+					if info.SystemFlag != "01" && info.SystemFlag != "00" {
+						err = termmodel.UpdateTerm(db, &termmodel.Info{MchtCd: info.MchtCd, TermId: info.TermId}, &termmodel.Info{SystemFlag: formValue.Value})
+						if err != nil {
+							return nil, err
+						}
+					}
+				}
+			} else if t.FormKey == "term" {
+				strs := strings.Split(instance.DataId, ",")
+				if len(strs) == 2 {
+					err = termmodel.UpdateTerm(db, &termmodel.Info{MchtCd: strs[0], TermId: strs[1]}, &termmodel.Info{SystemFlag: formValue.Value})
+					if err != nil {
+						return nil, err
+					}
+					err = mchtmodel.UpdateMerchant(db, &mchtmodel.MerchantInfo{MchtCd: strs[0]}, &mchtmodel.MerchantInfo{SystemFlag: formValue.Value})
+					if err != nil {
+						return nil, err
+					}
+				} else {
+					logrus.Errorln("dataId 错误", instance.DataId)
 				}
 			}
 		}
@@ -442,6 +468,32 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 				err = mchtmodel.UpdateMerchant(db, &mchtmodel.MerchantInfo{MchtCd: instance.DataId}, &mchtmodel.MerchantInfo{SystemFlag: formValue.Value})
 				if err != nil {
 					return nil, err
+				}
+				infos, _, err := termmodel.QueryTermInfo(db, &termmodel.Info{MchtCd: instance.DataId}, 1, 9999)
+				if err != nil {
+					return nil, err
+				}
+				for _, info := range infos {
+					if info.SystemFlag != "01" && info.SystemFlag != "00" {
+						err = termmodel.UpdateTerm(db, &termmodel.Info{MchtCd: info.MchtCd, TermId: info.TermId}, &termmodel.Info{SystemFlag: formValue.Value})
+						if err != nil {
+							return nil, err
+						}
+					}
+				}
+			} else if task.FormKey == "term" {
+				strs := strings.Split(instance.DataId, ",")
+				if len(strs) == 2 {
+					err = termmodel.UpdateTerm(db, &termmodel.Info{MchtCd: strs[0], TermId: strs[1]}, &termmodel.Info{SystemFlag: formValue.Value})
+					if err != nil {
+						return nil, err
+					}
+					err = mchtmodel.UpdateMerchant(db, &mchtmodel.MerchantInfo{MchtCd: strs[0]}, &mchtmodel.MerchantInfo{SystemFlag: formValue.Value})
+					if err != nil {
+						return nil, err
+					}
+				} else {
+					logrus.Errorln("dataId 错误", instance.DataId)
 				}
 			}
 		}

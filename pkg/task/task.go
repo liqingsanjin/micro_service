@@ -16,8 +16,10 @@ import (
 const (
 	addIns               = "add_ins"
 	addMcht              = "add_mcht"
+	addTerm              = "add_term"
 	deleteIns            = "delete_ins"
 	deleteMcht           = "delete_mcht"
+	deleteTerm           = "delete_term"
 	updateIns            = "update_ins"
 	cancelUpdateIns      = "cancel_update_ins"
 	updateMcht           = "update_mcht"
@@ -35,8 +37,10 @@ const (
 var topics = []string{
 	addIns,
 	addMcht,
+	addTerm,
 	deleteIns,
 	deleteMcht,
+	deleteTerm,
 	updateIns,
 	cancelUpdateIns,
 	updateMcht,
@@ -114,12 +118,17 @@ func finishRegister(ctx context.Context, workerId int, ch <-chan int) {
 				case addMcht:
 					// 商户注册
 					err = merchantRegister(db, instance)
+				case addTerm:
+					// 终端新增
+					err = termAdd(db, instance)
 				case deleteIns:
 					// 机构删除
 					err = deleteInstitution(db, instance)
 				case deleteMcht:
 					// 删除商户
 					err = deleteMerchant(db, instance)
+				case deleteTerm:
+					err = termDelete(db, instance)
 				case updateIns:
 					// 更新机构
 					err = institutionUpdate(db, instance)
