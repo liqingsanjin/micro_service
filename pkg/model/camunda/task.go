@@ -66,6 +66,6 @@ func FindTaskByRoles(db *gorm.DB, roles []int64, page int32, size int32) ([]*Tas
 	out := make([]*Task, 0)
 	var count int32
 	db.Model(&Task{}).Where("role_id in (?) and end_flag = false", roles).Count(&count)
-	err := db.Where("role_id in (?) and end_flag = false", roles).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	err := db.Order("updated_at desc").Where("role_id in (?) and end_flag = false", roles).Offset((page - 1) * size).Limit(size).Find(&out).Error
 	return out, count, err
 }
