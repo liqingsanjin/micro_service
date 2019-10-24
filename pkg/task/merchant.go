@@ -278,8 +278,26 @@ func merchantUpdate(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	if err != nil {
 		return err
 	}
+	terms, _, err := term.QueryTermInfo(db, &term.Info{
+		MchtCd: info.MchtCd,
+	}, nil, nil, 1, 10000)
+	if err != nil {
+		return err
+	}
 
 	// 入库
+	err = merchant.UpdateMerchant(db, &merchant.MerchantInfo{
+		MchtCd: info.MchtCd,
+	}, &merchant.MerchantInfo{
+		Status:     "01",
+		SystemFlag: "01",
+	})
+	if err != nil {
+		return err
+	}
+
+	info.Status = "01"
+	info.SystemFlag = "01"
 	err = merchant.SaveMerchantMain(db, &merchant.MerchantInfoMain{
 		MerchantInfo: *info,
 	})
@@ -327,7 +345,27 @@ func merchantUpdate(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 			return err
 		}
 	}
-
+	for i := range terms {
+		if terms[i].SystemFlag != "00" && terms[i].SystemFlag != "01" {
+			// 修改状态
+			err = term.UpdateTerm(
+				db,
+				&term.Info{MchtCd: terms[i].MchtCd, TermId: terms[i].TermId},
+				&term.Info{Status: "01", SystemFlag: "01"},
+			)
+			if err != nil {
+				return err
+			}
+			terms[i].SystemFlag = "01"
+			terms[i].Status = "01"
+			err = term.SaveTermInfoMain(db, &term.InfoMain{
+				Info: *terms[i],
+			})
+			if err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }
 
@@ -382,6 +420,14 @@ func merchantUpdateCancel(db *gorm.DB, instance *camundamodel.ProcessInstance) e
 	if err != nil {
 		return err
 	}
+	terms, _, err := term.QueryTermInfoMain(db, &term.InfoMain{
+		Info: term.Info{
+			MchtCd: info.MchtCd,
+		},
+	}, nil, nil, 1, 10000)
+	if err != nil {
+		return err
+	}
 
 	// 入库编辑表
 	err = merchant.SaveMerchant(db, &info.MerchantInfo)
@@ -415,6 +461,12 @@ func merchantUpdateCancel(db *gorm.DB, instance *camundamodel.ProcessInstance) e
 	}
 	for i := range pictures {
 		err = merchant.SavePicture(db, &pictures[i].Picture)
+		if err != nil {
+			return err
+		}
+	}
+	for i := range terms {
+		err = term.SaveTermInfo(db, &terms[i].Info)
 		if err != nil {
 			return err
 		}
