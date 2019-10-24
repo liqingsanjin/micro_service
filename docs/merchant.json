@@ -1777,7 +1777,7 @@
             "description": "正确返回",
             "examples": {
               "application/json": {
-                "err": null,
+                "err": null
               }
             }
           }

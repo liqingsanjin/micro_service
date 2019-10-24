@@ -245,7 +245,7 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 				if err != nil {
 					return nil, err
 				}
-				infos, _, err := termmodel.QueryTermInfo(db, &termmodel.Info{MchtCd: instance.DataId}, 1, 9999)
+				infos, _, err := termmodel.QueryTermInfo(db, &termmodel.Info{MchtCd: instance.DataId}, nil, nil, 1, 9999)
 				if err != nil {
 					return nil, err
 				}
@@ -454,7 +454,7 @@ func (s *service) Start(ctx context.Context, in *pb.StartWorkflowRequest) (*pb.S
 				if err != nil {
 					return nil, err
 				}
-				infos, _, err := termmodel.QueryTermInfo(db, &termmodel.Info{MchtCd: instance.DataId}, 1, 9999)
+				infos, _, err := termmodel.QueryTermInfo(db, &termmodel.Info{MchtCd: instance.DataId}, nil, nil, 1, 9999)
 				if err != nil {
 					return nil, err
 				}

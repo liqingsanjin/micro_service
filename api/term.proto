@@ -3,6 +3,7 @@ syntax = "proto3";
 package pb;
 
 import "error.proto";
+import "merchant.proto";
 
 service Term {
     rpc ListTermInfo(ListTermInfoRequest) returns (ListTermInfoReply) {}
@@ -10,6 +11,26 @@ service Term {
     rpc ListTermRisk(ListTermRiskRequest) returns (ListTermRiskReply) {}
     rpc ListTermActivationState(ListTermActivationStateRequest) returns (ListTermActivationStateReply) {}
     rpc UpdateTermInfo(UpdateTermInfoRequest) returns (UpdateTermInfoReply) {}
+    rpc QueryTermInfo(QueryTermInfoRequest) returns (QueryTermInfoReply) {}
+}
+
+message QueryTermInfoField {
+    TermInfoField term = 1;
+    MerchantInfoField mcht = 2;
+}
+
+message QueryTermInfoRequest {
+    int32 page = 1;
+    int32 size = 2;
+    QueryTermInfoField item = 3;
+}
+
+message QueryTermInfoReply {
+    int32 page = 1;
+    int32 size = 2;
+    int32 count = 3;
+    repeated TermInfoField items = 4;
+    error err = 5;
 }
 
 message UpdateTermInfoRequest {

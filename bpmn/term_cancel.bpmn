@@ -34,7 +34,7 @@
     <bpmn:userTask id="Task_18ge4by" name="check" camunda:formKey="term" camunda:assignee="商户复核员">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="status" type="string" defaultValue="19" />
+          <camunda:formField id="status" type="string" defaultValue="24" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0sh56bf</bpmn:incoming>
@@ -43,7 +43,7 @@
     <bpmn:userTask id="Task_0iix4z4" name="edit" camunda:formKey="term" camunda:assignee="商户编辑员">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="status" type="string" defaultValue="18" />
+          <camunda:formField id="status" type="string" defaultValue="23" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_068qco2</bpmn:incoming>

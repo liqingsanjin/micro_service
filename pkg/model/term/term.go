@@ -2,6 +2,7 @@ package term
 
 import (
 	"time"
+	"userService/pkg/model/merchant"
 
 	"github.com/jinzhu/gorm"
 )
@@ -55,11 +56,43 @@ func (InfoMain) TableName() string {
 	return "TBL_TERM_INF"
 }
 
-func QueryTermInfo(db *gorm.DB, query *Info, page int32, size int32) ([]*Info, int32, error) {
+func QueryTermInfo(db *gorm.DB, query *Info, insIds []string, merchantInfo *merchant.MerchantInfo, page int32, size int32) ([]*Info, int32, error) {
 	out := make([]*Info, 0)
 	var count int32
-	db.Model(&Info{}).Where(query).Count(&count)
-	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	var err error
+	if len(insIds) == 0 {
+		q := db.Table("TBL_EDIT_TERM_INF").Select("TBL_EDIT_TERM_INF.*")
+		if merchantInfo != nil {
+			if merchantInfo.AipBranCd != "" || merchantInfo.BankBelongCd != "" {
+				q = q.Joins("left join TBL_EDIT_MCHT_INF b on TBL_EDIT_TERM_INF.MCHT_CD = b.MCHT_CD")
+			}
+			if merchantInfo.AipBranCd != "" {
+				q = q.Where("b.AIP_BRAN_CD = ?", merchantInfo.AipBranCd)
+			}
+			if merchantInfo.BankBelongCd != "" {
+				q = q.Where("b.BANK_BELONG_CD = ?", merchantInfo.BankBelongCd)
+			}
+		}
+		q = q.Where(query)
+		q.Count(&count)
+		err = q.Offset((page - 1) * size).Limit(size).Scan(&out).Error
+	} else {
+		q := db.Table("TBL_EDIT_TERM_INF").
+			Select("TBL_EDIT_TERM_INF.*").
+			Joins("left join TBL_EDIT_MCHT_INF b on TBL_EDIT_TERM_INF.MCHT_CD = b.MCHT_CD").
+			Where("b.AIP_BRAN_CD in (?)", insIds)
+		if merchantInfo != nil && merchantInfo.BankBelongCd != "" && merchantInfo.AipBranCd != "" {
+			if merchantInfo.AipBranCd != "" {
+				q = q.Where("b.AIP_BRAN_CD = ?", merchantInfo.AipBranCd)
+			}
+			if merchantInfo.BankBelongCd != "" {
+				q = q.Where("b.BANK_BELONG_CD = ?", merchantInfo.BankBelongCd)
+			}
+		}
+		q = q.Where(query)
+		q.Count(&count)
+		err = q.Offset((page - 1) * size).Limit(size).Scan(&out).Error
+	}
 	return out, count, err
 }
 
@@ -71,11 +104,43 @@ func SaveTermInfoMain(db *gorm.DB, data *InfoMain) error {
 	return db.Save(data).Error
 }
 
-func QueryTermInfoMain(db *gorm.DB, query *InfoMain, page int32, size int32) ([]*InfoMain, int32, error) {
+func QueryTermInfoMain(db *gorm.DB, query *InfoMain, insIds []string, merchantInfo *merchant.MerchantInfo, page int32, size int32) ([]*InfoMain, int32, error) {
 	out := make([]*InfoMain, 0)
 	var count int32
-	db.Model(&InfoMain{}).Where(query).Count(&count)
-	err := db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	var err error
+	if len(insIds) == 0 {
+		q := db.Table("TBL_TERM_INF").Select("TBL_TERM_INF.*")
+		if merchantInfo != nil {
+			if merchantInfo.AipBranCd != "" || merchantInfo.BankBelongCd != "" {
+				q = q.Joins("left join TBL_MCHT_INF b on TBL_TERM_INF.MCHT_CD = b.MCHT_CD")
+			}
+			if merchantInfo.AipBranCd != "" {
+				q = q.Where("b.AIP_BRAN_CD = ?", merchantInfo.AipBranCd)
+			}
+			if merchantInfo.BankBelongCd != "" {
+				q = q.Where("b.BANK_BELONG_CD = ?", merchantInfo.BankBelongCd)
+			}
+		}
+		q = q.Where(query)
+		q.Count(&count)
+		err = q.Offset((page - 1) * size).Limit(size).Scan(&out).Error
+	} else {
+		q := db.Table("TBL_TERM_INF").
+			Select("TBL_TERM_INF.*").
+			Joins("left join TBL_MCHT_INF b on TBL_TERM_INF.MCHT_CD = b.MCHT_CD").
+			Where("b.AIP_BRAN_CD in (?)", insIds)
+		if merchantInfo != nil && merchantInfo.BankBelongCd != "" && merchantInfo.AipBranCd != "" {
+			if merchantInfo.AipBranCd != "" {
+				q = q.Where("b.AIP_BRAN_CD = ?", merchantInfo.AipBranCd)
+			}
+			if merchantInfo.BankBelongCd != "" {
+				q = q.Where("b.BANK_BELONG_CD = ?", merchantInfo.BankBelongCd)
+			}
+		}
+		q = q.Where(query)
+		q.Count(&count)
+		err = q.Offset((page - 1) * size).Limit(size).Scan(&out).Error
+	}
 	return out, count, err
 }
 

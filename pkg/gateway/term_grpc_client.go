@@ -17,6 +17,15 @@ type TermEndpoints struct {
 	ListTermRiskEndpoint            endpoint.Endpoint
 	ListTermActivationStateEndpoint endpoint.Endpoint
 	UpdateTermInfoEndpoint          endpoint.Endpoint
+	QueryTermInfoEndpoint           endpoint.Endpoint
+}
+
+func (t *TermEndpoints) QueryTermInfo(ctx context.Context, in *pb.QueryTermInfoRequest) (*pb.QueryTermInfoReply, error) {
+	res, err := t.QueryTermInfoEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.QueryTermInfoReply), nil
 }
 
 func (t *TermEndpoints) UpdateTermInfo(ctx context.Context, in *pb.UpdateTermInfoRequest) (*pb.UpdateTermInfoReply, error) {
@@ -133,6 +142,19 @@ func NewTermServiceClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *T
 			options...,
 		).Endpoint()
 		endpoints.UpdateTermInfoEndpoint = endpoint
+	}
+
+	{
+		endpoint := grpctransport.NewClient(
+			conn,
+			"pb.Term",
+			"QueryTermInfo",
+			encodeRequest,
+			decodeResponse,
+			pb.QueryTermInfoReply{},
+			append(options, grpctransport.ClientBefore(setUserInfoMD))...,
+		).Endpoint()
+		endpoints.QueryTermInfoEndpoint = endpoint
 	}
 
 	return endpoints

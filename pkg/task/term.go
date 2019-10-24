@@ -10,7 +10,7 @@ import (
 
 func termAdd(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	// 查询终端信息
-	infos, _, err := term.QueryTermInfo(db, &term.Info{MchtCd: instance.DataId}, 1, 9999)
+	infos, _, err := term.QueryTermInfo(db, &term.Info{MchtCd: instance.DataId}, nil, nil, 1, 9999)
 	if err != nil {
 		return err
 	}
@@ -38,7 +38,7 @@ func termAdd(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 }
 
 func termDelete(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
-	infos, _, err := term.QueryTermInfo(db, &term.Info{MchtCd: instance.DataId}, 1, 9999)
+	infos, _, err := term.QueryTermInfo(db, &term.Info{MchtCd: instance.DataId}, nil, nil, 1, 9999)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func termDelete(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 }
 
 func termInfoUnregister(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
-	infos, _, err := term.QueryTermInfo(db, &term.Info{MchtCd: instance.DataId}, 1, 9999)
+	infos, _, err := term.QueryTermInfo(db, &term.Info{MchtCd: instance.DataId}, nil, nil, 1, 9999)
 	if err != nil {
 		return err
 	}
@@ -92,7 +92,7 @@ func termInfoUnregister(db *gorm.DB, instance *camundamodel.ProcessInstance) err
 }
 
 func cancelTermInfoUnregister(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
-	infos, _, err := term.QueryTermInfo(db, &term.Info{MchtCd: instance.DataId}, 1, 9999)
+	infos, _, err := term.QueryTermInfo(db, &term.Info{MchtCd: instance.DataId}, nil, nil, 1, 9999)
 	if err != nil {
 		return err
 	}

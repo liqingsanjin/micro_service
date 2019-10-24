@@ -52,7 +52,7 @@ func merchantRegister(db *gorm.DB, instance *camundamodel.ProcessInstance) error
 	}
 	terms, _, err := term.QueryTermInfo(db, &term.Info{
 		MchtCd: info.MchtCd,
-	}, 1, 10000)
+	}, nil, nil, 1, 10000)
 	if err != nil {
 		return err
 	}

@@ -2,7 +2,9 @@ package gateway
 
 import (
 	"userService/pkg/pb"
+	"userService/pkg/userservice"
 
+	stdjwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	httptransport "github.com/go-kit/kit/transport/http"
 )
@@ -44,4 +46,14 @@ func RegisterTermHandler(engine *gin.Engine, endpoints *TermEndpoints) {
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
+
+	group.POST("/queryTermInfo",
+		userservice.JwtMiddleware(keyFunc, stdjwt.SigningMethodHS256, userservice.UserClaimFactory),
+		convertHttpHandlerToGinHandler(httptransport.NewServer(
+			endpoints.QueryTermInfoEndpoint,
+			decodeHttpRequest(&pb.QueryTermInfoRequest{}),
+			encodeHttpResponse,
+			httptransport.ServerErrorEncoder(errorEncoder),
+			httptransport.ServerBefore(setUserInfoContext),
+		)))
 }
