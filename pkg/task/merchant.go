@@ -515,6 +515,14 @@ func merchantFreeze(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 		return fmt.Errorf("merchant %s not found", instance.DataId)
 	}
 
+	err = merchant.UpdateMerchant(
+		db,
+		&merchant.MerchantInfo{MchtCd: info.MchtCd},
+		&merchant.MerchantInfo{Status: "13", SystemFlag: "13"},
+	)
+
+	info.SystemFlag = "13"
+	info.Status = "13"
 	err = merchant.SaveMerchantMain(db, &merchant.MerchantInfoMain{
 		MerchantInfo: *info,
 	})
@@ -544,6 +552,15 @@ func merchantUnregister(db *gorm.DB, instance *camundamodel.ProcessInstance) err
 	if info == nil {
 		return fmt.Errorf("merchant %s not found", instance.DataId)
 	}
+
+	err = merchant.UpdateMerchant(
+		db,
+		&merchant.MerchantInfo{MchtCd: info.MchtCd},
+		&merchant.MerchantInfo{Status: "00", SystemFlag: "00"},
+	)
+
+	info.SystemFlag = "00"
+	info.Status = "00"
 
 	err = merchant.SaveMerchantMain(db, &merchant.MerchantInfoMain{
 		MerchantInfo: *info,
