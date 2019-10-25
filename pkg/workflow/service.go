@@ -250,7 +250,7 @@ func (s *service) HandleTask(ctx context.Context, in *pb.HandleTaskRequest) (*pb
 					return nil, err
 				}
 				for _, info := range infos {
-					if info.SystemFlag != "01" && info.SystemFlag != "00" {
+					if info.SystemFlag != "01" && info.SystemFlag != "00" && info.SystemFlag != "13" {
 						err = termmodel.UpdateTerm(db, &termmodel.Info{MchtCd: info.MchtCd, TermId: info.TermId}, &termmodel.Info{SystemFlag: formValue.Value})
 						if err != nil {
 							return nil, err
