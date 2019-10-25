@@ -485,6 +485,41 @@ func merchantUnFreeze(db *gorm.DB, instance *camundamodel.ProcessInstance) error
 		return fmt.Errorf("merchant %s not found", instance.DataId)
 	}
 
+	terms, _, err := term.QueryTermInfo(db, &term.Info{
+		MchtCd: info.MchtCd,
+	}, nil, nil, 1, 10000)
+	if err != nil {
+		return err
+	}
+	for i := range terms {
+		// 修改状态
+		err = term.UpdateTerm(
+			db,
+			&term.Info{MchtCd: terms[i].MchtCd, TermId: terms[i].TermId},
+			&term.Info{Status: "01", SystemFlag: "01"},
+		)
+		if err != nil {
+			return err
+		}
+		terms[i].SystemFlag = "01"
+		terms[i].Status = "01"
+		err = term.SaveTermInfoMain(db, &term.InfoMain{
+			Info: *terms[i],
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	err = merchant.UpdateMerchant(
+		db,
+		&merchant.MerchantInfo{MchtCd: info.MchtCd},
+		&merchant.MerchantInfo{Status: "01", SystemFlag: "01"},
+	)
+
+	info.SystemFlag = "01"
+	info.Status = "01"
+
 	err = merchant.SaveMerchantMain(db, &merchant.MerchantInfoMain{
 		MerchantInfo: *info,
 	})
@@ -513,6 +548,32 @@ func merchantFreeze(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
 	}
 	if info == nil {
 		return fmt.Errorf("merchant %s not found", instance.DataId)
+	}
+
+	terms, _, err := term.QueryTermInfo(db, &term.Info{
+		MchtCd: info.MchtCd,
+	}, nil, nil, 1, 10000)
+	if err != nil {
+		return err
+	}
+	for i := range terms {
+		// 修改状态
+		err = term.UpdateTerm(
+			db,
+			&term.Info{MchtCd: terms[i].MchtCd, TermId: terms[i].TermId},
+			&term.Info{Status: "13", SystemFlag: "13"},
+		)
+		if err != nil {
+			return err
+		}
+		terms[i].SystemFlag = "13"
+		terms[i].Status = "13"
+		err = term.SaveTermInfoMain(db, &term.InfoMain{
+			Info: *terms[i],
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	err = merchant.UpdateMerchant(
@@ -551,6 +612,32 @@ func merchantUnregister(db *gorm.DB, instance *camundamodel.ProcessInstance) err
 	}
 	if info == nil {
 		return fmt.Errorf("merchant %s not found", instance.DataId)
+	}
+
+	terms, _, err := term.QueryTermInfo(db, &term.Info{
+		MchtCd: info.MchtCd,
+	}, nil, nil, 1, 10000)
+	if err != nil {
+		return err
+	}
+	for i := range terms {
+		// 修改状态
+		err = term.UpdateTerm(
+			db,
+			&term.Info{MchtCd: terms[i].MchtCd, TermId: terms[i].TermId},
+			&term.Info{Status: "00", SystemFlag: "00"},
+		)
+		if err != nil {
+			return err
+		}
+		terms[i].SystemFlag = "00"
+		terms[i].Status = "00"
+		err = term.SaveTermInfoMain(db, &term.InfoMain{
+			Info: *terms[i],
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	err = merchant.UpdateMerchant(
