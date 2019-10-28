@@ -759,6 +759,107 @@
           }
         }
       }
+    },
+    "/static/saveOrgDictionaryItem": {
+      "post": {
+        "operationId": "saveOrgDictionaryItem",
+        "summary": "保存机构32域和商户前三位",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "saveOrgDictionaryItem",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "dictionaryItem": {
+                  "type": "object",
+                  "properties": {
+                    "dicType": {
+                      "type": "string"
+                    },
+                    "dicCode": {
+                      "type": "string"
+                    },
+                    "dicName": {
+                      "type": "string"
+                    },
+                    "dispOrder": {
+                      "type": "string"
+                    },
+                    "memo": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "orgDictionaryItem": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "typeCode": {
+                      "type": "string"
+                    },
+                    "orgCode": {
+                      "type": "string"
+                    },
+                    "itemCode": {
+                      "type": "string"
+                    },
+                    "typeParm1": {
+                      "type": "string"
+                    },
+                    "typeParm2": {
+                      "type": "string"
+                    },
+                    "typeParm3": {
+                      "type": "string"
+                    },
+                    "remarks": {
+                      "type": "string"
+                    },
+                    "msgResvFld1": {
+                      "type": "string"
+                    },
+                    "msgResvFld2": {
+                      "type": "string"
+                    },
+                    "msgResvFld3": {
+                      "type": "string"
+                    },
+                    "msgResvFld4": {
+                      "type": "string"
+                    },
+                    "msgResvFld5": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "dicCode": "201",
+                    "dicName": "201_金苹果"
+                  }
+                ],
+                "err": null
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {

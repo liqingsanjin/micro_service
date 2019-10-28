@@ -100,4 +100,11 @@ func RegisterStaticHandler(engine *gin.Engine, endpoints *StaticEndpoints) {
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
+
+	group.POST("/saveOrgDictionaryItem", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.SaveOrgDictionaryItemEndpoint,
+		decodeHttpRequest(&pb.SaveOrgDictionaryItemRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
 }

@@ -167,3 +167,7 @@ func GetDictionaryLayerItem(db *gorm.DB, query *DictionaryLayerItem) []*Dictiona
 	db.Where(query).Order("DISP_ORDER").Find(&out)
 	return out
 }
+
+func SaveDictionaryItem(db *gorm.DB, data *DictionaryItem) error {
+	return db.Save(data).Error
+}

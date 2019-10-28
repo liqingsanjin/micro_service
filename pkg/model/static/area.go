@@ -1,6 +1,10 @@
 package static
 
-import "github.com/jinzhu/gorm"
+import (
+	"time"
+
+	"github.com/jinzhu/gorm"
+)
 
 const (
 	orgDictionaryItem   = "TBL_ORG_DICTIONARYITEM"
@@ -38,4 +42,29 @@ func FindCity(db *gorm.DB, dicCode string, level string) ([]*Area, error) {
 		).
 		Scan(&out).Error
 	return out, err
+}
+
+type OrgDictionaryItem struct {
+	Id          int64     `gorm:"column:ID;primary_key"`
+	TypeCode    string    `gorm:"column:TYPE_CODE"`
+	OrgCode     string    `gorm:"column:ORG_CODE"`
+	ItemCode    string    `gorm:"column:ITEM_CODE"`
+	TypeParm1   string    `gorm:"column:TYPE_PARM1"`
+	TypeParm2   string    `gorm:"column:TYPE_PARM2"`
+	TypeParm3   string    `gorm:"column:TYPE_PARM3"`
+	Remarks     string    `gorm:"column:REMARKS"`
+	MsgResvFld1 string    `gorm:"column:MSG_RESV_FLD1"`
+	MsgResvFld2 string    `gorm:"column:MSG_RESV_FLD2"`
+	MsgResvFld3 string    `gorm:"column:MSG_RESV_FLD3"`
+	MsgResvFld4 string    `gorm:"column:MSG_RESV_FLD4"`
+	MsgResvFld5 string    `gorm:"column:MSG_RESV_FLD5"`
+	CreatedAt   time.Time `gorm:"column:REC_CRT_TS"`
+}
+
+func (OrgDictionaryItem) TableName() string {
+	return orgDictionaryItem
+}
+
+func SaveOrgDictionaryItem(db *gorm.DB, data *OrgDictionaryItem) error {
+	return db.Save(data).Error
 }

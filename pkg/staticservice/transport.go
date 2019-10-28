@@ -101,3 +101,9 @@ func MakeFindMerchantFirstThreeCodeEndpoint(service pb.StaticServer) endpoint.En
 		return service.FindMerchantFirstThreeCode(ctx, request.(*pb.FindMerchantFirstThreeCodeRequest))
 	}
 }
+
+func MakeSaveOrgDictionaryItemEndpoint(service pb.StaticServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.SaveOrgDictionaryItem(ctx, request.(*pb.SaveOrgDictionaryItemRequest))
+	}
+}

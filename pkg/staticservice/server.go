@@ -9,7 +9,7 @@ import (
 )
 
 type server struct {
-	syncData                          grpctransport.Handler
+	SyncDataHandler                   grpctransport.Handler
 	getDictionaryItem                 grpctransport.Handler
 	getDicByProdAndBiz                grpctransport.Handler
 	checkValues                       grpctransport.Handler
@@ -22,6 +22,15 @@ type server struct {
 	ListFeeMapHandler                 grpctransport.Handler
 	FindAreaHandler                   grpctransport.Handler
 	FindMerchantFirstThreeCodeHandler grpctransport.Handler
+	SaveOrgDictionaryItemHandler      grpctransport.Handler
+}
+
+func (s *server) SaveOrgDictionaryItem(ctx context.Context, in *pb.SaveOrgDictionaryItemRequest) (*pb.SaveOrgDictionaryItemReply, error) {
+	_, res, err := s.SaveOrgDictionaryItemHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveOrgDictionaryItemReply), nil
 }
 
 func (s *server) FindMerchantFirstThreeCode(ctx context.Context, in *pb.FindMerchantFirstThreeCodeRequest) (*pb.FindMerchantFirstThreeCodeReply, error) {
@@ -98,7 +107,7 @@ func (g *server) GetDictionaryLayerItem(ctx context.Context, in *pb.GetDictionar
 }
 
 func (g *server) SyncData(ctx context.Context, in *pb.StaticSyncDataReq) (*pb.StaticSyncDataResp, error) {
-	_, res, err := g.syncData.ServeGRPC(ctx, in)
+	_, res, err := g.SyncDataHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -140,7 +149,7 @@ func New(tracer grpctransport.ServerOption) pb.StaticServer {
 
 	{
 		e := MakeSyncDataEndpoint(svc)
-		svr.syncData = grpctransport.NewServer(
+		svr.SyncDataHandler = grpctransport.NewServer(
 			e,
 			grpcDecode,
 			grpcEncode,
@@ -271,5 +280,17 @@ func New(tracer grpctransport.ServerOption) pb.StaticServer {
 			options...,
 		)
 	}
+
+	{
+		endpoint := MakeSaveOrgDictionaryItemEndpoint(svc)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.SaveOrgDictionaryItemHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+
 	return svr
 }

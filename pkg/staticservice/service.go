@@ -38,6 +38,50 @@ var MyMap = StaticMapData{
 //service .
 type service struct{}
 
+func (s *service) SaveOrgDictionaryItem(ctx context.Context, in *pb.SaveOrgDictionaryItemRequest) (*pb.SaveOrgDictionaryItemReply, error) {
+	reply := new(pb.SaveOrgDictionaryItemReply)
+	var err error
+	db := common.DB.Begin()
+	defer db.Rollback()
+
+	if in.DictionaryItem != nil {
+		item := new(static.DictionaryItem)
+		item.DicType = in.DictionaryItem.DicType
+		item.DicCode = in.DictionaryItem.DicCode
+		item.DicName = in.DictionaryItem.DicName
+		item.DispOrder = in.DictionaryItem.DispOrder
+		item.Memo = in.DictionaryItem.Memo
+		err = static.SaveDictionaryItem(db, item)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if in.OrgDictionaryItem != nil {
+		item := new(static.OrgDictionaryItem)
+		item.Id = in.OrgDictionaryItem.Id
+		item.TypeCode = in.OrgDictionaryItem.TypeCode
+		item.OrgCode = in.OrgDictionaryItem.OrgCode
+		item.ItemCode = in.OrgDictionaryItem.ItemCode
+		item.TypeParm1 = in.OrgDictionaryItem.TypeParm1
+		item.TypeParm2 = in.OrgDictionaryItem.TypeParm2
+		item.TypeParm3 = in.OrgDictionaryItem.TypeParm3
+		item.Remarks = in.OrgDictionaryItem.Remarks
+		item.MsgResvFld1 = in.OrgDictionaryItem.MsgResvFld1
+		item.MsgResvFld2 = in.OrgDictionaryItem.MsgResvFld2
+		item.MsgResvFld3 = in.OrgDictionaryItem.MsgResvFld3
+		item.MsgResvFld4 = in.OrgDictionaryItem.MsgResvFld4
+		item.MsgResvFld5 = in.OrgDictionaryItem.MsgResvFld5
+		err = static.SaveOrgDictionaryItem(db, item)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	db.Commit()
+	return reply, nil
+}
+
 func (s *service) FindMerchantFirstThreeCode(ctx context.Context, in *pb.FindMerchantFirstThreeCodeRequest) (*pb.FindMerchantFirstThreeCodeReply, error) {
 	reply := new(pb.FindMerchantFirstThreeCodeReply)
 	if in.Code == "" {

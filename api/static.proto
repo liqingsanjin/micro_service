@@ -18,6 +18,32 @@ service Static {
     rpc ListFeeMap(ListFeeMapRequest) returns (ListFeeMapReply) {}
     rpc FindArea(FindAreaRequest) returns (FindAreaReply) {}
     rpc FindMerchantFirstThreeCode(FindMerchantFirstThreeCodeRequest) returns (FindMerchantFirstThreeCodeReply) {}
+    rpc SaveOrgDictionaryItem(SaveOrgDictionaryItemRequest) returns (SaveOrgDictionaryItemReply) {}
+}
+
+message OrgDictionaryItemField {
+    int64  id          = 1;
+    string typeCode    = 2;
+    string orgCode     = 3;
+    string itemCode    = 4;
+    string typeParm1   = 5;
+    string typeParm2   = 6;
+    string typeParm3   = 7;
+    string remarks     = 8;
+    string msgResvFld1 = 9;
+    string msgResvFld2 = 10;
+    string msgResvFld3 = 11;
+    string msgResvFld4 = 12;
+    string msgResvFld5 = 13;
+}
+
+message SaveOrgDictionaryItemRequest {
+    DictionaryItemField dictionaryItem = 1;
+    OrgDictionaryItemField orgDictionaryItem = 2;
+}
+
+message SaveOrgDictionaryItemReply {
+    error err = 1;
 }
 
 message FindAreaRequest {

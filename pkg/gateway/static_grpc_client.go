@@ -24,6 +24,15 @@ type StaticEndpoints struct {
 	ListFeeMapEndpoint                 endpoint.Endpoint
 	FindAreaEndpoint                   endpoint.Endpoint
 	FindMerchantFirstThreeCodeEndpoint endpoint.Endpoint
+	SaveOrgDictionaryItemEndpoint      endpoint.Endpoint
+}
+
+func (s *StaticEndpoints) SaveOrgDictionaryItem(ctx context.Context, in *pb.SaveOrgDictionaryItemRequest) (*pb.SaveOrgDictionaryItemReply, error) {
+	res, err := s.SaveOrgDictionaryItemEndpoint(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveOrgDictionaryItemReply), nil
 }
 
 func (s *StaticEndpoints) FindMerchantFirstThreeCode(ctx context.Context, in *pb.FindMerchantFirstThreeCodeRequest) (*pb.FindMerchantFirstThreeCodeReply, error) {
@@ -324,6 +333,19 @@ func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOpti
 			options...,
 		).Endpoint()
 		endpoints.FindMerchantFirstThreeCodeEndpoint = e
+	}
+
+	{
+		e := grpctransport.NewClient(
+			conn,
+			"pb.Static",
+			"SaveOrgDictionaryItem",
+			encodeRequest,
+			decodeResponse,
+			pb.SaveOrgDictionaryItemReply{},
+			options...,
+		).Endpoint()
+		endpoints.SaveOrgDictionaryItemEndpoint = e
 	}
 
 	return endpoints
