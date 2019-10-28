@@ -68,3 +68,7 @@ func (OrgDictionaryItem) TableName() string {
 func SaveOrgDictionaryItem(db *gorm.DB, data *OrgDictionaryItem) error {
 	return db.Save(data).Error
 }
+
+func DeleteOrgDictionaryItem(db *gorm.DB, query *OrgDictionaryItem) error {
+	return db.Delete(&OrgDictionaryItem{}, query).Error
+}

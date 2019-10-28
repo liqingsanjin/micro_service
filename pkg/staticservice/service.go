@@ -57,24 +57,47 @@ func (s *service) SaveOrgDictionaryItem(ctx context.Context, in *pb.SaveOrgDicti
 		}
 	}
 
-	if in.OrgDictionaryItem != nil {
-		item := new(static.OrgDictionaryItem)
-		item.Id = in.OrgDictionaryItem.Id
-		item.TypeCode = in.OrgDictionaryItem.TypeCode
-		item.OrgCode = in.OrgDictionaryItem.OrgCode
-		item.ItemCode = in.OrgDictionaryItem.ItemCode
-		item.TypeParm1 = in.OrgDictionaryItem.TypeParm1
-		item.TypeParm2 = in.OrgDictionaryItem.TypeParm2
-		item.TypeParm3 = in.OrgDictionaryItem.TypeParm3
-		item.Remarks = in.OrgDictionaryItem.Remarks
-		item.MsgResvFld1 = in.OrgDictionaryItem.MsgResvFld1
-		item.MsgResvFld2 = in.OrgDictionaryItem.MsgResvFld2
-		item.MsgResvFld3 = in.OrgDictionaryItem.MsgResvFld3
-		item.MsgResvFld4 = in.OrgDictionaryItem.MsgResvFld4
-		item.MsgResvFld5 = in.OrgDictionaryItem.MsgResvFld5
-		err = static.SaveOrgDictionaryItem(db, item)
+	if in.OrgDictionary != nil {
+		if in.OrgDictionary.OrgCode == "" || in.OrgDictionary.TypeCode == "" {
+			reply.Err = &pb.Error{
+				Code:        http.StatusBadRequest,
+				Message:     InvalidParam,
+				Description: "orgCode, typeCode 不能为空",
+			}
+			return reply, nil
+		}
+
+		err = static.DeleteOrgDictionaryItem(
+			db,
+			&static.OrgDictionaryItem{
+				OrgCode:  in.OrgDictionary.OrgCode,
+				TypeCode: in.OrgDictionary.TypeCode,
+			},
+		)
 		if err != nil {
 			return nil, err
+		}
+
+		for _, item := range in.OrgDictionary.Items {
+
+			data := new(static.OrgDictionaryItem)
+			data.Id = item.Id
+			data.TypeCode = item.TypeCode
+			data.OrgCode = item.OrgCode
+			data.ItemCode = item.ItemCode
+			data.TypeParm1 = item.TypeParm1
+			data.TypeParm2 = item.TypeParm2
+			data.TypeParm3 = item.TypeParm3
+			data.Remarks = item.Remarks
+			data.MsgResvFld1 = item.MsgResvFld1
+			data.MsgResvFld2 = item.MsgResvFld2
+			data.MsgResvFld3 = item.MsgResvFld3
+			data.MsgResvFld4 = item.MsgResvFld4
+			data.MsgResvFld5 = item.MsgResvFld5
+			err = static.SaveOrgDictionaryItem(db, data)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 

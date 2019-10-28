@@ -37,9 +37,15 @@ message OrgDictionaryItemField {
     string msgResvFld5 = 13;
 }
 
+message OrgDictionary {
+    repeated OrgDictionaryItemField items = 1;
+    string orgCode = 2;
+    string typeCode = 3;
+}
+
 message SaveOrgDictionaryItemRequest {
     DictionaryItemField dictionaryItem = 1;
-    OrgDictionaryItemField orgDictionaryItem = 2;
+    OrgDictionary orgDictionary = 2;
 }
 
 message SaveOrgDictionaryItemReply {

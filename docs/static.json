@@ -795,47 +795,58 @@
                     }
                   }
                 },
-                "orgDictionaryItem": {
+                "orgDictionary": {
                   "type": "object",
                   "properties": {
-                    "id": {
-                      "type": "integer"
-                    },
                     "typeCode": {
                       "type": "string"
                     },
                     "orgCode": {
                       "type": "string"
                     },
-                    "itemCode": {
-                      "type": "string"
-                    },
-                    "typeParm1": {
-                      "type": "string"
-                    },
-                    "typeParm2": {
-                      "type": "string"
-                    },
-                    "typeParm3": {
-                      "type": "string"
-                    },
-                    "remarks": {
-                      "type": "string"
-                    },
-                    "msgResvFld1": {
-                      "type": "string"
-                    },
-                    "msgResvFld2": {
-                      "type": "string"
-                    },
-                    "msgResvFld3": {
-                      "type": "string"
-                    },
-                    "msgResvFld4": {
-                      "type": "string"
-                    },
-                    "msgResvFld5": {
-                      "type": "string"
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "typeCode": {
+                            "type": "string"
+                          },
+                          "orgCode": {
+                            "type": "string"
+                          },
+                          "itemCode": {
+                            "type": "string"
+                          },
+                          "typeParm1": {
+                            "type": "string"
+                          },
+                          "typeParm2": {
+                            "type": "string"
+                          },
+                          "typeParm3": {
+                            "type": "string"
+                          },
+                          "remarks": {
+                            "type": "string"
+                          },
+                          "msgResvFld1": {
+                            "type": "string"
+                          },
+                          "msgResvFld2": {
+                            "type": "string"
+                          },
+                          "msgResvFld3": {
+                            "type": "string"
+                          },
+                          "msgResvFld4": {
+                            "type": "string"
+                          },
+                          "msgResvFld5": {
+                            "type": "string"
+                          }
+                        }
+                      }
                     }
                   }
                 }
