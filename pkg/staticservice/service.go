@@ -38,6 +38,64 @@ var MyMap = StaticMapData{
 //service .
 type service struct{}
 
+func (s *service) ListOrgDictionaryItem(ctx context.Context, in *pb.ListOrgDictionaryItemRequest) (*pb.ListOrgDictionaryItemReply, error) {
+	reply := new(pb.ListOrgDictionaryItemReply)
+	if in.Page == 0 {
+		in.Page = 1
+	}
+	if in.Size == 0 {
+		in.Size = 10
+	}
+
+	db := common.DB
+
+	query := new(static.OrgDictionaryItem)
+	if in.Item != nil {
+		query.Id = in.Item.Id
+		query.TypeCode = in.Item.TypeCode
+		query.OrgCode = in.Item.OrgCode
+		query.ItemCode = in.Item.ItemCode
+		query.TypeParm1 = in.Item.TypeParm1
+		query.TypeParm2 = in.Item.TypeParm2
+		query.TypeParm3 = in.Item.TypeParm3
+		query.Remarks = in.Item.Remarks
+		query.MsgResvFld1 = in.Item.MsgResvFld1
+		query.MsgResvFld2 = in.Item.MsgResvFld2
+		query.MsgResvFld3 = in.Item.MsgResvFld3
+		query.MsgResvFld4 = in.Item.MsgResvFld4
+		query.MsgResvFld5 = in.Item.MsgResvFld5
+	}
+
+	out, count, err := static.ListOrgDictionaryItem(db, query, in.Page, in.Size)
+	if err != nil {
+		return nil, err
+	}
+	items := make([]*pb.OrgDictionaryItemField, 0, len(out))
+	for _, o := range out {
+		items = append(items, &pb.OrgDictionaryItemField{
+			Id:          o.Id,
+			TypeCode:    o.TypeCode,
+			OrgCode:     o.OrgCode,
+			ItemCode:    o.ItemCode,
+			TypeParm1:   o.TypeParm1,
+			TypeParm2:   o.TypeParm2,
+			TypeParm3:   o.TypeParm3,
+			Remarks:     o.Remarks,
+			MsgResvFld1: o.MsgResvFld1,
+			MsgResvFld2: o.MsgResvFld2,
+			MsgResvFld3: o.MsgResvFld3,
+			MsgResvFld4: o.MsgResvFld4,
+			MsgResvFld5: o.MsgResvFld5,
+		})
+	}
+	reply.Size = in.Size
+	reply.Page = in.Page
+	reply.Count = count
+	reply.Items = items
+
+	return reply, nil
+}
+
 func (s *service) SaveOrgDictionaryItem(ctx context.Context, in *pb.SaveOrgDictionaryItemRequest) (*pb.SaveOrgDictionaryItemReply, error) {
 	reply := new(pb.SaveOrgDictionaryItemReply)
 	var err error

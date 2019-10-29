@@ -72,3 +72,12 @@ func SaveOrgDictionaryItem(db *gorm.DB, data *OrgDictionaryItem) error {
 func DeleteOrgDictionaryItem(db *gorm.DB, query *OrgDictionaryItem) error {
 	return db.Delete(&OrgDictionaryItem{}, query).Error
 }
+
+func ListOrgDictionaryItem(db *gorm.DB, query *OrgDictionaryItem, page int32, size int32) ([]*OrgDictionaryItem, int32, error) {
+	var count int32
+	var err error
+	out := make([]*OrgDictionaryItem, 0)
+	db.Model(&OrgDictionaryItem{}).Where(query).Count(&count)
+	err = db.Where(query).Offset((page - 1) * size).Limit(size).Find(&out).Error
+	return out, count, err
+}

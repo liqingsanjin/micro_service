@@ -10,7 +10,7 @@ import (
 
 type server struct {
 	SyncDataHandler                   grpctransport.Handler
-	getDictionaryItem                 grpctransport.Handler
+	GetDictionaryItemHandler          grpctransport.Handler
 	getDicByProdAndBiz                grpctransport.Handler
 	checkValues                       grpctransport.Handler
 	getDictionaryLayerItem            grpctransport.Handler
@@ -23,6 +23,15 @@ type server struct {
 	FindAreaHandler                   grpctransport.Handler
 	FindMerchantFirstThreeCodeHandler grpctransport.Handler
 	SaveOrgDictionaryItemHandler      grpctransport.Handler
+	ListOrgDictionaryItemHandler      grpctransport.Handler
+}
+
+func (s *server) ListOrgDictionaryItem(ctx context.Context, in *pb.ListOrgDictionaryItemRequest) (*pb.ListOrgDictionaryItemReply, error) {
+	_, res, err := s.ListOrgDictionaryItemHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.ListOrgDictionaryItemReply), nil
 }
 
 func (s *server) SaveOrgDictionaryItem(ctx context.Context, in *pb.SaveOrgDictionaryItemRequest) (*pb.SaveOrgDictionaryItemReply, error) {
@@ -115,7 +124,7 @@ func (g *server) SyncData(ctx context.Context, in *pb.StaticSyncDataReq) (*pb.St
 }
 
 func (g *server) GetDictionaryItem(ctx context.Context, in *pb.StaticGetDictionaryItemReq) (*pb.StaticGetDictionaryItemResp, error) {
-	_, res, err := g.getDictionaryItem.ServeGRPC(ctx, in)
+	_, res, err := g.GetDictionaryItemHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +168,7 @@ func New(tracer grpctransport.ServerOption) pb.StaticServer {
 
 	{
 		e := MakeGetDictionaryItemEndpoint(svc)
-		svr.getDictionaryItem = grpctransport.NewServer(
+		svr.GetDictionaryItemHandler = grpctransport.NewServer(
 			e,
 			grpcDecode,
 			grpcEncode,
@@ -285,6 +294,17 @@ func New(tracer grpctransport.ServerOption) pb.StaticServer {
 		endpoint := MakeSaveOrgDictionaryItemEndpoint(svc)
 		endpoint = kit.LogginMiddleware(endpoint)
 		svr.SaveOrgDictionaryItemHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+
+	{
+		endpoint := MakeListOrgDictionaryItemEndpoint(svc)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.ListOrgDictionaryItemHandler = grpctransport.NewServer(
 			endpoint,
 			kit.DecodeRequest,
 			kit.EncodeResponse,

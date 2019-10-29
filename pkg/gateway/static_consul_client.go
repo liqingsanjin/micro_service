@@ -161,6 +161,15 @@ func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoi
 		endpoints.SaveOrgDictionaryItemEndpoint = retry
 	}
 
+	{
+		factory := staticserviceFactory(staticservice.MakeListOrgDictionaryItemEndpoint)
+		endpointer := sd.NewEndpointer(instancer, factory, log)
+		balancer := lb.NewRoundRobin(endpointer)
+		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry = breaker(retry)
+		endpoints.ListOrgDictionaryItemEndpoint = retry
+	}
+
 	return &endpoints
 }
 

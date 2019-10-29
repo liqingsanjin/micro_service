@@ -19,6 +19,21 @@ service Static {
     rpc FindArea(FindAreaRequest) returns (FindAreaReply) {}
     rpc FindMerchantFirstThreeCode(FindMerchantFirstThreeCodeRequest) returns (FindMerchantFirstThreeCodeReply) {}
     rpc SaveOrgDictionaryItem(SaveOrgDictionaryItemRequest) returns (SaveOrgDictionaryItemReply) {}
+    rpc ListOrgDictionaryItem(ListOrgDictionaryItemRequest) returns (ListOrgDictionaryItemReply) {}
+}
+
+message ListOrgDictionaryItemRequest {
+    OrgDictionaryItemField item = 1;
+    int32 page = 2;
+    int32 size = 3;
+}
+
+message ListOrgDictionaryItemReply {
+    error err = 1;
+    repeated OrgDictionaryItemField items = 2;
+    int32 page = 3;
+    int32 size = 4;
+    int32 count = 5;
 }
 
 message OrgDictionaryItemField {

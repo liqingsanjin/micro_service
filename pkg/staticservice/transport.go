@@ -107,3 +107,9 @@ func MakeSaveOrgDictionaryItemEndpoint(service pb.StaticServer) endpoint.Endpoin
 		return service.SaveOrgDictionaryItem(ctx, request.(*pb.SaveOrgDictionaryItemRequest))
 	}
 }
+
+func MakeListOrgDictionaryItemEndpoint(service pb.StaticServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.ListOrgDictionaryItem(ctx, request.(*pb.ListOrgDictionaryItemRequest))
+	}
+}

@@ -107,4 +107,11 @@ func RegisterStaticHandler(engine *gin.Engine, endpoints *StaticEndpoints) {
 		encodeHttpResponse,
 		httptransport.ServerErrorEncoder(errorEncoder),
 	)))
+
+	group.POST("/listOrgDictionaryItem", convertHttpHandlerToGinHandler(httptransport.NewServer(
+		endpoints.ListOrgDictionaryItemEndpoint,
+		decodeHttpRequest(&pb.ListOrgDictionaryItemRequest{}),
+		encodeHttpResponse,
+		httptransport.ServerErrorEncoder(errorEncoder),
+	)))
 }
