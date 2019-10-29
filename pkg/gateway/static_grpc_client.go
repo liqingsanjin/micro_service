@@ -113,11 +113,7 @@ func (s *StaticEndpoints) GetDictionaryItem(ctx context.Context, in *pb.StaticGe
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.StaticGetDictionaryItemResp)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.StaticGetDictionaryItemResp), nil
 }
 
 func (s *StaticEndpoints) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticGetDicByProdAndBizReq) (*pb.StaticGetDicByProdAndBizResp, error) {
@@ -125,11 +121,7 @@ func (s *StaticEndpoints) GetDicByProdAndBiz(ctx context.Context, in *pb.StaticG
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.StaticGetDicByProdAndBizResp)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.StaticGetDicByProdAndBizResp), nil
 }
 
 func (s *StaticEndpoints) CheckValues(ctx context.Context, in *pb.StaticCheckValuesReq) (*pb.StaticCheckValuesResp, error) {
@@ -137,11 +129,7 @@ func (s *StaticEndpoints) CheckValues(ctx context.Context, in *pb.StaticCheckVal
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.StaticCheckValuesResp)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.StaticCheckValuesResp), nil
 }
 
 func (s *StaticEndpoints) GetDictionaryLayerItem(ctx context.Context, in *pb.GetDictionaryLayerItemReq) (*pb.GetDictionaryLayerItemResp, error) {
@@ -149,11 +137,7 @@ func (s *StaticEndpoints) GetDictionaryLayerItem(ctx context.Context, in *pb.Get
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.GetDictionaryLayerItemResp)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.GetDictionaryLayerItemResp), nil
 }
 
 func (s *StaticEndpoints) GetDictionaryItemByPk(ctx context.Context, in *pb.GetDictionaryItemByPkReq) (*pb.GetDictionaryItemByPkResp, error) {
@@ -161,11 +145,7 @@ func (s *StaticEndpoints) GetDictionaryItemByPk(ctx context.Context, in *pb.GetD
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.GetDictionaryItemByPkResp)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.GetDictionaryItemByPkResp), nil
 }
 
 func NewStaticServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *StaticEndpoints {

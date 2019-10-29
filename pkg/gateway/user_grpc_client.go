@@ -560,11 +560,7 @@ func (u *UserEndpoints) Login(ctx context.Context, in *pb.LoginRequest) (*pb.Log
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.LoginReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.LoginReply), nil
 }
 
 func (u *UserEndpoints) GetPermissions(ctx context.Context, in *pb.GetPermissionsRequest) (*pb.GetPermissionsReply, error) {
@@ -572,11 +568,7 @@ func (u *UserEndpoints) GetPermissions(ctx context.Context, in *pb.GetPermission
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.GetPermissionsReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.GetPermissionsReply), nil
 }
 
 func (u *UserEndpoints) CheckPermission(ctx context.Context, in *pb.CheckPermissionRequest) (*pb.CheckPermissionReply, error) {
@@ -584,11 +576,7 @@ func (u *UserEndpoints) CheckPermission(ctx context.Context, in *pb.CheckPermiss
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.CheckPermissionReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.CheckPermissionReply), nil
 }
 
 func (u *UserEndpoints) Register(ctx context.Context, in *pb.RegisterRequest) (*pb.RegisterReply, error) {
@@ -596,11 +584,7 @@ func (u *UserEndpoints) Register(ctx context.Context, in *pb.RegisterRequest) (*
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.RegisterReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.RegisterReply), nil
 }
 
 func (u *UserEndpoints) AddPermissionForRole(ctx context.Context, in *pb.AddPermissionForRoleRequest) (*pb.AddPermissionForRoleReply, error) {
@@ -608,11 +592,7 @@ func (u *UserEndpoints) AddPermissionForRole(ctx context.Context, in *pb.AddPerm
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.AddPermissionForRoleReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.AddPermissionForRoleReply), nil
 }
 
 func (u *UserEndpoints) CreateRole(ctx context.Context, in *pb.CreateRoleRequest) (*pb.CreateRoleReply, error) {
@@ -620,11 +600,7 @@ func (u *UserEndpoints) CreateRole(ctx context.Context, in *pb.CreateRoleRequest
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.CreateRoleReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.CreateRoleReply), nil
 }
 
 func (u *UserEndpoints) AddRoleForUser(ctx context.Context, in *pb.AddRoleForUserRequest) (*pb.AddRoleForUserReply, error) {
@@ -632,11 +608,7 @@ func (u *UserEndpoints) AddRoleForUser(ctx context.Context, in *pb.AddRoleForUse
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.AddRoleForUserReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.AddRoleForUserReply), nil
 }
 
 func (u *UserEndpoints) AddRoutes(ctx context.Context, in *pb.AddRoutesRequest) (*pb.AddRoutesReply, error) {
@@ -644,11 +616,7 @@ func (u *UserEndpoints) AddRoutes(ctx context.Context, in *pb.AddRoutesRequest) 
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.AddRoutesReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.AddRoutesReply), nil
 }
 
 func (u *UserEndpoints) ListRoutes(ctx context.Context, in *pb.ListRoutesRequest) (*pb.ListRoutesReply, error) {
@@ -656,11 +624,7 @@ func (u *UserEndpoints) ListRoutes(ctx context.Context, in *pb.ListRoutesRequest
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.ListRoutesReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.ListRoutesReply), nil
 }
 
 func (u *UserEndpoints) CreatePermission(ctx context.Context, in *pb.CreatePermissionRequest) (*pb.CreatePermissionReply, error) {
@@ -668,11 +632,7 @@ func (u *UserEndpoints) CreatePermission(ctx context.Context, in *pb.CreatePermi
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.CreatePermissionReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.CreatePermissionReply), nil
 }
 
 func (u *UserEndpoints) UpdatePermission(ctx context.Context, in *pb.UpdatePermissionRequest) (*pb.UpdatePermissionReply, error) {
@@ -680,11 +640,7 @@ func (u *UserEndpoints) UpdatePermission(ctx context.Context, in *pb.UpdatePermi
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.UpdatePermissionReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.UpdatePermissionReply), nil
 }
 
 func (u *UserEndpoints) AddRouteForPermission(ctx context.Context, in *pb.AddRouteForPermissionRequest) (*pb.AddRouteForPermissionReply, error) {
@@ -692,11 +648,7 @@ func (u *UserEndpoints) AddRouteForPermission(ctx context.Context, in *pb.AddRou
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.AddRouteForPermissionReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.AddRouteForPermissionReply), nil
 }
 
 func (u *UserEndpoints) RemoveRouteForPermission(ctx context.Context, in *pb.RemoveRouteForPermissionRequest) (*pb.RemoveRouteForPermissionReply, error) {
@@ -704,11 +656,7 @@ func (u *UserEndpoints) RemoveRouteForPermission(ctx context.Context, in *pb.Rem
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.RemoveRouteForPermissionReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.RemoveRouteForPermissionReply), nil
 }
 
 func (u *UserEndpoints) RemovePermission(ctx context.Context, in *pb.RemovePermissionRequest) (*pb.RemovePermissionReply, error) {
@@ -716,11 +664,7 @@ func (u *UserEndpoints) RemovePermission(ctx context.Context, in *pb.RemovePermi
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.RemovePermissionReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.RemovePermissionReply), nil
 }
 
 func (u *UserEndpoints) ListPermissions(ctx context.Context, in *pb.ListPermissionsRequest) (*pb.ListPermissionsReply, error) {
@@ -728,11 +672,7 @@ func (u *UserEndpoints) ListPermissions(ctx context.Context, in *pb.ListPermissi
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.ListPermissionsReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.ListPermissionsReply), nil
 }
 
 func (u *UserEndpoints) AddPermissionForPermission(ctx context.Context, in *pb.AddPermissionForPermissionRequest) (*pb.AddPermissionForPermissionReply, error) {
@@ -740,11 +680,7 @@ func (u *UserEndpoints) AddPermissionForPermission(ctx context.Context, in *pb.A
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.AddPermissionForPermissionReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.AddPermissionForPermissionReply), nil
 }
 
 func (u *UserEndpoints) RemovePermissionForPermission(ctx context.Context, in *pb.RemovePermissionForPermissionRequest) (*pb.RemovePermissionForPermissionReply, error) {
@@ -752,11 +688,7 @@ func (u *UserEndpoints) RemovePermissionForPermission(ctx context.Context, in *p
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.RemovePermissionForPermissionReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.RemovePermissionForPermissionReply), nil
 }
 
 func (u *UserEndpoints) ListRole(ctx context.Context, in *pb.ListRoleRequest) (*pb.ListRoleReply, error) {
@@ -764,11 +696,7 @@ func (u *UserEndpoints) ListRole(ctx context.Context, in *pb.ListRoleRequest) (*
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.ListRoleReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.ListRoleReply), nil
 }
 
 func (u *UserEndpoints) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest) (*pb.UpdateRoleReply, error) {
@@ -776,11 +704,7 @@ func (u *UserEndpoints) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.UpdateRoleReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.UpdateRoleReply), nil
 }
 
 func (u *UserEndpoints) RemovePermissionForRole(ctx context.Context, in *pb.RemovePermissionForRoleRequest) (*pb.RemovePermissionForRoleReply, error) {
@@ -788,11 +712,7 @@ func (u *UserEndpoints) RemovePermissionForRole(ctx context.Context, in *pb.Remo
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.RemovePermissionForRoleReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.RemovePermissionForRoleReply), nil
 }
 
 func (u *UserEndpoints) AddRoleForRole(ctx context.Context, in *pb.AddRoleForRoleRequest) (*pb.AddRoleForRoleReply, error) {
@@ -800,11 +720,7 @@ func (u *UserEndpoints) AddRoleForRole(ctx context.Context, in *pb.AddRoleForRol
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.AddRoleForRoleReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.AddRoleForRoleReply), nil
 }
 
 func (u *UserEndpoints) RemoveRoleForRole(ctx context.Context, in *pb.RemoveRoleForRoleRequest) (*pb.RemoveRoleForRoleReply, error) {
@@ -812,11 +728,7 @@ func (u *UserEndpoints) RemoveRoleForRole(ctx context.Context, in *pb.RemoveRole
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.RemoveRoleForRoleReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.RemoveRoleForRoleReply), nil
 }
 
 func (u *UserEndpoints) RemoveRole(ctx context.Context, in *pb.RemoveRoleRequest) (*pb.RemoveRoleReply, error) {
@@ -824,11 +736,7 @@ func (u *UserEndpoints) RemoveRole(ctx context.Context, in *pb.RemoveRoleRequest
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.RemoveRoleReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.RemoveRoleReply), nil
 }
 
 func (u *UserEndpoints) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*pb.ListUsersReply, error) {
@@ -836,11 +744,7 @@ func (u *UserEndpoints) ListUsers(ctx context.Context, in *pb.ListUsersRequest) 
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.ListUsersReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.ListUsersReply), nil
 }
 
 func (u *UserEndpoints) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) (*pb.UpdateUserReply, error) {
@@ -848,11 +752,7 @@ func (u *UserEndpoints) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.UpdateUserReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.UpdateUserReply), nil
 }
 
 func (u *UserEndpoints) AddPermissionForUser(ctx context.Context, in *pb.AddPermissionForUserRequest) (*pb.AddPermissionForUserReply, error) {
@@ -860,11 +760,7 @@ func (u *UserEndpoints) AddPermissionForUser(ctx context.Context, in *pb.AddPerm
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.AddPermissionForUserReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.AddPermissionForUserReply), nil
 }
 
 func (u *UserEndpoints) RemovePermissionForUser(ctx context.Context, in *pb.RemovePermissionForUserRequest) (*pb.RemovePermissionForUserReply, error) {
@@ -872,11 +768,7 @@ func (u *UserEndpoints) RemovePermissionForUser(ctx context.Context, in *pb.Remo
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.RemovePermissionForUserReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.RemovePermissionForUserReply), nil
 }
 
 func (u *UserEndpoints) RemoveRoleForUser(ctx context.Context, in *pb.RemoveRoleForUserRequest) (*pb.RemoveRoleForUserReply, error) {
@@ -884,22 +776,14 @@ func (u *UserEndpoints) RemoveRoleForUser(ctx context.Context, in *pb.RemoveRole
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.RemoveRoleForUserReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.RemoveRoleForUserReply), nil
 }
 func (u *UserEndpoints) ListMenus(ctx context.Context, in *pb.ListMenusRequest) (*pb.ListMenusReply, error) {
 	res, err := u.ListMenusEndpoint(ctx, in)
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.ListMenusReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.ListMenusReply), nil
 }
 
 func setUserInfoMD(ctx context.Context, md *metadata.MD) context.Context {
@@ -916,11 +800,7 @@ func (u *UserEndpoints) CreateMenu(ctx context.Context, in *pb.CreateMenuRequest
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.CreateMenuReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.CreateMenuReply), nil
 }
 
 func (u *UserEndpoints) RemoveMenu(ctx context.Context, in *pb.RemoveMenuRequest) (*pb.RemoveMenuReply, error) {
@@ -928,11 +808,7 @@ func (u *UserEndpoints) RemoveMenu(ctx context.Context, in *pb.RemoveMenuRequest
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.RemoveMenuReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.RemoveMenuReply), nil
 }
 
 func (u *UserEndpoints) GetUserTypeInfo(ctx context.Context, in *pb.GetUserTypeInfoRequest) (*pb.GetUserTypeInfoReply, error) {
@@ -940,11 +816,7 @@ func (u *UserEndpoints) GetUserTypeInfo(ctx context.Context, in *pb.GetUserTypeI
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.GetUserTypeInfoReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.GetUserTypeInfoReply), nil
 }
 
 func (u *UserEndpoints) GetUser(ctx context.Context, in *pb.GetUserRequest) (*pb.GetUserReply, error) {
@@ -952,11 +824,7 @@ func (u *UserEndpoints) GetUser(ctx context.Context, in *pb.GetUserRequest) (*pb
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.GetUserReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.GetUserReply), nil
 }
 
 func (u *UserEndpoints) GetUserPermissionsAndRoles(ctx context.Context, in *pb.GetUserPermissionsAndRolesRequest) (*pb.GetUserPermissionsAndRolesReply, error) {
@@ -964,11 +832,7 @@ func (u *UserEndpoints) GetUserPermissionsAndRoles(ctx context.Context, in *pb.G
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.GetUserPermissionsAndRolesReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.GetUserPermissionsAndRolesReply), nil
 }
 
 func (u *UserEndpoints) GetRolePermissionsAndRoles(ctx context.Context, in *pb.GetRolePermissionsAndRolesRequest) (*pb.GetRolePermissionsAndRolesReply, error) {
@@ -976,11 +840,7 @@ func (u *UserEndpoints) GetRolePermissionsAndRoles(ctx context.Context, in *pb.G
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.GetRolePermissionsAndRolesReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.GetRolePermissionsAndRolesReply), nil
 }
 
 func (u *UserEndpoints) GetPermissionsAndRoutes(ctx context.Context, in *pb.GetPermissionsAndRoutesRequest) (*pb.GetPermissionsAndRoutesReply, error) {
@@ -988,11 +848,7 @@ func (u *UserEndpoints) GetPermissionsAndRoutes(ctx context.Context, in *pb.GetP
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.GetPermissionsAndRoutesReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.GetPermissionsAndRoutesReply), nil
 }
 
 func (u *UserEndpoints) ListLeaguer(ctx context.Context, in *pb.ListLeaguerRequest) (*pb.ListLeaguerReply, error) {
@@ -1000,11 +856,7 @@ func (u *UserEndpoints) ListLeaguer(ctx context.Context, in *pb.ListLeaguerReque
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.ListLeaguerReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.ListLeaguerReply), nil
 }
 
 func (u *UserEndpoints) RemoveRoute(ctx context.Context, in *pb.RemoveRouteRequest) (*pb.RemoveRouteReply, error) {

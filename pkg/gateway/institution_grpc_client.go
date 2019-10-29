@@ -106,11 +106,7 @@ func (s *InstitutionEndpoints) TnxHisDownload(ctx context.Context, in *pb.Instit
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.InstitutionTnxHisDownloadResp)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.InstitutionTnxHisDownloadResp), nil
 }
 
 func (s *InstitutionEndpoints) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrTrnLogsReq) (*pb.GetTfrTrnLogsResp, error) {
@@ -118,11 +114,7 @@ func (s *InstitutionEndpoints) GetTfrTrnLogs(ctx context.Context, in *pb.GetTfrT
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.GetTfrTrnLogsResp)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.GetTfrTrnLogsResp), nil
 }
 
 func (s *InstitutionEndpoints) GetTfrTrnLog(ctx context.Context, in *pb.GetTfrTrnLogReq) (*pb.GetTfrTrnLogResp, error) {
@@ -130,11 +122,7 @@ func (s *InstitutionEndpoints) GetTfrTrnLog(ctx context.Context, in *pb.GetTfrTr
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.GetTfrTrnLogResp)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.GetTfrTrnLogResp), nil
 }
 
 func (s *InstitutionEndpoints) DownloadTfrTrnLogs(ctx context.Context, in *pb.DownloadTfrTrnLogsReq) (*pb.DownloadTfrTrnLogsResp, error) {
@@ -142,11 +130,7 @@ func (s *InstitutionEndpoints) DownloadTfrTrnLogs(ctx context.Context, in *pb.Do
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.DownloadTfrTrnLogsResp)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.DownloadTfrTrnLogsResp), nil
 }
 
 func (s *InstitutionEndpoints) ListGroups(ctx context.Context, in *pb.ListGroupsRequest) (*pb.ListGroupsReply, error) {
@@ -154,11 +138,7 @@ func (s *InstitutionEndpoints) ListGroups(ctx context.Context, in *pb.ListGroups
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.ListGroupsReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.ListGroupsReply), nil
 }
 
 func (s *InstitutionEndpoints) ListInstitutions(ctx context.Context, in *pb.ListInstitutionsRequest) (*pb.ListInstitutionsReply, error) {
@@ -166,11 +146,7 @@ func (s *InstitutionEndpoints) ListInstitutions(ctx context.Context, in *pb.List
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.ListInstitutionsReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.ListInstitutionsReply), nil
 }
 
 func (s *InstitutionEndpoints) SaveInstitution(ctx context.Context, in *pb.SaveInstitutionRequest) (*pb.SaveInstitutionReply, error) {
@@ -178,11 +154,7 @@ func (s *InstitutionEndpoints) SaveInstitution(ctx context.Context, in *pb.SaveI
 	if err != nil {
 		return nil, err
 	}
-	reply, ok := res.(*pb.SaveInstitutionReply)
-	if !ok {
-		return nil, ErrReplyTypeInvalid
-	}
-	return reply, nil
+	return res.(*pb.SaveInstitutionReply), nil
 }
 
 func NewInstitutionServiceGRPCClient(conn *grpc.ClientConn, tracer kitgrpc.ClientOption) *InstitutionEndpoints {
