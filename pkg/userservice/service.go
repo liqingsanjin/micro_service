@@ -1165,6 +1165,7 @@ func (u *userService) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*
 			LeaguerNo:  u.LeaguerNO,
 			Email:      u.Email,
 			UserStatus: fmt.Sprintf("%d", u.UserStatus),
+			UserGroupNo: u.UserGroupNo,
 			CreatedAt:  u.CreatedAt.Format(util.TimePattern),
 		})
 	}

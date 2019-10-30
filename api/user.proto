@@ -342,7 +342,8 @@ message UserField {
     string email = 4;
     string userType = 5;
     string userStatus = 6;
-    string createdAt = 7;
+    string userGroupNo = 7;
+    string createdAt = 8;
 }
 
 message UpdateUserRequest {
