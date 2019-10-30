@@ -1159,14 +1159,14 @@ func (u *userService) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*
 
 	for _, u := range us {
 		users = append(users, &pb.UserField{
-			Id:         fmt.Sprintf("%d", u.UserID),
-			Username:   u.UserName,
-			UserType:   u.UserType,
-			LeaguerNo:  u.LeaguerNO,
-			Email:      u.Email,
-			UserStatus: fmt.Sprintf("%d", u.UserStatus),
+			Id:          fmt.Sprintf("%d", u.UserID),
+			Username:    u.UserName,
+			UserType:    u.UserType,
+			LeaguerNo:   u.LeaguerNO,
+			Email:       u.Email,
+			UserStatus:  fmt.Sprintf("%d", u.UserStatus),
 			UserGroupNo: u.UserGroupNo,
-			CreatedAt:  u.CreatedAt.Format(util.TimePattern),
+			CreatedAt:   u.CreatedAt.Format(util.TimePattern),
 		})
 	}
 
