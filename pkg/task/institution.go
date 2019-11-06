@@ -4,6 +4,7 @@ import (
 	"fmt"
 	camundamodel "userService/pkg/model/camunda"
 	"userService/pkg/model/institution"
+	"userService/pkg/model/static"
 
 	"github.com/jinzhu/gorm"
 )
@@ -80,7 +81,23 @@ func institutionRegister(db *gorm.DB, instance *camundamodel.ProcessInstance) er
 			return err
 		}
 	}
-	return nil
+
+	// 保存到字典表
+	item := new(static.DictionaryItem)
+	if info.InsType == "0" {
+		item.DicType = "INS_COMPANY_CD"
+		item.Memo = "所属机构编码"
+	} else {
+		item.DicType = "INS_ID_CD"
+		item.Memo = "收单机构编码"
+	}
+
+	item.DicCode = info.InsIdCd
+	item.DicName = info.InsIdCd + "_" + info.InsName
+	item.DispOrder = info.InsIdCd
+
+	err = static.SaveDictionaryItem(db, item)
+	return err
 }
 
 func deleteInstitution(db *gorm.DB, instance *camundamodel.ProcessInstance) error {
@@ -173,6 +190,22 @@ func institutionUpdate(db *gorm.DB, instance *camundamodel.ProcessInstance) erro
 			return err
 		}
 	}
+
+	// 保存到字典表
+	item := new(static.DictionaryItem)
+	if info.InsType == "0" {
+		item.DicType = "INS_COMPANY_CD"
+		item.Memo = "所属机构编码"
+	} else {
+		item.DicType = "INS_ID_CD"
+		item.Memo = "收单机构编码"
+	}
+
+	item.DicCode = info.InsIdCd
+	item.DicName = info.InsIdCd + "_" + info.InsName
+	item.DispOrder = info.InsIdCd
+
+	err = static.SaveDictionaryItem(db, item)
 	return nil
 }
 
