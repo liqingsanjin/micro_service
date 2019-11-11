@@ -83,26 +83,26 @@ message FindAreaReply {
 }
 
 message InsProdBizFeeMapInfoField {
-    string ProdCd       = 1;
-    string BizCd        = 2;
-    string MccMTp       = 3;
-    string MccSTp       = 4;
-    string InsFeeBizCd  = 5;
-    string InsFeeBizNm  = 6;
-    string MsgResvFld1  = 7;
-    string MsgResvFld2  = 8;
-    string MsgResvFld3  = 9;
-    string MsgResvFld4  = 10;
-    string MsgResvFld5  = 11;
-    string MsgResvFld6  = 12;
-    string MsgResvFld7  = 13;
-    string MsgResvFld8  = 14;
-    string MsgResvFld9  = 15;
-    string MsgResvFld10 = 16;
-    string RecOprID     = 17;
-    string RecUpdOpr    = 18;
-    string CreateAt     = 19;
-    string UpdatedAt    = 20;
+    string prodCd       = 1;
+    string bizCd        = 2;
+    string mccMTp       = 3;
+    string mccSTp       = 4;
+    string insFeeBizCd  = 5;
+    string insFeeBizNm  = 6;
+    string msgResvFld1  = 7;
+    string msgResvFld2  = 8;
+    string msgResvFld3  = 9;
+    string msgResvFld4  = 10;
+    string msgResvFld5  = 11;
+    string msgResvFld6  = 12;
+    string msgResvFld7  = 13;
+    string msgResvFld8  = 14;
+    string msgResvFld9  = 15;
+    string msgResvFld10 = 16;
+    string recOprID     = 17;
+    string recUpdOpr    = 18;
+    string createAt     = 19;
+    string updatedAt    = 20;
 }
 
 message GetInsProdBizFeeMapInfoReply {
@@ -111,6 +111,7 @@ message GetInsProdBizFeeMapInfoReply {
 }
 
 message GetInsProdBizFeeMapInfoRequest {
+    InsProdBizFeeMapInfoField item = 1;
 }
 
 message StaticSyncDataReq {

@@ -555,7 +555,32 @@
             "name": "getInsProdBizFeeMapInfo",
             "in": "body",
             "schema": {
-              "type": "object"
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "properties": {
+                    "prodCd": {"type": "string"},
+                    "bizCd":{"type": "string"},
+                    "mccMTp": {"type": "string"},
+                    "mccSTp":{"type": "string"},
+                    "insFeeBizCd": {"type": "string"},
+                    "insFeeBizNm":{"type": "string"},
+                    "msgResvFld1": {"type": "string"},
+                    "msgResvFld2":{"type": "string"},
+                    "msgResvFld3": {"type": "string"},
+                    "msgResvFld4":{"type": "string"},
+                    "msgResvFld5": {"type": "string"},
+                    "msgResvFld6":{"type": "string"},
+                    "msgResvFld7": {"type": "string"},
+                    "msgResvFld8":{"type": "string"},
+                    "msgResvFld9": {"type": "string"},
+                    "msgResvFld10":{"type": "string"},
+                    "recOprID": {"type": "string"},
+                    "recUpdOpr":{"type": "string"}
+                  }
+                }
+              }
             }
           }
         ],

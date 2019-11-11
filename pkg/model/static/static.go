@@ -129,10 +129,10 @@ func GetDictionaryItemByPk(db *gorm.DB, query *DictionaryItem) *DictionaryItem {
 	return out
 }
 
-func GetInsProdBizFeeMapInf(db *gorm.DB) []*InsProdBizFeeMapInf {
-	insProdBizFeeMapInf := make([]*InsProdBizFeeMapInf, 0)
-	db.Find(&insProdBizFeeMapInf)
-	return insProdBizFeeMapInf
+func GetInsProdBizFeeMapInf(db *gorm.DB, query *InsProdBizFeeMapInf) ([]*InsProdBizFeeMapInf, error) {
+	out := make([]*InsProdBizFeeMapInf, 0)
+	err := db.Where(query).Find(&out).Error
+	return out, err
 }
 
 func GetProdBizTransMap(db *gorm.DB) []*ProdBizTransMap {

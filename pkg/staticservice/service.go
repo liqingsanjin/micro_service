@@ -314,7 +314,31 @@ func (s *service) ListTransMap(ctx context.Context, in *pb.ListTransMapRequest) 
 
 func (s *service) GetInsProdBizFeeMapInfo(ctx context.Context, in *pb.GetInsProdBizFeeMapInfoRequest) (*pb.GetInsProdBizFeeMapInfoReply, error) {
 	reply := new(pb.GetInsProdBizFeeMapInfoReply)
-	infos := static.GetInsProdBizFeeMapInf(common.DB)
+	query := new(static.InsProdBizFeeMapInf)
+	if in.Item != nil {
+		query.ProdCd = in.Item.ProdCd
+		query.BizCd = in.Item.BizCd
+		query.MccMTp = in.Item.MccMTp
+		query.MccSTp = in.Item.MccSTp
+		query.InsFeeBizCd = in.Item.InsFeeBizCd
+		query.InsFeeBizNm = in.Item.InsFeeBizNm
+		query.MsgResvFld1 = in.Item.MsgResvFld1
+		query.MsgResvFld2 = in.Item.MsgResvFld2
+		query.MsgResvFld3 = in.Item.MsgResvFld3
+		query.MsgResvFld4 = in.Item.MsgResvFld4
+		query.MsgResvFld5 = in.Item.MsgResvFld5
+		query.MsgResvFld6 = in.Item.MsgResvFld6
+		query.MsgResvFld7 = in.Item.MsgResvFld7
+		query.MsgResvFld8 = in.Item.MsgResvFld8
+		query.MsgResvFld9 = in.Item.MsgResvFld9
+		query.MsgResvFld10 = in.Item.MsgResvFld10
+		query.RecOprID = in.Item.RecOprID
+		query.RecUpdOpr = in.Item.RecUpdOpr
+	}
+	infos, err := static.GetInsProdBizFeeMapInf(common.DB, query)
+	if err != nil {
+		return nil, err
+	}
 	items := make([]*pb.InsProdBizFeeMapInfoField, len(infos))
 	for i := range infos {
 		items[i] = &pb.InsProdBizFeeMapInfoField{
@@ -442,7 +466,7 @@ func (s *service) GetUnionPayBankList(ctx context.Context, in *pb.GetUnionPayBan
 
 //Download .
 func (s *service) SyncData(ctx context.Context, in *pb.StaticSyncDataReq) (*pb.StaticSyncDataResp, error) {
-	insProdBizFeeMapInfs := static.GetInsProdBizFeeMapInf(common.DB)
+	insProdBizFeeMapInfs, _ := static.GetInsProdBizFeeMapInf(common.DB, nil)
 	prodBizTransMaps := static.GetProdBizTransMap(common.DB)
 	insInfs := static.GetInsInf(common.DB)
 
