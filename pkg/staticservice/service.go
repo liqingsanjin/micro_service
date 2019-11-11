@@ -38,6 +38,42 @@ var MyMap = StaticMapData{
 //service .
 type service struct{}
 
+func (s *service) SaveInsProdBizFeeMapInfo(ctx context.Context, in *pb.SaveInsProdBizFeeMapInfoRequest) (*pb.SaveInsProdBizFeeMapInfoReply, error) {
+	reply := new(pb.SaveInsProdBizFeeMapInfoReply)
+	if in.Item == nil {
+		reply.Err = &pb.Error{
+			Code:        http.StatusBadRequest,
+			Message:     InvalidParam,
+			Description: "item 不能为空",
+		}
+		return reply, nil
+	}
+	db := common.DB
+
+	data := new(static.InsProdBizFeeMapInf)
+	data.ProdCd = in.Item.ProdCd
+	data.BizCd = in.Item.BizCd
+	data.MccMTp = in.Item.MccMTp
+	data.MccSTp = in.Item.MccSTp
+	data.InsFeeBizCd = in.Item.InsFeeBizCd
+	data.InsFeeBizNm = in.Item.InsFeeBizNm
+	data.MsgResvFld1 = in.Item.MsgResvFld1
+	data.MsgResvFld2 = in.Item.MsgResvFld2
+	data.MsgResvFld3 = in.Item.MsgResvFld3
+	data.MsgResvFld4 = in.Item.MsgResvFld4
+	data.MsgResvFld5 = in.Item.MsgResvFld5
+	data.MsgResvFld6 = in.Item.MsgResvFld6
+	data.MsgResvFld7 = in.Item.MsgResvFld7
+	data.MsgResvFld8 = in.Item.MsgResvFld8
+	data.MsgResvFld9 = in.Item.MsgResvFld9
+	data.MsgResvFld10 = in.Item.MsgResvFld10
+	data.RecOprID = in.Item.RecOprID
+	data.RecUpdOpr = in.Item.RecUpdOpr
+	err := static.SaveInsProdBizFeeMapInf(db, data)
+
+	return reply, err
+}
+
 func (s *service) ListOrgDictionaryItem(ctx context.Context, in *pb.ListOrgDictionaryItemRequest) (*pb.ListOrgDictionaryItemReply, error) {
 	reply := new(pb.ListOrgDictionaryItemReply)
 	if in.Page == 0 {
@@ -361,8 +397,8 @@ func (s *service) GetInsProdBizFeeMapInfo(ctx context.Context, in *pb.GetInsProd
 			RecOprID:     infos[i].RecOprID,
 			RecUpdOpr:    infos[i].RecUpdOpr,
 		}
-		if !infos[i].CreateAt.IsZero() {
-			items[i].CreateAt = infos[i].CreateAt.Format(util.TimePattern)
+		if !infos[i].CreatedAt.IsZero() {
+			items[i].CreatedAt = infos[i].CreatedAt.Format(util.TimePattern)
 		}
 		if !infos[i].UpdatedAt.IsZero() {
 			items[i].UpdatedAt = infos[i].UpdatedAt.Format(util.TimePattern)

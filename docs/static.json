@@ -544,82 +544,6 @@
         }
       }
     },
-    "/static/getInsProdBizFeeMapInfo": {
-      "post": {
-        "operationId": "getInsProdBizFeeMapInfo",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "getInsProdBizFeeMapInfo",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "item": {
-                  "type": "object",
-                  "properties": {
-                    "prodCd": {"type": "string"},
-                    "bizCd":{"type": "string"},
-                    "mccMTp": {"type": "string"},
-                    "mccSTp":{"type": "string"},
-                    "insFeeBizCd": {"type": "string"},
-                    "insFeeBizNm":{"type": "string"},
-                    "msgResvFld1": {"type": "string"},
-                    "msgResvFld2":{"type": "string"},
-                    "msgResvFld3": {"type": "string"},
-                    "msgResvFld4":{"type": "string"},
-                    "msgResvFld5": {"type": "string"},
-                    "msgResvFld6":{"type": "string"},
-                    "msgResvFld7": {"type": "string"},
-                    "msgResvFld8":{"type": "string"},
-                    "msgResvFld9": {"type": "string"},
-                    "msgResvFld10":{"type": "string"},
-                    "recOprID": {"type": "string"},
-                    "recUpdOpr":{"type": "string"}
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "正确返回",
-            "examples": {
-              "application/json": {
-                "items": [
-                  {
-                    "ProdCd": "1000",
-                    "BizCd": "0000000",
-                    "MccMTp": "1",
-                    "MccSTp": "0",
-                    "InsFeeBizCd": "1000000000010",
-                    "InsFeeBizNm": "标准类费率",
-                    "MsgResvFld1": "",
-                    "MsgResvFld2": "",
-                    "MsgResvFld3": "",
-                    "MsgResvFld4": "",
-                    "MsgResvFld5": "",
-                    "MsgResvFld6": "",
-                    "MsgResvFld7": "",
-                    "MsgResvFld8": "",
-                    "MsgResvFld9": "",
-                    "MsgResvFld10": "",
-                    "RecOprID": "I",
-                    "RecUpdOpr": "",
-                    "CreateAt": "2016-10-16 15:40:44",
-                    "UpdatedAt": "2016-10-16 15:40:44"
-                  }
-                ],
-                "err": null
-              }
-            }
-          }
-        }
-      }
-    },
     "/static/listTransMap": {
       "post": {
         "operationId": "listTransMap",
@@ -986,6 +910,206 @@
                 "page": 1,
                 "size": 10,
                 "count": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "/static/getInsProdBizFeeMapInfo": {
+      "post": {
+        "operationId": "getInsProdBizFeeMapInfo",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "getInsProdBizFeeMapInfo",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "properties": {
+                    "prodCd": {
+                      "type": "string"
+                    },
+                    "bizCd": {
+                      "type": "string"
+                    },
+                    "mccMTp": {
+                      "type": "string"
+                    },
+                    "mccSTp": {
+                      "type": "string"
+                    },
+                    "insFeeBizCd": {
+                      "type": "string"
+                    },
+                    "insFeeBizNm": {
+                      "type": "string"
+                    },
+                    "msgResvFld1": {
+                      "type": "string"
+                    },
+                    "msgResvFld2": {
+                      "type": "string"
+                    },
+                    "msgResvFld3": {
+                      "type": "string"
+                    },
+                    "msgResvFld4": {
+                      "type": "string"
+                    },
+                    "msgResvFld5": {
+                      "type": "string"
+                    },
+                    "msgResvFld6": {
+                      "type": "string"
+                    },
+                    "msgResvFld7": {
+                      "type": "string"
+                    },
+                    "msgResvFld8": {
+                      "type": "string"
+                    },
+                    "msgResvFld9": {
+                      "type": "string"
+                    },
+                    "msgResvFld10": {
+                      "type": "string"
+                    },
+                    "recOprID": {
+                      "type": "string"
+                    },
+                    "recUpdOpr": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "items": [
+                  {
+                    "ProdCd": "1000",
+                    "BizCd": "0000000",
+                    "MccMTp": "1",
+                    "MccSTp": "0",
+                    "InsFeeBizCd": "1000000000010",
+                    "InsFeeBizNm": "标准类费率",
+                    "MsgResvFld1": "",
+                    "MsgResvFld2": "",
+                    "MsgResvFld3": "",
+                    "MsgResvFld4": "",
+                    "MsgResvFld5": "",
+                    "MsgResvFld6": "",
+                    "MsgResvFld7": "",
+                    "MsgResvFld8": "",
+                    "MsgResvFld9": "",
+                    "MsgResvFld10": "",
+                    "RecOprID": "I",
+                    "RecUpdOpr": "",
+                    "CreateAt": "2016-10-16 15:40:44",
+                    "UpdatedAt": "2016-10-16 15:40:44"
+                  }
+                ],
+                "err": null
+              }
+            }
+          }
+        }
+      }
+    },
+    "/static/saveInsProdBizFeeMapInfo": {
+      "post": {
+        "operationId": "saveInsProdBizFeeMapInfo",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "saveInsProdBizFeeMapInfo",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "properties": {
+                    "prodCd": {
+                      "type": "string"
+                    },
+                    "bizCd": {
+                      "type": "string"
+                    },
+                    "mccMTp": {
+                      "type": "string"
+                    },
+                    "mccSTp": {
+                      "type": "string"
+                    },
+                    "insFeeBizCd": {
+                      "type": "string"
+                    },
+                    "insFeeBizNm": {
+                      "type": "string"
+                    },
+                    "msgResvFld1": {
+                      "type": "string"
+                    },
+                    "msgResvFld2": {
+                      "type": "string"
+                    },
+                    "msgResvFld3": {
+                      "type": "string"
+                    },
+                    "msgResvFld4": {
+                      "type": "string"
+                    },
+                    "msgResvFld5": {
+                      "type": "string"
+                    },
+                    "msgResvFld6": {
+                      "type": "string"
+                    },
+                    "msgResvFld7": {
+                      "type": "string"
+                    },
+                    "msgResvFld8": {
+                      "type": "string"
+                    },
+                    "msgResvFld9": {
+                      "type": "string"
+                    },
+                    "msgResvFld10": {
+                      "type": "string"
+                    },
+                    "recOprID": {
+                      "type": "string"
+                    },
+                    "recUpdOpr": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正确返回",
+            "examples": {
+              "application/json": {
+                "err": null
               }
             }
           }

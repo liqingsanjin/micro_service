@@ -14,7 +14,7 @@ type server struct {
 	getDicByProdAndBiz                grpctransport.Handler
 	checkValues                       grpctransport.Handler
 	getDictionaryLayerItem            grpctransport.Handler
-	getDictionaryItemByPk             grpctransport.Handler
+	GetDictionaryItemByPkHandler      grpctransport.Handler
 	GetUnionPayBankListHandler        grpctransport.Handler
 	FindUnionPayMccListHandler        grpctransport.Handler
 	GetInsProdBizFeeMapInfoHandler    grpctransport.Handler
@@ -24,6 +24,15 @@ type server struct {
 	FindMerchantFirstThreeCodeHandler grpctransport.Handler
 	SaveOrgDictionaryItemHandler      grpctransport.Handler
 	ListOrgDictionaryItemHandler      grpctransport.Handler
+	SaveInsProdBizFeeMapInfoHandler   grpctransport.Handler
+}
+
+func (s *server) SaveInsProdBizFeeMapInfo(ctx context.Context, in *pb.SaveInsProdBizFeeMapInfoRequest) (*pb.SaveInsProdBizFeeMapInfoReply, error) {
+	_, res, err := s.SaveInsProdBizFeeMapInfoHandler.ServeGRPC(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return res.(*pb.SaveInsProdBizFeeMapInfoReply), nil
 }
 
 func (s *server) ListOrgDictionaryItem(ctx context.Context, in *pb.ListOrgDictionaryItemRequest) (*pb.ListOrgDictionaryItemReply, error) {
@@ -100,7 +109,7 @@ func (g *server) GetUnionPayBankList(ctx context.Context, in *pb.GetUnionPayBank
 }
 
 func (g *server) GetDictionaryItemByPk(ctx context.Context, in *pb.GetDictionaryItemByPkReq) (*pb.GetDictionaryItemByPkResp, error) {
-	_, res, err := g.getDictionaryItemByPk.ServeGRPC(ctx, in)
+	_, res, err := g.GetDictionaryItemByPkHandler.ServeGRPC(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -208,7 +217,7 @@ func New(tracer grpctransport.ServerOption) pb.StaticServer {
 
 	{
 		e := MakeGetDictionaryItemByPkEndpoint(svc)
-		svr.getDictionaryItemByPk = grpctransport.NewServer(
+		svr.GetDictionaryItemByPkHandler = grpctransport.NewServer(
 			e,
 			grpcDecode,
 			grpcEncode,
@@ -305,6 +314,17 @@ func New(tracer grpctransport.ServerOption) pb.StaticServer {
 		endpoint := MakeListOrgDictionaryItemEndpoint(svc)
 		endpoint = kit.LogginMiddleware(endpoint)
 		svr.ListOrgDictionaryItemHandler = grpctransport.NewServer(
+			endpoint,
+			kit.DecodeRequest,
+			kit.EncodeResponse,
+			options...,
+		)
+	}
+
+	{
+		endpoint := MakeSaveInsProdBizFeeMapInfoEndpoint(svc)
+		endpoint = kit.LogginMiddleware(endpoint)
+		svr.SaveInsProdBizFeeMapInfoHandler = grpctransport.NewServer(
 			endpoint,
 			kit.DecodeRequest,
 			kit.EncodeResponse,

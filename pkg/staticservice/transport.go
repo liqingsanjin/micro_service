@@ -113,3 +113,9 @@ func MakeListOrgDictionaryItemEndpoint(service pb.StaticServer) endpoint.Endpoin
 		return service.ListOrgDictionaryItem(ctx, request.(*pb.ListOrgDictionaryItemRequest))
 	}
 }
+
+func MakeSaveInsProdBizFeeMapInfoEndpoint(service pb.StaticServer) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		return service.SaveInsProdBizFeeMapInfo(ctx, request.(*pb.SaveInsProdBizFeeMapInfoRequest))
+	}
+}

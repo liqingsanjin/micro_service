@@ -14,12 +14,21 @@ service Static {
     rpc GetUnionPayBankList(GetUnionPayBankListRequest) returns (GetUnionPayBankListReply) {}
     rpc FindUnionPayMccList(FindUnionPayMccListRequest) returns (FindUnionPayMccListReply) {}
     rpc GetInsProdBizFeeMapInfo(GetInsProdBizFeeMapInfoRequest) returns (GetInsProdBizFeeMapInfoReply) {}
+    rpc SaveInsProdBizFeeMapInfo(SaveInsProdBizFeeMapInfoRequest) returns (SaveInsProdBizFeeMapInfoReply) {}
     rpc ListTransMap(ListTransMapRequest) returns (ListTransMapReply) {}
     rpc ListFeeMap(ListFeeMapRequest) returns (ListFeeMapReply) {}
     rpc FindArea(FindAreaRequest) returns (FindAreaReply) {}
     rpc FindMerchantFirstThreeCode(FindMerchantFirstThreeCodeRequest) returns (FindMerchantFirstThreeCodeReply) {}
     rpc SaveOrgDictionaryItem(SaveOrgDictionaryItemRequest) returns (SaveOrgDictionaryItemReply) {}
     rpc ListOrgDictionaryItem(ListOrgDictionaryItemRequest) returns (ListOrgDictionaryItemReply) {}
+}
+
+message SaveInsProdBizFeeMapInfoRequest {
+    InsProdBizFeeMapInfoField item = 1;
+}
+
+message SaveInsProdBizFeeMapInfoReply {
+    error err = 1;
 }
 
 message ListOrgDictionaryItemRequest {
@@ -101,7 +110,7 @@ message InsProdBizFeeMapInfoField {
     string msgResvFld10 = 16;
     string recOprID     = 17;
     string recUpdOpr    = 18;
-    string createAt     = 19;
+    string createdAt    = 19;
     string updatedAt    = 20;
 }
 

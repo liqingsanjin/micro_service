@@ -33,10 +33,10 @@ func (DictionaryItem) TableName() string {
 }
 
 type InsProdBizFeeMapInf struct {
-	ProdCd       string    `gorm:"column:PROD_CD"`
-	BizCd        string    `gorm:"column:BIZ_CD"`
-	MccMTp       string    `gorm:"column:MCC_M_TP"`
-	MccSTp       string    `gorm:"column:MCC_S_TP"`
+	ProdCd       string    `gorm:"column:PROD_CD;primary_key"`
+	BizCd        string    `gorm:"column:BIZ_CD;primary_key"`
+	MccMTp       string    `gorm:"column:MCC_M_TP;primary_key"`
+	MccSTp       string    `gorm:"column:MCC_S_TP;primary_key"`
 	InsFeeBizCd  string    `gorm:"column:INS_FEE_BIZ_CD"`
 	InsFeeBizNm  string    `gorm:"column:INS_FEE_BIZ_NM"`
 	MsgResvFld1  string    `gorm:"column:MSG_RESV_FLD1"`
@@ -51,7 +51,7 @@ type InsProdBizFeeMapInf struct {
 	MsgResvFld10 string    `gorm:"column:MSG_RESV_FLD10"`
 	RecOprID     string    `gorm:"column:REC_OPR_ID"`
 	RecUpdOpr    string    `gorm:"column:REC_UPD_OPR"`
-	CreateAt     time.Time `gorm:"column:REC_CRT_TS"`
+	CreatedAt    time.Time `gorm:"column:REC_CRT_TS"`
 	UpdatedAt    time.Time `gorm:"column:REC_UPD_TS"`
 }
 
@@ -169,5 +169,9 @@ func GetDictionaryLayerItem(db *gorm.DB, query *DictionaryLayerItem) []*Dictiona
 }
 
 func SaveDictionaryItem(db *gorm.DB, data *DictionaryItem) error {
+	return db.Save(data).Error
+}
+
+func SaveInsProdBizFeeMapInf(db *gorm.DB, data *InsProdBizFeeMapInf) error {
 	return db.Save(data).Error
 }
