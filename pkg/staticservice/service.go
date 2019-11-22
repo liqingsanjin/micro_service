@@ -49,6 +49,13 @@ func (s *service) SaveInsProdBizFeeMapInfo(ctx context.Context, in *pb.SaveInsPr
 		return reply, nil
 	}
 	db := common.DB
+	var err error
+	if in.InsFeeBizCd != "" {
+		err = static.DeleteInsProdBizFeeMapInf(db, in.InsFeeBizCd)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	data := new(static.InsProdBizFeeMapInf)
 	data.ProdCd = in.Item.ProdCd
@@ -69,7 +76,7 @@ func (s *service) SaveInsProdBizFeeMapInfo(ctx context.Context, in *pb.SaveInsPr
 	data.MsgResvFld10 = in.Item.MsgResvFld10
 	data.RecOprID = in.Item.RecOprID
 	data.RecUpdOpr = in.Item.RecUpdOpr
-	err := static.SaveInsProdBizFeeMapInf(db, data)
+	err = static.SaveInsProdBizFeeMapInf(db, data)
 
 	return reply, err
 }

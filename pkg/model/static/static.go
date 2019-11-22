@@ -175,3 +175,7 @@ func SaveDictionaryItem(db *gorm.DB, data *DictionaryItem) error {
 func SaveInsProdBizFeeMapInf(db *gorm.DB, data *InsProdBizFeeMapInf) error {
 	return db.Save(data).Error
 }
+
+func DeleteInsProdBizFeeMapInf(db *gorm.DB, insFeeBizCd string) error {
+	return db.Delete(&InsProdBizFeeMapInf{InsFeeBizCd: insFeeBizCd}).Error
+}

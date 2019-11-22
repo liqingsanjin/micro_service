@@ -25,6 +25,7 @@ service Static {
 
 message SaveInsProdBizFeeMapInfoRequest {
     InsProdBizFeeMapInfoField item = 1;
+    string insFeeBizCd = 2;
 }
 
 message SaveInsProdBizFeeMapInfoReply {
