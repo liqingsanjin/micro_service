@@ -280,6 +280,12 @@ func institutionUnRegister(db *gorm.DB, instance *camundamodel.ProcessInstance) 
 		return fmt.Errorf("institution %s not found", instance.DataId)
 	}
 
+	err = institution.UpdateInstitution(db, &institution.InstitutionInfo{InsIdCd: info.InsIdCd}, &institution.InstitutionInfo{InsSta: "00"})
+	if err != nil {
+		return err
+	}
+
+	info.InsSta = "00"
 	err = institution.SaveInstitutionMain(db, &institution.InstitutionInfoMain{
 		InstitutionInfo: *info,
 	})
