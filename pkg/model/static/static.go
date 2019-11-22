@@ -177,5 +177,5 @@ func SaveInsProdBizFeeMapInf(db *gorm.DB, data *InsProdBizFeeMapInf) error {
 }
 
 func DeleteInsProdBizFeeMapInf(db *gorm.DB, insFeeBizCd string) error {
-	return db.Delete(&InsProdBizFeeMapInf{InsFeeBizCd: insFeeBizCd}).Error
+	return db.Where("INS_FEE_BIZ_CD = ?", insFeeBizCd).Delete(&InsProdBizFeeMapInf{}).Error
 }
