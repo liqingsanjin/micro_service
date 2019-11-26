@@ -90,8 +90,8 @@ func main() {
 		writer, err := rotatelogs.New(
 			logFilePath+".%Y%m%d%H%M",
 			rotatelogs.WithLinkName(logFilePath),
-			rotatelogs.WithMaxAge(time.Duration(24)*time.Hour),
-			rotatelogs.WithRotationTime(time.Duration(30*24)*time.Hour),
+			rotatelogs.WithMaxAge(time.Duration(30*24)*time.Hour),
+			rotatelogs.WithRotationTime(time.Duration(24)*time.Hour),
 		)
 		if err != nil {
 			logrus.Errorln(err)
