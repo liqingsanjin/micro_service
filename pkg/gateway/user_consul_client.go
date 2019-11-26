@@ -20,20 +20,16 @@ import (
 	"google.golang.org/grpc"
 )
 
-const (
-	userbreaker = "userbreaker"
-)
-
 func GetUserEndpoints(instancer sd.Instancer, log log.Logger) *UserEndpoints {
 	var endpoints UserEndpoints
 
-	hystrix.ConfigureCommand(userbreaker, hystrix.CommandConfig{
+	hystrix.ConfigureCommand(userBreaker, hystrix.CommandConfig{
 		MaxConcurrentRequests: 1000,
 		Timeout:               10000,
 		ErrorPercentThreshold: 25,
 		SleepWindow:           10000,
 	})
-	userBreaker := circuitbreaker.Hystrix(userbreaker)
+	userBreaker := circuitbreaker.Hystrix(userBreaker)
 
 	{
 		factory := userserviceFactory(userservice.MakeLoginEndpoint)

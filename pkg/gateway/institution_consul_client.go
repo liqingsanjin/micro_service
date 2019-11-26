@@ -19,20 +19,16 @@ import (
 	"google.golang.org/grpc"
 )
 
-const (
-	institutionbreaker = "institutionbreaker"
-)
-
 func GetInstitutionCliEndpoints(instancer sd.Instancer, log log.Logger) *InstitutionEndpoints {
 	var endpoints InstitutionEndpoints
 
-	hystrix.ConfigureCommand(institutionbreaker, hystrix.CommandConfig{
+	hystrix.ConfigureCommand(institutionBreaker, hystrix.CommandConfig{
 		MaxConcurrentRequests: 1000,
 		Timeout:               10000,
 		ErrorPercentThreshold: 25,
 		SleepWindow:           10000,
 	})
-	institutionBreaker := circuitbreaker.Hystrix(institutionbreaker)
+	institutionBreaker := circuitbreaker.Hystrix(institutionBreaker)
 
 	{
 		factory := institutionserviceFactory(institutionservice.MakeTnxHisDownloadEndpoint)

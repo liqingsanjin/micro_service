@@ -23,13 +23,13 @@ import (
 func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpoints {
 	var endpoints MerchantEndpoints
 
-	hystrix.ConfigureCommand(userbreaker, hystrix.CommandConfig{
+	hystrix.ConfigureCommand(merchantBreaker, hystrix.CommandConfig{
 		MaxConcurrentRequests: 1000,
 		Timeout:               10000,
 		ErrorPercentThreshold: 25,
 		SleepWindow:           10000,
 	})
-	userBreaker := circuitbreaker.Hystrix(userbreaker)
+	userBreaker := circuitbreaker.Hystrix(merchantBreaker)
 
 	{
 		factory := merchantServiceFactory(merchantservice.MakeSaveMerchantBizDealAndFeeEndpoint)

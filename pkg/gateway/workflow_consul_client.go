@@ -23,13 +23,13 @@ import (
 func GetWorkflowEndpoints(instancer sd.Instancer, log log.Logger) *WorkflowEndpoints {
 	var endpoints WorkflowEndpoints
 
-	hystrix.ConfigureCommand(userbreaker, hystrix.CommandConfig{
+	hystrix.ConfigureCommand(workflowBreaker, hystrix.CommandConfig{
 		MaxConcurrentRequests: 1000,
 		Timeout:               10000,
 		ErrorPercentThreshold: 25,
 		SleepWindow:           10000,
 	})
-	userBreaker := circuitbreaker.Hystrix(userbreaker)
+	userBreaker := circuitbreaker.Hystrix(workflowBreaker)
 
 	{
 		factory := workflowFactory(workflow.MakeListTaskEndpoint)

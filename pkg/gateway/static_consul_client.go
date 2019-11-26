@@ -19,21 +19,17 @@ import (
 	"google.golang.org/grpc"
 )
 
-const (
-	staticbreaker = "staticbreaker"
-)
-
 func GetStaticCliEndpoints(instancer sd.Instancer, log log.Logger) *StaticEndpoints {
 
 	var endpoints StaticEndpoints
 
-	hystrix.ConfigureCommand(staticbreaker, hystrix.CommandConfig{
+	hystrix.ConfigureCommand(staticBreaker, hystrix.CommandConfig{
 		MaxConcurrentRequests: 1000,
 		Timeout:               10000,
 		ErrorPercentThreshold: 25,
 		SleepWindow:           10000,
 	})
-	breaker := circuitbreaker.Hystrix(staticbreaker)
+	breaker := circuitbreaker.Hystrix(staticBreaker)
 
 	{
 		factory := staticserviceFactory(staticservice.MakeSyncDataEndpoint)

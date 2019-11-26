@@ -23,13 +23,13 @@ import (
 func GetTermEndpoints(instancer sd.Instancer, log log.Logger) *TermEndpoints {
 	var endpoints TermEndpoints
 
-	hystrix.ConfigureCommand(userbreaker, hystrix.CommandConfig{
+	hystrix.ConfigureCommand(termBreaker, hystrix.CommandConfig{
 		MaxConcurrentRequests: 1000,
 		Timeout:               10000,
 		ErrorPercentThreshold: 25,
 		SleepWindow:           10000,
 	})
-	userBreaker := circuitbreaker.Hystrix(userbreaker)
+	userBreaker := circuitbreaker.Hystrix(termBreaker)
 
 	{
 		factory := termServiceFactory(termservice.MakeListTermInfoEndpoint)
