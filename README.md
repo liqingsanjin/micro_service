@@ -74,3 +74,9 @@ docker build -t merchantservice:1.0.0 -f build/deploy/Dockerfile_merchant .
 ```
 protoc -I ./api/camunda --go_out=plugins=grpc:./pkg/camunda/pb api/camunda/*.proto
 ```
+
+# 扫码类交易
+### 编译
+```bash
+protoc -I ./api/apstfr --go_out=plugins=grpc:./pkg/apstfr/apstfrpb api/apstfr/*.proto
+```
