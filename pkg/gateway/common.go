@@ -3,7 +3,7 @@ package gateway
 import "time"
 
 var (
-	rpcRetryTimes = 3
+	rpcRetryTimes = 1
 	rpcTimeOut    = 5 * time.Second
 )
 

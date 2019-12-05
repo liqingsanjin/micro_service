@@ -35,7 +35,7 @@ func GetUserEndpoints(instancer sd.Instancer, log log.Logger) *UserEndpoints {
 		factory := userserviceFactory(userservice.MakeLoginEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.LoginEndpoint = retry
 	}

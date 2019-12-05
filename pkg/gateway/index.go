@@ -17,6 +17,7 @@ type ClientEndpoints struct {
 	MerchantEndpoints    *MerchantEndpoints
 	TermEndpoints        *TermEndpoints
 	WorkflowEndpoints    *WorkflowEndpoints
+	ScanEndpoints        *ScanEndpoints
 }
 
 func NewHttpHandler(c *ClientEndpoints) http.Handler {
@@ -34,6 +35,7 @@ func NewHttpHandler(c *ClientEndpoints) http.Handler {
 	RegisterMerchantHandler(engine, c.MerchantEndpoints)
 	RegisterTermHandler(engine, c.TermEndpoints)
 	RegisterWorkflowHandler(engine, c.WorkflowEndpoints)
+	RegisterScanHandler(engine, c.ScanEndpoints)
 	return engine
 }
 

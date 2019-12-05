@@ -3,7 +3,6 @@ package gateway
 import (
 	"io"
 	"os"
-	"time"
 	merchantservice "userService/pkg/merchantservice"
 	"userService/pkg/pb"
 
@@ -35,7 +34,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeSaveMerchantBizDealAndFeeEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.SaveMerchantBizDealAndFeeEndpoint = retry
 	}
@@ -44,7 +43,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeListMerchantEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.ListMerchantEndpoint = retry
 	}
@@ -53,7 +52,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeListGroupMerchantEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.ListGroupMerchantEndpoint = retry
 	}
@@ -62,7 +61,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeSaveMerchantEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.SaveMerchantEndpoint = retry
 	}
@@ -71,7 +70,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeSaveMerchantBankAccountEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.SaveMerchantBankAccountEndpoint = retry
 	}
@@ -80,7 +79,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeSaveMerchantBusinessEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.SaveMerchantBusinessEndpoint = retry
 	}
@@ -89,7 +88,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeSaveMerchantPictureEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.SaveMerchantPictureEndpoint = retry
 	}
@@ -98,7 +97,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeGetMerchantBankAccountEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.GetMerchantBankAccountEndpoint = retry
 	}
@@ -107,7 +106,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeGetMerchantBizDealEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.GetMerchantBizDealEndpoint = retry
 	}
@@ -116,7 +115,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeGetMerchantBizFeeEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.GetMerchantBizFeeEndpoint = retry
 	}
@@ -125,7 +124,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeGetMerchantBusinessEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.GetMerchantBusinessEndpoint = retry
 	}
@@ -134,7 +133,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeGetMerchantPictureEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.GetMerchantPictureEndpoint = retry
 	}
@@ -143,7 +142,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeGetMerchantByIdEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.GetMerchantByIdEndpoint = retry
 	}
@@ -152,7 +151,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeGenerateMchtCdEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.GenerateMchtCdEndpoint = retry
 	}
@@ -161,7 +160,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeMerchantInfoQueryEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.MerchantInfoQueryEndpoint = retry
 	}
@@ -170,7 +169,7 @@ func GetMerchantEndpoints(instancer sd.Instancer, log log.Logger) *MerchantEndpo
 		factory := merchantServiceFactory(merchantservice.MakeMerchantForceChangeStatusEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.MerchantForceChangeStatusEndpoint = retry
 	}

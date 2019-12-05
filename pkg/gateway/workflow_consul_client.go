@@ -3,7 +3,6 @@ package gateway
 import (
 	"io"
 	"os"
-	"time"
 	"userService/pkg/pb"
 	"userService/pkg/workflow"
 
@@ -35,7 +34,7 @@ func GetWorkflowEndpoints(instancer sd.Instancer, log log.Logger) *WorkflowEndpo
 		factory := workflowFactory(workflow.MakeListTaskEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.ListTaskEndpoint = retry
 	}
@@ -44,7 +43,7 @@ func GetWorkflowEndpoints(instancer sd.Instancer, log log.Logger) *WorkflowEndpo
 		factory := workflowFactory(workflow.MakeHandleTaskEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.HandleTaskEndpoint = retry
 	}
@@ -53,7 +52,7 @@ func GetWorkflowEndpoints(instancer sd.Instancer, log log.Logger) *WorkflowEndpo
 		factory := workflowFactory(workflow.MakeStartWorkflowEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.StartEndpoint = retry
 	}
@@ -62,7 +61,7 @@ func GetWorkflowEndpoints(instancer sd.Instancer, log log.Logger) *WorkflowEndpo
 		factory := workflowFactory(workflow.MakeListRemarkEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.ListRemarkEndpoint = retry
 	}

@@ -3,7 +3,6 @@ package gateway
 import (
 	"io"
 	"os"
-	"time"
 	"userService/pkg/pb"
 	"userService/pkg/termservice"
 
@@ -35,7 +34,7 @@ func GetTermEndpoints(instancer sd.Instancer, log log.Logger) *TermEndpoints {
 		factory := termServiceFactory(termservice.MakeListTermInfoEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.ListTermInfoEndpoint = retry
 	}
@@ -44,7 +43,7 @@ func GetTermEndpoints(instancer sd.Instancer, log log.Logger) *TermEndpoints {
 		factory := termServiceFactory(termservice.MakeSaveTermEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.SaveTermEndpoint = retry
 	}
@@ -53,7 +52,7 @@ func GetTermEndpoints(instancer sd.Instancer, log log.Logger) *TermEndpoints {
 		factory := termServiceFactory(termservice.MakeListTermRiskEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.ListTermRiskEndpoint = retry
 	}
@@ -62,7 +61,7 @@ func GetTermEndpoints(instancer sd.Instancer, log log.Logger) *TermEndpoints {
 		factory := termServiceFactory(termservice.MakeListTermActivationStateEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.ListTermActivationStateEndpoint = retry
 	}
@@ -71,7 +70,7 @@ func GetTermEndpoints(instancer sd.Instancer, log log.Logger) *TermEndpoints {
 		factory := termServiceFactory(termservice.MakeUpdateTermInfoEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.UpdateTermInfoEndpoint = retry
 	}
@@ -80,7 +79,7 @@ func GetTermEndpoints(instancer sd.Instancer, log log.Logger) *TermEndpoints {
 		factory := termServiceFactory(termservice.MakeQueryTermInfoEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
-		retry := lb.Retry(3, 5000*time.Millisecond, balancer)
+		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)
 		retry = userBreaker(retry)
 		endpoints.QueryTermInfoEndpoint = retry
 	}

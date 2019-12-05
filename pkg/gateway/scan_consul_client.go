@@ -3,7 +3,7 @@ package gateway
 import (
 	"io"
 	"userService/pkg/apstfr/apstfrpb"
-	"userService/pkg/staticservice"
+	"userService/pkg/apstfr/scan"
 
 	"github.com/afex/hystrix-go/hystrix"
 	"github.com/go-kit/kit/circuitbreaker"
@@ -31,7 +31,7 @@ func GetScanEndpoints(instancer sd.Instancer, log log.Logger) *ScanEndpoints {
 	breaker := circuitbreaker.Hystrix(scanBreaker)
 
 	{
-		factory := staticserviceFactory(staticservice.MakeSaveInsProdBizFeeMapInfoEndpoint)
+		factory := scanFactory(scan.MakePayEndpoint)
 		endpointer := sd.NewEndpointer(instancer, factory, log)
 		balancer := lb.NewRoundRobin(endpointer)
 		retry := lb.Retry(rpcRetryTimes, rpcTimeOut, balancer)

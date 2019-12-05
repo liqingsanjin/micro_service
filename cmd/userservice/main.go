@@ -7,6 +7,8 @@ import (
 	"path"
 	"runtime"
 	"time"
+	"userService/pkg/apstfr/apstfrpb"
+	"userService/pkg/apstfr/scan"
 	"userService/pkg/camunda"
 	"userService/pkg/institutionservice"
 	"userService/pkg/merchantservice"
@@ -266,5 +268,7 @@ func runGRPCServer(addr string, tracer grpctransport.ServerOption) error {
 	pb.RegisterMerchantServer(svr, merchantservice.New(tracer))
 	pb.RegisterTermServer(svr, termservice.New(tracer))
 	pb.RegisterStaticServer(svr, staticservice.New(tracer))
+
+	apstfrpb.RegisterScanServer(svr, scan.New(tracer))
 	return svr.Serve(l)
 }
