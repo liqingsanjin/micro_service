@@ -16,3 +16,11 @@ const (
 	termBreaker        = "termBreaker"
 	workflowBreaker    = "workflowBeaker"
 )
+
+func SetRetryTime(times int) {
+	rpcRetryTimes = times
+}
+
+func SetTimeOut(timeOut time.Duration) {
+	rpcTimeOut = timeOut
+}

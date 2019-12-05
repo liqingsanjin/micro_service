@@ -159,6 +159,15 @@ func institutionUpdate(db *gorm.DB, instance *camundamodel.ProcessInstance) erro
 		return err
 	}
 
+	err = institution.UpdateInstitution(
+		db,
+		&institution.InstitutionInfo{InsIdCd: info.InsIdCd},
+		&institution.InstitutionInfo{InsSta: "01"},
+	)
+	if err != nil {
+		return err
+	}
+	info.InsSta = "01"
 	// 入正式表 institution fee cash control
 	err = institution.SaveInstitutionMain(db, &institution.InstitutionInfoMain{
 		InstitutionInfo: *info,
