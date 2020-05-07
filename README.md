@@ -2,8 +2,8 @@
 
 ## 使用
 ### 下载依赖包
-需要设置代理
 ```
+export GOPROXY=https://goproxy.io
 go get -v -u github.com/golang/protobuf/protoc-gen-go
 go get -v -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
 
@@ -30,8 +30,8 @@ docker build -t userservice:1.0.0 -f build/deploy/Dockerfile_user .
 
 ## 使用
 ### 下载依赖包
-需要设置代理
 ```
+export GOPROXY=https://goproxy.io
 go get -v -u github.com/golang/protobuf/protoc-gen-go
 go get -v -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
 go get -v -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
